@@ -134,16 +134,16 @@ function Nav({ page, setPage }) {
   }, []);
   const links = [
     { id: "platform", label: "Platform" },
+    { id: "pricing", label: "Pricing" },
     { id: "about", label: "About" },
     { id: "blog", label: "Resources" },
     { id: "faq", label: "FAQs" },
     { id: "contact", label: "Contact" },
-    { id: "pricing", label: "Pricing" },
     { id: "login", label: "Log In" },
   ];
   return (
     <>
-      <nav style={{ position: "sticky", top: 0, zIndex: 50, background: C.bg, boxShadow: scrolled ? "0 2px 8px rgba(0,0,0,0.06)" : "none", transition: "box-shadow 0.2s" }}>
+      <nav style={{ position: "sticky", top: 0, zIndex: 50, background: C.bg, borderBottom: scrolled ? "1px solid " + C.border : "1px solid transparent", boxShadow: scrolled ? "0 2px 8px rgba(0,0,0,0.06)" : "none", transition: "box-shadow 0.2s, border-color 0.2s" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", maxWidth: 1400, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -159,7 +159,7 @@ function Nav({ page, setPage }) {
           </div>
           <div className="r-desktop-nav" style={{ display: "none", alignItems: "baseline", gap: 28 }}>
             {links.filter(l => l.id !== "login").map(l => (
-              <span key={l.id} onClick={() => setPage(l.id)} style={{ fontSize: 15, fontWeight: page === l.id ? 700 : 600, color: page === l.id ? C.primary : C.text, cursor: "pointer", letterSpacing: "-0.01em" }}>{l.label}</span>
+              <span key={l.id} onClick={() => setPage(l.id)} style={{ fontSize: 15, fontWeight: page === l.id ? 700 : 600, color: page === l.id ? C.primary : C.text, cursor: "pointer", letterSpacing: "-0.01em", borderBottom: page === l.id ? "2px solid " + C.btn : "2px solid transparent", paddingBottom: 2, transition: "border-color 0.2s" }}>{l.label}</span>
             ))}
           </div>
         </div>
@@ -276,7 +276,7 @@ function Home({ setPage }) {
   return (
     <>
       {/* HERO */}
-      <section style={{ padding: "48px 20px 40px", textAlign: "center" }}>
+      <section style={{ padding: "72px 20px 40px", textAlign: "center" }}>
         <div style={{ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(16px)", transition: "all 0.6s ease 0.2s", marginBottom: 20 }}>
           <h1 className="r-hero-text" style={{ fontSize: 44, fontWeight: 900, letterSpacing: "-0.045em", lineHeight: 1.08 }}>
             <span style={{ position: "relative", display: "inline-block" }}>
@@ -291,7 +291,7 @@ function Home({ setPage }) {
         </div>
         <div style={{ fontSize: 16, lineHeight: 1.6, color: C.textSec, maxWidth: 810, margin: "0 auto 28px", opacity: loaded ? 1 : 0, transition: "all 0.5s ease 0.4s" }}>
           <p style={{ marginBottom: 6, fontWeight: 600, color: C.text }}>The clients you lose are savable.</p>
-          <p>Traditional CRMs track deals and contacts. Retayned tracks the health of relationships to predict churn well before it happens — giving you precise, client-specific solutions to keep (and grow) the business you've earned.</p>        </div>
+          <p>Traditional CRMs track deals and contacts. Retayned tracks the health of relationships — giving you client-specific solutions to keep (and grow) the business you've earned.</p>        </div>
         <div style={{ opacity: loaded ? 1 : 0, transition: "all 0.5s ease 0.6s", maxWidth: 400, margin: "0 auto 12px" }}>
           <button className="cta-btn" onClick={() => setPage("signup")} style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
         </div>
@@ -299,12 +299,12 @@ function Home({ setPage }) {
       </section>
 
       {/* STATS */}
-      <section style={{ padding: "0 20px 48px", opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 0.9s" }}>
+      <section style={{ padding: "0 20px 64px", opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 0.9s" }}>
         <div style={{ display: "flex", gap: 16 }}>
           {[
             { label: "Of churn is predictable", num: "90%" },
-            { label: "Cheaper to retain than find", num: "25x" },
-            { label: "Client pays for it all", num: "1+" },
+            { label: "Cheaper to retain than acquire", num: "25x" },
+            { label: "Saved client pays for itself", num: "1+" },
           ].map((s, i) => (
             <div key={i} style={{ flex: 1, textAlign: "center" }}>
               <div className="r-stats" style={{ fontSize: 48, fontWeight: 900, letterSpacing: "-0.04em", background: "linear-gradient(135deg, #33543E, #558B68)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 1, marginBottom: 6 }}>{s.num}</div>
@@ -315,7 +315,7 @@ function Home({ setPage }) {
       </section>
 
       {/* APP PREVIEW */}
-      <section style={{ padding: "0 16px 48px", opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(16px)", transition: "all 0.6s ease 1s" }}>
+      <section style={{ padding: "0 16px 64px", opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(16px)", transition: "all 0.6s ease 1s" }}>
         <div style={{ background: C.sidebar, borderRadius: 14, padding: 2, boxShadow: "0 16px 48px rgba(0,0,0,0.1)" }}>
           <div style={{ background: C.card, borderRadius: 12, overflow: "hidden" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "10px 14px", borderBottom: "1px solid " + C.borderLight }}>
@@ -323,31 +323,31 @@ function Home({ setPage }) {
               <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.warning }} />
               <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.success }} />
               <div style={{ flex: 1 }} />
-              <span style={{ fontSize: 10, color: C.textMuted, fontFamily: "monospace" }}>app.retayned.com</span>
+              <span style={{ fontSize: 11, color: C.textMuted, fontFamily: "monospace" }}>app.retayned.com</span>
               <div style={{ flex: 1 }} />
             </div>
-            <div style={{ padding: 14, background: C.bg }}>
-              <div style={{ marginBottom: 10 }}>
-                <div style={{ fontSize: 8, fontWeight: 700, color: C.danger, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 5, display: "flex", alignItems: "center", gap: 4 }}>🚨 Alert</div>
+            <div style={{ padding: 16, background: C.bg }}>
+              <div style={{ marginBottom: 12 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: C.danger, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>🚨 Alert</div>
                 <div style={{ background: "#FAE8E4", borderRadius: 8, border: "1px solid " + C.danger + "44", overflow: "hidden" }}>
-                  <div style={{ padding: "9px 12px" }}>
-                    <p style={{ fontSize: 11, color: C.danger, fontWeight: 700, lineHeight: 1.4 }}>Foxglove Partners: Email Tom today with a brief update on a net-new task.</p>
-                    <p style={{ fontSize: 10, color: C.danger + "aa", fontWeight: 400, lineHeight: 1.4, marginTop: 3 }}>Tom may be pulling back, which he has done once before when he was dissatisfied. This is a great opportunity to protect the contract.</p>
+                  <div style={{ padding: "10px 14px" }}>
+                    <p style={{ fontSize: 14, color: C.danger, fontWeight: 700, lineHeight: 1.4 }}>Foxglove Partners: Email Tom today with a brief update on a net-new task.</p>
+                    <p style={{ fontSize: 12, color: C.danger + "aa", fontWeight: 400, lineHeight: 1.4, marginTop: 4 }}>Tom may be pulling back, which he has done once before when he was dissatisfied. This is a great opportunity to protect the contract.</p>
                   </div>
                   <div style={{ display: "flex", borderTop: "1px solid " + C.danger + "22" }}>
-                    <div style={{ flex: 1, padding: "5px", textAlign: "center", fontSize: 9, fontWeight: 600, color: C.danger, borderRight: "1px solid " + C.danger + "22" }}>Add to Today's Tasks</div>
-                    <div style={{ flex: 1, padding: "5px", textAlign: "center", fontSize: 9, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
+                    <div style={{ flex: 1, padding: "7px", textAlign: "center", fontSize: 12, fontWeight: 600, color: C.danger, borderRight: "1px solid " + C.danger + "22" }}>Add to Today's Tasks</div>
+                    <div style={{ flex: 1, padding: "7px", textAlign: "center", fontSize: 12, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
                   </div>
                 </div>
               </div>
               {[{ name: "Northvane Studios", ret: 91, tag: "Creative", contact: "Sarah Chen", months: 34 }, { name: "Ridgeline Supply", ret: 73, tag: "Ecommerce", contact: "Marcus Webb", months: 11 }, { name: "Copper & Sage", ret: 55, tag: "Wellness", contact: "Elena Moss", months: 6 }, { name: "Foxglove Partners", ret: 38, tag: "B2B", contact: "Tom Aldrich", months: 3 }].map((row, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "9px 0", borderBottom: "1px solid " + C.borderLight }}>
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: "1px solid " + C.borderLight }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}><span style={{ fontWeight: 700, fontSize: 11 }}>{row.name}</span><span style={{ fontSize: 8, padding: "1px 5px", borderRadius: 3, background: C.surface, color: C.textMuted }}>{row.tag}</span></div>
-                    <div style={{ fontSize: 9, color: C.textMuted, marginTop: 1 }}>{row.contact} · {row.months}mo</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}><span style={{ fontWeight: 700, fontSize: 14 }}>{row.name}</span><span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 3, background: C.surface, color: C.textMuted }}>{row.tag}</span></div>
+                    <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>{row.contact} · {row.months}mo</div>
                   </div>
-                  <div style={{ width: 36, height: 3, background: C.borderLight, borderRadius: 2 }}><div style={{ height: "100%", width: row.ret + "%", background: row.ret >= 70 ? C.success : row.ret >= 45 ? C.warning : C.danger, borderRadius: 2 }} /></div>
-                  <span style={{ fontFamily: "monospace", fontSize: 10, fontWeight: 700, color: row.ret >= 70 ? C.success : row.ret >= 45 ? C.warning : C.danger, minWidth: 24, textAlign: "right" }}>{row.ret}%</span>
+                  <div style={{ width: 40, height: 4, background: C.borderLight, borderRadius: 2 }}><div style={{ height: "100%", width: row.ret + "%", background: row.ret >= 70 ? C.success : row.ret >= 45 ? C.warning : C.danger, borderRadius: 2 }} /></div>
+                  <span style={{ fontFamily: "monospace", fontSize: 13, fontWeight: 700, color: row.ret >= 70 ? C.success : row.ret >= 45 ? C.warning : C.danger, minWidth: 28, textAlign: "right" }}>{row.ret}%</span>
                 </div>
               ))}
             </div>
@@ -357,7 +357,7 @@ function Home({ setPage }) {
       </section>
 
       {/* STATEMENT */}
-      <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px", marginBottom: 48, position: "relative", overflow: "visible" }}>
+      <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px", marginBottom: 64, position: "relative", overflow: "visible" }}>
         {/* Left - professional people group */}
         <svg style={{ position: "absolute", left: 120, bottom: -14, width: 120, height: 90, opacity: 0.14 }} className="r-stat-graphic-left" viewBox="0 0 120 90" fill="none">
           {/* Person 1 - front */}
@@ -405,9 +405,9 @@ function Home({ setPage }) {
       </div>
 
       {/* BRAIN */}
-      <section style={{ padding: "0 16px 24px" }}>
-        <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>How It Works</h2>
-        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", maxWidth: 810, margin: "0 auto 24px" }}><span style={{ fontWeight: 700 }}>Rai pays attention to every client, every day.</span> She learns that Jessica goes quiet under stress, Mark is blunt and data-driven, and Sarah hasn't been hands-on in years. When something shifts, Rai catches it — and tells you exactly what to do before it's too late.</p>
+      <section style={{ padding: "16px 16px 12px" }}>
+        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>How It Works</h2>
+        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", maxWidth: 810, margin: "0 auto 24px" }}><span style={{ fontWeight: 700 }}>Rai pays attention to every client, every day.</span> She knows that Jessica shuts down under stress, Mark is blunt and data-driven, and Sarah's looking for a new job. When something shifts, Rai catches it — and tells you what to do about it.</p>
         <div style={{ position: "relative", width: "100%", maxWidth: 500, margin: "0 auto", aspectRatio: "1" }}>
           <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }} viewBox="0 0 400 400">
             <circle cx="200" cy="200" r="155" fill="none" stroke={C.border} strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
@@ -465,7 +465,7 @@ function Home({ setPage }) {
           return () => obs.disconnect();
         }, []);
         return (
-          <section ref={plugRef} style={{ paddingTop: 32, paddingBottom: 48, position: "relative", overflow: "visible" }}>
+          <section ref={plugRef} style={{ paddingTop: 32, paddingBottom: 72, position: "relative", overflow: "visible" }}>
             <style>{`
               @keyframes cordLeft { 0% { transform: translateX(-100%); } 100% { transform: translateX(0); } }
               @keyframes cordRight { 0% { transform: translateX(100%); } 100% { transform: translateX(0); } }
@@ -474,25 +474,38 @@ function Home({ setPage }) {
             {/* Cord container */}
             <div style={{ position: "relative", height: 60, marginBottom: 12, width: "100vw", left: "50%", transform: "translateX(-50%)", overflow: "hidden" }}>
               {/* Left cord */}
-              <svg style={{ position: "absolute", top: 0, left: 0, width: "calc(50% - 25px)", height: 60, animation: plugged ? "cordLeft 0.8s ease-out forwards" : "none", transform: plugged ? "translateX(0)" : "translateX(-100%)" }} viewBox="0 0 500 60" preserveAspectRatio="none">
+              <svg style={{ position: "absolute", top: 0, left: 0, width: "calc(50% - 35px)", height: 60, animation: plugged ? "cordLeft 0.8s ease-out forwards" : "none", transform: plugged ? "translateX(0)" : "translateX(-100%)" }} viewBox="0 0 500 60" preserveAspectRatio="none">
                 <path d="M0,30 Q100,30 150,20 T300,35 T420,25 T500,30" stroke={C.primary} strokeWidth="4" fill="none" strokeLinecap="round" />
               </svg>
               {/* Right cord */}
-              <svg style={{ position: "absolute", top: 0, right: 0, width: "calc(50% - 25px)", height: 60, animation: plugged ? "cordRight 0.8s ease-out forwards" : "none", transform: plugged ? "translateX(0)" : "translateX(100%)" }} viewBox="0 0 500 60" preserveAspectRatio="none">
+              <svg style={{ position: "absolute", top: 0, right: 0, width: "calc(50% - 35px)", height: 60, animation: plugged ? "cordRight 0.8s ease-out forwards" : "none", transform: plugged ? "translateX(0)" : "translateX(100%)" }} viewBox="0 0 500 60" preserveAspectRatio="none">
                 <path d="M500,30 Q400,30 350,40 T200,25 T80,35 T0,30" stroke={C.primaryLight} strokeWidth="4" fill="none" strokeLinecap="round" />
               </svg>
               {/* Center plug + socket */}
-              <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 100, height: 60, opacity: plugged ? 1 : 0, transition: "opacity 0.2s ease 0.7s" }}>
-                <svg width="100" height="60" viewBox="0 0 100 60">
-                  <path d="M0,30 C3,20 8,14 16,14 L26,14 C30,14 34,18 34,22 L34,38 C34,42 30,46 26,46 L16,46 C8,46 3,40 0,30 Z" fill="#33543E" />
-                  <rect x="34" y="22" width="10" height="4" rx="1" fill="#558B68" />
-                  <rect x="34" y="34" width="10" height="4" rx="1" fill="#558B68" />
-                  <ellipse cx="18" cy="24" rx="5" ry="2.5" fill="rgba(255,255,255,0.1)" />
-                  <path d="M100,30 C97,20 92,14 84,14 L74,14 C70,14 66,18 66,22 L66,38 C66,42 70,46 74,46 L84,46 C92,46 97,40 100,30 Z" fill="#1E261F" />
-                  <rect x="54" y="14" width="12" height="32" rx="3" fill="#1C3224" />
-                  <rect x="56" y="22" width="8" height="4" rx="1" fill="#1E261F" />
-                  <rect x="56" y="34" width="8" height="4" rx="1" fill="#1E261F" />
-                  <ellipse cx="82" cy="24" rx="5" ry="2.5" fill="rgba(255,255,255,0.06)" />
+              <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 120, height: 60, opacity: plugged ? 1 : 0, transition: "opacity 0.2s ease 0.7s" }}>
+                <svg width="120" height="60" viewBox="0 0 120 60">
+                  {/* Left plug — body tapering from cord, two prongs extending right */}
+                  <path d="M0,30 C6,30 10,22 14,18 L14,42 C10,38 6,30 0,30 Z" fill={C.primary} />
+                  <rect x="14" y="16" width="18" height="28" rx="4" fill={C.primary} />
+                  <rect x="32" y="22" width="12" height="4" rx="2" fill={C.primary} />
+                  <rect x="32" y="34" width="12" height="4" rx="2" fill={C.primary} />
+                  {/* Right socket — body tapering to cord, recessed slots */}
+                  <path d="M120,30 C114,30 110,22 106,18 L106,42 C110,38 114,30 120,30 Z" fill={C.sidebar} />
+                  <rect x="82" y="16" width="24" height="28" rx="4" fill={C.sidebar} />
+                  <rect x="82" y="23" width="10" height="3" rx="1" fill={C.bg} opacity="0.3" />
+                  <rect x="82" y="34" width="10" height="3" rx="1" fill={C.bg} opacity="0.3" />
+
+
+
+
+
+                  {/* Spark lines between plug and socket */}
+                  <line x1="54" y1="6" x2="58" y2="14" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
+                  <line x1="60" y1="2" x2="60" y2="11" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
+                  <line x1="66" y1="6" x2="62" y2="14" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
+                  <line x1="54" y1="54" x2="58" y2="46" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
+                  <line x1="60" y1="58" x2="60" y2="49" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
+                  <line x1="66" y1="54" x2="62" y2="46" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </div>
               {/* Spark */}
@@ -505,7 +518,7 @@ function Home({ setPage }) {
               )}
             </div>
             <div style={{ padding: "0 20px" }}>
-              <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 12 }}>Plugs Into Your Workflow</h2>
+              <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 12 }}>Plugs Into Your Workflow</h2>
             </div>
             <div style={{ padding: "0 20px" }}>
               <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 24 }}>Integrations help the engine adapt and learn, supplying you with even more insight.</p>
@@ -520,7 +533,7 @@ function Home({ setPage }) {
       })()}
 
       {/* PHILOSOPHY */}
-      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "48px 20px", marginBottom: 48 }}>
+      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "56px 20px", marginBottom: 64 }}>
         <div style={{ margin: "0 auto", textAlign: "center" }}>
           <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.3)", marginBottom: 16 }}>Retayned Wisdom</div>
           <blockquote style={{ fontSize: 21, fontWeight: 600, lineHeight: 1.45, letterSpacing: "-0.02em", margin: 0, color: "#fff" }}>"The conversation you're avoiding is the one that saves the account."</blockquote>
@@ -529,8 +542,8 @@ function Home({ setPage }) {
       </div>
 
       {/* TESTIMONIALS */}
-      <section style={{ padding: "0 20px 48px" }}>
-        <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>What the People Are Saying</h2>
+      <section style={{ padding: "0 20px 64px" }}>
+        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>What the People Are Saying</h2>
         <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 24 }}>From our own Retayned business.</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
           {[
@@ -555,13 +568,13 @@ function Home({ setPage }) {
       </section>
 
       {/* FAQ */}
-      <section style={{ padding: "0 20px 48px" }}>
-        <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 24 }}>FAQs</h2>
+      <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px 64px" }}>
+        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 24 }}>FAQs</h2>
         <FAQ />
-      </section>
+      </div>
 
       {/* FINAL CTA */}
-      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 50%, #1E261F 100%)", padding: "64px 20px", textAlign: "center" }}>
+      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 50%, #1E261F 100%)", padding: "72px 20px", textAlign: "center" }}>
         <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 12, color: "#fff" }}>You work too hard to get new clients. Keep them Retayned.</h2>
         <p style={{ fontSize: 17, color: "rgba(255,255,255,.6)", marginBottom: 24, lineHeight: 1.5 }}>See the signal. Make the changes. Keep the client.</p>
         <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "14px 32px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
@@ -1300,7 +1313,7 @@ function FAQ() {
             const isOpen = openQ === key;
             return (
               <div key={key} onClick={() => setOpenQ(isOpen ? null : key)} style={{
-                background: isOpen ? C.primarySoft : "transparent",
+                background: isOpen ? C.card : "transparent",
                 borderTop: "1px solid " + C.borderLight,
                 borderBottom: qi === group.questions.length - 1 ? "1px solid " + C.borderLight : "none",
                 cursor: "pointer",
@@ -1393,17 +1406,17 @@ function Platform({ setPage }) {
   return (
     <>
       {/* Hero */}
-      <section style={{ padding: "48px 20px 20px" }}>
+      <section style={{ padding: "72px 20px 20px" }}>
         <h1 className="r-hero-text" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 12 }}>
-          Your clients won't know Retayned exists. They just won't leave.
+          Your clients won't know Retayned exists. They'll just stay.
         </h1>
         <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.6 }}>
-          Retayned is built on something no one else has: a proprietary retention engine trained on over a decade of real client relationships. Layer in custom profiles, health checks, daily signals, and velocity detection, and you get something that's never existed — an AI platform built to actually strengthen working relationships.
+          Retayned is built on something no one else has: a proprietary retention engine trained on over a decade of real client relationships. Our AI isn't just smart, it's emotionally intelligent.
         </p>
       </section>
 
       {/* Retayned AI — app preview */}
-      <section style={{ padding: "0 20px 32px" }}>
+      <section style={{ padding: "0 20px 48px" }}>
         <div style={{ background: C.sidebar, borderRadius: 14, padding: 2, boxShadow: "0 16px 48px rgba(0,0,0,0.1)" }}>
           <div style={{ background: C.card, borderRadius: 12, overflow: "hidden" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "10px 14px", borderBottom: "1px solid " + C.borderLight }}>
@@ -1411,31 +1424,31 @@ function Platform({ setPage }) {
               <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.warning }} />
               <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.success }} />
               <div style={{ flex: 1 }} />
-              <span style={{ fontSize: 10, color: C.textMuted, fontFamily: "monospace" }}>app.retayned.com</span>
+              <span style={{ fontSize: 11, color: C.textMuted, fontFamily: "monospace" }}>app.retayned.com</span>
               <div style={{ flex: 1 }} />
             </div>
-            <div style={{ padding: 14, background: C.bg }}>
-              <div style={{ marginBottom: 10 }}>
-                <div style={{ fontSize: 8, fontWeight: 700, color: C.danger, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 5, display: "flex", alignItems: "center", gap: 4 }}>🚨 Alert</div>
+            <div style={{ padding: 16, background: C.bg }}>
+              <div style={{ marginBottom: 12 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: C.danger, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>🚨 Alert</div>
                 <div style={{ background: "#FAE8E4", borderRadius: 8, border: "1px solid " + C.danger + "44", overflow: "hidden" }}>
-                  <div style={{ padding: "9px 12px" }}>
-                    <p style={{ fontSize: 11, color: C.danger, fontWeight: 700, lineHeight: 1.4 }}>Foxglove Partners: Email Tom today with a brief update on a net-new task.</p>
-                    <p style={{ fontSize: 10, color: C.danger + "aa", fontWeight: 400, lineHeight: 1.4, marginTop: 3 }}>Tom may be pulling back, which he has done once before when he was dissatisfied. This is a great opportunity to protect the contract.</p>
+                  <div style={{ padding: "10px 14px" }}>
+                    <p style={{ fontSize: 14, color: C.danger, fontWeight: 700, lineHeight: 1.4 }}>Foxglove Partners: Email Tom today with a brief update on a net-new task.</p>
+                    <p style={{ fontSize: 12, color: C.danger + "aa", fontWeight: 400, lineHeight: 1.4, marginTop: 4 }}>Tom may be pulling back, which he has done once before when he was dissatisfied. This is a great opportunity to protect the contract.</p>
                   </div>
                   <div style={{ display: "flex", borderTop: "1px solid " + C.danger + "22" }}>
-                    <div style={{ flex: 1, padding: "5px", textAlign: "center", fontSize: 9, fontWeight: 600, color: C.danger, borderRight: "1px solid " + C.danger + "22" }}>Add to Today's Tasks</div>
-                    <div style={{ flex: 1, padding: "5px", textAlign: "center", fontSize: 9, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
+                    <div style={{ flex: 1, padding: "7px", textAlign: "center", fontSize: 12, fontWeight: 600, color: C.danger, borderRight: "1px solid " + C.danger + "22" }}>Add to Today's Tasks</div>
+                    <div style={{ flex: 1, padding: "7px", textAlign: "center", fontSize: 12, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
                   </div>
                 </div>
               </div>
               {[{ name: "Northvane Studios", ret: 91, tag: "Creative", contact: "Sarah Chen", months: 34 }, { name: "Ridgeline Supply", ret: 73, tag: "Ecommerce", contact: "Marcus Webb", months: 11 }, { name: "Copper & Sage", ret: 55, tag: "Wellness", contact: "Elena Moss", months: 6 }, { name: "Foxglove Partners", ret: 38, tag: "B2B", contact: "Tom Aldrich", months: 3 }].map((row, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "9px 0", borderBottom: "1px solid " + C.borderLight }}>
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: "1px solid " + C.borderLight }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}><span style={{ fontWeight: 700, fontSize: 11 }}>{row.name}</span><span style={{ fontSize: 8, padding: "1px 5px", borderRadius: 3, background: C.surface, color: C.textMuted }}>{row.tag}</span></div>
-                    <div style={{ fontSize: 9, color: C.textMuted, marginTop: 1 }}>{row.contact} · {row.months}mo</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}><span style={{ fontWeight: 700, fontSize: 14 }}>{row.name}</span><span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 3, background: C.surface, color: C.textMuted }}>{row.tag}</span></div>
+                    <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>{row.contact} · {row.months}mo</div>
                   </div>
-                  <div style={{ width: 36, height: 3, background: C.borderLight, borderRadius: 2 }}><div style={{ height: "100%", width: row.ret + "%", background: row.ret >= 70 ? C.success : row.ret >= 45 ? C.warning : C.danger, borderRadius: 2 }} /></div>
-                  <span style={{ fontFamily: "monospace", fontSize: 10, fontWeight: 700, color: row.ret >= 70 ? C.success : row.ret >= 45 ? C.warning : C.danger, minWidth: 24, textAlign: "right" }}>{row.ret}%</span>
+                  <div style={{ width: 40, height: 4, background: C.borderLight, borderRadius: 2 }}><div style={{ height: "100%", width: row.ret + "%", background: row.ret >= 70 ? C.success : row.ret >= 45 ? C.warning : C.danger, borderRadius: 2 }} /></div>
+                  <span style={{ fontFamily: "monospace", fontSize: 13, fontWeight: 700, color: row.ret >= 70 ? C.success : row.ret >= 45 ? C.warning : C.danger, minWidth: 28, textAlign: "right" }}>{row.ret}%</span>
                 </div>
               ))}
             </div>
@@ -1445,7 +1458,7 @@ function Platform({ setPage }) {
       </section>
 
       {/* STATEMENT */}
-      <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px", marginBottom: 48, position: "relative", overflow: "visible" }}>
+      <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px", marginBottom: 64, position: "relative", overflow: "visible" }}>
         {/* Left - professional people group */}
         <svg style={{ position: "absolute", left: 120, bottom: -14, width: 120, height: 90, opacity: 0.14 }} className="r-stat-graphic-left" viewBox="0 0 120 90" fill="none">
           <circle cx="40" cy="22" r="14" fill={C.primary} />
@@ -1482,8 +1495,8 @@ function Platform({ setPage }) {
 
       {/* Brain graphic */}
       <section style={{ padding: "0 16px 32px" }}>
-        <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>Emotionally Intelligent</h2>
-        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 16 }}>We built Rai to help sharpen your instincts, not replace them. You know your clients. She just makes sure you don't lose one by surprise.</p>
+        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>Emotionally Intelligent</h2>
+        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 16 }}>We built Rai to help strengthen working relationships, not replace them. You know your clients. She just makes sure you don't lose one by surprise.</p>
         <div style={{ position: "relative", width: "100%", maxWidth: 500, margin: "0 auto", aspectRatio: "1" }}>
           <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }} viewBox="0 0 400 400">
             <circle cx="200" cy="200" r="155" fill="none" stroke={C.border} strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
@@ -1526,9 +1539,9 @@ function Platform({ setPage }) {
       {/* 6 Inputs */}
       <section style={{ padding: "0 20px 12px" }}>
         <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 4 }}>Six inputs. One brain.</h2>
-        <p style={{ fontSize: 14, color: C.textSec, marginBottom: 20 }}>Rai pays attention to every client, every day — connecting the dots between what you know, what you haven't noticed yet, and what to do next.</p>
+        <p style={{ fontSize: 14, color: C.textSec, marginBottom: 20 }}>Rai connects the dots between what you know, what you haven't noticed yet, and what to do next to keep your clients fanatical about working with you.</p>
       </section>
-      <section style={{ padding: "0 20px 48px" }}>
+      <section style={{ padding: "0 20px 64px" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {features.map((f, i) => {
             const isOpen = activeF === i;
@@ -1577,7 +1590,7 @@ function Platform({ setPage }) {
           return () => obs.disconnect();
         }, []);
         return (
-          <section ref={plugRef2} style={{ paddingTop: 48, paddingBottom: 64, position: "relative", overflow: "visible" }}>
+          <section ref={plugRef2} style={{ paddingTop: 48, paddingBottom: 80, position: "relative", overflow: "visible" }}>
             <style>{`
               @keyframes cordLeft2 { 0% { transform: translateX(-100%); } 100% { transform: translateX(0); } }
               @keyframes cordRight2 { 0% { transform: translateX(100%); } 100% { transform: translateX(0); } }
@@ -1586,25 +1599,38 @@ function Platform({ setPage }) {
             {/* Cord container */}
             <div style={{ position: "relative", height: 60, marginBottom: 12, width: "100vw", left: "50%", transform: "translateX(-50%)", overflow: "hidden" }}>
               {/* Left cord */}
-              <svg style={{ position: "absolute", top: 0, left: 0, width: "calc(50% - 25px)", height: 60, animation: plugged2 ? "cordLeft2 0.8s ease-out forwards" : "none", transform: plugged2 ? "translateX(0)" : "translateX(-100%)" }} viewBox="0 0 500 60" preserveAspectRatio="none">
+              <svg style={{ position: "absolute", top: 0, left: 0, width: "calc(50% - 35px)", height: 60, animation: plugged2 ? "cordLeft2 0.8s ease-out forwards" : "none", transform: plugged2 ? "translateX(0)" : "translateX(-100%)" }} viewBox="0 0 500 60" preserveAspectRatio="none">
                 <path d="M0,30 Q100,30 150,20 T300,35 T420,25 T500,30" stroke={C.primary} strokeWidth="4" fill="none" strokeLinecap="round" />
               </svg>
               {/* Right cord */}
-              <svg style={{ position: "absolute", top: 0, right: 0, width: "calc(50% - 25px)", height: 60, animation: plugged2 ? "cordRight2 0.8s ease-out forwards" : "none", transform: plugged2 ? "translateX(0)" : "translateX(100%)" }} viewBox="0 0 500 60" preserveAspectRatio="none">
+              <svg style={{ position: "absolute", top: 0, right: 0, width: "calc(50% - 35px)", height: 60, animation: plugged2 ? "cordRight2 0.8s ease-out forwards" : "none", transform: plugged2 ? "translateX(0)" : "translateX(100%)" }} viewBox="0 0 500 60" preserveAspectRatio="none">
                 <path d="M500,30 Q400,30 350,40 T200,25 T80,35 T0,30" stroke={C.primaryLight} strokeWidth="4" fill="none" strokeLinecap="round" />
               </svg>
               {/* Center plug + socket */}
-              <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 100, height: 60, opacity: plugged2 ? 1 : 0, transition: "opacity 0.2s ease 0.7s" }}>
-                <svg width="100" height="60" viewBox="0 0 100 60">
-                  <path d="M0,30 C3,20 8,14 16,14 L26,14 C30,14 34,18 34,22 L34,38 C34,42 30,46 26,46 L16,46 C8,46 3,40 0,30 Z" fill="#33543E" />
-                  <rect x="34" y="22" width="10" height="4" rx="1" fill="#558B68" />
-                  <rect x="34" y="34" width="10" height="4" rx="1" fill="#558B68" />
-                  <ellipse cx="18" cy="24" rx="5" ry="2.5" fill="rgba(255,255,255,0.1)" />
-                  <path d="M100,30 C97,20 92,14 84,14 L74,14 C70,14 66,18 66,22 L66,38 C66,42 70,46 74,46 L84,46 C92,46 97,40 100,30 Z" fill="#1E261F" />
-                  <rect x="54" y="14" width="12" height="32" rx="3" fill="#1C3224" />
-                  <rect x="56" y="22" width="8" height="4" rx="1" fill="#1E261F" />
-                  <rect x="56" y="34" width="8" height="4" rx="1" fill="#1E261F" />
-                  <ellipse cx="82" cy="24" rx="5" ry="2.5" fill="rgba(255,255,255,0.06)" />
+              <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 120, height: 60, opacity: plugged2 ? 1 : 0, transition: "opacity 0.2s ease 0.7s" }}>
+                <svg width="120" height="60" viewBox="0 0 120 60">
+                  {/* Left plug — body tapering from cord, two prongs extending right */}
+                  <path d="M0,30 C6,30 10,22 14,18 L14,42 C10,38 6,30 0,30 Z" fill={C.primary} />
+                  <rect x="14" y="16" width="18" height="28" rx="4" fill={C.primary} />
+                  <rect x="32" y="22" width="12" height="4" rx="2" fill={C.primary} />
+                  <rect x="32" y="34" width="12" height="4" rx="2" fill={C.primary} />
+                  {/* Right socket — body tapering to cord, recessed slots */}
+                  <path d="M120,30 C114,30 110,22 106,18 L106,42 C110,38 114,30 120,30 Z" fill={C.sidebar} />
+                  <rect x="82" y="16" width="24" height="28" rx="4" fill={C.sidebar} />
+                  <rect x="82" y="23" width="10" height="3" rx="1" fill={C.bg} opacity="0.3" />
+                  <rect x="82" y="34" width="10" height="3" rx="1" fill={C.bg} opacity="0.3" />
+
+
+
+
+
+                  {/* Spark lines between plug and socket */}
+                  <line x1="54" y1="6" x2="58" y2="14" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
+                  <line x1="60" y1="2" x2="60" y2="11" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
+                  <line x1="66" y1="6" x2="62" y2="14" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
+                  <line x1="54" y1="54" x2="58" y2="46" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
+                  <line x1="60" y1="58" x2="60" y2="49" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
+                  <line x1="66" y1="54" x2="62" y2="46" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </div>
               {/* Spark */}
@@ -1617,7 +1643,7 @@ function Platform({ setPage }) {
               )}
             </div>
             <div style={{ padding: "0 20px" }}>
-              <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 12 }}>Plugs Into Your Workflow</h2>
+              <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 12 }}>Plugs Into Your Workflow</h2>
             </div>
             <div style={{ padding: "0 20px" }}>
               <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 24 }}>Integrations help the engine adapt and learn, supplying you with even more insight.</p>
@@ -1632,7 +1658,7 @@ function Platform({ setPage }) {
       })()}
 
       {/* How they connect — full bleed */}
-      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "48px 20px", marginBottom: 48 }}>
+      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "56px 20px", marginBottom: 64 }}>
         <div style={{ margin: "0 auto", textAlign: "center" }}>
           <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 12, color: "#fff" }}>Everything feeds everything.</h2>
           <div style={{ fontSize: 14, color: "rgba(255,255,255,.65)", lineHeight: 1.65 }}>
@@ -1642,13 +1668,13 @@ function Platform({ setPage }) {
       </div>
 
       {/* FAQs */}
-      <section style={{ padding: "0 20px 48px" }}>
-        <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 24 }}>FAQs</h2>
+      <section style={{ padding: "0 20px 64px" }}>
+        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 24 }}>FAQs</h2>
         <FAQ />
       </section>
 
       {/* CTA — gradient full bleed */}
-      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 50%, #1E261F 100%)", padding: "64px 20px", textAlign: "center" }}>
+      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 50%, #1E261F 100%)", padding: "72px 20px", textAlign: "center" }}>
         <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 12, color: "#fff" }}>
           See the platform in action.
         </h2>
@@ -1668,7 +1694,7 @@ export default function RetaynedSite() {
   useEffect(() => { window.scrollTo(0, 0); }, [page]);
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Outfit', system-ui, sans-serif", color: C.text, overflowX: "hidden" }}>
+    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Outfit', system-ui, sans-serif", color: C.text }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Caveat:wght@500;600;700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1678,11 +1704,11 @@ export default function RetaynedSite() {
         .cta-btn:active { transform: translateY(0); }
         .ch-pill { transition: all 0.15s ease; }
         .ch-pill:active { transform: scale(0.97); }
-        input:focus, textarea:focus { border-color: #33543E !important; outline: none; box-shadow: 0 0 0 3px rgba(51,84,62,0.1); }
+        input:focus, textarea:focus { border-color: #5B21B6 !important; outline: none; box-shadow: 0 0 0 3px rgba(91,33,182,0.1); }
         ::-webkit-scrollbar { width: 0; }
         @keyframes flyAway { 0%{transform:translateY(0) translateX(0) rotate(0deg);opacity:1}20%{transform:translateY(-4px) translateX(2px) rotate(-1deg);opacity:1}40%{transform:translateY(-14px) translateX(8px) rotate(-3deg);opacity:.9}60%{transform:translateY(-30px) translateX(18px) rotate(-7deg);opacity:.6}80%{transform:translateY(-50px) translateX(32px) rotate(-12deg);opacity:.3}100%{transform:translateY(-75px) translateX(50px) rotate(-16deg);opacity:0} }
         .fly-away { display: inline-block; animation: flyAway 2.5s ease-out forwards; }
-        .r-wrap { max-width: 100%; margin: 0 auto; padding: 0; }
+        .r-wrap { max-width: 100%; margin: 0 auto; padding: 0; overflow-x: hidden; }
         .r-mobile-only { display: flex; }
         .r-desktop-nav { display: none !important; }
         .r-full-bleed { margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); padding-left: 20px; padding-right: 20px; }
@@ -1736,4 +1762,3 @@ export default function RetaynedSite() {
     </div>
   );
 }
-
