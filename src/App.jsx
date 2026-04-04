@@ -400,7 +400,7 @@ function Home({ setPage }) {
           <text x="16" y="22" fontSize="16" fontWeight="800" fill={C.primary} fontFamily="Outfit, sans-serif" textAnchor="middle">$</text>
         </svg>
         <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.25, textAlign: "center", margin: "0 auto", position: "relative", zIndex: 2 }}>
-          A 5% increase in retention can{" "}<span style={{ color: C.danger }}>boost profits by 95%.</span><sup style={{ fontSize: "0.4em", color: C.textMuted, verticalAlign: "super", lineHeight: 0 }}>¹</sup>
+          A 5% increase in retention can{" "}<span style={{ color: C.btn }}>boost profits by 95%.</span><sup style={{ fontSize: "0.4em", color: C.textMuted, verticalAlign: "super", lineHeight: 0 }}>¹</sup>
         </h2>
       </div>
 
@@ -569,8 +569,10 @@ function Home({ setPage }) {
 
       {/* FAQ */}
       <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px 64px" }}>
-        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 24 }}>FAQs</h2>
-        <FAQ />
+        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+          <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 24 }}>FAQs</h2>
+          <FAQ fullBleed />
+        </div>
       </div>
 
       {/* FINAL CTA */}
@@ -1489,7 +1491,7 @@ function Platform({ setPage }) {
           <text x="16" y="22" fontSize="16" fontWeight="800" fill={C.primary} fontFamily="Outfit, sans-serif" textAnchor="middle">$</text>
         </svg>
         <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.25, textAlign: "center", margin: "0 auto", position: "relative", zIndex: 2 }}>
-          A 5% increase in retention can{" "}<span style={{ color: C.danger }}>boost profits by 95%.</span><sup style={{ fontSize: "0.4em", color: C.textMuted, verticalAlign: "super", lineHeight: 0 }}>¹</sup>
+          A 5% increase in retention can{" "}<span style={{ color: C.btn }}>boost profits by 95%.</span><sup style={{ fontSize: "0.4em", color: C.textMuted, verticalAlign: "super", lineHeight: 0 }}>¹</sup>
         </h2>
       </div>
 
@@ -1668,10 +1670,12 @@ function Platform({ setPage }) {
       </div>
 
       {/* FAQs */}
-      <section style={{ padding: "0 20px 64px" }}>
-        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 24 }}>FAQs</h2>
-        <FAQ />
-      </section>
+      <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px 64px" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+          <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 24 }}>FAQs</h2>
+          <FAQ fullBleed />
+        </div>
+      </div>
 
       {/* CTA — gradient full bleed */}
       <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 50%, #1E261F 100%)", padding: "72px 20px", textAlign: "center" }}>
