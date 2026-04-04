@@ -144,7 +144,7 @@ function Nav({ page, setPage }) {
   return (
     <>
       <nav style={{ position: "sticky", top: 0, zIndex: 50, background: C.bg, borderBottom: scrolled ? "1px solid " + C.border : "1px solid transparent", boxShadow: scrolled ? "0 2px 8px rgba(0,0,0,0.06)" : "none", transition: "box-shadow 0.2s, border-color 0.2s" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", maxWidth: 1400, margin: "0 auto" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", maxWidth: 1600, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <button className="r-mobile-only" onClick={() => setOpen(!open)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2, display: "flex", alignItems: "center", zIndex: 110 }}>
@@ -543,7 +543,7 @@ function Home({ setPage }) {
 
       {/* TESTIMONIALS */}
       <section style={{ padding: "0 20px 64px" }}>
-        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>What the People Are Saying</h2>
+        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>What Folks Are Saying</h2>
         <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 24 }}>From our own Retayned business.</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
           {[
@@ -1320,10 +1320,10 @@ function FAQ({ fullBleed }) {
                 borderBottom: qi === group.questions.length - 1 ? "1px solid " + (fullBleed ? C.border : C.borderLight) : "none",
                 cursor: "pointer",
                 transition: "background 0.2s ease",
-                marginLeft: fullBleed ? -20 : "calc(-50vw + 50%)",
-                marginRight: fullBleed ? -20 : "calc(-50vw + 50%)",
-                paddingLeft: fullBleed ? 20 : "calc(50vw - 50%)",
-                paddingRight: fullBleed ? 20 : "calc(50vw - 50%)",
+                marginLeft: "calc(-50vw + 50%)",
+                marginRight: "calc(-50vw + 50%)",
+                paddingLeft: "calc(50vw - 50%)",
+                paddingRight: "calc(50vw - 50%)",
                 paddingTop: 16,
                 paddingBottom: 16,
               }}>
@@ -1668,6 +1668,32 @@ function Platform({ setPage }) {
           </div>
         </div>
       </div>
+
+      {/* TESTIMONIALS */}
+      <section style={{ padding: "0 20px 64px" }}>
+        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>What Folks Are Saying</h2>
+        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 24 }}>From our own Retayned business.</p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
+          {[
+            { quote: "I used to lose 2-3 clients a year and just accept it as cost of doing business. Retayned showed me an actual pattern. It was the same signs every time and we just ignored them. Not anymore!", name: "Agency Owner", role: "50+ Clients", stars: 5 },
+            { quote: "It gave me the exact words to say to a client I was about to lose. I had the conversation that afternoon. They're still with me 8 months later. I'm still with Retayned.", name: "Solo Operator", role: "1-5 Clients", stars: 5 },
+            { quote: "The health check questions are uncomfortable in the best way. They force you to admit what you already know but haven't said out loud. It's something we thought we'd use for crises and it's turned into our daily operations hub.", name: "Freelance Consultant", role: "10-50 Clients", stars: 5 },
+          ].map((t, i) => (
+            <div key={i} style={{ background: C.card, borderRadius: 14, padding: "24px 22px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280, display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", gap: 2, marginBottom: 12 }}>
+                {Array(t.stars).fill(0).map((_, j) => (
+                  <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>
+                ))}
+              </div>
+              <p style={{ fontSize: 15, color: C.text, lineHeight: 1.6, marginBottom: 16, fontStyle: "italic", flex: 1 }}>"{t.quote}"</p>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{t.name}</div>
+                <div style={{ fontSize: 12, color: C.textMuted }}>{t.role}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* FAQs */}
       <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px 64px" }}>
