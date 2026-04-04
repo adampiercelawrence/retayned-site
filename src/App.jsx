@@ -1299,7 +1299,7 @@ const faqGroups = [
   }
 ];
 
-function FAQ() {
+function FAQ({ fullBleed }) {
   const [openQ, setOpenQ] = useState(null);
   return (
     <div>
@@ -1314,14 +1314,14 @@ function FAQ() {
             return (
               <div key={key} onClick={() => setOpenQ(isOpen ? null : key)} style={{
                 background: isOpen ? C.card : "transparent",
-                borderTop: "1px solid " + C.borderLight,
-                borderBottom: qi === group.questions.length - 1 ? "1px solid " + C.borderLight : "none",
+                borderTop: "1px solid " + (fullBleed ? C.border : C.borderLight),
+                borderBottom: qi === group.questions.length - 1 ? "1px solid " + (fullBleed ? C.border : C.borderLight) : "none",
                 cursor: "pointer",
                 transition: "background 0.2s ease",
-                marginLeft: "calc(-50vw + 50%)",
-                marginRight: "calc(-50vw + 50%)",
-                paddingLeft: "calc(50vw - 50%)",
-                paddingRight: "calc(50vw - 50%)",
+                marginLeft: fullBleed ? -20 : "calc(-50vw + 50%)",
+                marginRight: fullBleed ? -20 : "calc(-50vw + 50%)",
+                paddingLeft: fullBleed ? 20 : "calc(50vw - 50%)",
+                paddingRight: fullBleed ? 20 : "calc(50vw - 50%)",
                 paddingTop: 16,
                 paddingBottom: 16,
               }}>
@@ -1708,7 +1708,7 @@ export default function RetaynedSite() {
         ::-webkit-scrollbar { width: 0; }
         @keyframes flyAway { 0%{transform:translateY(0) translateX(0) rotate(0deg);opacity:1}20%{transform:translateY(-4px) translateX(2px) rotate(-1deg);opacity:1}40%{transform:translateY(-14px) translateX(8px) rotate(-3deg);opacity:.9}60%{transform:translateY(-30px) translateX(18px) rotate(-7deg);opacity:.6}80%{transform:translateY(-50px) translateX(32px) rotate(-12deg);opacity:.3}100%{transform:translateY(-75px) translateX(50px) rotate(-16deg);opacity:0} }
         .fly-away { display: inline-block; animation: flyAway 2.5s ease-out forwards; }
-        .r-wrap { max-width: 100%; margin: 0 auto; padding: 0; overflow-x: hidden; }
+        .r-wrap { max-width: 100%; margin: 0 auto; padding: 0; }
         .r-mobile-only { display: flex; }
         .r-desktop-nav { display: none !important; }
         .r-full-bleed { margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); padding-left: 20px; padding-right: 20px; }
@@ -1744,6 +1744,7 @@ export default function RetaynedSite() {
       `}</style>
 
       <Nav page={page} setPage={setPage} />
+      <div style={{ overflowX: "hidden" }}>
       <div className="r-wrap">
         {page === "home" && <Home setPage={setPage} />}
         {page === "platform" && <Platform setPage={setPage} />}
@@ -1759,6 +1760,7 @@ export default function RetaynedSite() {
         {page === "terms" && <Terms />}
       </div>
       <Footer setPage={setPage} />
+      </div>
     </div>
   );
 }
