@@ -143,7 +143,7 @@ function Nav({ page, setPage }) {
   return (
     <>
       <nav style={{ position: "sticky", top: 0, zIndex: 50, background: C.bg, borderBottom: scrolled ? "1px solid " + C.border : "1px solid transparent", boxShadow: scrolled ? "0 2px 8px rgba(0,0,0,0.06)" : "none", transition: "box-shadow 0.2s, border-color 0.2s" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", maxWidth: 1600, margin: "0 auto" }}>
+        <div className="r-nav-inner" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", maxWidth: 1600, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <button className="r-mobile-only" onClick={() => setOpen(!open)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2, display: "flex", alignItems: "center", zIndex: 110 }}>
@@ -276,7 +276,7 @@ function Home({ setPage }) {
   return (
     <>
       {/* HERO */}
-      <section style={{ padding: "72px 20px 40px", textAlign: "center" }}>
+      <section className="r-hero-section" style={{ padding: "48px 20px 40px", textAlign: "center" }}>
         <div style={{ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(16px)", transition: "all 0.6s ease 0.2s", marginBottom: 20 }}>
           <h1 className="r-hero-text" style={{ fontSize: 44, fontWeight: 900, letterSpacing: "-0.045em", lineHeight: 1.08 }}>
             The CRM that{" "}
@@ -610,7 +610,7 @@ function Pricing({ setPage }) {
   return (
     <>
       <section style={{ padding: "48px 20px 24px", textAlign: "center" }}>
-        <h1 className="r-hero-text" style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.3, marginBottom: 12 }}>One client saved pays for{" "}
+        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.3, marginBottom: 12 }}>One client saved pays for{" "}
           <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
             <span style={{ color: C.textMuted }}>a year<span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} /></span>
             <span style={{ position: "absolute", top: "-0.55em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>years</span>
@@ -669,7 +669,7 @@ function About({ setPage }) {
   return (
     <>
       <section style={{ padding: "48px 20px 40px" }}>
-        <h1 className="r-hero-text" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.25, marginBottom: 16 }}>
+        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.25, marginBottom: 16 }}>
           Built by someone who's kept clients for{" "}
           <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
             <span style={{ color: C.textMuted }}>years<span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} /></span>
@@ -1124,7 +1124,7 @@ function Blog() {
   return (
     <>
       <section style={{ padding: "48px 20px 40px" }}>
-        <h1 style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Resources</h1>
+        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Resources</h1>
         <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32 }}>Interactive tools to sharpen your retention instincts. Free. No sign-up required.</p>
 
         {!activeModule ? (
@@ -1194,8 +1194,8 @@ function Blog() {
 // ═══ DEMO ═══
 function Demo() {
   return (
-    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto" }}>
-      <h1 style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get a demo</h1>
+    <section style={{ padding: "40px 20px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get a demo</h1>
       <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Add your name and email and we'll send you a prerecorded demo of the Retayned platform.</p>
       <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -1211,7 +1211,7 @@ function Demo() {
 function Contact() {
   return (
     <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto" }}>
-      <h1 style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get in Touch</h1>
+      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get in Touch</h1>
       <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Questions, feedback, partnerships, or just want to talk retention.</p>
       <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -1233,7 +1233,7 @@ function Contact() {
 // ═══ LOGIN ═══
 function Login({ setPage }) {
   return (
-    <div style={{ padding: "60px 20px 40px", maxWidth: 480, margin: "0 auto", textAlign: "center" }}>
+    <div style={{ padding: "40px 20px", maxWidth: 640, margin: "0 auto", textAlign: "center", minHeight: "calc(100vh - 160px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", marginBottom: 32 }}>
         <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
         <span style={{ fontSize: 32, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
@@ -1260,7 +1260,7 @@ function Login({ setPage }) {
 // ═══ SIGNUP ═══
 function Signup({ setPage }) {
   return (
-    <div style={{ padding: "60px 20px 40px", maxWidth: 480, margin: "0 auto", textAlign: "center" }}>
+    <div style={{ padding: "40px 20px", maxWidth: 640, margin: "0 auto", textAlign: "center", minHeight: "calc(100vh - 160px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", marginBottom: 32 }}>
         <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
         <span style={{ fontSize: 32, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
@@ -1326,9 +1326,9 @@ function FAQ({ fullBleed }) {
             const isOpen = openQ === key;
             return (
               <div key={key} onClick={() => setOpenQ(isOpen ? null : key)} style={{
-                background: isOpen ? C.card : "transparent",
-                borderTop: "1px solid " + (fullBleed ? C.border : C.borderLight),
-                borderBottom: qi === group.questions.length - 1 ? "1px solid " + (fullBleed ? C.border : C.borderLight) : "none",
+                background: isOpen ? (fullBleed ? C.card : C.primarySoft) : "transparent",
+                borderTop: "1px solid " + C.borderLight,
+                borderBottom: qi === group.questions.length - 1 ? "1px solid " + C.borderLight : "none",
                 cursor: "pointer",
                 transition: "background 0.2s ease",
                 marginLeft: "calc(-50vw + 50%)",
@@ -1356,7 +1356,7 @@ function FAQPage({ setPage }) {
   return (
     <>
       <section style={{ padding: "48px 20px 48px" }}>
-        <h1 style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 8 }}>Frequently Asked Questions</h1>
+        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 8 }}>Frequently Asked Questions</h1>
         <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32 }}>Everything you need to know about Retayned.</p>
         <FAQ />
       </section>
@@ -1373,7 +1373,7 @@ function FAQPage({ setPage }) {
 function Privacy() {
   return (
     <section style={{ padding: "48px 20px 48px", margin: "0 auto" }}>
-      <h1 style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 32 }}>Privacy Policy</h1>
+      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 32 }}>Privacy Policy</h1>
       <div style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7 }}>
         <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Last updated:</strong> March 2026</p>
         <p style={{ marginBottom: 12 }}>Retayned ("we," "our," "us") is committed to protecting the privacy of our users. This Privacy Policy describes how we collect, use, and share information when you use the Retayned platform.</p>
@@ -1391,7 +1391,7 @@ function Privacy() {
 function Terms() {
   return (
     <section style={{ padding: "48px 20px 48px", margin: "0 auto" }}>
-      <h1 style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 32 }}>Terms of Service</h1>
+      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 32 }}>Terms of Service</h1>
       <div style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7 }}>
         <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Last updated:</strong> March 2026</p>
         <p style={{ marginBottom: 12 }}>By using Retayned, you agree to these terms. Retayned provides client relationship mastery tools including retention scoring, AI-powered coaching, and communication signal analysis.</p>
@@ -1420,7 +1420,7 @@ function Platform({ setPage }) {
     <>
       {/* Hero */}
       <section style={{ padding: "72px 20px 20px" }}>
-        <h1 className="r-hero-text" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 12 }}>
+        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 12 }}>
           Your clients won't know Retayned exists.<br />They'll just stay.
         </h1>
         <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.6 }}>
@@ -1756,6 +1756,7 @@ export default function RetaynedSite() {
         .r-brain-layout { display: flex; flex-direction: column; }
         .r-brain-diagram { width: 100%; }
         .r-brain-card { margin-top: 12px; }
+        .r-page-title { }
         .r-conf-inner { border-radius: 0; }
         .r-conf-img { border-radius: 0; }
         .r-full-bleed { margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); padding-left: 20px; padding-right: 20px; }
@@ -1766,6 +1767,8 @@ export default function RetaynedSite() {
         section { }
         @media (min-width: 768px) {
           section { padding-left: 40px !important; padding-right: 40px !important; }
+          .r-nav-inner { padding-left: 40px !important; padding-right: 40px !important; }
+          .r-hero-section { padding-top: 72px !important; }
           .r-wrap { max-width: 100%; }
           .r-mobile-only { display: none !important; }
           .r-desktop-nav { display: flex !important; }
@@ -1779,7 +1782,9 @@ export default function RetaynedSite() {
         }
         @media (min-width: 1024px) {
           section { padding-left: 60px !important; padding-right: 60px !important; }
+          .r-nav-inner { padding-left: 60px !important; padding-right: 60px !important; }
           .r-hero-text { font-size: 52px !important; }
+          .r-page-title { font-size: 40px !important; }
           .r-stats { font-size: 72px !important; }
           .r-hero-center { text-align: center !important; }
           .r-hero-center p { margin-left: auto; margin-right: auto; max-width: 700px; }
@@ -1790,16 +1795,18 @@ export default function RetaynedSite() {
         }
         @media (min-width: 1280px) {
           section { padding-left: 80px !important; padding-right: 80px !important; }
+          .r-nav-inner { padding-left: 80px !important; padding-right: 80px !important; }
           .r-wrap { max-width: 1400px; margin: 0 auto; }
           .r-hero-text { font-size: 60px !important; }
+          .r-page-title { font-size: 44px !important; }
           .r-stats { font-size: 80px !important; }
           .r-full-bleed { padding-left: 80px; padding-right: 80px; }
         }
       `}</style>
 
       <Nav page={page} setPage={setPage} />
-      <div style={{ overflowX: "hidden", display: "flex", flexDirection: "column", minHeight: "calc(100vh - 60px)" }}>
-      <div className="r-wrap" style={{ flex: 1 }}>
+      <div style={{ overflowX: "hidden" }}>
+      <div className="r-wrap">
         {page === "home" && <Home setPage={setPage} />}
         {page === "platform" && <Platform setPage={setPage} />}
         {page === "pricing" && <Pricing setPage={setPage} />}
