@@ -163,14 +163,14 @@ function Nav({ page, setPage }) {
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span className="r-desktop-nav" onClick={() => setPage("login")} style={{ fontSize: 14, fontWeight: 600, color: C.textSec, cursor: "pointer", display: "flex", alignItems: "center" }}>Log In</span>
+          <span className="r-desktop-nav" onClick={() => setPage("login")} style={{ fontSize: 14, fontWeight: 600, color: C.textSec, cursor: "pointer" }}>Log In</span>
           <button className="r-desktop-nav" onClick={() => setPage("demo")} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "10px 22px", background: "transparent", border: "1.5px solid " + C.border, borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 600, color: C.text }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
               <line x1="8" y1="21" x2="16" y2="21" />
               <line x1="12" y1="17" x2="12" y2="21" />
             </svg>
-            <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.02em" }}>GET A DEMO</span>
+            <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.02em" }}>DEMO</span>
           </button>
           <button className="cta-btn" onClick={() => { setPage("signup"); setOpen(false); }} style={{ padding: "10px 22px", background: C.btn, color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
             Try Free Now
@@ -258,7 +258,7 @@ function Home({ setPage }) {
   const [activeFeat, setActiveFeat] = useState(null);
 
   useEffect(() => {
-    if (window.innerWidth >= 1024) setActiveFeat(0);
+    if (window.innerWidth >= 1024) setActiveFeat(1);
   }, []);
 
   useEffect(() => {
@@ -572,6 +572,16 @@ function Home({ setPage }) {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* CONFERENCE */}
+      <section style={{ padding: "0 20px 64px" }}>
+        <div style={{ position: "relative", borderRadius: 14, overflow: "hidden", maxWidth: 900, margin: "0 auto" }}>
+          <img src="https://i.postimg.cc/bDWFBSLN/retayned-conference.jpg" alt="AI-generated conference photo" style={{ width: "100%", display: "block", borderRadius: 14 }} />
+          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "40px 24px 24px", background: "linear-gradient(transparent, rgba(0,0,0,0.6))" }}>
+            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.85)", fontStyle: "italic", lineHeight: 1.5, maxWidth: 500 }}>We don't go to conferences. But if we did, it would probably look like this.</p>
+          </div>
         </div>
       </section>
 
@@ -1786,8 +1796,8 @@ export default function RetaynedSite() {
       `}</style>
 
       <Nav page={page} setPage={setPage} />
-      <div style={{ overflowX: "hidden" }}>
-      <div className="r-wrap">
+      <div style={{ overflowX: "hidden", display: "flex", flexDirection: "column", minHeight: "calc(100vh - 60px)" }}>
+      <div className="r-wrap" style={{ flex: 1 }}>
         {page === "home" && <Home setPage={setPage} />}
         {page === "platform" && <Platform setPage={setPage} />}
         {page === "pricing" && <Pricing setPage={setPage} />}
