@@ -163,6 +163,7 @@ function Nav({ page, setPage }) {
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span className="r-desktop-nav" onClick={() => setPage("login")} style={{ fontSize: 14, fontWeight: 600, color: C.textSec, cursor: "pointer", display: "flex", alignItems: "center" }}>Log In</span>
           <button className="r-desktop-nav" onClick={() => setPage("demo")} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "10px 22px", background: "transparent", border: "1.5px solid " + C.border, borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 600, color: C.text }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
@@ -257,13 +258,17 @@ function Home({ setPage }) {
   const [activeFeat, setActiveFeat] = useState(null);
 
   useEffect(() => {
+    if (window.innerWidth >= 1024) setActiveFeat(0);
+  }, []);
+
+  useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 100);
     const t2 = setTimeout(() => setAwayFlown(true), 3000);
     return () => { clearTimeout(t); clearTimeout(t2); };
   }, []);
 
   const features = [
-    { icon: "👤", title: "Relationship Profile", short: "Profile", desc: "12 dimensions of every relationship creating a core archetype of each client. Not metrics — personality. Rai knows the shape of every relationship and calibrates recommendations around it.", angle: -90, color: "#2E6B60" },
+    { icon: "👤", title: "Relationship Profiles", short: "Profiles", desc: "12 dimensions of every relationship creating a core archetype of each client. Not metrics — personality. Rai knows the shape of every relationship and calibrates recommendations around it.", angle: -90, color: "#2E6B60" },
     { icon: "🩺", title: "Health Checks", short: "Health", desc: "8 honest questions every month, plus performance, communication, and event tracking. This isn't 'how satisfied are they' — Rai detects drift from their baseline, not from some universal standard.", angle: -30, color: "#B88B15" },
     { icon: "💰", title: "Billing", short: "Billing", desc: "Track every invoice, line item, and add-on per client per month. Rai connects revenue data to relationship health — a client paying more but engaging less is a different risk than one doing both.", angle: 30, color: "#5B21B6" },
     { icon: "◉", title: "Today", short: "Today", desc: "Every task, every note, every client you thought about today. Including recurring and company-wide tasks. Rai notices which clients need a little more attention and which ones you're outright neglecting.", angle: 90, color: "#0D9488" },
@@ -407,46 +412,50 @@ function Home({ setPage }) {
       <section style={{ padding: "16px 16px 12px" }}>
         <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>How It Works</h2>
         <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", maxWidth: 810, margin: "0 auto 24px" }}><span style={{ fontWeight: 700 }}>Rai pays attention to every client, every day.</span> She knows that Jessica shuts down under stress, Mark is blunt and data-driven, and Sarah's looking for a new job. When something shifts, Rai catches it — and tells you what to do about it.</p>
-        <div style={{ position: "relative", width: "100%", maxWidth: 500, margin: "0 auto", aspectRatio: "1" }}>
-          <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }} viewBox="0 0 400 400">
-            <circle cx="200" cy="200" r="155" fill="none" stroke={C.border} strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
-            {features.map((f, i) => {
-              const rad = (f.angle * Math.PI) / 180;
-              const nx = 200 + 155 * Math.cos(rad), ny = 200 + 155 * Math.sin(rad);
-              const mx = 200 + 70 * Math.cos(rad) + (i % 2 === 0 ? 15 : -15), my = 200 + 70 * Math.sin(rad) + (i % 2 === 0 ? -10 : 10);
-              return (<g key={i}><path d={`M200,200 Q${mx},${my} ${nx},${ny}`} stroke={C.primaryLight} strokeWidth={activeFeat === i ? "2" : "1.5"} fill="none" opacity={activeFeat === i ? "0.6" : "0.3"} style={{ transition: "all 0.3s" }} /><path d={`M200,${195 + (i % 3) * 5} Q${mx + 8},${my - 5} ${nx},${ny}`} stroke={C.primaryLight} strokeWidth="0.7" fill="none" opacity="0.12" /><circle cx={200 + 50 * Math.cos(rad) + (i % 2 === 0 ? 4 : -4)} cy={200 + 50 * Math.sin(rad)} r="2" fill={C.primaryLight} opacity="0.25" /></g>);
-            })}
-            {features.map((f, i) => {
-              const rad = (f.angle * Math.PI) / 180;
-              const nx = 200 + 155 * Math.cos(rad), ny = 200 + 155 * Math.sin(rad);
-              const mx = 200 + 70 * Math.cos(rad) + (i % 2 === 0 ? 15 : -15), my = 200 + 70 * Math.sin(rad) + (i % 2 === 0 ? -10 : 10);
-              return (<circle key={"p" + i} r="2.5" fill={C.primary} opacity="0.45"><animateMotion dur={3 + i * 0.6 + "s"} repeatCount="indefinite" path={`M200,200 Q${mx},${my} ${nx},${ny}`} /></circle>);
-            })}
-          </svg>
-          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 2, filter: "drop-shadow(0 6px 24px rgba(30,38,31,0.3))" }}>
-            <svg width="130" height="135" viewBox="0 0 130 135" fill="none">
-              <path d="M65 18C52 18 40 22 34 28C28 34 26 42 27 48C22 52 20 58 21 64C20 70 23 77 29 82C33 88 42 94 54 96C58 97 62 97.5 65 97" fill={C.primaryDeep} stroke={C.primaryDark} strokeWidth="1.5" />
-              <path d="M65 18C78 18 90 22 96 28C102 34 104 42 103 48C108 52 110 58 109 64C110 70 107 77 101 82C97 88 88 94 76 96C72 97 68 97.5 65 97" fill={C.primaryDeep} stroke={C.primaryDark} strokeWidth="1.5" />
-              <path d="M65 20V95" stroke={C.primary} strokeWidth="1" opacity="0.35" />
-              <path d="M32 42C40 46 52 44 62 39" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.35" />
-              <path d="M25 58C36 54 48 57 62 54" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.3" />
-              <path d="M30 72C38 68 50 70 62 68" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.25" />
-              <path d="M98 42C90 46 78 44 68 39" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.35" />
-              <path d="M105 58C94 54 82 57 68 54" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.3" />
-              <path d="M100 72C92 68 80 70 68 68" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.25" />
-              <circle cx="44" cy="48" r="5" fill={C.primaryLight} opacity="0.12" /><circle cx="82" cy="52" r="6" fill={C.primaryLight} opacity="0.1" /><circle cx="54" cy="68" r="4" fill={C.primaryLight} opacity="0.15" /><circle cx="78" cy="72" r="5" fill={C.primaryLight} opacity="0.12" /><circle cx="65" cy="44" r="4" fill={C.primaryLight} opacity="0.18" />
-              <text x="65" y="118" textAnchor="middle" fill={C.primary} fontSize="10" fontWeight="700" fontFamily="Outfit, sans-serif" letterSpacing="0.06em">RAI</text>
-            </svg>
+        <div className="r-brain-layout">
+          <div className="r-brain-diagram">
+            <div style={{ position: "relative", width: "100%", maxWidth: 500, margin: "0 auto", aspectRatio: "1" }}>
+              <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }} viewBox="0 0 400 400">
+                <circle cx="200" cy="200" r="155" fill="none" stroke={C.border} strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
+                {features.map((f, i) => {
+                  const rad = (f.angle * Math.PI) / 180;
+                  const nx = 200 + 155 * Math.cos(rad), ny = 200 + 155 * Math.sin(rad);
+                  const mx = 200 + 70 * Math.cos(rad) + (i % 2 === 0 ? 15 : -15), my = 200 + 70 * Math.sin(rad) + (i % 2 === 0 ? -10 : 10);
+                  return (<g key={i}><path d={`M200,200 Q${mx},${my} ${nx},${ny}`} stroke={C.primaryLight} strokeWidth={activeFeat === i ? "2" : "1.5"} fill="none" opacity={activeFeat === i ? "0.6" : "0.3"} style={{ transition: "all 0.3s" }} /><path d={`M200,${195 + (i % 3) * 5} Q${mx + 8},${my - 5} ${nx},${ny}`} stroke={C.primaryLight} strokeWidth="0.7" fill="none" opacity="0.12" /><circle cx={200 + 50 * Math.cos(rad) + (i % 2 === 0 ? 4 : -4)} cy={200 + 50 * Math.sin(rad)} r="2" fill={C.primaryLight} opacity="0.25" /></g>);
+                })}
+                {features.map((f, i) => {
+                  const rad = (f.angle * Math.PI) / 180;
+                  const nx = 200 + 155 * Math.cos(rad), ny = 200 + 155 * Math.sin(rad);
+                  const mx = 200 + 70 * Math.cos(rad) + (i % 2 === 0 ? 15 : -15), my = 200 + 70 * Math.sin(rad) + (i % 2 === 0 ? -10 : 10);
+                  return (<circle key={"p" + i} r="2.5" fill={C.primary} opacity="0.45"><animateMotion dur={3 + i * 0.6 + "s"} repeatCount="indefinite" path={`M200,200 Q${mx},${my} ${nx},${ny}`} /></circle>);
+                })}
+              </svg>
+              <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 2, filter: "drop-shadow(0 6px 24px rgba(30,38,31,0.3))" }}>
+                <svg width="130" height="135" viewBox="0 0 130 135" fill="none">
+                  <path d="M65 18C52 18 40 22 34 28C28 34 26 42 27 48C22 52 20 58 21 64C20 70 23 77 29 82C33 88 42 94 54 96C58 97 62 97.5 65 97" fill={C.primaryDeep} stroke={C.primaryDark} strokeWidth="1.5" />
+                  <path d="M65 18C78 18 90 22 96 28C102 34 104 42 103 48C108 52 110 58 109 64C110 70 107 77 101 82C97 88 88 94 76 96C72 97 68 97.5 65 97" fill={C.primaryDeep} stroke={C.primaryDark} strokeWidth="1.5" />
+                  <path d="M65 20V95" stroke={C.primary} strokeWidth="1" opacity="0.35" />
+                  <path d="M32 42C40 46 52 44 62 39" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.35" />
+                  <path d="M25 58C36 54 48 57 62 54" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.3" />
+                  <path d="M30 72C38 68 50 70 62 68" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.25" />
+                  <path d="M98 42C90 46 78 44 68 39" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.35" />
+                  <path d="M105 58C94 54 82 57 68 54" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.3" />
+                  <path d="M100 72C92 68 80 70 68 68" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.25" />
+                  <circle cx="44" cy="48" r="5" fill={C.primaryLight} opacity="0.12" /><circle cx="82" cy="52" r="6" fill={C.primaryLight} opacity="0.1" /><circle cx="54" cy="68" r="4" fill={C.primaryLight} opacity="0.15" /><circle cx="78" cy="72" r="5" fill={C.primaryLight} opacity="0.12" /><circle cx="65" cy="44" r="4" fill={C.primaryLight} opacity="0.18" />
+                  <text x="65" y="122" textAnchor="middle" fill={C.primary} fontSize="14" fontWeight="900" fontFamily="Outfit, sans-serif" letterSpacing="0.12em">RAI</text>
+                </svg>
+              </div>
+              {features.map((f, i) => {
+                const rad = (f.angle * Math.PI) / 180;
+                const x = 50 + (155 / 200) * 50 * Math.cos(rad), y = 50 + (155 / 200) * 50 * Math.sin(rad);
+                const isA = activeFeat === i;
+                return (<div key={i} onClick={() => setActiveFeat(isA ? null : i)} style={{ position: "absolute", left: `calc(${x}% - 28px)`, top: `calc(${y}% - 28px)`, width: 56, height: 56, borderRadius: "50%", background: isA ? C.primary : C.card, border: (isA ? "2.5px solid " + C.primary : "2px solid " + C.border), display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", boxShadow: isA ? "0 4px 20px rgba(51,84,62,0.3)" : "0 2px 10px rgba(0,0,0,0.06)", zIndex: 3, cursor: "pointer", transition: "all 0.25s" }}><span style={{ fontSize: 17, lineHeight: 1 }}>{f.icon}</span><span style={{ fontSize: 7, fontWeight: 700, color: isA ? "rgba(255,255,255,.8)" : C.textMuted, marginTop: 2 }}>{f.short}</span></div>);
+              })}
+            </div>
           </div>
-          {features.map((f, i) => {
-            const rad = (f.angle * Math.PI) / 180;
-            const x = 50 + (155 / 200) * 50 * Math.cos(rad), y = 50 + (155 / 200) * 50 * Math.sin(rad);
-            const isA = activeFeat === i;
-            return (<div key={i} onClick={() => setActiveFeat(isA ? null : i)} style={{ position: "absolute", left: `calc(${x}% - 28px)`, top: `calc(${y}% - 28px)`, width: 56, height: 56, borderRadius: "50%", background: isA ? C.primary : C.card, border: (isA ? "2.5px solid " + C.primary : "2px solid " + C.border), display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", boxShadow: isA ? "0 4px 20px rgba(51,84,62,0.3)" : "0 2px 10px rgba(0,0,0,0.06)", zIndex: 3, cursor: "pointer", transition: "all 0.25s" }}><span style={{ fontSize: 17, lineHeight: 1 }}>{f.icon}</span><span style={{ fontSize: 7, fontWeight: 700, color: isA ? "rgba(255,255,255,.8)" : C.textMuted, marginTop: 2 }}>{f.short}</span></div>);
-          })}
-        </div>
-        <div style={{ maxWidth: 500, margin: "12px auto 0", minHeight: 40, opacity: activeFeat !== null ? 1 : 0, transform: activeFeat !== null ? "translateY(0)" : "translateY(8px)", transition: "all 0.3s" }}>
-          {activeFeat !== null ? (<div style={{ background: C.card, borderRadius: 14, padding: "22px", border: "2px solid " + C.primary, boxShadow: "0 4px 20px rgba(51,84,62,0.08)" }}><div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}><div style={{ width: 40, height: 40, borderRadius: 10, background: C.primary, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 700 }}>{features[activeFeat].icon}</div><h3 style={{ fontSize: 18, fontWeight: 700 }}>{features[activeFeat].title}</h3></div><p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.6 }}>{features[activeFeat].desc}</p></div>) : (<div style={{ textAlign: "center", padding: "8px 0" }}><p style={{ fontSize: 14, color: C.textMuted }}>Tap a node to explore</p></div>)}
+          <div className="r-brain-card" style={{ opacity: activeFeat !== null ? 1 : 0, transform: activeFeat !== null ? "translateY(0)" : "translateY(8px)", transition: "all 0.3s" }}>
+            {activeFeat !== null ? (<div style={{ background: C.card, borderRadius: 14, padding: "22px", border: "2px solid " + C.primary, boxShadow: "0 6px 24px rgba(51,84,62,0.12)" }}><div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}><div style={{ width: 40, height: 40, borderRadius: 10, background: C.primary, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 700 }}>{features[activeFeat].icon}</div><h3 style={{ fontSize: 18, fontWeight: 700 }}>{features[activeFeat].title}</h3></div><p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.6 }}>{features[activeFeat].desc}</p></div>) : (<div style={{ textAlign: "center", padding: "8px 0" }}><p style={{ fontSize: 14, color: C.textMuted }}>Tap a node to explore</p></div>)}
+          </div>
         </div>
       </section>
 
@@ -1142,15 +1151,6 @@ function Blog() {
         )}
       </section>
 
-      {/* WISDOM */}
-      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "56px 20px", marginBottom: 48 }}>
-        <div style={{ margin: "0 auto", textAlign: "center" }}>
-          <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.3)", marginBottom: 16 }}>Retayned Wisdom</div>
-          <blockquote style={{ fontSize: 21, fontWeight: 600, lineHeight: 1.45, letterSpacing: "-0.02em", margin: 0, color: "#fff" }}>"The conversation you're avoiding is the one that saves the account."</blockquote>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,.38)", marginTop: 16, lineHeight: 1.5 }}>Retayned doesn't help you avoid hard conversations. It just helps you have them.</p>
-        </div>
-      </div>
-
       {/* Blog Posts */}
       <section style={{ padding: "0 20px 48px" }}>
         <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 16 }}>From the Blog</h2>
@@ -1414,7 +1414,7 @@ function Platform({ setPage }) {
       {/* Hero */}
       <section style={{ padding: "72px 20px 20px" }}>
         <h1 className="r-hero-text" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 12 }}>
-          Your clients won't know Retayned exists. They'll just stay.
+          Your clients won't know Retayned exists.<br />They'll just stay.
         </h1>
         <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.6 }}>
           Retayned is built on something no one else has: a proprietary retention engine trained on over a decade of real client relationships. Our AI isn't just smart, it's <strong>emotionally intelligent</strong>.
@@ -1531,7 +1531,7 @@ function Platform({ setPage }) {
               <path d="M105 58C94 54 82 57 68 54" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.3" />
               <path d="M100 72C92 68 80 70 68 68" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.25" />
               <circle cx="44" cy="48" r="5" fill={C.primaryLight} opacity="0.12" /><circle cx="82" cy="52" r="6" fill={C.primaryLight} opacity="0.1" /><circle cx="54" cy="68" r="4" fill={C.primaryLight} opacity="0.15" /><circle cx="78" cy="72" r="5" fill={C.primaryLight} opacity="0.12" /><circle cx="65" cy="44" r="4" fill={C.primaryLight} opacity="0.18" />
-              <text x="65" y="118" textAnchor="middle" fill={C.primary} fontSize="10" fontWeight="700" fontFamily="Outfit, sans-serif" letterSpacing="0.06em">RAI</text>
+              <text x="65" y="122" textAnchor="middle" fill={C.primary} fontSize="14" fontWeight="900" fontFamily="Outfit, sans-serif" letterSpacing="0.12em">RAI</text>
             </svg>
           </div>
           {[[-90,"👤","Profiles"],[-30,"🩺","Health"],[30,"💰","Billing"],[90,"◉","Today"],[150,"📇","Rolodex"],[210,"🤝","Referrals"]].map(([angle, icon, label], i) => {
@@ -1555,6 +1555,7 @@ function Platform({ setPage }) {
               <div key={i} onClick={() => setActiveF(isOpen ? null : i)} style={{
                 background: C.card, borderRadius: 14, padding: "24px 22px",
                 border: isOpen ? "2px solid " + C.primary : "1.5px solid " + C.border,
+                boxShadow: isOpen ? "0 6px 24px rgba(51,84,62,0.12)" : "0 2px 8px rgba(0,0,0,0.04)",
                 cursor: "pointer", transition: "all 0.2s ease",
               }}>
                 <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
@@ -1745,6 +1746,9 @@ export default function RetaynedSite() {
         .r-wrap { max-width: 100%; margin: 0 auto; padding: 0; }
         .r-mobile-only { display: flex; }
         .r-desktop-nav { display: none !important; }
+        .r-brain-layout { display: flex; flex-direction: column; }
+        .r-brain-diagram { width: 100%; }
+        .r-brain-card { margin-top: 12px; }
         .r-full-bleed { margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); padding-left: 20px; padding-right: 20px; }
         .r-no-pad { padding-left: 0 !important; padding-right: 0 !important; }
         .r-stat-graphic-left { width: 60px !important; height: 45px !important; left: 12px !important; bottom: -8px !important; opacity: 0.12 !important; }
@@ -1764,15 +1768,19 @@ export default function RetaynedSite() {
         @media (min-width: 1024px) {
           section { padding-left: 60px !important; padding-right: 60px !important; }
           .r-hero-text { font-size: 52px !important; }
-          .r-stats { font-size: 56px !important; }
+          .r-stats { font-size: 72px !important; }
           .r-hero-center { text-align: center !important; }
           .r-hero-center p { margin-left: auto; margin-right: auto; max-width: 700px; }
+          .r-brain-layout { flex-direction: row; align-items: center; gap: 40px; max-width: 1000px; margin: 0 auto; padding-bottom: 20px; }
+          .r-brain-diagram { flex: 0 0 55%; }
+          .r-brain-card { flex: 1; margin-top: 0; }
           .r-full-bleed { padding-left: 60px; padding-right: 60px; }
         }
         @media (min-width: 1280px) {
           section { padding-left: 80px !important; padding-right: 80px !important; }
           .r-wrap { max-width: 1400px; margin: 0 auto; }
           .r-hero-text { font-size: 60px !important; }
+          .r-stats { font-size: 80px !important; }
           .r-full-bleed { padding-left: 80px; padding-right: 80px; }
         }
       `}</style>
