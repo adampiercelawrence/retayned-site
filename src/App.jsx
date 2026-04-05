@@ -134,9 +134,9 @@ function Nav({ page, setPage }) {
   }, []);
   const links = [
     { id: "platform", label: "Platform" },
-    { id: "pricing", label: "Pricing" },
     { id: "about", label: "About" },
     { id: "blog", label: "Resources" },
+    { id: "pricing", label: "Pricing" },
     { id: "contact", label: "Contact" },
     { id: "login", label: "Log In" },
   ];
@@ -283,18 +283,19 @@ function Home({ setPage }) {
       <section style={{ padding: "72px 20px 40px", textAlign: "center" }}>
         <div style={{ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(16px)", transition: "all 0.6s ease 0.2s", marginBottom: 20 }}>
           <h1 className="r-hero-text" style={{ fontSize: 44, fontWeight: 900, letterSpacing: "-0.045em", lineHeight: 1.08 }}>
-            <span style={{ position: "relative", display: "inline-block" }}>
+            The CRM that{" "}
+            <span style={{ position: "relative", display: "inline-block", marginTop: "0.25em" }}>
               <span style={{ color: C.textMuted, position: "relative" }}>
-                Customer
+                predicts
                 <span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: loaded ? "108%" : "0%", transition: "width 0.5s ease 0.7s", borderRadius: 2, transform: "rotate(-1deg)" }} />
               </span>
-              <span style={{ position: "absolute", top: "-0.75em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.65em", fontWeight: 700, color: C.primary, opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 1.2s", whiteSpace: "nowrap" }}>Client</span>
+              <span style={{ position: "absolute", top: "-0.7em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, color: C.primary, opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 1.2s", whiteSpace: "nowrap" }}>prevents</span>
             </span>
-            {" "}Relationship Management
+            {" "}client churn.
           </h1>
         </div>
         <div style={{ fontSize: 16, lineHeight: 1.6, color: C.textSec, maxWidth: 810, margin: "0 auto 28px", opacity: loaded ? 1 : 0, transition: "all 0.5s ease 0.4s" }}>
-          <p style={{ marginBottom: 6, fontWeight: 600, color: C.text }}>The clients you lose are savable.</p>
+          <p style={{ marginBottom: 6, fontWeight: 600, color: C.text }}>Stop losing clients you should have kept.</p>
           <p>Traditional CRMs track deals and contacts. Retayned tracks the health of relationships — giving you client-specific solutions to keep (and grow) the business you've earned.</p>        </div>
         <div style={{ opacity: loaded ? 1 : 0, transition: "all 0.5s ease 0.6s", maxWidth: 400, margin: "0 auto 12px" }}>
           <button className="cta-btn" onClick={() => setPage("signup")} style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
@@ -576,11 +577,11 @@ function Home({ setPage }) {
       </section>
 
       {/* CONFERENCE */}
-      <div className="r-full-bleed" style={{ padding: "0", marginBottom: 0 }}>
-        <div style={{ position: "relative" }}>
-          <img src="/retayned-conference.jpg" alt="AI-generated conference photo" style={{ width: "100%", display: "block" }} />
+      <div className="r-full-bleed r-conf" style={{ padding: 0, marginBottom: 0 }}>
+        <div className="r-conf-inner" style={{ position: "relative", margin: "0 auto" }}>
+          <img src="/retayned-conference.jpg" alt="AI-generated conference photo" style={{ width: "100%", display: "block" }} className="r-conf-img" />
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "40px 24px 24px", background: "linear-gradient(transparent, rgba(0,0,0,0.6))" }}>
-            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.85)", fontStyle: "italic", lineHeight: 1.5, maxWidth: 500 }}>We don't go to conferences. But if we did, it would probably look like this.</p>
+            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.85)", fontStyle: "italic", lineHeight: 1.5, maxWidth: 500 }}>We don't go to conferences. But if we did, it might look something like this.</p>
           </div>
         </div>
       </div>
@@ -1759,6 +1760,8 @@ export default function RetaynedSite() {
         .r-brain-layout { display: flex; flex-direction: column; }
         .r-brain-diagram { width: 100%; }
         .r-brain-card { margin-top: 12px; }
+        .r-conf-inner { border-radius: 0; }
+        .r-conf-img { border-radius: 0; }
         .r-full-bleed { margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); padding-left: 20px; padding-right: 20px; }
         .r-no-pad { padding-left: 0 !important; padding-right: 0 !important; }
         .r-stat-graphic-left { width: 60px !important; height: 45px !important; left: 12px !important; bottom: -8px !important; opacity: 0.12 !important; }
@@ -1774,6 +1777,9 @@ export default function RetaynedSite() {
           .r-stat-graphic-left { width: 120px !important; height: 90px !important; left: 120px !important; bottom: -14px !important; opacity: 0.14 !important; }
           .r-stat-graphic-right { width: 120px !important; height: 90px !important; right: 120px !important; top: -16px !important; opacity: 0.14 !important; }
           .r-stat-accent-left, .r-stat-accent-right { display: block !important; }
+          .r-conf-inner { max-width: 900px; border-radius: 14px; overflow: hidden; }
+          .r-conf-img { border-radius: 14px; }
+          .r-conf { padding: 0 40px !important; margin-bottom: 0; }
         }
         @media (min-width: 1024px) {
           section { padding-left: 60px !important; padding-right: 60px !important; }
