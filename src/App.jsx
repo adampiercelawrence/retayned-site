@@ -255,11 +255,7 @@ function Home({ setPage }) {
   const [email, setEmail] = useState("");
   const [email2, setEmail2] = useState("");
   const [awayFlown, setAwayFlown] = useState(false);
-  const [activeFeat, setActiveFeat] = useState(null);
-
-  useEffect(() => {
-    if (window.innerWidth >= 1024) setActiveFeat(1);
-  }, []);
+  const [activeFeat, setActiveFeat] = useState(1);
 
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 100);
@@ -410,7 +406,7 @@ function Home({ setPage }) {
       </div>
 
       {/* BRAIN */}
-      <section style={{ padding: "16px 16px 12px" }}>
+      <section style={{ padding: "16px 16px 48px" }}>
         <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>How It Works</h2>
         <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", maxWidth: 810, margin: "0 auto 24px" }}><span style={{ fontWeight: 700 }}>Rai pays attention to every client, every day.</span> She knows that Jessica shuts down under stress, Mark is blunt and data-driven, and Sarah's looking for a new job. When something shifts, Rai catches it — and tells you what to do about it.</p>
         <div className="r-brain-layout">
@@ -1779,7 +1775,7 @@ export default function RetaynedSite() {
           .r-stat-accent-left, .r-stat-accent-right { display: block !important; }
           .r-conf-inner { max-width: 900px; border-radius: 14px; overflow: hidden; }
           .r-conf-img { border-radius: 14px; }
-          .r-conf { padding: 0 40px !important; margin-bottom: 0; }
+          .r-conf { padding: 0 40px !important; margin-bottom: 64px !important; }
         }
         @media (min-width: 1024px) {
           section { padding-left: 60px !important; padding-right: 60px !important; }
