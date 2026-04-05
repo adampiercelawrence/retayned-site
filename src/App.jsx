@@ -137,7 +137,6 @@ function Nav({ page, setPage }) {
     { id: "pricing", label: "Pricing" },
     { id: "about", label: "About" },
     { id: "blog", label: "Resources" },
-    { id: "faq", label: "FAQs" },
     { id: "contact", label: "Contact" },
     { id: "login", label: "Log In" },
   ];
@@ -353,7 +352,7 @@ function Home({ setPage }) {
             </div>
           </div>
         </div>
-        <p style={{ fontSize: 10, color: C.textMuted, textAlign: "center", marginTop: 8 }}>Dramatization based on client input data.</p>
+        <p style={{ fontSize: 10, color: C.textMuted, textAlign: "center", marginTop: 8 }}>Based on sample client data.</p>
       </section>
 
       {/* STATEMENT */}
@@ -578,7 +577,7 @@ function Home({ setPage }) {
       {/* FINAL CTA */}
       <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 50%, #1E261F 100%)", padding: "72px 20px", textAlign: "center" }}>
         <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 12, color: "#fff" }}>You work too hard to get new clients. Keep them Retayned.</h2>
-        <p style={{ fontSize: 17, color: "rgba(255,255,255,.6)", marginBottom: 24, lineHeight: 1.5 }}>See the signal. Make the changes. Keep the client.</p>
+        <p style={{ fontSize: 17, color: "rgba(255,255,255,.6)", marginBottom: 24, lineHeight: 1.5 }}>See the signal. Get the script. Keep the client.</p>
         <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "14px 32px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
       </div>
     </>
@@ -643,7 +642,7 @@ function Pricing({ setPage }) {
       </section>
       <section style={{ padding: "48px 20px 64px", textAlign: "center" }}>
         <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 12 }}>You work too hard to get new clients. Keep them Retayned.</h2>
-        <p style={{ fontSize: 17, color: C.textSec, lineHeight: 1.5 }}>See the signal. Make the changes. Keep the client.</p>
+        <p style={{ fontSize: 17, color: C.textSec, lineHeight: 1.5 }}>See the signal. Get the script. Keep the client.</p>
       </section>
     </>
   );
@@ -1143,6 +1142,15 @@ function Blog() {
         )}
       </section>
 
+      {/* WISDOM */}
+      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "56px 20px", marginBottom: 48 }}>
+        <div style={{ margin: "0 auto", textAlign: "center" }}>
+          <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.3)", marginBottom: 16 }}>Retayned Wisdom</div>
+          <blockquote style={{ fontSize: 21, fontWeight: 600, lineHeight: 1.45, letterSpacing: "-0.02em", margin: 0, color: "#fff" }}>"The conversation you're avoiding is the one that saves the account."</blockquote>
+          <p style={{ fontSize: 14, color: "rgba(255,255,255,.38)", marginTop: 16, lineHeight: 1.5 }}>Retayned doesn't help you avoid hard conversations. It just helps you have them.</p>
+        </div>
+      </div>
+
       {/* Blog Posts */}
       <section style={{ padding: "0 20px 48px" }}>
         <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 16 }}>From the Blog</h2>
@@ -1178,19 +1186,15 @@ function Blog() {
 }
 // ═══ DEMO ═══
 function Demo() {
-  const [demoDate, setDemoDate] = useState("");
-  const [demoTime, setDemoTime] = useState("");
   return (
     <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto" }}>
       <h1 style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get a demo</h1>
-      <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Let us show you through the Retayned platform.</p>
+      <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Add your name and email and we'll send you a prerecorded demo of the Retayned platform.</p>
       <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Name</label><input style={inputStyle} placeholder="Your name" /></div>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Email</label><input style={inputStyle} placeholder="you@agency.com" type="email" /></div>
-          <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Preferred date</label><input type="date" value={demoDate} onChange={e => setDemoDate(e.target.value)} style={inputStyle} /></div>
-          <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Preferred time</label><input type="time" value={demoTime} onChange={e => setDemoTime(e.target.value)} style={inputStyle} /></div>
-          <button className="cta-btn" style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Book a Demo</button>
+          <button className="cta-btn" style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Send Me the Demo</button>
         </div>
       </div>
     </section>
@@ -1413,7 +1417,7 @@ function Platform({ setPage }) {
           Your clients won't know Retayned exists. They'll just stay.
         </h1>
         <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.6 }}>
-          Retayned is built on something no one else has: a proprietary retention engine trained on over a decade of real client relationships. Our AI isn't just smart, it's emotionally intelligent.
+          Retayned is built on something no one else has: a proprietary retention engine trained on over a decade of real client relationships. Our AI isn't just smart, it's <strong>emotionally intelligent</strong>.
         </p>
       </section>
 
@@ -1456,7 +1460,7 @@ function Platform({ setPage }) {
             </div>
           </div>
         </div>
-        <p style={{ fontSize: 10, color: C.textMuted, textAlign: "center", marginTop: 8 }}>Dramatization based on client input data.</p>
+        <p style={{ fontSize: 10, color: C.textMuted, textAlign: "center", marginTop: 8 }}>Based on sample client data.</p>
       </section>
 
       {/* STATEMENT */}
@@ -1498,7 +1502,7 @@ function Platform({ setPage }) {
       {/* Brain graphic */}
       <section style={{ padding: "0 16px 32px" }}>
         <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>Emotionally Intelligent</h2>
-        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 16 }}>We built Rai to help strengthen working relationships, not replace them. You know your clients. She just makes sure you don't lose one by surprise.</p>
+        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 16 }}>We built Rai to strengthen working relationships, not replace them. You know your clients. She just makes sure you don't lose one by surprise.</p>
         <div style={{ position: "relative", width: "100%", maxWidth: 500, margin: "0 auto", aspectRatio: "1" }}>
           <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }} viewBox="0 0 400 400">
             <circle cx="200" cy="200" r="155" fill="none" stroke={C.border} strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
