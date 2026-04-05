@@ -1192,7 +1192,7 @@ function Blog() {
 // ═══ DEMO ═══
 function Demo() {
   return (
-    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto" }}>
+    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get a Demo</h1>
       <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Get a prerecorded demo of the Retayned platform!</p>
       <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border }}>
@@ -1214,7 +1214,7 @@ function Demo() {
 // ═══ CONTACT ═══
 function Contact() {
   return (
-    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto" }}>
+    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get in Touch</h1>
       <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Questions, feedback, partnerships, or just want to talk retention.</p>
       <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border }}>
