@@ -330,8 +330,8 @@ function Home({ setPage }) {
                 <div style={{ fontSize: 11, fontWeight: 700, color: C.danger, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>🚨 Alert</div>
                 <div style={{ background: "#FAE8E4", borderRadius: 8, border: "1px solid " + C.danger + "44", overflow: "hidden" }}>
                   <div style={{ padding: "10px 14px" }}>
-                    <p style={{ fontSize: 14, color: C.danger, fontWeight: 700, lineHeight: 1.4 }}>Foxglove Partners: Email Tom today with a brief update on a net-new task.</p>
-                    <p style={{ fontSize: 12, color: C.danger + "aa", fontWeight: 400, lineHeight: 1.4, marginTop: 4 }}>Tom may be pulling back, which he has done once before when he was dissatisfied. This is a great opportunity to protect the contract.</p>
+                    <p style={{ fontSize: 14, color: C.danger, fontWeight: 700, lineHeight: 1.4 }}>Foxglove Partners: Email Tom today with something new — not a follow-up.</p>
+                    <p style={{ fontSize: 12, color: C.danger + "aa", fontWeight: 400, lineHeight: 1.4, marginTop: 4 }}>Tom's pulling back. You're overdue on a fresh campaign for his account — get something in front of him before your next call. Keep it brief. He'll notice the effort more than the detail.</p>
                   </div>
                   <div style={{ display: "flex", borderTop: "1px solid " + C.danger + "22" }}>
                     <div style={{ flex: 1, padding: "7px", textAlign: "center", fontSize: 12, fontWeight: 600, color: C.danger, borderRight: "1px solid " + C.danger + "22" }}>Add to Today's Tasks</div>
@@ -1192,15 +1192,21 @@ function Blog() {
 // ═══ DEMO ═══
 function Demo() {
   return (
-    <section style={{ padding: "48px 20px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto" }}>
       <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get a Demo</h1>
-      <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Add your name and email and we'll send you a prerecorded demo of the Retayned platform.</p>
+      <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Get a prerecorded demo of the Retayned platform!</p>
       <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Name</label><input style={inputStyle} placeholder="Your name" /></div>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Email</label><input style={inputStyle} placeholder="you@agency.com" type="email" /></div>
+          <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Message</label><textarea style={{ ...inputStyle, minHeight: 120, resize: "vertical" }} placeholder="What parts of the platform do you want to see? What features are you most interested in?" /></div>
           <button className="cta-btn" style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Send Me the Demo</button>
         </div>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 24 }}>
+        {[["Email", "hello@retayned.com"], ["Based in", "Washington, DC"], ["Response time", "Usually within a few hours"]].map(([l, v], i) => (
+          <div key={i} style={{ background: C.card, borderRadius: 12, padding: "16px 20px", border: "1px solid " + C.border }}><div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{l}</div><div style={{ fontSize: 14, color: C.textSec }}>{v}</div></div>
+        ))}
       </div>
     </section>
   );
@@ -1231,7 +1237,7 @@ function Contact() {
 // ═══ LOGIN ═══
 function Login({ setPage }) {
   return (
-    <div style={{ padding: "40px 20px", maxWidth: 640, margin: "0 auto", textAlign: "center", minHeight: "calc(100vh - 160px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", marginBottom: 32 }}>
         <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
         <span style={{ fontSize: 32, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
@@ -1251,14 +1257,14 @@ function Login({ setPage }) {
         </div>
         <p style={{ fontSize: 13, color: C.textMuted, marginTop: 16 }}>Don't have an account? <span onClick={() => setPage("signup")} style={{ color: C.primary, fontWeight: 600, cursor: "pointer" }}>Start free trial</span></p>
       </div>
-    </div>
+    </section>
   );
 }
 
 // ═══ SIGNUP ═══
 function Signup({ setPage }) {
   return (
-    <div style={{ padding: "40px 20px", maxWidth: 640, margin: "0 auto", textAlign: "center", minHeight: "calc(100vh - 160px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", marginBottom: 32 }}>
         <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
         <span style={{ fontSize: 32, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
@@ -1279,7 +1285,7 @@ function Signup({ setPage }) {
         </div>
         <p style={{ fontSize: 13, color: C.textMuted, marginTop: 16 }}>Already have an account? <span onClick={() => setPage("login")} style={{ color: C.primary, fontWeight: 600, cursor: "pointer" }}>Sign in</span></p>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -1370,7 +1376,7 @@ function FAQPage({ setPage }) {
 // ═══ PRIVACY ═══
 function Privacy() {
   return (
-    <section style={{ padding: "48px 20px 48px", margin: "0 auto" }}>
+    <section style={{ padding: "48px 20px 48px", margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 32 }}>Privacy Policy</h1>
       <div style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7 }}>
         <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Last updated:</strong> March 2026</p>
@@ -1388,7 +1394,7 @@ function Privacy() {
 // ═══ TERMS ═══
 function Terms() {
   return (
-    <section style={{ padding: "48px 20px 48px", margin: "0 auto" }}>
+    <section style={{ padding: "48px 20px 48px", margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 32 }}>Terms of Service</h1>
       <div style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7 }}>
         <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Last updated:</strong> March 2026</p>
@@ -1443,8 +1449,8 @@ function Platform({ setPage }) {
                 <div style={{ fontSize: 11, fontWeight: 700, color: C.danger, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>🚨 Alert</div>
                 <div style={{ background: "#FAE8E4", borderRadius: 8, border: "1px solid " + C.danger + "44", overflow: "hidden" }}>
                   <div style={{ padding: "10px 14px" }}>
-                    <p style={{ fontSize: 14, color: C.danger, fontWeight: 700, lineHeight: 1.4 }}>Foxglove Partners: Email Tom today with a brief update on a net-new task.</p>
-                    <p style={{ fontSize: 12, color: C.danger + "aa", fontWeight: 400, lineHeight: 1.4, marginTop: 4 }}>Tom may be pulling back, which he has done once before when he was dissatisfied. This is a great opportunity to protect the contract.</p>
+                    <p style={{ fontSize: 14, color: C.danger, fontWeight: 700, lineHeight: 1.4 }}>Foxglove Partners: Email Tom today with something new — not a follow-up.</p>
+                    <p style={{ fontSize: 12, color: C.danger + "aa", fontWeight: 400, lineHeight: 1.4, marginTop: 4 }}>Tom's pulling back. You're overdue on a fresh campaign for his account — get something in front of him before your next call. Keep it brief. He'll notice the effort more than the detail.</p>
                   </div>
                   <div style={{ display: "flex", borderTop: "1px solid " + C.danger + "22" }}>
                     <div style={{ flex: 1, padding: "7px", textAlign: "center", fontSize: 12, fontWeight: 600, color: C.danger, borderRight: "1px solid " + C.danger + "22" }}>Add to Today's Tasks</div>
