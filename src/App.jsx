@@ -279,15 +279,13 @@ function Home({ setPage }) {
       <section className="r-hero-section" style={{ padding: "48px 20px 40px", textAlign: "center" }}>
         <div style={{ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(16px)", transition: "all 0.6s ease 0.2s", marginBottom: 20 }}>
           <h1 className="r-hero-text" style={{ fontSize: 44, fontWeight: 900, letterSpacing: "-0.045em", lineHeight: 1.08 }}>
-            The CRM that{" "}
+            The CRM that predicts{" "}
             <span style={{ position: "relative", display: "inline-block", marginTop: "0.25em" }}>
-              <span style={{ color: C.textMuted, position: "relative" }}>
-                predicts
-                <span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: loaded ? "108%" : "0%", transition: "width 0.5s ease 0.7s", borderRadius: 2, transform: "rotate(-1deg)" }} />
-              </span>
-              <span style={{ position: "absolute", top: "-0.7em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, color: C.primary, opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 1.2s", whiteSpace: "nowrap" }}>prevents</span>
+              <style>{`@keyframes drawCaret { 0% { opacity: 0; transform: translateX(-0.3em); } 100% { opacity: 1; transform: translateX(0); } }`}</style>
+              <span style={{ color: C.danger, fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, display: "inline-block", width: 0, overflow: "visible", textAlign: "center", position: "relative", top: "-0.3em", left: "-0.15em", opacity: 0, animation: loaded ? "drawCaret 0.3s ease-out 0.7s forwards" : "none" }}>^</span>
+              <span style={{ position: "absolute", bottom: "1.1em", left: "50%", transform: "translateX(-55%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, color: C.primary, opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 1.2s", whiteSpace: "nowrap" }}>and prevents</span>
             </span>
-            {" "}client churn.
+            {" "}churn.
           </h1>
         </div>
         <div style={{ fontSize: 16, lineHeight: 1.6, color: C.textSec, maxWidth: 810, margin: "0 auto 28px", opacity: loaded ? 1 : 0, transition: "all 0.5s ease 0.4s" }}>
@@ -610,7 +608,7 @@ function Pricing({ setPage }) {
   return (
     <>
       <section style={{ padding: "48px 20px 24px", textAlign: "center" }}>
-        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.3, marginBottom: 12 }}>One client saved pays for{" "}
+        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 12 }}>One client saved pays for{" "}
           <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
             <span style={{ color: C.textMuted }}>a year<span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} /></span>
             <span style={{ position: "absolute", top: "-0.55em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>years</span>
@@ -669,7 +667,7 @@ function About({ setPage }) {
   return (
     <>
       <section style={{ padding: "48px 20px 40px" }}>
-        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.25, marginBottom: 16 }}>
+        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 16 }}>
           Built by someone who's kept clients for{" "}
           <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
             <span style={{ color: C.textMuted }}>years<span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} /></span>
@@ -1194,8 +1192,8 @@ function Blog() {
 // ═══ DEMO ═══
 function Demo() {
   return (
-    <section style={{ padding: "40px 20px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get a demo</h1>
+    <section style={{ padding: "48px 20px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get a Demo</h1>
       <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Add your name and email and we'll send you a prerecorded demo of the Retayned platform.</p>
       <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -1419,7 +1417,7 @@ function Platform({ setPage }) {
   return (
     <>
       {/* Hero */}
-      <section style={{ padding: "72px 20px 20px" }}>
+      <section style={{ padding: "48px 20px 20px" }}>
         <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 12 }}>
           Your clients won't know Retayned exists.<br />They'll just stay.
         </h1>
