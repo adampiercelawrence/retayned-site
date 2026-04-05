@@ -578,7 +578,7 @@ function Home({ setPage }) {
       {/* CONFERENCE */}
       <div className="r-full-bleed" style={{ padding: "0", marginBottom: 0 }}>
         <div style={{ position: "relative" }}>
-          <img src="https://i.postimg.cc/bDWFBSLN/retayned-conference.jpg" alt="AI-generated conference photo" style={{ width: "100%", display: "block" }} />
+          <img src="/retayned-conference.jpg" alt="AI-generated conference photo" style={{ width: "100%", display: "block" }} />
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "40px 24px 24px", background: "linear-gradient(transparent, rgba(0,0,0,0.6))" }}>
             <p style={{ fontSize: 15, color: "rgba(255,255,255,0.85)", fontStyle: "italic", lineHeight: 1.5, maxWidth: 500 }}>We don't go to conferences. But if we did, it would probably look like this.</p>
           </div>
