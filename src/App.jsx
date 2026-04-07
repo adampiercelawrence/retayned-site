@@ -602,8 +602,9 @@ function Home({ setPage }) {
 function Pricing({ setPage }) {
   const [annual, setAnnual] = useState(true);
   const tiers = [
-    { name: "Starter", desc: "Solopreneurs and freelancers", monthly: 39, annual: 29, clients: "Up to 15 clients", hl: false, features: ["Client registry + profiles", "12-dimension relationship scoring", "Health check assessments", "AI Coach — unlimited", "Retention scoring engine", "3 channel integrations", "Email support"] },
-    { name: "Growth", desc: "Agencies and teams", monthly: 99, annual: 79, clients: "Unlimited clients", hl: true, features: ["Everything in Starter, plus:", "Up to 5 team members", "Unlimited integrations", "Unlimited Rolodex", "Additional velocity detection", "Manager dashboard", "Priority support"] },
+    { name: "Starter", desc: "Freelancers and solos", monthly: 29, annual: 19, clients: "Up to 10 clients", hl: false, features: ["Client registry + profiles", "Retention scoring engine", "Health check assessments", "Daily suggested tasks", "Unlimited Rai chats", "20 Rolodex slots", "Email support"] },
+    { name: "Growth", desc: "Small, agile teams", monthly: 49, annual: 39, clients: "Up to 50 clients", hl: true, features: ["Everything in Starter, plus:", "Up to 2 team members", "2 channel integrations", "Additional velocity detection", "Additional task suggestions", "100 Rolodex slots", "Priority support"] },
+    { name: "Scale", desc: "Large, complex teams", monthly: 249, annual: 199, clients: "Up to 500 clients", hl: false, features: ["Everything in Starter, plus:", "Manager dashboard", "Up to 20 team members", "Unlimited channel integrations", "Unlimited Rolodex slots", "Additional velocity detection", "Custom setup and support"] },
   ];
   return (
     <>
@@ -621,9 +622,9 @@ function Pricing({ setPage }) {
         </div>
       </section>
       <section style={{ padding: "24px 16px 48px" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 16, maxWidth: 1200, margin: "0 auto", justifyContent: "center" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 16, maxWidth: 1400, margin: "0 auto", justifyContent: "center" }}>
           {tiers.map((t, i) => (
-            <div key={i} style={{ background: t.hl ? C.heroGrad : C.card, borderRadius: 16, padding: "28px 24px", border: t.hl ? "none" : "1.5px solid " + C.border, color: t.hl ? "#fff" : C.text, position: "relative", overflow: "hidden", flex: "1 1 280px", maxWidth: 340, minWidth: 280 }}>
+            <div key={i} style={{ background: t.hl ? C.heroGrad : C.card, borderRadius: 16, padding: "28px 24px", border: t.hl ? "none" : "1.5px solid " + C.border, color: t.hl ? "#fff" : C.text, position: "relative", overflow: "hidden", flex: "1 1 260px", maxWidth: 320, minWidth: 260 }}>
               {t.hl && <div style={{ position: "absolute", top: 14, right: -28, background: "#fff", color: C.primary, fontSize: 10, fontWeight: 700, padding: "4px 32px", transform: "rotate(45deg)" }}>POPULAR</div>}
               <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: t.hl ? "rgba(255,255,255,.5)" : C.textMuted, marginBottom: 4 }}>{t.name}</div>
               <div style={{ fontSize: 14, color: t.hl ? "rgba(255,255,255,.65)" : C.textSec, marginBottom: 16 }}>{t.desc}</div>
@@ -635,16 +636,16 @@ function Pricing({ setPage }) {
             </div>
           ))}
           {/* Enterprise */}
-          <div style={{ background: C.card, borderRadius: 16, border: "1.5px solid " + C.border, padding: "28px 24px", position: "relative", overflow: "hidden", flex: "1 1 280px", maxWidth: 340, minWidth: 280 }}>
+          <div style={{ background: C.card, borderRadius: 16, border: "1.5px solid " + C.border, padding: "28px 24px", position: "relative", overflow: "hidden", flex: "1 1 260px", maxWidth: 320, minWidth: 260 }}>
             <div style={{ position: "absolute", top: 28, right: -36, background: C.danger, color: "#fff", fontSize: 9, fontWeight: 700, padding: "5px 44px", transform: "rotate(45deg)", letterSpacing: ".04em", textAlign: "center" }}>COMING SOON</div>
             <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.textMuted, marginBottom: 4 }}>Enterprise</div>
-            <div style={{ fontSize: 14, color: C.textSec, marginBottom: 16 }}>Relationship intelligence for AI agents</div>
+            <div style={{ fontSize: 14, color: C.textSec, marginBottom: 16 }}>Retention intelligence API</div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 4 }}><span style={{ fontSize: 44, fontWeight: 900, letterSpacing: "-0.03em" }}>Let's Talk</span></div>
             <div style={{ marginBottom: 16 }} />
-            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 16, color: C.text }}>API + integration layer</div>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 16, color: C.text }}>Unlimited clients</div>
             <button onClick={() => setPage("contact")} className="cta-btn" style={{ width: "100%", padding: "13px 20px", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginBottom: 20, background: C.btn, color: "#fff", border: "none" }}>Contact Us</button>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {["Client archetype classification API", "Response protocols", "Behavioral guardrails", "Multi-tenant data isolation", "Outcome-trained rec engine", "Custom archetype training", "Dedicated integration support"].map((f, j) => (
+              {["API + integration layer", "Response protocols", "Behavioral guardrails", "Multi-tenant data isolation", "Custom archetype training", "Dedicated integration setup", "Agent-assisted support"].map((f, j) => (
                 <div key={j} style={{ display: "flex", gap: 8, fontSize: 13, lineHeight: 1.4 }}>
                   <span style={{ color: C.primaryLight }}>✓</span>
                   <span style={{ color: C.textSec }}>{f}</span>
