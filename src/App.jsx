@@ -164,7 +164,7 @@ function Nav({ page, setPage }) {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <span className="r-desktop-nav" onClick={() => setPage("login")} style={{ fontSize: 14, fontWeight: 600, color: C.textSec, cursor: "pointer" }}>Log In</span>
-          <button className="r-desktop-nav" onClick={() => setPage("demo")} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "10px 22px", background: "transparent", border: "1.5px solid " + C.border, borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 600, color: C.text }}>
+          <button className="r-desktop-nav" onClick={() => setPage("demo")} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 16px", background: "transparent", border: "1.5px solid " + C.border, borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 600, color: C.text }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
               <line x1="8" y1="21" x2="16" y2="21" />
@@ -554,7 +554,7 @@ function Home({ setPage }) {
             { quote: "It gave me the exact words to say to a client I was about to lose. I had the conversation that afternoon. They're still with me 8 months later. I'm still with Retayned.", name: "Solo Operator", role: "1-5 Clients", stars: 5 },
             { quote: "The health check questions are uncomfortable in the best way. They force you to admit what you already know but haven't said out loud. It's something we thought we'd use for crises and it's turned into our daily operations hub.", name: "Freelance Consultant", role: "10-50 Clients", stars: 5 },
           ].map((t, i) => (
-            <div key={i} style={{ background: C.card, borderRadius: 14, padding: "24px 22px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280, display: "flex", flexDirection: "column" }}>
+            <div key={i} style={{ background: C.card, borderRadius: 14, padding: "24px 22px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280, display: "flex", flexDirection: "column", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
               <div style={{ display: "flex", gap: 2, marginBottom: 12 }}>
                 {Array(t.stars).fill(0).map((_, j) => (
                   <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>
@@ -601,8 +601,10 @@ function Home({ setPage }) {
 // ═══ PRICING ═══
 function Pricing({ setPage }) {
   const [annual, setAnnual] = useState(true);
+  const [clientCount, setClientCount] = useState(5);
+  const calcClientCost = (n) => n * 1;
   const tiers = [
-    { name: "Starter", desc: "Freelancers and solos", monthly: 29, annual: 19, clients: "Up to 10 clients", hl: false, features: ["Client registry + profiles", "Retention scoring engine", "Health check assessments", "Daily suggested tasks", "Unlimited Rai chats", "20 Rolodex slots", "Email support"] },
+    { name: "Starter", desc: "Freelancers and solos", monthly: 29, annual: 19, clients: "Up to 10 clients", hl: false, features: ["Client registry + profiles", "Retention scoring engine", "Monthly health checks", "Suggested tasks daily", "Unlimited Rai client chats", "20 Rolodex slots", "Email support"] },
     { name: "Growth", desc: "Small, agile teams", monthly: 49, annual: 39, clients: "Up to 50 clients", hl: true, features: ["Everything in Starter, plus:", "Up to 2 team members", "2 channel integrations", "Additional velocity detection", "Additional task suggestions", "100 Rolodex slots", "Priority support"] },
     { name: "Scale", desc: "Large, complex teams", monthly: 249, annual: 199, clients: "Up to 500 clients", hl: false, features: ["Everything in Starter, plus:", "Manager dashboard", "Up to 20 team members", "Unlimited channel integrations", "Unlimited Rolodex slots", "Additional velocity detection", "Custom setup and support"] },
   ];
@@ -616,49 +618,59 @@ function Pricing({ setPage }) {
           </span>{" "}of Retayned.
         </h1>
         <p style={{ fontSize: 16, color: C.textSec, marginBottom: 24 }}>The math works. Still not convinced? Try it free for 14 days. 🤝</p>
-        <div style={{ display: "inline-flex", gap: 12, padding: "4px 6px", background: C.surface, borderRadius: 10 }}>
-          <button onClick={() => setAnnual(true)} style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13, fontWeight: 600, fontFamily: "inherit", cursor: "pointer", background: annual ? C.primary : "transparent", color: annual ? "#fff" : C.textMuted }}>Annual <span style={{ fontSize: 11, opacity: 0.8 }}>save 25%</span></button>
-          <button onClick={() => setAnnual(false)} style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13, fontWeight: 600, fontFamily: "inherit", cursor: "pointer", background: !annual ? C.primary : "transparent", color: !annual ? "#fff" : C.textMuted }}>Monthly</button>
-        </div>
       </section>
-      <section style={{ padding: "24px 16px 48px" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 16, maxWidth: 1400, margin: "0 auto", justifyContent: "center" }}>
-          {tiers.map((t, i) => (
-            <div key={i} style={{ background: t.hl ? C.heroGrad : C.card, borderRadius: 16, padding: "28px 24px", border: t.hl ? "none" : "1.5px solid " + C.border, color: t.hl ? "#fff" : C.text, position: "relative", overflow: "hidden", flex: "1 1 260px", maxWidth: 320, minWidth: 260 }}>
-              {t.hl && <div style={{ position: "absolute", top: 14, right: -28, background: "#fff", color: C.primary, fontSize: 10, fontWeight: 700, padding: "4px 32px", transform: "rotate(45deg)" }}>POPULAR</div>}
-              <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: t.hl ? "rgba(255,255,255,.5)" : C.textMuted, marginBottom: 4 }}>{t.name}</div>
-              <div style={{ fontSize: 14, color: t.hl ? "rgba(255,255,255,.65)" : C.textSec, marginBottom: 16 }}>{t.desc}</div>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 4 }}><span style={{ fontSize: 44, fontWeight: 900, letterSpacing: "-0.03em" }}>${annual ? t.annual : t.monthly}</span><span style={{ fontSize: 14, color: t.hl ? "rgba(255,255,255,.5)" : C.textMuted }}>/mo</span></div>
-              <div style={{ marginBottom: 16 }} />
-              <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 16, color: t.hl ? "rgba(255,255,255,.8)" : C.text }}>{t.clients}</div>
-              <button className="cta-btn" style={{ width: "100%", padding: "13px 20px", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginBottom: 20, background: t.hl ? "#fff" : C.btn, color: t.hl ? C.btn : "#fff", border: "none" }}>Start Free Trial</button>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>{t.features.map((f, j) => (<div key={j} style={{ display: "flex", gap: 8, fontSize: 13, lineHeight: 1.4 }}>{!(j === 0 && i > 0) && <span style={{ color: t.hl ? "rgba(255,255,255,.5)" : C.primaryLight }}>✓</span>}<span style={{ color: t.hl ? "rgba(255,255,255,.8)" : C.textSec, fontWeight: j === 0 && i > 0 ? 700 : 400 }}>{f}</span></div>))}</div>
+      <section style={{ padding: "0 20px 48px" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto" }}>
+          {/* Main pricing card — full width */}
+          <div style={{ background: `linear-gradient(to bottom, ${C.card} 55%, ${C.primarySoft} 100%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "36px 32px", marginBottom: 24, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: C.textMuted, marginBottom: 20, textAlign: "center" }}>One plan. Every feature. Impossibly easy.</div>
+            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4, marginBottom: 4 }}>
+              <span style={{ fontSize: 52, fontWeight: 900, letterSpacing: "-0.03em" }}>$19.99</span>
+              <span style={{ fontSize: 15, color: C.textMuted }}>/mo</span>
             </div>
-          ))}
-          {/* Enterprise */}
-          <div style={{ background: C.card, borderRadius: 16, border: "1.5px solid " + C.border, padding: "28px 24px", position: "relative", overflow: "hidden", flex: "1 1 260px", maxWidth: 320, minWidth: 260 }}>
+            <div style={{ fontSize: 16, color: C.textSec, marginBottom: 28, lineHeight: 1.5, textAlign: "center" }}>+ <span style={{ fontWeight: 700 }}>$1 per Client</span></div>
+            <p style={{ fontSize: 14, color: C.textSec, textAlign: "center", marginBottom: 28 }}>Solve your business's most consequential problem for less than a Netflix subscription.</p>
+
+            <button className="cta-btn" onClick={() => setPage("signup")} style={{ width: "100%", padding: "14px 20px", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: C.btn, color: "#fff", border: "none", marginBottom: 28 }}>Start Free Trial</button>
+
+            {/* Features */}
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.primary, marginBottom: 16, textAlign: "center" }}>Everything's included</div>
+              <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
+                {["Suggested tasks daily", "Dynamic client scoring", "Monthly health checks", "Dedicated, priority support", "Unlimited chats with Rai", "Unlimited Rolodex slots", "Unlimited team members", "Unlimited linked channels"].map((f, j) => (
+                  <span key={j} style={{ fontSize: 13, color: C.text, padding: "8px 14px", borderRadius: 10, background: "rgba(51,84,62,0.06)", border: "1px solid " + C.borderLight, fontWeight: 500 }}>{f}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Enterprise bridge */}
+          <div style={{ textAlign: "center", padding: "16px 0 12px" }}>
+            <h2 style={{ fontSize: 21, fontWeight: 600, letterSpacing: "-0.02em", color: C.text }}>Working on something bigger?</h2>
+            <p style={{ fontSize: 14, color: C.textSec, marginTop: 6 }}>Embed retention intelligence into your ecosystem.</p>
+          </div>
+
+          {/* Enterprise — gradient matching pricing card */}
+          <div style={{ background: `linear-gradient(to bottom, ${C.card} 70%, ${C.primarySoft} 100%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "36px 32px", position: "relative", overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
             <div style={{ position: "absolute", top: 28, right: -36, background: C.danger, color: "#fff", fontSize: 9, fontWeight: 700, padding: "5px 44px", transform: "rotate(45deg)", letterSpacing: ".04em", textAlign: "center" }}>COMING SOON</div>
-            <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.textMuted, marginBottom: 4 }}>Enterprise</div>
-            <div style={{ fontSize: 14, color: C.textSec, marginBottom: 16 }}>Retention intelligence API</div>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 4 }}><span style={{ fontSize: 44, fontWeight: 900, letterSpacing: "-0.03em" }}>Let's Talk</span></div>
-            <div style={{ marginBottom: 16 }} />
-            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 16, color: C.text }}>Unlimited clients</div>
-            <button onClick={() => setPage("contact")} className="cta-btn" style={{ width: "100%", padding: "13px 20px", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginBottom: 20, background: C.btn, color: "#fff", border: "none" }}>Contact Us</button>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {["API + integration layer", "Response protocols", "Behavioral guardrails", "Multi-tenant data isolation", "Custom archetype training", "Dedicated integration setup", "Agent-assisted support"].map((f, j) => (
-                <div key={j} style={{ display: "flex", gap: 8, fontSize: 13, lineHeight: 1.4 }}>
-                  <span style={{ color: C.primaryLight }}>✓</span>
-                  <span style={{ color: C.textSec }}>{f}</span>
-                </div>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.textMuted, marginBottom: 4 }}>Enterprise</div>
+            <div style={{ fontSize: 14, color: C.textSec, marginBottom: 16 }}>Account management as an API.</div>
+            <div style={{ fontSize: 40, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 20 }}>Let's Talk</div>
+            <button onClick={() => setPage("contact")} className="cta-btn" style={{ width: "100%", padding: "13px 20px", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginBottom: 24, background: C.btn, color: "#fff", border: "none" }}>Contact Us</button>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.primary, marginBottom: 16, textAlign: "center" }}>Built for AI agents and large teams</div>
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
+              {["API + integration layer", "Response protocols", "Behavioral guardrails", "Multi-tenant data isolation", "Custom archetype training", "Dedicated integration setup", "Agent-assisted support", "White-label deployment"].map((f, j) => (
+                <span key={j} style={{ fontSize: 13, color: C.text, padding: "6px 14px", borderRadius: 20, background: "rgba(51,84,62,0.06)", border: "1px solid " + C.borderLight, fontWeight: 500 }}>{f}</span>
               ))}
             </div>
           </div>
         </div>
       </section>
-      <section style={{ padding: "48px 20px 64px", textAlign: "center" }}>
-        <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 12 }}>You work too hard to get new clients. Keep them Retayned.</h2>
-        <p style={{ fontSize: 17, color: C.textSec, lineHeight: 1.5 }}>See the signal. Get the script. Keep the client.</p>
-      </section>
+      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 50%, #1E261F 100%)", padding: "72px 20px", textAlign: "center" }}>
+        <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 12, color: "#fff" }}>You work too hard to get new clients. Keep them Retayned.</h2>
+        <p style={{ fontSize: 17, color: "rgba(255,255,255,.6)", marginBottom: 24, lineHeight: 1.5 }}>See the signal. Get the script. Keep the client.</p>
+        <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "14px 32px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
+      </div>
     </>
   );
 }
@@ -690,7 +702,7 @@ function About({ setPage }) {
       </section>
 
       <section style={{ padding: "0 20px 40px" }}>
-        <div style={{ background: C.card, borderRadius: 14, padding: "28px 24px", border: "1px solid " + C.border }}>
+        <div style={{ background: C.card, borderRadius: 14, padding: "28px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
           <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.textMuted, marginBottom: 16 }}>The backstory</div>
           <div style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>
             <p style={{ marginBottom: 14 }}>Adam Lawrence spent most of his career running a paid social agency, managing campaigns and client relationships for agencies, DTC brands, and enterprise clients.</p>
@@ -1129,7 +1141,7 @@ function Blog() {
         {!activeModule ? (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
             {modules.map((m, i) => (
-              <div key={i} onClick={() => { reset(); setActiveModule(m.id); window.scrollTo(0, 0); }} style={{ background: C.card, borderRadius: 14, padding: "24px 22px", border: "1.5px solid " + C.border, cursor: "pointer", flex: "1 1 280px", minWidth: 280 }}>
+              <div key={i} onClick={() => { reset(); setActiveModule(m.id); window.scrollTo(0, 0); }} style={{ background: C.card, borderRadius: 14, padding: "24px 22px", border: "1.5px solid " + C.border, cursor: "pointer", flex: "1 1 280px", minWidth: 280, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
                   <span style={{ fontSize: 32 }}>{m.emoji}</span>
                   <div style={{ display: "flex", gap: 6 }}>
@@ -1146,7 +1158,7 @@ function Blog() {
         ) : (
           <div style={{ }}>
             <button onClick={reset} style={{ background: "none", border: "none", fontSize: 13, fontWeight: 600, color: C.textMuted, cursor: "pointer", fontFamily: "inherit", marginBottom: 16, padding: 0 }}>← Back to all tools</button>
-            <div style={{ background: C.card, borderRadius: 14, padding: "28px 24px", border: "1.5px solid " + C.border }}>
+            <div style={{ background: C.card, borderRadius: 14, padding: "28px 24px", border: "1.5px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
                 <span style={{ fontSize: 28 }}>{modules.find(m => m.id === activeModule)?.emoji}</span>
                 <h2 style={{ fontSize: 20, fontWeight: 800 }}>{modules.find(m => m.id === activeModule)?.title}</h2>
@@ -1167,7 +1179,7 @@ function Blog() {
             { title: "What 50 lost clients taught us about communication velocity", desc: "When response times double, cancellation follows within 8 weeks.", tag: "Signals" },
             { title: "How to have the conversation you're avoiding", desc: "The opening line matters more than you think. We break down the script.", tag: "AI Coach" },
           ].map((p, i) => (
-            <div key={i} style={{ background: C.card, borderRadius: 14, padding: "24px 22px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280 }}>
+            <div key={i} style={{ background: C.card, borderRadius: 14, padding: "24px 22px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
               <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
                 <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", background: C.primarySoft, color: C.primary, borderRadius: 4 }}>{p.tag}</span>
                 <span style={{ fontSize: 11, color: C.textMuted, padding: "3px 0" }}>Coming soon</span>
@@ -1196,7 +1208,7 @@ function Demo() {
     <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get a Demo</h1>
       <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Get a prerecorded demo of the Retayned platform!</p>
-      <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border }}>
+      <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Name</label><input style={inputStyle} placeholder="Your name" /></div>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Email</label><input style={inputStyle} placeholder="you@agency.com" type="email" /></div>
@@ -1206,7 +1218,7 @@ function Demo() {
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 24 }}>
         {[["Email", "hello@retayned.com"], ["Based in", "Washington, DC"], ["Response time", "Usually within a few hours"]].map(([l, v], i) => (
-          <div key={i} style={{ background: C.card, borderRadius: 12, padding: "16px 20px", border: "1px solid " + C.border }}><div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{l}</div><div style={{ fontSize: 14, color: C.textSec }}>{v}</div></div>
+          <div key={i} style={{ background: C.card, borderRadius: 12, padding: "16px 20px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}><div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{l}</div><div style={{ fontSize: 14, color: C.textSec }}>{v}</div></div>
         ))}
       </div>
     </section>
@@ -1218,7 +1230,7 @@ function Contact() {
     <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get in Touch</h1>
       <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Questions, feedback, partnerships, or just want to talk retention.</p>
-      <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border }}>
+      <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Name</label><input style={inputStyle} placeholder="Your name" /></div>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Email</label><input style={inputStyle} placeholder="you@agency.com" type="email" /></div>
@@ -1228,7 +1240,7 @@ function Contact() {
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 24 }}>
         {[["Email", "hello@retayned.com"], ["Based in", "Washington, DC"], ["Response time", "Usually within a few hours"]].map(([l, v], i) => (
-          <div key={i} style={{ background: C.card, borderRadius: 12, padding: "16px 20px", border: "1px solid " + C.border }}><div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{l}</div><div style={{ fontSize: 14, color: C.textSec }}>{v}</div></div>
+          <div key={i} style={{ background: C.card, borderRadius: 12, padding: "16px 20px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}><div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{l}</div><div style={{ fontSize: 14, color: C.textSec }}>{v}</div></div>
         ))}
       </div>
     </section>
@@ -1243,7 +1255,7 @@ function Login({ setPage }) {
         <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
         <span style={{ fontSize: 32, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
       </div>
-      <div style={{ background: C.card, borderRadius: 16, padding: "32px 24px", border: "1px solid " + C.border }}>
+      <div style={{ background: C.card, borderRadius: 16, padding: "32px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
         <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>Welcome back.</h1>
         <p style={{ fontSize: 14, color: C.textMuted, marginBottom: 24 }}>Sign in to your account.</p>
         <button style={{ width: "100%", padding: "13px 16px", borderRadius: 10, border: "1.5px solid " + C.border, background: C.card, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: C.text, marginBottom: 20 }}>
@@ -1270,7 +1282,7 @@ function Signup({ setPage }) {
         <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
         <span style={{ fontSize: 32, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
       </div>
-      <div style={{ background: C.card, borderRadius: 16, padding: "32px 24px", border: "1px solid " + C.border }}>
+      <div style={{ background: C.card, borderRadius: 16, padding: "32px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
         <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>Start your free trial.</h1>
         <p style={{ fontSize: 14, color: C.textMuted, marginBottom: 24 }}>14 days free. No credit card required.</p>
         <button style={{ width: "100%", padding: "13px 16px", borderRadius: 10, border: "1.5px solid " + C.border, background: C.card, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: C.text, marginBottom: 20 }}>
@@ -1297,21 +1309,21 @@ const faqGroups = [
     questions: [
       { q: "What is Retayned?", a: "Retayned is a new client relationship management platform built for agencies, freelancers, consultants, stylists, coaches...anyone who manages ongoing client relationships. It combines AI-powered retention scoring with communication signal tracking and 10+ years of proprietary client retention data and expertise. Retayned doesn't just tell you which clients need attention — it gives you the exact action steps and script to turn a potential loss into lifelong business." },
       { q: "How is this different from a CRM?", a: "Traditional CRMs track deals and contacts. Retayned tracks the health of relationships. It profiles how each client communicates, monitors engagement velocity across your channels, and uses AI to predict churn well before it happens. A CRM tells you who your clients are. Retayned tells you how your clients are feeling and what to do to make things better." },
-      { q: "What does the AI actually do?", a: "Retayned AI ingests several inputs — relationship profiles, health checks, velocity signals, deliverable tracking, billing, and more — then generates personalized action points. It tells you who to talk to today, what the real problem is, and gives you an opening to delight your clients." },
+      { q: "What does the AI actually do?", a: "Rai ingests several inputs — relationship profiles, health checks, velocity signals, deliverable tracking, billing, and more — then generates personalized action points. It tells you who to talk to today, what the real problem is, and gives you an opening to delight your clients." },
       { q: "Who is this built for?", a: "Anyone who manages one or more ongoing client relationships. Agency owners, freelancers, consultants, stylists, coaches, account managers. If losing a client changes your month, quarter, or year, Retayned is for you." },
     ]
   },
   {
     label: "Pricing & Plans",
     questions: [
-      { q: "What does it cost?", a: "Plans start at $29/mo for Starter (up to 15 clients). Growth is $79/mo (unlimited clients, 5 team members). Enterprise pricing is custom to your specs. Every plan includes a 14-day free trial — cancel anytime." },
+      { q: "What does it cost?", a: "It couldn't be simpler. $19.99/mo plus $1 per client. One plan, every feature, no tiers. Whether you have 3 clients or 300, you get the full platform — unlimited Rai chats, dynamic scoring, health checks, integrations, team members, everything. Enterprise pricing is available for teams building AI agents. Every plan includes a 14-day free trial." },
     ]
   },
   {
     label: "Getting Started",
     questions: [
       { q: "Do I need to connect my email or Slack?", a: "Nope. The core platform — profiles, health checks, AI coaching, and deliverable tracking — works without any integrations. Channel connections unlock additional velocity detection and automated signals, but you can start without them and add integrations when you're ready." },
-      { q: "How long does setup take?", a: "Minutes. Add your clients, score their relationship profiles, and you're in. The AI starts generating insights immediately. Channel integrations take a few clicks each when you're ready for them." },
+      { q: "How long does setup take?", a: "Minutes. Add your clients, score their relationship profiles, and you're in. The AI starts generating insights immediately. Connect every channel take a few clicks each when you're ready for them." },
       { q: "Is my client data safe?", a: "Yes. We access communication metadata (timestamps, response frequency) — not message content. Your data is encrypted in transit and at rest, hosted on secure US infrastructure. We don't sell your data or use it to train AI models. You own everything you put in." },
     ]
   }
@@ -1380,13 +1392,52 @@ function Privacy() {
     <section style={{ padding: "48px 20px 48px", margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 32 }}>Privacy Policy</h1>
       <div style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7 }}>
-        <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Last updated:</strong> March 2026</p>
-        <p style={{ marginBottom: 12 }}>Retayned ("we," "our," "us") is committed to protecting the privacy of our users. This Privacy Policy describes how we collect, use, and share information when you use the Retayned platform.</p>
-        <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Information we collect.</strong> We collect information you provide directly: account details (name, email, company), client data you enter into the platform, and health check responses. When you connect integrations (email, calendar, Slack), we access metadata (timestamps, response frequency) — we do not read message content.</p>
-        <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>How we use it.</strong> To provide the Retayned service: generating retention scores, powering Retayned AI, calculating communication velocity, and surfacing signals. We do not sell your data. We do not use your client data to train AI models.</p>
-        <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Data retention.</strong> Your data is stored as long as your account is active. If you cancel, your data is deleted within 90 days. You can request immediate deletion at any time.</p>
-        <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Security.</strong> Industry-standard encryption for data in transit and at rest. Hosted on secure cloud infrastructure in the United States.</p>
-        <p><strong style={{ color: C.text }}>Contact.</strong> privacy@retayned.com</p>
+        <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Last updated:</strong> April 2026</p>
+        <p style={{ marginBottom: 20 }}>Retayned, operated by Maniac Digital, LLC ("Retayned," "we," "our," "us"), is committed to protecting the privacy of our users. This Privacy Policy describes how we collect, use, store, and share information when you use the Retayned platform, website (retayned.com), and related services (collectively, the "Service").</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>1. Information We Collect</strong></p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Account Information.</strong> When you register, we collect your name, email address, company name, and billing information. If you sign up via Google OAuth, we receive your name and email from Google. We do not store your Google password.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Client Data.</strong> You may enter client names, contact information, relationship profiles, health check responses, billing records, notes, and other client-related data into the Service ("Client Data"). You control what Client Data you provide.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Integration Data.</strong> When you connect third-party integrations (Gmail, Google Calendar, Slack, Zoom, or others), we access metadata such as timestamps, sender/recipient identifiers, meeting frequency, and response latency. We do not read, store, or process the content of your emails, messages, or meeting transcripts. We access only the metadata necessary to calculate communication velocity and engagement signals.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Usage Data.</strong> We automatically collect information about how you interact with the Service, including pages viewed, features used, session duration, device type, browser type, IP address, and referring URLs.</p>
+        <p style={{ marginBottom: 20 }}><strong style={{ color: C.text }}>Cookies and Tracking.</strong> We use essential cookies to maintain your session and preferences. We use analytics tools to understand usage patterns. We do not use third-party advertising cookies. You may disable non-essential cookies through your browser settings.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>2. How We Use Your Information</strong></p>
+        <p style={{ marginBottom: 8 }}>We use the information we collect to: provide, operate, and maintain the Service; generate retention scores, health assessments, and AI-powered recommendations through Rai; calculate communication velocity and engagement signals from integration metadata; process payments and manage your subscription; send transactional communications (account confirmations, billing notices, security alerts); respond to support requests; improve the Service based on aggregated, anonymized usage patterns; and comply with legal obligations.</p>
+        <p style={{ marginBottom: 20 }}>We do not sell, rent, or lease your personal information or Client Data to third parties. We do not use your Client Data for advertising purposes.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>3. AI and Data Processing</strong></p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>How Rai Works.</strong> Retayned's AI advisor ("Rai") processes your Client Data — including relationship profiles, health check responses, billing data, and integration metadata — to generate personalized recommendations, retention scores, and suggested actions. Rai is powered by third-party AI models accessed via API (currently Anthropic's Claude). Your Client Data is sent to these AI providers solely to generate responses within your session.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>No Model Training.</strong> We do not use your Client Data to train, fine-tune, or improve any AI or machine learning models — ours or any third party's. Your data is used exclusively to provide the Service to you. Our AI API providers are contractually prohibited from using your data for model training.</p>
+        <p style={{ marginBottom: 20 }}><strong style={{ color: C.text }}>Data Minimization.</strong> We send only the minimum Client Data necessary for Rai to generate relevant recommendations. We do not send your full account data, billing information, or credentials to AI providers.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>4. Data Sharing and Third Parties</strong></p>
+        <p style={{ marginBottom: 8 }}>We share information only in the following circumstances: with service providers who help us operate the Service (hosting, payment processing, AI API providers, analytics), subject to contractual obligations to protect your data; with your consent or at your direction; to comply with applicable law, regulation, legal process, or governmental request; to protect the rights, safety, or property of Retayned, our users, or the public; and in connection with a merger, acquisition, or sale of assets, in which case you will be notified of any change in data practices.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Key Service Providers.</strong> Hosting and infrastructure: Railway / cloud providers (United States). Payment processing: Stripe. AI API: Anthropic. Authentication: Supabase. Analytics: privacy-respecting analytics tools.</p>
+        <p style={{ marginBottom: 20 }}>All service providers are bound by data processing agreements and are prohibited from using your data for their own purposes.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>5. Data Security</strong></p>
+        <p style={{ marginBottom: 20 }}>We implement industry-standard security measures to protect your data, including: encryption of data in transit (TLS 1.2+) and at rest (AES-256); secure authentication with password hashing and optional OAuth; access controls limiting employee access to production data; regular security reviews of our infrastructure and dependencies; and secure API communication with all third-party providers. No method of transmission or storage is 100% secure. While we strive to protect your data, we cannot guarantee absolute security.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>6. Data Retention and Deletion</strong></p>
+        <p style={{ marginBottom: 8 }}>We retain your account information and Client Data for as long as your account is active. If you cancel your subscription, your data will be retained in an inactive state for 30 days to allow for reactivation, after which it will be permanently deleted within 90 days. You may request immediate deletion of your account and all associated data at any time by contacting privacy@retayned.com. Certain data may be retained as required by law (e.g., billing records for tax purposes) even after account deletion.</p>
+        <p style={{ marginBottom: 20 }}>Anonymized, aggregated data that cannot be used to identify you or your clients may be retained indefinitely for product improvement purposes.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>7. Your Rights</strong></p>
+        <p style={{ marginBottom: 8 }}>Depending on your jurisdiction, you may have the right to: access, correct, or delete your personal information; export your Client Data in a portable format; restrict or object to certain processing of your data; withdraw consent where processing is based on consent; and lodge a complaint with a supervisory authority.</p>
+        <p style={{ marginBottom: 20 }}>To exercise any of these rights, contact us at privacy@retayned.com. We will respond within 30 days.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>8. International Data Transfers</strong></p>
+        <p style={{ marginBottom: 20 }}>Retayned is based in Washington, DC, United States. If you access the Service from outside the United States, your information may be transferred to, stored, and processed in the United States. By using the Service, you consent to the transfer of your information to the United States, where data protection laws may differ from those in your jurisdiction.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>9. Children's Privacy</strong></p>
+        <p style={{ marginBottom: 20 }}>The Service is not directed to individuals under the age of 18. We do not knowingly collect personal information from children. If we become aware that we have collected data from a child, we will delete it promptly.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>10. Changes to This Policy</strong></p>
+        <p style={{ marginBottom: 20 }}>We may update this Privacy Policy from time to time. We will notify you of material changes by posting the updated policy on the Service and updating the "Last updated" date. Your continued use of the Service after any changes constitutes acceptance of the updated policy.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>11. Contact Us</strong></p>
+        <p>If you have questions about this Privacy Policy or our data practices, contact us at: privacy@retayned.com — Maniac Digital, LLC, Washington, DC, United States.</p>
       </div>
     </section>
   );
@@ -1398,12 +1449,72 @@ function Terms() {
     <section style={{ padding: "48px 20px 48px", margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 32 }}>Terms of Service</h1>
       <div style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7 }}>
-        <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Last updated:</strong> March 2026</p>
-        <p style={{ marginBottom: 12 }}>By using Retayned, you agree to these terms. Retayned provides client relationship mastery tools including retention scoring, AI-powered coaching, and communication signal analysis.</p>
-        <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Your data.</strong> You retain ownership of all data you enter into Retayned. We do not claim any rights to your client data, health check responses, or relationship profiles.</p>
-        <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Retayned AI.</strong> Retayned AI provides suggestions and scripts based on your client data. These are recommendations, not guarantees. You are responsible for your client relationships and communications.</p>
-        <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Payment.</strong> Paid plans are billed monthly or annually. Cancel anytime. Refunds within 14 days. Free trials require a credit card.</p>
-        <p><strong style={{ color: C.text }}>Contact.</strong> legal@retayned.com</p>
+        <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Last updated:</strong> April 2026</p>
+        <p style={{ marginBottom: 20 }}>These Terms of Service ("Terms") govern your access to and use of the Retayned platform, website, and related services (collectively, the "Service") provided by Maniac Digital, LLC ("Retayned," "we," "our," "us"). By creating an account or using the Service, you agree to be bound by these Terms. If you do not agree, do not use the Service.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>1. Eligibility and Account</strong></p>
+        <p style={{ marginBottom: 8 }}>You must be at least 18 years old and have the legal authority to enter into these Terms. If you are using the Service on behalf of an organization, you represent that you have the authority to bind that organization to these Terms. You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. You agree to notify us immediately of any unauthorized use of your account.</p>
+        <p style={{ marginBottom: 20 }}>You agree to provide accurate, current, and complete information during registration and to keep your account information updated.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>2. The Service</strong></p>
+        <p style={{ marginBottom: 8 }}>Retayned provides client relationship management tools including AI-powered retention scoring, communication signal analysis, health check assessments, suggested daily actions, a client relationship advisor ("Rai"), and related features. The Service is designed to help you manage and strengthen client relationships. We reserve the right to modify, suspend, or discontinue any part of the Service at any time with reasonable notice.</p>
+        <p style={{ marginBottom: 20 }}>The Service may include integrations with third-party platforms (Gmail, Google Calendar, Slack, Zoom, and others). Your use of these integrations is also subject to the terms and privacy policies of those third-party providers.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>3. Your Data</strong></p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Ownership.</strong> You retain full ownership of all data you enter into the Service, including client information, relationship profiles, health check responses, billing records, notes, and any other content you provide ("Your Data"). We do not claim any intellectual property rights over Your Data.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>License to Us.</strong> You grant Retayned a limited, non-exclusive, worldwide license to use, process, and store Your Data solely for the purpose of providing and improving the Service. This license terminates when you delete your account or Your Data.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Data Portability.</strong> You may export Your Data at any time while your account is active. Upon account termination, you may request an export within 30 days before permanent deletion.</p>
+        <p style={{ marginBottom: 20 }}><strong style={{ color: C.text }}>Your Responsibilities.</strong> You are responsible for the accuracy and legality of Your Data. You represent that you have the right to enter client information into the Service and that doing so does not violate any confidentiality agreement, privacy law, or other obligation. You are responsible for obtaining any necessary consents from your clients regarding the storage and processing of their information.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>4. AI-Powered Features</strong></p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Rai and AI Outputs.</strong> The Service includes AI-powered features, including the Rai advisor, retention scoring, and suggested actions. These features are powered by third-party AI models accessed via API. AI-generated recommendations, scores, scripts, and suggestions ("AI Outputs") are provided for informational purposes only and do not constitute professional advice of any kind — including legal, financial, or business advice.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>No Guarantees.</strong> AI Outputs are generated based on the data you provide and may not be accurate, complete, or appropriate for your specific situation. You are solely responsible for evaluating and acting on AI Outputs. Retayned does not guarantee any specific business outcome, client retention rate, or revenue result from using the Service or following AI Outputs.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>No Training on Your Data.</strong> We do not use Your Data to train, fine-tune, or improve any AI or machine learning models. Your Data is processed in real-time to generate responses and is not retained by our AI providers beyond the duration of the API request, in accordance with their data processing agreements.</p>
+        <p style={{ marginBottom: 20 }}><strong style={{ color: C.text }}>Human Oversight.</strong> You acknowledge that all actions taken based on AI Outputs are your own decisions. You should exercise your own professional judgment before acting on any recommendation provided by the Service.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>5. Payment and Billing</strong></p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Subscription Plans.</strong> The Service is offered on a subscription basis. Current pricing is displayed on our pricing page. Prices are subject to change with 30 days' notice. Subscription fees are non-refundable except as described below.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Free Trial.</strong> We may offer a free trial period. At the end of the trial, your subscription will begin automatically unless you cancel before the trial ends. We will notify you before charging.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Billing.</strong> Fees are billed in advance on a monthly or annual basis, depending on your chosen plan. Payment is processed through Stripe. You authorize us to charge your payment method on file for all applicable fees.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Cancellation.</strong> You may cancel your subscription at any time. Cancellation takes effect at the end of your current billing period. You will retain access to the Service until then. We do not provide prorated refunds for partial billing periods.</p>
+        <p style={{ marginBottom: 20 }}><strong style={{ color: C.text }}>Refunds.</strong> If you are dissatisfied with the Service, you may request a refund within 14 days of your first paid subscription charge. Refund requests after 14 days are handled at our discretion.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>6. Acceptable Use</strong></p>
+        <p style={{ marginBottom: 8 }}>You agree not to: use the Service for any unlawful purpose or in violation of any applicable law; upload or transmit malicious code, viruses, or harmful data; attempt to gain unauthorized access to the Service, other accounts, or our systems; interfere with or disrupt the Service or its infrastructure; resell, sublicense, or redistribute the Service without our written consent; use the Service to store or process data that violates any person's privacy rights; use automated tools (bots, scrapers) to access the Service except through our published APIs; or use the Service to harass, abuse, or harm any person.</p>
+        <p style={{ marginBottom: 20 }}>We reserve the right to suspend or terminate your account for violations of these terms, with notice where practicable.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>7. Intellectual Property</strong></p>
+        <p style={{ marginBottom: 8 }}>The Service, including its design, code, features, documentation, branding, and all related intellectual property, is owned by Maniac Digital, LLC. You may not copy, modify, distribute, or create derivative works based on the Service without our written permission.</p>
+        <p style={{ marginBottom: 20 }}>The Retayned name, logo, "Rai," and related marks are trademarks of Maniac Digital, LLC. You may not use our trademarks without prior written consent.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>8. Limitation of Liability</strong></p>
+        <p style={{ marginBottom: 8 }}>To the maximum extent permitted by law, Retayned and its officers, directors, employees, and agents shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of revenue, lost profits, loss of clients, loss of data, or business interruption, arising out of or related to your use of the Service — whether based on warranty, contract, tort, or any other legal theory, even if we have been advised of the possibility of such damages.</p>
+        <p style={{ marginBottom: 20 }}>Our total aggregate liability for all claims arising out of or related to the Service shall not exceed the total amount you paid to us in the twelve (12) months preceding the claim. Some jurisdictions do not allow the exclusion of certain warranties or limitation of liability, so some of the above limitations may not apply to you.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>9. Disclaimer of Warranties</strong></p>
+        <p style={{ marginBottom: 20 }}>The Service is provided "as is" and "as available" without warranties of any kind, either express or implied, including but not limited to implied warranties of merchantability, fitness for a particular purpose, title, and non-infringement. We do not warrant that the Service will be uninterrupted, error-free, or secure; that AI Outputs will be accurate, reliable, or suitable for your needs; that any defects will be corrected; or that the Service will meet your specific requirements or expectations.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>10. Indemnification</strong></p>
+        <p style={{ marginBottom: 20 }}>You agree to indemnify, defend, and hold harmless Retayned and its officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including reasonable attorneys' fees) arising out of or related to: your use of the Service; Your Data or your violation of any third party's rights; your violation of these Terms; or any actions you take based on AI Outputs.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>11. Termination</strong></p>
+        <p style={{ marginBottom: 8 }}>Either party may terminate these Terms at any time. You may terminate by canceling your subscription and deleting your account. We may terminate or suspend your access to the Service immediately, without prior notice, for conduct that we determine violates these Terms, is harmful to other users or the Service, or is otherwise objectionable.</p>
+        <p style={{ marginBottom: 20 }}>Upon termination, your right to use the Service ceases immediately. Sections that by their nature should survive termination — including ownership, warranty disclaimers, indemnification, and limitation of liability — shall survive.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>12. Dispute Resolution</strong></p>
+        <p style={{ marginBottom: 20 }}>These Terms are governed by the laws of the District of Columbia, United States, without regard to conflict of law provisions. Any disputes arising from these Terms or the Service shall be resolved through binding arbitration administered in Washington, DC, except that either party may seek injunctive relief in any court of competent jurisdiction. You agree to resolve disputes on an individual basis and waive any right to participate in a class action.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>13. Changes to These Terms</strong></p>
+        <p style={{ marginBottom: 20 }}>We may update these Terms from time to time. We will notify you of material changes by posting the updated Terms on the Service, sending an email to your registered address, or through an in-app notification. Your continued use of the Service after changes take effect constitutes acceptance of the updated Terms. If you do not agree to the updated Terms, you must stop using the Service.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>14. General Provisions</strong></p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Entire Agreement.</strong> These Terms, together with the Privacy Policy, constitute the entire agreement between you and Retayned regarding the Service.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Severability.</strong> If any provision of these Terms is found to be unenforceable, the remaining provisions shall continue in full force and effect.</p>
+        <p style={{ marginBottom: 8 }}><strong style={{ color: C.text }}>Waiver.</strong> Our failure to enforce any provision of these Terms shall not constitute a waiver of that provision.</p>
+        <p style={{ marginBottom: 20 }}><strong style={{ color: C.text }}>Assignment.</strong> You may not assign your rights under these Terms without our consent. We may assign our rights at any time without notice.</p>
+
+        <p style={{ marginBottom: 6 }}><strong style={{ color: C.text, fontSize: 16 }}>15. Contact Us</strong></p>
+        <p>If you have questions about these Terms, contact us at: legal@retayned.com — Maniac Digital, LLC, Washington, DC, United States.</p>
       </div>
     </section>
   );
@@ -1696,7 +1807,7 @@ function Platform({ setPage }) {
             { quote: "It gave me the exact words to say to a client I was about to lose. I had the conversation that afternoon. They're still with me 8 months later. I'm still with Retayned.", name: "Solo Operator", role: "1-5 Clients", stars: 5 },
             { quote: "The health check questions are uncomfortable in the best way. They force you to admit what you already know but haven't said out loud. It's something we thought we'd use for crises and it's turned into our daily operations hub.", name: "Freelance Consultant", role: "10-50 Clients", stars: 5 },
           ].map((t, i) => (
-            <div key={i} style={{ background: C.card, borderRadius: 14, padding: "24px 22px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280, display: "flex", flexDirection: "column" }}>
+            <div key={i} style={{ background: C.card, borderRadius: 14, padding: "24px 22px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280, display: "flex", flexDirection: "column", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
               <div style={{ display: "flex", gap: 2, marginBottom: 12 }}>
                 {Array(t.stars).fill(0).map((_, j) => (
                   <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>
@@ -1762,6 +1873,9 @@ export default function RetaynedSite() {
         .r-brain-diagram { width: 100%; }
         .r-brain-card { margin-top: 12px; }
         .r-page-title { }
+        input[type=range] { -webkit-appearance: none; width: 100%; height: 8px; border-radius: 4px; background: #E8ECE6; outline: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%; background: #5B21B6; cursor: pointer; box-shadow: 0 2px 8px rgba(91,33,182,0.3); }
+        input[type=range]::-moz-range-thumb { width: 28px; height: 28px; border-radius: 50%; background: #5B21B6; cursor: pointer; border: none; }
         .r-conf-inner { border-radius: 0; }
         .r-conf-img { border-radius: 0; }
         .r-full-bleed { margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); padding-left: 20px; padding-right: 20px; }
