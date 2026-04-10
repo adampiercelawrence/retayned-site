@@ -524,7 +524,7 @@ function Home({ setPage }) {
               <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 12 }}>Plugs Into Your Workflow</h2>
             </div>
             <div style={{ padding: "0 20px" }}>
-              <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 24 }}>Integrations help the engine adapt and learn, supplying you with even more insight.</p>
+              <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 24 }}>Enterprise integrations help the engine adapt and learn, supplying you with even more insight.</p>
               <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap" }}>
                 {["✉️ Gmail", "📁 Meets", "📅 Calendar", "💬 Slack", "🎥 Zoom"].map((ch, i) => (
                   <div key={i} className="ch-pill" style={{ padding: "10px 14px", background: C.card, borderRadius: 10, border: "1px solid " + C.border, fontSize: 13, fontWeight: 500 }}>{ch}</div>
@@ -637,7 +637,7 @@ function Pricing({ setPage }) {
             <div>
               <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.primary, marginBottom: 16, textAlign: "center" }}>Everything's included</div>
               <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
-                {["Suggested tasks daily", "Dynamic client scoring", "Monthly health checks", "Dedicated, priority support", "Unlimited chats with Rai", "Unlimited Rolodex slots", "Unlimited team members", "Unlimited linked channels"].map((f, j) => (
+                {["Suggested tasks daily", "Priority retention alerts", "Dynamic client scoring", "Monthly health checks", "Dedicated, priority support", "Unlimited chats with Rai", "Unlimited Rolodex slots", "Unlimited team members"].map((f, j) => (
                   <span key={j} style={{ fontSize: 13, color: C.text, padding: "8px 14px", borderRadius: 10, background: "rgba(51,84,62,0.06)", border: "1px solid " + C.borderLight, fontWeight: 500 }}>{f}</span>
                 ))}
               </div>
@@ -646,20 +646,20 @@ function Pricing({ setPage }) {
 
           {/* Enterprise bridge */}
           <div style={{ textAlign: "center", padding: "16px 0 12px" }}>
-            <h2 style={{ fontSize: 21, fontWeight: 600, letterSpacing: "-0.02em", color: C.text }}>Working on something bigger?</h2>
-            <p style={{ fontSize: 14, color: C.textSec, marginTop: 6 }}>Embed retention intelligence into your ecosystem.</p>
+            <h2 style={{ fontSize: 21, fontWeight: 600, letterSpacing: "-0.02em", color: C.text }}>Let AI do the work.</h2>
+            <p style={{ fontSize: 14, color: C.textSec, marginTop: 6 }}>Connect your platforms. Retayned scores every client, detects churn patterns, and tells your team — or your agents — exactly what to address, every morning, automatically.</p>
           </div>
 
-          {/* Enterprise — gradient matching pricing card */}
+          {/* Enterprise */}
           <div style={{ background: `linear-gradient(to bottom, ${C.card} 70%, ${C.primarySoft} 100%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "36px 32px", position: "relative", overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
-            <div style={{ position: "absolute", top: 28, right: -36, background: C.danger, color: "#fff", fontSize: 9, fontWeight: 700, padding: "5px 44px", transform: "rotate(45deg)", letterSpacing: ".04em", textAlign: "center" }}>COMING SOON</div>
+            <div style={{ position: "absolute", top: 28, right: -32, background: C.danger, color: "#fff", fontSize: 9, fontWeight: 700, padding: "5px 40px", transform: "rotate(45deg)", letterSpacing: ".06em", textAlign: "center" }}>EARLY ACCESS</div>
             <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.textMuted, marginBottom: 4 }}>Enterprise</div>
-            <div style={{ fontSize: 14, color: C.textSec, marginBottom: 16 }}>Account management as an API.</div>
+            <div style={{ fontSize: 14, color: C.textSec, marginBottom: 16 }}>Autonomous relationship intelligence.</div>
             <div style={{ fontSize: 40, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 20 }}>Let's Talk</div>
             <button onClick={() => setPage("contact")} className="cta-btn" style={{ width: "100%", padding: "13px 20px", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginBottom: 24, background: C.btn, color: "#fff", border: "none" }}>Contact Us</button>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.primary, marginBottom: 16, textAlign: "center" }}>Built for AI agents and large teams</div>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.primary, marginBottom: 16, textAlign: "center" }}>Built for large orgs and AI agents</div>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
-              {["API + integration layer", "Response protocols", "Behavioral guardrails", "Multi-tenant data isolation", "Custom archetype training", "Dedicated integration setup", "Agent-assisted support", "White-label deployment"].map((f, j) => (
+              {["Slack, email, Zoom, CRM integrations", "Automated daily portfolio sweeps", "Churn archetype detection", "Prioritized client rankings", "Multi-signal alerts", "Score history and drift tracking", "API + webhook delivery", "Dedicated onboarding"].map((f, j) => (
                 <span key={j} style={{ fontSize: 13, color: C.text, padding: "6px 14px", borderRadius: 20, background: "rgba(51,84,62,0.06)", border: "1px solid " + C.borderLight, fontWeight: 500 }}>{f}</span>
               ))}
             </div>
@@ -1776,7 +1776,7 @@ function Platform({ setPage }) {
               <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 12 }}>Plugs Into Your Workflow</h2>
             </div>
             <div style={{ padding: "0 20px" }}>
-              <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 24 }}>Integrations help the engine adapt and learn, supplying you with even more insight.</p>
+              <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 24 }}>Enterprise integrations help the engine adapt and learn, supplying you with even more insight.</p>
               <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap" }}>
                 {["✉️ Gmail", "📁 Meets", "📅 Calendar", "💬 Slack", "🎥 Zoom"].map((ch, i) => (
                   <div key={i} className="ch-pill" style={{ padding: "10px 14px", background: C.card, borderRadius: 10, border: "1px solid " + C.border, fontSize: 13, fontWeight: 500 }}>{ch}</div>
