@@ -22,6 +22,27 @@ const HEADSHOT = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0
 
 const inputStyle = { width: "100%", padding: "14px 16px", border: "2px solid " + C.border, borderRadius: 10, fontSize: 15, fontFamily: "inherit", background: C.card, boxSizing: "border-box", outline: "none" };
 
+// ═══ Reveal on Scroll ═══
+function Reveal({ children, direction = "up", delay = 0, style = {} }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setVisible(true); obs.disconnect(); }
+    }, { threshold: 0.15 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  const transforms = { up: "translateY(32px)", down: "translateY(-32px)", left: "translateX(-40px)", right: "translateX(40px)", none: "none" };
+  return (
+    <div ref={ref} style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : (transforms[direction] || transforms.up), transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`, ...style }}>
+      {children}
+    </div>
+  );
+}
+
 // ═══ Swipe Drawer ═══
 function SwipeDrawer({ open, setOpen, children }) {
   const startX = useRef(0);
@@ -251,12 +272,72 @@ function Footer({ setPage }) {
   );
 }
 
-// ═══ HOME ═══
+// ═══ Animated counter ═══
+function AnimatedStat({ value, suffix = "", duration = 1800 }) {
+  const ref = useRef(null);
+  const [display, setDisplay] = useState("0");
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started) {
+        setStarted(true);
+        obs.disconnect();
+      }
+    }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [started]);
+
+  useEffect(() => {
+    if (!started) return;
+    const num = parseInt(value);
+    if (isNaN(num)) { setDisplay(value); return; }
+    const steps = 40;
+    const increment = num / steps;
+    let current = 0;
+    let step = 0;
+    const timer = setInterval(() => {
+      step++;
+      // easeOutQuart
+      const t = step / steps;
+      const ease = 1 - Math.pow(1 - t, 4);
+      current = Math.round(ease * num);
+      setDisplay(String(current));
+      if (step >= steps) { setDisplay(String(num)); clearInterval(timer); }
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [started, value, duration]);
+
+  return <span ref={ref}>{display}{suffix}</span>;
+}
+
+// ═══ Floating badge component ═══
+function FloatingBadge({ children, delay = 0, style = {} }) {
+  return (
+    <div style={{
+      display: "inline-flex", alignItems: "center", gap: 6,
+      padding: "6px 14px", borderRadius: 100,
+      background: "rgba(255,255,255,0.9)", backdropFilter: "blur(8px)",
+      border: "1px solid rgba(216,223,216,0.6)",
+      boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+      fontSize: 12, fontWeight: 600, color: C.text,
+      animation: `floatBadge 0.6s ease ${delay}s both`,
+      ...style,
+    }}>
+      {children}
+    </div>
+  );
+}
+
 // ═══ HOME ═══
 function Home({ setPage }) {
   const [loaded, setLoaded] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [expandedText, setExpandedText] = useState(false);
+  const [hoveredFeature, setHoveredFeature] = useState(null);
 
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 100);
@@ -264,386 +345,766 @@ function Home({ setPage }) {
   }, []);
 
   const homeTabs = [
-    { id: "today", label: "Today", headline: "One page. Every priority.", sub: "Your Today tab knows which clients need you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value. Green clients surface first. At-risk clients with high revenue jump the line." },
-    { id: "scoring", label: "Retention Score", headline: "A number that means something.", sub: "12 dimensions. 20 combination signals. Health check modifiers. Every client gets a Retention Score from 1–99 that tells you exactly where the relationship stands — not where you hope it is." },
-    { id: "health", label: "Health Checks", headline: "Five questions. Two minutes. The truth.", sub: "Regular check-ins that detect drift before it becomes damage. Your answers blend directly into the Retention Score — bad news moves the number immediately. No lengthy forms. No busywork. Just the signal." },
-    { id: "rai", label: "Talk to Rai", headline: "She writes the words you need when it matters most.", sub: "Rai is an AI advisor calibrated to your specific relationships. When you don't know what to say — the opening line, the tone, whether to call or email — Rai gives you the script." },
-    { id: "rolodex", label: "Rolodex", headline: "Your pipeline is forward-looking.", sub: "Former clients aren't dead relationships — they're future revenue. The Rolodex tracks who left, how it ended, and whether they'd come back. One-off projects become re-engagement opportunities." },
-    { id: "referrals", label: "Referrals", headline: "Your best clients send you their friends.", sub: "Retayned tracks referral readiness based on loyalty, trust, and relationship depth. When a client is ready to refer, the system knows before you do." },
+    { id: "today", label: "Today", icon: "◉", headline: "One page. Every priority.", sub: "Your Today tab knows which clients need you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value. Green clients surface first. At-risk clients with high revenue jump the line." },
+    { id: "scoring", label: "Retention Score", icon: "◎", headline: "A number that means something.", sub: "12 dimensions. 20 combination signals. Health check modifiers. Every client gets a Retention Score from 1–99 that tells you exactly where the relationship stands — not where you hope it is." },
+    { id: "health", label: "Health Checks", icon: "♡", headline: "Five questions. Two minutes. The truth.", sub: "Regular check-ins that detect drift before it becomes damage. Your answers blend directly into the Retention Score — bad news moves the number immediately. No lengthy forms. No busywork. Just the signal." },
+    { id: "rai", label: "Talk to Rai", icon: "✦", headline: "She writes the words you need when it matters most.", sub: "Rai is an AI advisor calibrated to your specific relationships. When you don't know what to say — the opening line, the tone, whether to call or email — Rai gives you the script." },
+    { id: "rolodex", label: "Rolodex", icon: "⟐", headline: "Your pipeline is forward-looking.", sub: "Former clients aren't dead relationships — they're future revenue. The Rolodex tracks who left, how it ended, and whether they'd come back. One-off projects become re-engagement opportunities." },
+    { id: "referrals", label: "Referrals", icon: "⟡", headline: "Your best clients send you their friends.", sub: "Retayned tracks referral readiness based on loyalty, trust, and relationship depth. When a client is ready to refer, the system knows before you do." },
   ];
   const ht = homeTabs[activeTab];
 
+  // How it works steps
+  const howSteps = [
+    { num: "01", title: "Profile your clients", desc: "Score each relationship across 12 behavioral dimensions. Retayned builds a unique communication fingerprint for every client.", icon: "⬡" },
+    { num: "02", title: "Rai monitors the signals", desc: "Health checks, engagement velocity, and sentiment patterns feed into a retention engine that scores every client daily.", icon: "◈" },
+    { num: "03", title: "Get the script, not just the alert", desc: "When something shifts, Rai tells you who needs attention, what the real problem is, and exactly what to say.", icon: "✧" },
+  ];
+
   return (
     <>
-      {/* HERO */}
-      <section className="r-hero-section" style={{ padding: "48px 20px 40px", textAlign: "center" }}>
-        <div style={{ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(16px)", transition: "all 0.6s ease 0.2s", marginBottom: 20 }}>
-          <h1 className="r-hero-text" style={{ fontSize: 44, fontWeight: 900, letterSpacing: "-0.045em", lineHeight: 1.08 }}>
-            The CRM that predicts{" "}
-            <span style={{ position: "relative", display: "inline-block", marginTop: "0.25em" }}>
-              <style>{`@keyframes drawCaret { 0% { opacity: 0; transform: translateX(-0.3em); } 100% { opacity: 1; transform: translateX(0); } }`}</style>
-              <span style={{ color: C.danger, fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, display: "inline-block", width: 0, overflow: "visible", textAlign: "center", position: "relative", top: "-0.3em", left: "-0.15em", opacity: 0, animation: loaded ? "drawCaret 0.3s ease-out 0.7s forwards" : "none" }}>^</span>
-              <span style={{ position: "absolute", bottom: "1.1em", left: "50%", transform: "translateX(-55%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, color: C.primary, opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 1.2s", whiteSpace: "nowrap" }}>and prevents</span>
-            </span>
-            {" "}churn.
-          </h1>
-        </div>
-        <div style={{ fontSize: 16, lineHeight: 1.6, color: C.textSec, maxWidth: 810, margin: "0 auto 28px", opacity: loaded ? 1 : 0, transition: "all 0.5s ease 0.4s" }}>
-          <p style={{ marginBottom: 6, fontWeight: 600, color: C.text }}>Stop losing clients you should have kept.</p>
-          <p>Traditional CRMs track deals and contacts. Retayned tracks the health of relationships — giving you client-specific solutions to keep (and grow) the business you've earned.</p>
-        </div>
-        <div style={{ opacity: loaded ? 1 : 0, transition: "all 0.5s ease 0.6s", maxWidth: 400, margin: "0 auto 12px" }}>
-          <button className="cta-btn" onClick={() => setPage("signup")} style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
-        </div>
-        <p style={{ fontSize: 12, color: C.textMuted, opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 0.8s" }}>The secret weapon of agencies, freelancers, law firms, consultants, stylists, coaches, mobsters, and more.</p>
-      </section>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
 
-      {/* STATS — green band */}
-      <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px", opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 0.9s" }}>
-        <div style={{ display: "flex", gap: 16, maxWidth: 700, margin: "0 auto" }}>
-          {[
-            { label: "Of churn is predictable", num: "90%" },
-            { label: "Cheaper to retain than acquire", num: "25x" },
-            { label: "Saved client pays for itself", num: "1+" },
-          ].map((s, i) => (
-            <div key={i} style={{ flex: 1, textAlign: "center" }}>
-              <div className="r-stats" style={{ fontSize: 64, fontWeight: 900, letterSpacing: "-0.04em", background: "linear-gradient(135deg, #33543E, #558B68)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 1, marginBottom: 8 }}>{s.num}</div>
-              <div style={{ fontSize: 10, fontWeight: 600, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".03em" }}>{s.label}</div>
+        @keyframes floatBadge { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(91,33,182,0.15); } 50% { box-shadow: 0 0 0 12px rgba(91,33,182,0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes drawLine { from { width: 0; } to { width: 108%; } }
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+        @keyframes subtleBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        @keyframes grain { 0%, 100% { transform: translate(0, 0); } 10% { transform: translate(-2%, -2%); } 20% { transform: translate(1%, 3%); } 30% { transform: translate(-3%, 1%); } 40% { transform: translate(3%, -1%); } 50% { transform: translate(-1%, 2%); } 60% { transform: translate(2%, -3%); } 70% { transform: translate(-2%, 1%); } 80% { transform: translate(1%, -2%); } 90% { transform: translate(-1%, 3%); } }
+
+        .r-serif { font-family: 'DM Serif Display', Georgia, serif; }
+
+        .r-hero-cta {
+          padding: 15px 32px; background: ${C.btn}; color: #fff;
+          border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+          cursor: pointer; font-family: inherit;
+          position: relative; overflow: hidden;
+          transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .r-hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(91,33,182,0.25); }
+        .r-hero-cta:active { transform: translateY(0); }
+
+        .r-ghost-cta {
+          padding: 15px 32px; background: transparent; color: ${C.text};
+          border: 1.5px solid ${C.border}; border-radius: 12px; font-size: 15px;
+          font-weight: 600; cursor: pointer; font-family: inherit;
+          transition: border-color 0.2s, background 0.2s;
+        }
+        .r-ghost-cta:hover { border-color: ${C.primary}; background: ${C.primaryGhost}; }
+
+        .r-tab-pill {
+          padding: 10px 18px; border-radius: 10px; border: none; cursor: pointer;
+          font-family: inherit; font-size: 13px; font-weight: 500;
+          transition: all 0.25s ease; white-space: nowrap; flex: 0 0 auto;
+          position: relative;
+        }
+        .r-tab-pill:hover { background: rgba(255,255,255,0.6); }
+        .r-tab-pill[data-active="true"] {
+          background: ${C.card}; color: ${C.primary}; font-weight: 700;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .r-mockup-card {
+          background: ${C.card}; border-radius: 18px; border: 1px solid ${C.border};
+          padding: 22px; box-shadow: 0 12px 40px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .r-mockup-card:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(0,0,0,0.09), 0 4px 12px rgba(0,0,0,0.04); }
+
+        .r-feature-step {
+          padding: 28px 24px; border-radius: 16px; border: 1.5px solid ${C.borderLight};
+          background: ${C.card}; transition: all 0.3s ease; cursor: default;
+          position: relative; overflow: hidden;
+        }
+        .r-feature-step:hover {
+          border-color: ${C.primary}; box-shadow: 0 8px 32px rgba(51,84,62,0.08);
+        }
+        .r-feature-step:hover .step-num { color: ${C.btn}; }
+
+        .r-ent-feature {
+          padding: 20px 18px; background: rgba(255,255,255,0.04);
+          border-radius: 14px; border: 1px solid rgba(255,255,255,0.07);
+          text-align: left; transition: all 0.3s ease;
+        }
+        .r-ent-feature:hover {
+          background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.14);
+          transform: translateY(-2px);
+        }
+
+        .r-testimonial-card {
+          background: ${C.card}; border-radius: 16px; padding: 28px 24px;
+          border: 1px solid ${C.border}; display: flex; flex-direction: column;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.04); height: 100%;
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .r-testimonial-card:hover {
+          transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+        }
+
+        .r-grain {
+          position: absolute; inset: 0; pointer-events: none; opacity: 0.03;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+          background-size: 128px 128px;
+        }
+
+        .r-score-ring {
+          width: 42px; height: 42px; border-radius: 10px;
+          display: flex; align-items: center; justify-content: center;
+          font-weight: 800; font-size: 14px; flex-shrink: 0;
+          font-family: inherit;
+          transition: transform 0.2s;
+        }
+
+        .r-alert-actions > div {
+          flex: 1; padding: 11px; text-align: center; font-size: 13px;
+          font-weight: 600; cursor: pointer; transition: background 0.15s;
+        }
+        .r-alert-actions > div:hover { background: rgba(0,0,0,0.02); }
+      `}</style>
+
+      <div className="r-home">
+        {/* ══════════════ HERO ══════════════ */}
+        <div className="r-full-bleed" style={{
+          background: `radial-gradient(ellipse 80% 60% at 20% 40%, ${C.primarySoft} 0%, ${C.bg} 70%)`,
+          padding: "56px 20px 72px",
+          position: "relative", overflow: "hidden",
+        }}>
+          {/* Subtle decorative elements */}
+          <div style={{ position: "absolute", top: "10%", right: "5%", width: 320, height: 320, borderRadius: "50%", background: `radial-gradient(circle, ${C.primarySoft} 0%, transparent 70%)`, opacity: 0.5, pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: "-5%", left: "15%", width: 200, height: 200, borderRadius: "50%", background: `radial-gradient(circle, rgba(91,33,182,0.04) 0%, transparent 70%)`, pointerEvents: "none" }} />
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 48, alignItems: "center", maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
+            {/* Left — copy */}
+            <div style={{ flex: "1 1 440px", opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(20px)", transition: "all 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s" }}>
+
+              {/* Trust badge */}
+              <div style={{ marginBottom: 20, opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 0.3s" }}>
+                <FloatingBadge delay={0.6}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.success, display: "inline-block" }} />
+                  Built for agencies, freelancers & consultants
+                </FloatingBadge>
+              </div>
+
+              <h1 style={{
+                fontSize: 50, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08,
+                marginBottom: 24, color: C.text,
+              }}>
+                The CRM that{" "}
+                <span style={{ position: "relative", display: "inline-block" }}>
+                  <span style={{ color: C.text }}>predicts</span>
+                  <span style={{
+                    position: "absolute", left: "-2%", top: "50%", height: "2px",
+                    background: C.danger, borderRadius: 2,
+                    animation: loaded ? "drawLine 0.4s ease-out 0.9s both" : "none",
+                  }} />
+                </span>
+                <br />
+                <span style={{
+                  fontFamily: "'Caveat', cursive", fontSize: "0.75em", fontWeight: 700, color: C.primary,
+                  opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 1.1s",
+                }}>
+                  and prevents
+                </span>{" "}
+                churn.
+              </h1>
+
+              <p style={{
+                fontSize: 17, lineHeight: 1.7, color: C.textSec, marginBottom: 10,
+                maxWidth: 480, opacity: loaded ? 1 : 0, transition: "all 0.5s ease 0.5s",
+              }}>
+                <span style={{ fontWeight: 700, color: C.text }}>Stop losing clients you should have kept.</span>
+              </p>
+              <p style={{
+                fontSize: 16, lineHeight: 1.7, color: C.textSec, marginBottom: 32,
+                maxWidth: 480, opacity: loaded ? 1 : 0, transition: "all 0.5s ease 0.6s",
+              }}>
+                Traditional CRMs track deals. Retayned tracks the health of relationships — giving you client-specific solutions to keep and grow the business you've earned.
+              </p>
+
+              <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", opacity: loaded ? 1 : 0, transition: "all 0.5s ease 0.7s", marginBottom: 16 }}>
+                <button className="r-hero-cta" onClick={() => setPage("signup")}>
+                  Start Free Trial
+                  <span style={{ marginLeft: 8, fontSize: 14 }}>→</span>
+                </button>
+                <button className="r-ghost-cta" onClick={() => setPage("contact")}>
+                  Contact Sales
+                </button>
+              </div>
+
+              <p style={{ fontSize: 13, color: C.textMuted, opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 0.9s", letterSpacing: "0.01em" }}>
+                No credit card required · 14-day free trial
+              </p>
             </div>
-          ))}
-        </div>
-      </div>
 
-      {/* HOW IT WORKS — header */}
-      <section style={{ padding: "48px 20px 24px" }}>
-        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>How It Works</h2>
-        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", maxWidth: 600, margin: "0 auto" }}>
-          <span style={{ fontWeight: 700 }}>Rai pays attention to every client, every day.</span> When something shifts, she catches it — and tells you what to do about it.
-        </p>
-      </section>
+            {/* Right — app mockup */}
+            <div style={{
+              flex: "1 1 400px",
+              opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0) rotate(0deg)" : "translateY(30px)",
+              transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s",
+            }}>
+              <div className="r-mockup-card" style={{ position: "relative" }}>
+                {/* Window dots */}
+                <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FF5F57" }} />
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FEBC2E" }} />
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#28C840" }} />
+                  <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".08em" }}>Today — April 12</span>
+                </div>
 
-      {/* WHAT RAI SURFACES — product in action */}
-      <section style={{ padding: "0 20px 64px" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto" }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 6, display: "flex", alignItems: "center", gap: 6 }}>
-            <svg width={12} height={12} viewBox="0 0 24 24" fill="none"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primary} strokeWidth="1.6" fill="none" strokeLinejoin="round"/></svg>
-            Suggested by Rai
-          </div>
-          {/* Alert card */}
-          <div style={{ background: "linear-gradient(90deg, #FAE8E4 0%, #FDF5F3 40%, " + C.card + " 100%)", borderRadius: 12, marginBottom: 8, border: "1px solid " + C.border, overflow: "hidden", boxShadow: C.cardShadow }}>
-            <div style={{ padding: "14px 16px" }}>
-              <p style={{ fontSize: 14, color: C.text, fontWeight: 600, lineHeight: 1.5, margin: 0 }}>Broadleaf Media: Rachel's score dropped 13 points in two check-ins. The "No room to operate" combo just triggered. Call her — not email.</p>
-              <p style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}>Broadleaf Media</p>
-            </div>
-            <div style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-              <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
-              <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.btn, borderRight: "1px solid " + C.borderLight }}>Talk to Rai</div>
-              <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
-            </div>
-          </div>
-          {/* Green card */}
-          <div style={{ background: "linear-gradient(90deg, " + C.primarySoft + " 0%, #F0F5F1 40%, " + C.card + " 100%)", borderRadius: 12, border: "1px solid " + C.border, overflow: "hidden", boxShadow: C.cardShadow }}>
-            <div style={{ padding: "14px 16px" }}>
-              <p style={{ fontSize: 14, color: C.text, lineHeight: 1.5, margin: 0 }}>Northvane: 3-year anniversary in 26 days. Plan something.</p>
-              <p style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}>Northvane Studios</p>
-            </div>
-            <div style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-              <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
-              <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* STATEMENT */}
-      <div className="r-full-bleed" style={{ background: C.raiGrad, padding: "48px 20px", marginBottom: 64, position: "relative", overflow: "visible" }}>
-        <svg style={{ position: "absolute", left: 120, bottom: -14, width: 120, height: 90, opacity: 0.14 }} className="r-stat-graphic-left" viewBox="0 0 120 90" fill="none">
-          <circle cx="40" cy="22" r="14" fill="#fff" />
-          <path d="M40,36 C28,36 20,44 18,56 L18,90 L62,90 L62,56 C60,44 52,36 40,36 Z" fill="#fff" />
-          <circle cx="16" cy="28" r="10" fill="#fff" opacity="0.6" />
-          <path d="M16,38 C8,38 2,44 0,52 L0,90 L32,90 L32,52 C30,44 24,38 16,38 Z" fill="#fff" opacity="0.6" />
-          <circle cx="68" cy="30" r="9" fill="#fff" opacity="0.45" />
-          <path d="M68,39 C60,39 56,44 54,50 L54,90 L82,90 L82,50 C80,44 76,39 68,39 Z" fill="#fff" opacity="0.45" />
-          <circle cx="92" cy="34" r="7" fill="#fff" opacity="0.3" />
-          <path d="M92,41 C86,41 82,45 81,50 L81,90 L103,90 L103,50 C102,45 98,41 92,41 Z" fill="#fff" opacity="0.3" />
-          <path d="M20,70 Q45,58 68,70" stroke="#fff" strokeWidth="1.5" strokeDasharray="3 3" fill="none" opacity="0.3" />
-        </svg>
-        <svg style={{ position: "absolute", left: 250, bottom: -8, width: 36, height: 36, opacity: 0.1 }} className="r-stat-accent-left" viewBox="0 0 36 36" fill="none">
-          <path d="M4,20 L12,14 L18,18 L24,12 L32,18" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-          <path d="M12,14 L18,20 L24,14" stroke="#fff" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.5" />
-        </svg>
-        <svg style={{ position: "absolute", right: 120, top: -16, width: 120, height: 90, opacity: 0.14 }} className="r-stat-graphic-right" viewBox="0 0 120 90" fill="none">
-          <rect x="8" y="62" width="14" height="28" rx="3" fill="#fff" opacity="0.4" />
-          <rect x="28" y="48" width="14" height="42" rx="3" fill="#fff" opacity="0.55" />
-          <rect x="48" y="34" width="14" height="56" rx="3" fill="#fff" opacity="0.7" />
-          <rect x="68" y="18" width="14" height="72" rx="3" fill="#fff" opacity="0.85" />
-          <rect x="88" y="4" width="14" height="86" rx="3" fill="#fff" />
-          <path d="M15,58 Q35,46 55,30 T102,6" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.4" />
-          <path d="M96,4 L104,2 L100,10" stroke="#fff" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.4" />
-        </svg>
-        <svg style={{ position: "absolute", right: 250, top: -6, width: 32, height: 32, opacity: 0.1 }} className="r-stat-accent-right" viewBox="0 0 32 32" fill="none">
-          <circle cx="16" cy="16" r="14" stroke="#fff" strokeWidth="2" fill="none" />
-          <text x="16" y="22" fontSize="16" fontWeight="800" fill="#fff" fontFamily="Outfit, sans-serif" textAnchor="middle">$</text>
-        </svg>
-        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.25, textAlign: "center", margin: "0 auto", color: "#fff", position: "relative", zIndex: 2 }}>
-          A 5% increase in retention can{" "}<span style={{ color: "#fff" }}>boost profits by 95%.</span><sup style={{ fontSize: "0.4em", color: "rgba(255,255,255,0.4)", verticalAlign: "super", lineHeight: 0 }}>¹</sup>
-        </h2>
-      </div>
-
-      {/* EXPLORE THE PLATFORM — Feature tabs preview */}
-      <section style={{ padding: "0 20px 64px" }}>
-        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>Every tool you need to keep your clients</h2>
-        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", maxWidth: 600, margin: "0 auto 32px" }}>
-          Relationship intelligence, health monitoring, AI advising, and pipeline management — in one system. Your clients won't know it exists. They just won't leave.
-        </p>
-
-        {/* Tab bar */}
-        <div className="r-tab-bar" style={{ display: "flex", gap: 4, background: C.surface, borderRadius: 10, padding: 4, marginBottom: 32, overflowX: "auto", maxWidth: 720, margin: "0 auto 32px", WebkitOverflowScrolling: "touch" }}>
-          {homeTabs.map((feat, i) => (
-            <button key={feat.id} onClick={() => { setActiveTab(i); setExpandedText(false); }} className="r-tab-btn" style={{
-              padding: "10px 16px", borderRadius: 8, border: "none", cursor: "pointer",
-              background: i === activeTab ? C.card : "transparent",
-              color: i === activeTab ? C.primary : C.textMuted,
-              fontFamily: "inherit", fontSize: 13, fontWeight: i === activeTab ? 700 : 500,
-              boxShadow: i === activeTab ? "0 2px 8px rgba(0,0,0,0.06)" : "none",
-              transition: "all 0.2s", whiteSpace: "nowrap", flex: "0 0 auto",
-            }}>{feat.label}</button>
-          ))}
-        </div>
-
-        {/* Feature content */}
-        <div className="r-feat-content" style={{ display: "flex", flexWrap: "wrap", gap: 40, alignItems: "flex-start", maxWidth: 960, margin: "0 auto" }}>
-          {/* Left: copy */}
-          <div style={{ flex: "1 1 320px", paddingTop: 24 }}>
-            <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 12 }}>{ht.headline}</h2>
-            <div className="r-feat-desc-full" style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 24 }}>{ht.sub}</div>
-            <div className="r-feat-desc-mobile" style={{ display: "none" }}>
-              <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 8, overflow: "hidden", maxHeight: expandedText ? "none" : 48, transition: "max-height 0.3s ease" }}>{ht.sub}</p>
-              <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 20, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
-            </div>
-            <div style={{ display: "flex", gap: 12 }}>
-              <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "12px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
-              <button onClick={() => setPage("platform")} style={{ padding: "12px 28px", background: "transparent", color: C.primary, border: "1.5px solid " + C.border, borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>See All Features</button>
-            </div>
-          </div>
-
-          {/* Right: visual mockup */}
-          <div style={{ flex: "1 1 340px", minHeight: 380 }}>
-            {ht.id === "today" && (
-              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Today — April 11</div>
                 {[
-                  { name: "Northvane Studios", score: 91, task: "Monthly strategy review", color: C.success, tag: "Protect" },
-                  { name: "Broadleaf Media", score: 67, task: "Health Check overdue", color: C.warning, tag: "Watch" },
+                  { name: "Northvane Studios", score: 91, task: "Monthly strategy review — on track", color: C.success, tag: "Protect" },
+                  { name: "Broadleaf Media", score: 67, task: "Health Check overdue · 3 days", color: C.warning, tag: "Watch" },
                   { name: "Foxglove Partners", score: 38, task: "Rai: Call today, not email", color: C.danger, tag: "Urgent" },
                 ].map((t, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
-                    <div style={{ width: 38, height: 38, borderRadius: 8, background: t.color + "18", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 14, color: t.color, flexShrink: 0 }}>{t.score}</div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 700, fontSize: 13 }}>{t.name}</div>
-                      <div style={{ fontSize: 11, color: C.textMuted }}>{t.task}</div>
+                  <div key={i} style={{
+                    display: "flex", alignItems: "center", gap: 14, padding: "14px 0",
+                    borderTop: i > 0 ? "1px solid " + C.borderLight : "none",
+                    animation: `slideUp 0.4s ease ${0.8 + i * 0.12}s both`,
+                  }}>
+                    <div className="r-score-ring" style={{ background: t.color + "14", color: t.color, border: `1.5px solid ${t.color}30` }}>
+                      {t.score}
                     </div>
-                    <div style={{ fontSize: 10, fontWeight: 600, padding: "3px 8px", borderRadius: 4, background: t.color + "15", color: t.color }}>{t.tag}</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 700, fontSize: 14, letterSpacing: "-0.01em", marginBottom: 2 }}>{t.name}</div>
+                      <div style={{ fontSize: 12, color: C.textMuted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.task}</div>
+                    </div>
+                    <div style={{
+                      fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 6,
+                      background: t.color + "10", color: t.color, letterSpacing: "0.02em",
+                      textTransform: "uppercase",
+                    }}>{t.tag}</div>
                   </div>
                 ))}
-                <div style={{ marginTop: 10, padding: "10px 12px", background: C.primarySoft, borderRadius: 8, fontSize: 12, color: C.primary }}>
-                  <strong>Rai:</strong> 3 clients need attention today. Foxglove hasn't responded in 14 days — this is beyond busy.
+
+                {/* Rai insight */}
+                <div style={{
+                  marginTop: 14, padding: "12px 14px", borderRadius: 12,
+                  background: "linear-gradient(135deg, rgba(51,84,62,0.06) 0%, rgba(85,139,104,0.04) 100%)",
+                  border: "1px solid " + C.primarySoft,
+                  animation: "slideUp 0.5s ease 1.2s both",
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                    <span style={{ fontSize: 10, fontWeight: 800, color: C.primary, letterSpacing: "0.04em", textTransform: "uppercase" }}>✦ Rai</span>
+                  </div>
+                  <p style={{ fontSize: 13, color: C.primary, lineHeight: 1.5, margin: 0, fontWeight: 500 }}>
+                    3 clients need attention today. Foxglove hasn't responded in 14 days — this is beyond busy.
+                  </p>
                 </div>
               </div>
-            )}
-            {ht.id === "scoring" && (
-              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-                <div style={{ textAlign: "center", marginBottom: 16 }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 8 }}>Retention Score</div>
-                  <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#FEF3C7", border: "3px solid #92400E30", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
-                    <span style={{ fontSize: 32, fontWeight: 900, color: "#92400E" }}>67</span>
-                  </div>
-                  <div style={{ fontWeight: 700, fontSize: 13, marginTop: 6 }}>Broadleaf Media</div>
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
-                  {[["Trust", 6, C.warning], ["Loyalty", 7, C.primaryLight], ["Expectations", 7, C.primaryLight], ["Grace", 5, C.warning]].map(([name, val, color]) => (
-                    <div key={name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 10px", background: C.bg, borderRadius: 6, fontSize: 12 }}>
-                      <span style={{ color: C.textMuted }}>{name}</span>
-                      <span style={{ fontWeight: 700, color }}>{val}/10</span>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ marginTop: 10, display: "flex", gap: 6 }}>
-                  <div style={{ flex: 1, padding: "5px 8px", background: "#FEE2E2", borderRadius: 6, fontSize: 10, color: "#991B1B", fontWeight: 600 }}>No room to operate</div>
-                  <div style={{ flex: 1, padding: "5px 8px", background: "#FEF3C7", borderRadius: 6, fontSize: 10, color: "#92400E", fontWeight: 600 }}>Ice wall</div>
+
+              {/* Floating badges around mockup */}
+              <div style={{ position: "relative", height: 0 }}>
+                <div style={{
+                  position: "absolute", top: -380, right: -10,
+                  animation: "subtleBob 4s ease-in-out infinite",
+                }}>
+                  <FloatingBadge delay={1.4} style={{ fontSize: 11 }}>
+                    <span style={{ color: C.success }}>↑ 12%</span> retention this quarter
+                  </FloatingBadge>
                 </div>
               </div>
-            )}
-            {ht.id === "health" && (
-              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Health Check — Broadleaf Media</div>
-                <div style={{ display: "flex", gap: 4, marginBottom: 14 }}>
-                  {[1,2,3,4,5].map(i => <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= 2 ? C.primary : C.borderLight }} />)}
-                </div>
-                <p style={{ fontSize: 14, fontWeight: 700, marginBottom: 10 }}>Has anything changed with this relationship?</p>
-                {["Nothing — same as always", "Something minor, could be nothing", "Noticeably different from before", "Something has clearly changed"].map((opt, i) => (
-                  <div key={i} style={{ padding: "10px 14px", borderRadius: 8, marginBottom: 4, background: i === 2 ? C.primarySoft : C.bg, border: "1.5px solid " + (i === 2 ? C.primary : C.borderLight), fontSize: 13, color: i === 2 ? C.primary : C.textSec, fontWeight: i === 2 ? 600 : 400 }}>{opt}</div>
-                ))}
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
-                  <span style={{ fontSize: 12, color: C.textMuted }}>2 of 5</span>
-                  <div style={{ padding: "7px 18px", background: C.primary, color: "#fff", borderRadius: 6, fontWeight: 600, fontSize: 12 }}>Next</div>
-                </div>
-              </div>
-            )}
-            {ht.id === "rai" && (
-              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Talk to Rai</div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  <div style={{ alignSelf: "flex-end", maxWidth: "75%", padding: "10px 14px", background: C.primary, color: "#fff", borderRadius: "12px 12px 4px 12px", fontSize: 13, lineHeight: 1.5 }}>
-                    Rachel at Broadleaf has been different lately. What should I do?
-                  </div>
-                  <div style={{ alignSelf: "flex-start", maxWidth: "85%", padding: "12px 14px", background: C.bg, borderRadius: "12px 12px 12px 4px", fontSize: 13, lineHeight: 1.6 }}>
-                    <div style={{ fontWeight: 700, color: C.primary, marginBottom: 4, fontSize: 11 }}>Rai</div>
-                    Rachel's score dropped from 78 to 67 over two check-ins. The "No room to operate" combo just triggered — low trust combined with low grace. Call her. Not email. Ask directly: "I've noticed things feel different. What's on your mind?"
-                  </div>
-                  <div style={{ alignSelf: "flex-start", maxWidth: "85%", padding: "8px 12px", background: C.primarySoft, borderRadius: "12px 12px 12px 4px", fontSize: 12, color: C.primary }}>
-                    I've also flagged a profile re-evaluation for Broadleaf. Your initial profile was 8 weeks ago — things have shifted. Want me to queue that up?
-                  </div>
-                </div>
-              </div>
-            )}
-            {ht.id === "rolodex" && (
-              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Rolodex</div>
-                {[
-                  { name: "Maplewood Agency", type: "Former", months: "14mo together", tags: ["Would refer", "Would come back"], priority: "high" },
-                  { name: "Clearpoint Digital", type: "One-off", months: "Site audit", tags: ["Would refer"], priority: "medium" },
-                  { name: "Harlow & Associates", type: "Former", months: "8mo together", tags: ["Would come back"], priority: "high" },
-                ].map((r, i) => (
-                  <div key={i} style={{ padding: "12px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                      <div>
-                        <span style={{ fontWeight: 700, fontSize: 13 }}>{r.name}</span>
-                        <span style={{ fontSize: 11, color: C.textMuted, marginLeft: 8 }}>{r.type} · {r.months}</span>
-                      </div>
-                      <div style={{ width: 7, height: 7, borderRadius: "50%", background: r.priority === "high" ? C.success : C.warning }} />
-                    </div>
-                    <div style={{ display: "flex", gap: 4 }}>
-                      {r.tags.map(t => (
-                        <span key={t} style={{ fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 4, background: C.primarySoft, color: C.primary }}>{t}</span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-                <div style={{ marginTop: 10, fontSize: 12, color: C.primary, fontWeight: 600 }}>3 re-engagement opportunities →</div>
-              </div>
-            )}
-            {ht.id === "referrals" && (
-              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Referral Intelligence</div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 16 }}>
-                  {[["Total", "7"], ["Converted", "4"], ["Revenue", "$18.4k"]].map(([label, val]) => (
-                    <div key={label} style={{ background: C.bg, borderRadius: 8, padding: 10, textAlign: "center" }}>
-                      <div style={{ fontSize: 20, fontWeight: 900, color: C.primary }}>{val}</div>
-                      <div style={{ fontSize: 10, color: C.textMuted, marginTop: 2 }}>{label}</div>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8 }}>Ready to refer</div>
-                {[
-                  { name: "Northvane Studios", readiness: 94, contact: "Sarah Chen" },
-                  { name: "Oakline Outdoors", readiness: 76, contact: "James Park" },
-                ].map((r, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0", borderTop: "1px solid " + C.borderLight }}>
-                    <div>
-                      <span style={{ fontWeight: 600, fontSize: 13 }}>{r.name}</span>
-                      <span style={{ fontSize: 11, color: C.textMuted, marginLeft: 8 }}>{r.contact}</span>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <div style={{ width: 50, height: 4, borderRadius: 2, background: C.borderLight, overflow: "hidden" }}>
-                        <div style={{ width: `${r.readiness}%`, height: "100%", background: C.success, borderRadius: 2 }} />
-                      </div>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: C.success }}>{r.readiness}%</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* ENTERPRISE */}
-      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "64px 20px" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
-          <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.3)", marginBottom: 16 }}>Enterprise</div>
-          <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 12, color: "#fff" }}>Autonomous relationship intelligence.</h2>
-          <p style={{ fontSize: 15, color: "rgba(255,255,255,.45)", maxWidth: 600, margin: "0 auto 32px", lineHeight: 1.7 }}>Connect your platforms. Retayned scores every client, detects churn patterns, and tells your team — or your agents — exactly what to address, every morning, automatically.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 32, maxWidth: 500, margin: "0 auto 32px" }}>
+        {/* ══════════════ HOW IT WORKS ══════════════ */}
+        <section style={{ padding: "0 20px 80px" }}>
+          <Reveal>
+            <div style={{ textAlign: "center", marginBottom: 48 }}>
+              <div style={{
+                display: "inline-block", fontSize: 11, fontWeight: 700,
+                textTransform: "uppercase", letterSpacing: ".12em",
+                color: C.btn, marginBottom: 12,
+                padding: "5px 14px", borderRadius: 6,
+                background: "rgba(91,33,182,0.06)",
+              }}>How it works</div>
+              <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 8 }}>
+                Rai pays attention to every client, every day.
+              </h2>
+              <p style={{ fontSize: 16, color: C.textSec, maxWidth: 560, margin: "0 auto", lineHeight: 1.7 }}>
+                When something shifts, she catches it — and tells you what to do about it.
+              </p>
+            </div>
+          </Reveal>
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 20, maxWidth: 1100, margin: "0 auto" }}>
+            {howSteps.map((step, i) => (
+              <Reveal key={i} delay={i * 0.15} style={{ flex: "1 1 300px", minWidth: 280 }}>
+                <div className="r-feature-step">
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 14 }}>
+                    <span className="step-num" style={{
+                      fontSize: 32, fontWeight: 900, color: C.borderLight,
+                      fontFamily: "inherit", lineHeight: 1,
+                      transition: "color 0.3s",
+                    }}>{step.num}</span>
+                    <span style={{ fontSize: 24, marginTop: 4, opacity: 0.4 }}>{step.icon}</span>
+                  </div>
+                  <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8, lineHeight: 1.25 }}>{step.title}</h3>
+                  <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7, margin: 0 }}>{step.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════════════ RAI SURFACES — Product in action ══════════════ */}
+        <section style={{ padding: "0 20px 80px" }}>
+          <Reveal>
+            <div style={{ maxWidth: 680, margin: "0 auto" }}>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                fontSize: 11, fontWeight: 700, color: C.primary,
+                textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14,
+              }}>
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primary} strokeWidth="1.8" fill="none" strokeLinejoin="round"/>
+                </svg>
+                Suggested by Rai
+              </div>
+
+              {/* Danger alert card */}
+              <div style={{
+                borderRadius: 14, marginBottom: 10, overflow: "hidden",
+                border: "1px solid " + C.border,
+                boxShadow: "0 4px 24px rgba(0,0,0,0.05)",
+                background: `linear-gradient(95deg, ${C.dangerBg} 0%, #FDF5F3 30%, ${C.card} 100%)`,
+              }}>
+                <div style={{ padding: "16px 18px" }}>
+                  <p style={{ fontSize: 15, color: C.text, fontWeight: 600, lineHeight: 1.55, margin: 0 }}>
+                    Broadleaf Media: Rachel's score dropped 13 points in two check-ins. The "No room to operate" combo just triggered. <span style={{ fontWeight: 700 }}>Call her — not email.</span>
+                  </p>
+                  <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Broadleaf Media · 2 minutes ago</p>
+                </div>
+                <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
+                  <div style={{ color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
+                  <div style={{ color: C.btn, borderRight: "1px solid " + C.borderLight }}>Talk to Rai</div>
+                  <div style={{ color: C.textMuted }}>Dismiss</div>
+                </div>
+              </div>
+
+              {/* Green alert card */}
+              <div style={{
+                borderRadius: 14, overflow: "hidden",
+                border: "1px solid " + C.border,
+                boxShadow: "0 4px 24px rgba(0,0,0,0.04)",
+                background: `linear-gradient(95deg, ${C.primarySoft} 0%, #F0F5F1 30%, ${C.card} 100%)`,
+              }}>
+                <div style={{ padding: "16px 18px" }}>
+                  <p style={{ fontSize: 15, color: C.text, lineHeight: 1.55, margin: 0 }}>
+                    Northvane: <span style={{ fontWeight: 600 }}>3-year anniversary in 26 days.</span> Plan something.
+                  </p>
+                  <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Northvane Studios · Milestone</p>
+                </div>
+                <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
+                  <div style={{ color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
+                  <div style={{ color: C.textMuted }}>Dismiss</div>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </section>
+
+        {/* ══════════════ 5% STAT BAR ══════════════ */}
+        <div className="r-full-bleed" style={{
+          background: C.raiGrad, padding: "56px 20px",
+          position: "relative", overflow: "hidden",
+        }}>
+          <div className="r-grain" />
+          {/* Decorative bar chart SVG */}
+          <svg style={{ position: "absolute", right: "8%", top: "50%", transform: "translateY(-50%)", width: 120, height: 80, opacity: 0.12 }} viewBox="0 0 120 80" fill="none">
+            <rect x="0" y="55" width="16" height="25" rx="3" fill="white"/>
+            <rect x="24" y="40" width="16" height="40" rx="3" fill="white"/>
+            <rect x="48" y="25" width="16" height="55" rx="3" fill="white"/>
+            <rect x="72" y="12" width="16" height="68" rx="3" fill="white"/>
+            <rect x="96" y="0" width="16" height="80" rx="3" fill="white"/>
+          </svg>
+          <svg style={{ position: "absolute", left: "8%", top: "50%", transform: "translateY(-50%)", width: 100, height: 80, opacity: 0.08 }} viewBox="0 0 100 80" fill="none">
+            <circle cx="30" cy="20" r="14" fill="white"/>
+            <path d="M30,34 C18,34 10,42 8,54 L8,80 L52,80 L52,54 C50,42 42,34 30,34Z" fill="white"/>
+            <circle cx="68" cy="28" r="10" fill="white" opacity="0.7"/>
+            <path d="M68,38 C60,38 54,44 52,52 L52,80 L84,80 L84,52 C82,44 76,38 68,38Z" fill="white" opacity="0.7"/>
+          </svg>
+
+          <h2 style={{
+            fontSize: 26, fontWeight: 800, lineHeight: 1.25, textAlign: "center",
+            margin: "0 auto", color: "#fff", letterSpacing: "-0.03em", position: "relative", zIndex: 2,
+            maxWidth: 600,
+          }}>
+            A 5% increase in retention can boost profits by 95%.
+            <sup style={{ fontSize: "0.35em", color: "rgba(255,255,255,0.3)", verticalAlign: "super" }}>¹</sup>
+          </h2>
+          <p style={{
+            textAlign: "center", fontSize: 14, color: "rgba(255,255,255,0.35)",
+            marginTop: 12, position: "relative", zIndex: 2,
+          }}>
+            Harvard Business School / Bain & Company
+          </p>
+
+          {/* Stats row */}
+          <div style={{ display: "flex", gap: 16, maxWidth: 720, margin: "32px auto 0", position: "relative", zIndex: 2 }}>
             {[
-              { label: "Daily Portfolio Sweeps", desc: "Every client scored and ranked automatically, every morning." },
-              { label: "Churn Detection", desc: "Converging signals identified before they become cancellations." },
-              { label: "Prioritized Task Lists", desc: "Specific actions, tailored to each client's communication style." },
-              { label: "Platform Integrations", desc: "Connects to Slack, email, Zoom, CRM, and billing — Retayned reads the data, you read the tasks." },
-            ].map(item => (
-              <div key={item.label} style={{ padding: "16px 14px", background: "rgba(255,255,255,0.05)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.08)", textAlign: "left" }}>
-                <div style={{ fontWeight: 700, fontSize: 13, color: "#fff", marginBottom: 4 }}>{item.label}</div>
-                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", lineHeight: 1.4 }}>{item.desc}</div>
+              { num: "90", suffix: "%", label: "Of churn is predictable" },
+              { num: "25", suffix: "x", label: "Cheaper to retain than acquire" },
+              { num: "1", suffix: "+", label: "Saved client pays for itself" },
+            ].map((s, i) => (
+              <div key={i} style={{ flex: 1, textAlign: "center", padding: "16px 0", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+                <div className="r-stats" style={{
+                  fontSize: 48, fontWeight: 900, letterSpacing: "-0.04em",
+                  color: "#fff", lineHeight: 1, marginBottom: 6,
+                }}>
+                  <AnimatedStat value={s.num} suffix={s.suffix} />
+                </div>
+                <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: ".04em" }}>{s.label}</div>
               </div>
             ))}
           </div>
-          <button className="cta-btn" onClick={() => setPage("contact")} style={{ padding: "14px 32px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Let's Talk</button>
         </div>
-      </div>
 
-      {/* TESTIMONIALS */}
-      <section style={{ padding: "0 20px 64px" }}>
-        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>What Folks Are Saying</h2>
-        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 24 }}>From our own Retayned business.</p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
-          {[
-            { quote: "I used to lose 2-3 clients a year and just accept it as cost of doing business. Retayned showed me an actual pattern. It was the same signs every time and we just ignored them. Not anymore!", name: "Agency Owner", role: "50+ Clients", stars: 5 },
-            { quote: "It gave me the exact words to say to a client I was about to lose. I had the conversation that afternoon. They're still with me 8 months later. I'm still with Retayned.", name: "Solo Operator", role: "1-5 Clients", stars: 5 },
-            { quote: "The health check questions are uncomfortable in the best way. They force you to admit what you already know but haven't said out loud. It's something we thought we'd use for crises and it's turned into our daily operations hub.", name: "Freelance Consultant", role: "10-50 Clients", stars: 5 },
-          ].map((t, i) => (
-            <div key={i} style={{ background: C.card, borderRadius: 14, padding: "24px 22px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280, display: "flex", flexDirection: "column", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
-              <div style={{ display: "flex", gap: 2, marginBottom: 12 }}>
-                {Array(t.stars).fill(0).map((_, j) => (
-                  <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>
-                ))}
+        {/* ══════════════ FEATURE TABS ══════════════ */}
+        <section style={{ padding: "80px 20px 80px" }}>
+          <Reveal>
+            <div style={{ textAlign: "center", marginBottom: 48 }}>
+              <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 8 }}>
+                Every tool you need to keep your clients
+              </h2>
+              <p style={{ fontSize: 16, color: C.textSec, maxWidth: 580, margin: "0 auto", lineHeight: 1.7 }}>
+                Relationship intelligence, health monitoring, AI advising, and pipeline management — in one system. Your clients won't know it exists. They just won't leave.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Tab bar */}
+          <div style={{
+            display: "flex", gap: 4, background: C.surface, borderRadius: 12,
+            padding: 5, marginBottom: 40, overflowX: "auto", maxWidth: 740,
+            margin: "0 auto 40px", WebkitOverflowScrolling: "touch",
+          }}>
+            {homeTabs.map((feat, i) => (
+              <button
+                key={feat.id}
+                className="r-tab-pill r-tab-btn"
+                data-active={i === activeTab}
+                onClick={() => { setActiveTab(i); setExpandedText(false); }}
+                style={{
+                  background: i === activeTab ? C.card : "transparent",
+                  color: i === activeTab ? C.primary : C.textMuted,
+                  fontWeight: i === activeTab ? 700 : 500,
+                  boxShadow: i === activeTab ? "0 2px 12px rgba(0,0,0,0.06)" : "none",
+                }}
+              >
+                <span style={{ marginRight: 4, opacity: i === activeTab ? 1 : 0.5 }}>{feat.icon}</span>
+                {feat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Feature content */}
+          <div className="r-feat-content" style={{
+            display: "flex", flexWrap: "wrap", gap: 48,
+            alignItems: "flex-start", maxWidth: 1000, margin: "0 auto",
+          }}>
+            {/* Left: copy */}
+            <div style={{ flex: "1 1 340px", paddingTop: 16 }}>
+              <h2 style={{
+                fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15,
+                marginBottom: 12,
+              }}>{ht.headline}</h2>
+              <div className="r-feat-desc-full" style={{
+                fontSize: 15, color: C.textSec, lineHeight: 1.75, marginBottom: 28,
+              }}>{ht.sub}</div>
+              <div className="r-feat-desc-mobile" style={{ display: "none" }}>
+                <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 8, overflow: "hidden", maxHeight: expandedText ? "none" : 48, transition: "max-height 0.3s ease" }}>{ht.sub}</p>
+                <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 24, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
               </div>
-              <p style={{ fontSize: 15, color: C.text, lineHeight: 1.6, marginBottom: 16, fontStyle: "italic", flex: 1 }}>"{t.quote}"</p>
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{t.name}</div>
-                <div style={{ fontSize: 12, color: C.textMuted }}>{t.role}</div>
+              <div style={{ display: "flex", gap: 12 }}>
+                <button className="r-hero-cta" onClick={() => setPage("signup")} style={{ padding: "13px 26px", fontSize: 14 }}>
+                  Try Free Now <span style={{ marginLeft: 6 }}>→</span>
+                </button>
+                <button className="r-ghost-cta" onClick={() => setPage("platform")} style={{ padding: "13px 26px", fontSize: 14 }}>
+                  See All Features
+                </button>
               </div>
             </div>
-          ))}
-        </div>
-      </section>
 
-      {/* CONFERENCE */}
-      <div className="r-full-bleed r-conf" style={{ padding: 0, marginBottom: 0 }}>
-        <div className="r-conf-inner" style={{ position: "relative", margin: "0 auto" }}>
-          <img src="/retayned-conference.jpg" alt="AI-generated conference photo" style={{ width: "100%", display: "block" }} className="r-conf-img" />
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "40px 24px 24px", background: "linear-gradient(transparent, rgba(0,0,0,0.6))" }}>
-            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.85)", fontStyle: "italic", lineHeight: 1.5, maxWidth: 500 }}>We don't go to conferences. But if we did, it might look something like this.</p>
+            {/* Right: visual mockup */}
+            <div style={{ flex: "1 1 360px", minHeight: 380 }}>
+              <div key={ht.id} style={{ animation: "fadeInScale 0.35s ease" }}>
+                {ht.id === "today" && (
+                  <div className="r-mockup-card">
+                    <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
+                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FF5F57" }} />
+                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FEBC2E" }} />
+                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#28C840" }} />
+                      <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em" }}>Today — April 12</span>
+                    </div>
+                    {[
+                      { name: "Northvane Studios", score: 91, task: "Monthly strategy review", color: C.success, tag: "Protect" },
+                      { name: "Broadleaf Media", score: 67, task: "Health Check overdue", color: C.warning, tag: "Watch" },
+                      { name: "Foxglove Partners", score: 38, task: "Rai: Call today, not email", color: C.danger, tag: "Urgent" },
+                    ].map((t, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, padding: "13px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
+                        <div className="r-score-ring" style={{ background: t.color + "14", color: t.color, border: `1.5px solid ${t.color}30` }}>{t.score}</div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>{t.name}</div>
+                          <div style={{ fontSize: 12, color: C.textMuted }}>{t.task}</div>
+                        </div>
+                        <div style={{ fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 6, background: t.color + "10", color: t.color, textTransform: "uppercase", letterSpacing: "0.02em" }}>{t.tag}</div>
+                      </div>
+                    ))}
+                    <div style={{ marginTop: 12, padding: "12px 14px", background: "linear-gradient(135deg, rgba(51,84,62,0.06), rgba(85,139,104,0.03))", borderRadius: 10, border: "1px solid " + C.primarySoft }}>
+                      <span style={{ fontSize: 10, fontWeight: 800, color: C.primary, letterSpacing: "0.04em", textTransform: "uppercase" }}>✦ Rai:</span>
+                      <span style={{ fontSize: 13, color: C.primary, marginLeft: 6, fontWeight: 500 }}>3 clients need attention today.</span>
+                    </div>
+                  </div>
+                )}
+                {ht.id === "scoring" && (
+                  <div className="r-mockup-card">
+                    <div style={{ textAlign: "center", marginBottom: 20 }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 10 }}>Retention Score</div>
+                      <div style={{ width: 88, height: 88, borderRadius: "50%", background: "linear-gradient(135deg, #FEF3C7, #FDE68A)", border: "3px solid #92400E20", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                        <span style={{ fontSize: 36, fontWeight: 900, color: "#92400E", fontFamily: "inherit" }}>67</span>
+                      </div>
+                      <div style={{ fontWeight: 700, fontSize: 14, marginTop: 8 }}>Broadleaf Media</div>
+                      <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>Rachel Chen · Account Lead</div>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                      {[["Trust", 6, C.warning], ["Loyalty", 7, C.primaryLight], ["Expectations", 7, C.primaryLight], ["Grace", 5, C.warning]].map(([name, val, color]) => (
+                        <div key={name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 12px", background: C.bg, borderRadius: 8, fontSize: 13 }}>
+                          <span style={{ color: C.textMuted }}>{name}</span>
+                          <span style={{ fontWeight: 800, color, fontFamily: "inherit" }}>{val}/10</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ marginTop: 12, display: "flex", gap: 6 }}>
+                      <div style={{ flex: 1, padding: "6px 10px", background: "#FEE2E2", borderRadius: 8, fontSize: 11, color: "#991B1B", fontWeight: 700, textAlign: "center" }}>No room to operate</div>
+                      <div style={{ flex: 1, padding: "6px 10px", background: "#FEF3C7", borderRadius: 8, fontSize: 11, color: "#92400E", fontWeight: 700, textAlign: "center" }}>Ice wall</div>
+                    </div>
+                  </div>
+                )}
+                {ht.id === "health" && (
+                  <div className="r-mockup-card">
+                    <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Health Check — Broadleaf Media</div>
+                    <div style={{ display: "flex", gap: 5, marginBottom: 16 }}>
+                      {[1,2,3,4,5].map(i => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= 2 ? C.primary : C.borderLight, transition: "background 0.3s" }} />)}
+                    </div>
+                    <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Has anything changed with this relationship?</p>
+                    {["Nothing — same as always", "Something minor, could be nothing", "Noticeably different from before", "Something has clearly changed"].map((opt, i) => (
+                      <div key={i} style={{
+                        padding: "12px 16px", borderRadius: 10, marginBottom: 5,
+                        background: i === 2 ? C.primarySoft : C.bg,
+                        border: "1.5px solid " + (i === 2 ? C.primary : C.borderLight),
+                        fontSize: 14, color: i === 2 ? C.primary : C.textSec,
+                        fontWeight: i === 2 ? 600 : 400,
+                        cursor: "pointer", transition: "all 0.15s",
+                      }}>{opt}</div>
+                    ))}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                      <span style={{ fontSize: 12, color: C.textMuted }}>2 of 5</span>
+                      <div style={{ padding: "8px 20px", background: C.primary, color: "#fff", borderRadius: 8, fontWeight: 600, fontSize: 13 }}>Next</div>
+                    </div>
+                  </div>
+                )}
+                {ht.id === "rai" && (
+                  <div className="r-mockup-card">
+                    <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Talk to Rai</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                      <div style={{ alignSelf: "flex-end", maxWidth: "78%", padding: "12px 16px", background: C.primary, color: "#fff", borderRadius: "14px 14px 4px 14px", fontSize: 14, lineHeight: 1.55 }}>
+                        Rachel at Broadleaf has been different lately. What should I do?
+                      </div>
+                      <div style={{ alignSelf: "flex-start", maxWidth: "88%", padding: "14px 16px", background: C.bg, borderRadius: "14px 14px 14px 4px", fontSize: 14, lineHeight: 1.65, border: "1px solid " + C.borderLight }}>
+                        <div style={{ fontWeight: 800, color: C.primary, marginBottom: 6, fontSize: 11, letterSpacing: "0.04em", textTransform: "uppercase" }}>✦ Rai</div>
+                        Rachel's score dropped from 78 to 67 over two check-ins. The "No room to operate" combo just triggered — low trust combined with low grace. <strong>Call her. Not email.</strong> Ask directly: "I've noticed things feel different. What's on your mind?"
+                      </div>
+                      <div style={{ alignSelf: "flex-start", maxWidth: "80%", padding: "10px 14px", background: C.primarySoft, borderRadius: "14px 14px 14px 4px", fontSize: 13, color: C.primary, fontStyle: "italic", border: "1px solid " + C.primarySoft }}>
+                        I've flagged a profile re-evaluation for Broadleaf. Want me to queue that up?
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {ht.id === "rolodex" && (
+                  <div className="r-mockup-card">
+                    <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Rolodex</div>
+                    {[
+                      { name: "Maplewood Agency", type: "Former", months: "14mo together", tags: ["Would refer", "Would come back"], priority: "high" },
+                      { name: "Clearpoint Digital", type: "One-off", months: "Site audit", tags: ["Would refer"], priority: "medium" },
+                      { name: "Harlow & Associates", type: "Former", months: "8mo together", tags: ["Would come back"], priority: "high" },
+                    ].map((r, i) => (
+                      <div key={i} style={{ padding: "13px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                          <div>
+                            <span style={{ fontWeight: 700, fontSize: 14 }}>{r.name}</span>
+                            <span style={{ fontSize: 12, color: C.textMuted, marginLeft: 8 }}>{r.type} · {r.months}</span>
+                          </div>
+                          <div style={{ width: 8, height: 8, borderRadius: "50%", background: r.priority === "high" ? C.success : C.warning }} />
+                        </div>
+                        <div style={{ display: "flex", gap: 5 }}>
+                          {r.tags.map(t => (
+                            <span key={t} style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 6, background: C.primarySoft, color: C.primary }}>{t}</span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                    <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>3 re-engagement opportunities →</div>
+                  </div>
+                )}
+                {ht.id === "referrals" && (
+                  <div className="r-mockup-card">
+                    <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Referral Intelligence</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 18 }}>
+                      {[["Total", "7"], ["Converted", "4"], ["Revenue", "$18.4k"]].map(([label, val]) => (
+                        <div key={label} style={{ background: C.bg, borderRadius: 10, padding: 12, textAlign: "center" }}>
+                          <div style={{ fontSize: 22, fontWeight: 900, color: C.primary, fontFamily: "inherit" }}>{val}</div>
+                          <div style={{ fontSize: 10, color: C.textMuted, marginTop: 3 }}>{label}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10 }}>Ready to refer</div>
+                    {[
+                      { name: "Northvane Studios", readiness: 94, contact: "Sarah Chen" },
+                      { name: "Oakline Outdoors", readiness: 76, contact: "James Park" },
+                    ].map((r, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 0", borderTop: "1px solid " + C.borderLight }}>
+                        <div>
+                          <span style={{ fontWeight: 600, fontSize: 14 }}>{r.name}</span>
+                          <span style={{ fontSize: 12, color: C.textMuted, marginLeft: 8 }}>{r.contact}</span>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <div style={{ width: 52, height: 5, borderRadius: 3, background: C.borderLight, overflow: "hidden" }}>
+                            <div style={{ width: `${r.readiness}%`, height: "100%", background: `linear-gradient(90deg, ${C.primaryLight}, ${C.success})`, borderRadius: 3 }} />
+                          </div>
+                          <span style={{ fontSize: 12, fontWeight: 800, color: C.success }}>{r.readiness}%</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════ ENTERPRISE ══════════════ */}
+        <div className="r-full-bleed" style={{
+          background: C.heroGrad, padding: "80px 20px",
+          position: "relative", overflow: "hidden",
+        }}>
+          <div className="r-grain" />
+          {/* Decorative geometric pattern */}
+          <div style={{ position: "absolute", top: 40, right: 60, width: 200, height: 200, border: "1px solid rgba(255,255,255,0.04)", borderRadius: "50%", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", top: 60, right: 80, width: 160, height: 160, border: "1px solid rgba(255,255,255,0.03)", borderRadius: "50%", pointerEvents: "none" }} />
+
+          <Reveal><div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 2 }}>
+            <div style={{
+              display: "inline-block", fontSize: 10, fontWeight: 700,
+              textTransform: "uppercase", letterSpacing: ".14em",
+              color: "rgba(255,255,255,0.3)", marginBottom: 20,
+              padding: "5px 16px", borderRadius: 6,
+              background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)",
+            }}>Enterprise</div>
+            <h2 style={{
+              fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff",
+            }}>Autonomous relationship intelligence.</h2>
+            <p style={{
+              fontSize: 16, color: "rgba(255,255,255,0.4)", maxWidth: 580,
+              margin: "0 auto 40px", lineHeight: 1.75,
+            }}>Connect your platforms. Retayned scores every client, detects churn patterns, and tells your team — or your agents — exactly what to address, every morning, automatically.</p>
+
+            <div className="r-ent-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 40, maxWidth: 560, margin: "0 auto 40px" }}>
+              {[
+                { label: "Daily Portfolio Sweeps", desc: "Every client scored and ranked automatically, every morning." },
+                { label: "Churn Detection", desc: "Converging signals identified before they become cancellations." },
+                { label: "Prioritized Task Lists", desc: "Specific actions, tailored to each client's communication style." },
+                { label: "Platform Integrations", desc: "Slack, email, Zoom, CRM, billing — Retayned reads the data, you read the tasks." },
+              ].map(item => (
+                <div key={item.label} className="r-ent-feature">
+                  <div style={{ fontWeight: 700, fontSize: 14, color: "#fff", marginBottom: 5 }}>{item.label}</div>
+                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.38)", lineHeight: 1.5 }}>{item.desc}</div>
+                </div>
+              ))}
+            </div>
+            <button className="r-hero-cta" onClick={() => setPage("contact")} style={{
+              background: "#fff", color: C.btn,
+            }}>Let's Talk <span style={{ marginLeft: 6 }}>→</span></button>
+          </div></Reveal>
+        </div>
+
+        {/* ══════════════ TESTIMONIALS ══════════════ */}
+        <section style={{ padding: "80px 20px 80px" }}>
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 8 }}>What Folks Are Saying</h2>
+            <p style={{ fontSize: 16, color: C.textSec }}>From our own Retayned business.</p>
+          </div>
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 16, maxWidth: 1100, margin: "0 auto" }}>
+            {[
+              { quote: "I used to lose 2-3 clients a year and just accept it as cost of doing business. Retayned showed me an actual pattern. It was the same signs every time and we just ignored them. Not anymore!", name: "Agency Owner", role: "50+ Clients", stars: 5 },
+              { quote: "It gave me the exact words to say to a client I was about to lose. I had the conversation that afternoon. They're still with me 8 months later. I'm still with Retayned.", name: "Solo Operator", role: "1-5 Clients", stars: 5 },
+              { quote: "The health check questions are uncomfortable in the best way. They force you to admit what you already know but haven't said out loud. It's something we thought we'd use for crises and it's turned into our daily operations hub.", name: "Freelance Consultant", role: "10-50 Clients", stars: 5 },
+            ].map((t, i) => (
+              <Reveal key={i} delay={i * 0.12} style={{ flex: "1 1 300px", minWidth: 280 }}>
+                <div className="r-testimonial-card">
+                  <div style={{ display: "flex", gap: 2, marginBottom: 14 }}>
+                    {Array(t.stars).fill(0).map((_, j) => (
+                      <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>
+                    ))}
+                  </div>
+                  <p style={{ fontSize: 15, color: C.text, lineHeight: 1.65, marginBottom: 20, fontStyle: "italic", flex: 1 }}>"{t.quote}"</p>
+                  <div style={{ borderTop: "1px solid " + C.borderLight, paddingTop: 14 }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{t.name}</div>
+                    <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>{t.role}</div>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════════════ FAQ ══════════════ */}
+        <div className="r-full-bleed" style={{
+          background: C.primarySoft, padding: "64px 20px 72px",
+        }}>
+          <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+            <h2 style={{ fontSize: 30, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>FAQs</h2>
+            <FAQ fullBleed />
           </div>
         </div>
-      </div>
 
-      {/* FAQ */}
-      <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px 64px" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
-          <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 24 }}>FAQs</h2>
-          <FAQ fullBleed />
+        {/* ══════════════ FINAL CTA ══════════════ */}
+        <div className="r-full-bleed" style={{
+          background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 40%, #1E261F 100%)",
+          padding: "88px 20px", textAlign: "center",
+          position: "relative", overflow: "hidden",
+        }}>
+          <div className="r-grain" style={{ opacity: 0.04 }} />
+          <div style={{ position: "relative", zIndex: 2 }}>
+            <h2 style={{
+              fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff",
+            }}>
+              You work too hard to get new clients.<br />
+              Keep them Retayned.
+            </h2>
+            <p style={{ fontSize: 17, color: "rgba(255,255,255,0.5)", marginBottom: 28, lineHeight: 1.6 }}>
+              See the signal. Get the script. Keep the client.
+            </p>
+            <button className="r-hero-cta" onClick={() => setPage("signup")} style={{
+              background: "#fff", color: C.btn, padding: "16px 40px", fontSize: 16,
+              animation: "pulseGlow 3s ease-in-out infinite",
+            }}>
+              Start Free Trial <span style={{ marginLeft: 8 }}>→</span>
+            </button>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 14 }}>
+              No credit card · Cancel anytime
+            </p>
+          </div>
         </div>
-      </div>
-
-      {/* FINAL CTA */}
-      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 50%, #1E261F 100%)", padding: "72px 20px", textAlign: "center" }}>
-        <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 12, color: "#fff" }}>You work too hard to get new clients. Keep them Retayned.</h2>
-        <p style={{ fontSize: 17, color: "rgba(255,255,255,.6)", marginBottom: 24, lineHeight: 1.5 }}>See the signal. Get the script. Keep the client.</p>
-        <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "14px 32px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
       </div>
     </>
   );
 }
+
 
 // ═══ PRICING ═══
 function Pricing({ setPage }) {
@@ -728,7 +1189,7 @@ function About({ setPage }) {
     <>
       <section style={{ padding: "48px 20px 40px" }}>
         <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 16 }}>
-          Built by someone who's kept clients for{" "}
+          Built by a team that's kept clients for{" "}
           <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
             <span style={{ color: C.textMuted }}>years<span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} /></span>
             <span style={{ position: "absolute", top: "-0.55em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>a decade+</span>
@@ -1572,498 +2033,552 @@ function Platform({ setPage }) {
   const [activeFeat, setActiveFeat] = useState(0);
   const [expandedText, setExpandedText] = useState(false);
   const platformFeatures = [
-    { id: "today", label: "Today", headline: "One page. Every priority.", sub: "Your Today tab knows which clients need you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value. Green clients surface first to protect what's working. At-risk clients with high revenue jump the line. You never have to decide who to focus on. The system already did." },
-    { id: "scoring", label: "Retention Score", headline: "A number that means something.", sub: "12 dimensions. 20 combination signals. Health check modifiers. Every client gets a Retention Score from 1–99 that tells you exactly where the relationship stands — not where you hope it is. The score catches silent churners, rewards genuine trust, and penalizes the patterns that kill contracts. Your gut feeling, quantified." },
-    { id: "health", label: "Health Checks", headline: "Five questions. Two minutes. The truth.", sub: "Regular check-ins that detect drift before it becomes damage. Has anything changed? Is the relationship trending up or down? Would you be surprised if they cancelled? Your answers blend directly into the Retention Score — bad news moves the number immediately. No lengthy forms. No busywork. Just the signal." },
-    { id: "rai", label: "Talk to Rai", headline: "She writes the words you need when it matters most.", sub: "Rai isn't a chatbot. She's an AI advisor calibrated to your specific relationships. When you're staring at a client's name and don't know what to say — the opening line, the tone, whether to call or email — Rai gives you the script. She knows this client's personality, their history, what worked last time, and what didn't. Most of the time you won't need her. But when you do, she's the difference between saving the account and losing it." },
-    { id: "rolodex", label: "Rolodex", headline: "Your pipeline is forward-looking.", sub: "Former clients aren't dead relationships — they're future revenue. The Rolodex tracks who left, how it ended, and whether they'd come back. One-off projects become re-engagement opportunities. Past clients become referral sources. This isn't a CRM graveyard. It's a pipeline you forgot you had." },
-    { id: "referrals", label: "Referrals", headline: "Your best clients send you their friends.", sub: "Retayned tracks referral readiness based on loyalty, trust, and relationship depth — the same dimensions driving your Retention Score. When a client is ready to refer, the system knows before you do. Track who referred who, whether they converted, and the revenue they generated. Your network, measured." },
+    { id: "today", label: "Today", icon: "◉", headline: "One page. Every priority.", sub: "Your Today tab knows which clients need you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value. Green clients surface first to protect what's working. At-risk clients with high revenue jump the line. You never have to decide who to focus on. The system already did." },
+    { id: "scoring", label: "Retention Score", icon: "◎", headline: "A number that means something.", sub: "12 dimensions. 20 combination signals. Health check modifiers. Every client gets a Retention Score from 1–99 that tells you exactly where the relationship stands — not where you hope it is. The score catches silent churners, rewards genuine trust, and penalizes the patterns that kill contracts. Your gut feeling, quantified." },
+    { id: "health", label: "Health Checks", icon: "♡", headline: "Five questions. Two minutes. The truth.", sub: "Regular check-ins that detect drift before it becomes damage. Has anything changed? Is the relationship trending up or down? Would you be surprised if they cancelled? Your answers blend directly into the Retention Score — bad news moves the number immediately. No lengthy forms. No busywork. Just the signal." },
+    { id: "rai", label: "Talk to Rai", icon: "✦", headline: "She writes the words you need when it matters most.", sub: "Rai isn't a chatbot. She's an AI advisor calibrated to your specific relationships. When you're staring at a client's name and don't know what to say — the opening line, the tone, whether to call or email — Rai gives you the script. She knows this client's personality, their history, what worked last time, and what didn't. Most of the time you won't need her. But when you do, she's the difference between saving the account and losing it." },
+    { id: "rolodex", label: "Rolodex", icon: "⟐", headline: "Your pipeline is forward-looking.", sub: "Former clients aren't dead relationships — they're future revenue. The Rolodex tracks who left, how it ended, and whether they'd come back. One-off projects become re-engagement opportunities. Past clients become referral sources. This isn't a CRM graveyard. It's a pipeline you forgot you had." },
+    { id: "referrals", label: "Referrals", icon: "⟡", headline: "Your best clients send you their friends.", sub: "Retayned tracks referral readiness based on loyalty, trust, and relationship depth — the same dimensions driving your Retention Score. When a client is ready to refer, the system knows before you do. Track who referred who, whether they converted, and the revenue they generated. Your network, measured." },
   ];
   const pf = platformFeatures[activeFeat];
 
   return (
     <>
-      {/* Hero */}
-      <section style={{ padding: "48px 20px 20px" }}>
-        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 12 }}>
-          Your clients won't know Retayned exists.<br />They'll just stay.
-        </h1>
-        <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.6, maxWidth: 600 }}>
-          Retayned brings relationship intelligence, health monitoring, AI advising, and pipeline management into one system. Our AI isn't just smart, it's <strong>emotionally intelligent</strong>.
-        </p>
-      </section>
+      <style>{`
+        
 
-      {/* Feature Tabs */}
-      <section style={{ padding: "32px 20px 64px" }}>
-        {/* Tab bar */}
-        <div className="r-tab-bar" style={{ display: "flex", gap: 4, background: C.surface, borderRadius: 10, padding: 4, marginBottom: 32, overflowX: "auto", maxWidth: 720, margin: "0 auto 32px", WebkitOverflowScrolling: "touch" }}>
-          {platformFeatures.map((feat, i) => (
-            <button key={feat.id} onClick={() => { setActiveFeat(i); setExpandedText(false); }} className="r-tab-btn" style={{
-              padding: "10px 16px", borderRadius: 8, border: "none", cursor: "pointer",
-              background: i === activeFeat ? C.card : "transparent",
-              color: i === activeFeat ? C.primary : C.textMuted,
-              fontFamily: "inherit", fontSize: 13, fontWeight: i === activeFeat ? 700 : 500,
-              boxShadow: i === activeFeat ? "0 2px 8px rgba(0,0,0,0.06)" : "none",
-              transition: "all 0.2s", whiteSpace: "nowrap", flex: "0 0 auto",
-            }}>{feat.label}</button>
-          ))}
-        </div>
+        .r-plat-tab {
+          padding: 10px 18px; border-radius: 10px; border: none; cursor: pointer;
+          font-family: inherit; font-size: 13px; font-weight: 500;
+          transition: all 0.25s ease; white-space: nowrap; flex: 0 0 auto;
+        }
+        .r-plat-tab:hover { background: rgba(255,255,255,0.6); }
 
-        {/* Feature content — two column on desktop */}
-        <div className="r-feat-content" style={{ display: "flex", flexWrap: "wrap", gap: 40, alignItems: "flex-start", maxWidth: 960, margin: "0 auto" }}>
-          {/* Left: copy */}
-          <div style={{ flex: "1 1 320px", paddingTop: 24 }}>
-            <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 12 }}>{pf.headline}</h2>
-            <div className="r-feat-desc-full" style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 24 }}>{pf.sub}</div>
-            <div className="r-feat-desc-mobile" style={{ display: "none" }}>
-              <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 8, overflow: "hidden", maxHeight: expandedText ? "none" : 48, transition: "max-height 0.3s ease" }}>{pf.sub}</p>
-              <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 20, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
-            </div>
-            <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "12px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
+        .r-plat-mockup {
+          background: ${C.card}; border-radius: 18px; border: 1px solid ${C.border};
+          padding: 22px; box-shadow: 0 12px 40px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .r-rai-step-card {
+          padding: 32px 28px; border-radius: 18px; background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.06);
+          transition: all 0.3s ease;
+        }
+        .r-rai-step-card:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+
+        .r-combo-card {
+          background: ${C.card}; border-radius: 16px; padding: 22px 18px;
+          border: 1px solid ${C.border}; text-align: center;
+          transition: all 0.25s ease; cursor: default;
+        }
+        .r-combo-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+
+        @keyframes dimScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @keyframes dimScrollReverse { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+      `}</style>
+
+      <div className="r-platform">
+        {/* ══════ Hero ══════ */}
+        <div className="r-full-bleed" style={{
+          background: "radial-gradient(ellipse 70% 50% at 50% 60%, " + C.primarySoft + " 0%, " + C.bg + " 80%)",
+          padding: "56px 20px 24px",
+        }}>
+          <div style={{ textAlign: "center", maxWidth: 680, margin: "0 auto" }}>
+            <div style={{
+              display: "inline-block", fontSize: 10, fontWeight: 700,
+              textTransform: "uppercase", letterSpacing: ".14em",
+              color: C.btn, marginBottom: 16,
+              padding: "5px 14px", borderRadius: 6,
+              background: "rgba(91,33,182,0.06)",
+            }}>Platform</div>
+            <h1 style={{
+              fontSize: 36, fontWeight: 900, lineHeight: 1.1, marginBottom: 12,
+              letterSpacing: "-0.04em",
+            }}>
+              Your clients won't know Retayned exists.<br />
+              <span style={{ fontFamily: "'Caveat', cursive", fontWeight: 700, color: C.primary }}>They'll just stay.</span>
+            </h1>
+            <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>
+              Relationship intelligence, health monitoring, AI advising, and pipeline management in one system. Our AI isn't just smart — it's <strong style={{ color: C.text }}>emotionally intelligent</strong>.
+            </p>
           </div>
 
-          {/* Right: visual mockup */}
+          {/* ══════ Feature Tabs ══════ */}
+          <section style={{ padding: "36px 20px 64px" }}>
+            <div style={{
+              display: "flex", gap: 4, background: C.surface, borderRadius: 12,
+              padding: 5, marginBottom: 36, overflowX: "auto", maxWidth: 740,
+              margin: "0 auto 36px", WebkitOverflowScrolling: "touch",
+            }}>
+              {platformFeatures.map((feat, i) => (
+                <button key={feat.id} onClick={() => { setActiveFeat(i); setExpandedText(false); }} className="r-plat-tab r-tab-btn" style={{
+                  background: i === activeFeat ? C.card : "transparent",
+                  color: i === activeFeat ? C.primary : C.textMuted,
+                  fontWeight: i === activeFeat ? 700 : 500,
+                  boxShadow: i === activeFeat ? "0 2px 12px rgba(0,0,0,0.06)" : "none",
+                }}>
+                  <span style={{ marginRight: 4, opacity: i === activeFeat ? 1 : 0.5 }}>{feat.icon}</span>
+                  {feat.label}
+                </button>
+              ))}
+            </div>
 
-          <div style={{ flex: "1 1 340px", height: 380, overflow: "auto" }}>
-            {pf.id === "today" && (
-              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Today — April 11</div>
+            {/* Feature content */}
+            <div className="r-feat-content" style={{ display: "flex", flexWrap: "wrap", gap: 48, alignItems: "flex-start", maxWidth: 1000, margin: "0 auto" }}>
+              <div style={{ flex: "1 1 340px", paddingTop: 16 }}>
+                <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 12 }}>{pf.headline}</h2>
+                <div className="r-feat-desc-full" style={{ fontSize: 15, color: C.textSec, lineHeight: 1.75, marginBottom: 28 }}>{pf.sub}</div>
+                <div className="r-feat-desc-mobile" style={{ display: "none" }}>
+                  <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 8, overflow: "hidden", maxHeight: expandedText ? "none" : 48, transition: "max-height 0.3s ease" }}>{pf.sub}</p>
+                  <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 24, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
+                </div>
+                <button className="r-hero-cta cta-btn" onClick={() => setPage("signup")} style={{ padding: "13px 26px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                  Try Free Now <span style={{ marginLeft: 6 }}>→</span>
+                </button>
+              </div>
+
+              {/* Mockups */}
+              <div style={{ flex: "1 1 360px", height: 400, overflow: "auto" }}>
+                <div key={pf.id} style={{ animation: "fadeInScale 0.35s ease" }}>
+                  {pf.id === "today" && (
+                    <div className="r-plat-mockup">
+                      <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
+                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FF5F57" }} />
+                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FEBC2E" }} />
+                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#28C840" }} />
+                        <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em" }}>Today — April 12</span>
+                      </div>
+                      {[
+                        { name: "Northvane Studios", score: 91, task: "Monthly strategy review", color: C.success, tag: "Protect" },
+                        { name: "Broadleaf Media", score: 67, task: "Health Check overdue", color: C.warning, tag: "Watch" },
+                        { name: "Foxglove Partners", score: 38, task: "Rai: Call today, not email", color: C.danger, tag: "Urgent" },
+                      ].map((t, i) => (
+                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, padding: "13px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
+                          <div style={{ width: 42, height: 42, borderRadius: 10, background: t.color + "14", border: "1.5px solid " + t.color + "30", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14, color: t.color, flexShrink: 0 }}>{t.score}</div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>{t.name}</div>
+                            <div style={{ fontSize: 12, color: C.textMuted }}>{t.task}</div>
+                          </div>
+                          <div style={{ fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 6, background: t.color + "10", color: t.color, textTransform: "uppercase", letterSpacing: "0.02em" }}>{t.tag}</div>
+                        </div>
+                      ))}
+                      <div style={{ marginTop: 12, padding: "12px 14px", background: "linear-gradient(135deg, rgba(51,84,62,0.06), rgba(85,139,104,0.03))", borderRadius: 10, border: "1px solid " + C.primarySoft }}>
+                        <span style={{ fontSize: 10, fontWeight: 800, color: C.primary, letterSpacing: "0.04em", textTransform: "uppercase" }}>✦ Rai:</span>
+                        <span style={{ fontSize: 13, color: C.primary, marginLeft: 6, fontWeight: 500 }}>3 clients need attention today. Foxglove hasn't responded in 14 days.</span>
+                      </div>
+                    </div>
+                  )}
+                  {pf.id === "scoring" && (
+                    <div className="r-plat-mockup">
+                      <div style={{ textAlign: "center", marginBottom: 20 }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 10 }}>Retention Score</div>
+                        <div style={{ width: 88, height: 88, borderRadius: "50%", background: "linear-gradient(135deg, #FEF3C7, #FDE68A)", border: "3px solid #92400E20", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                          <span style={{ fontSize: 36, fontWeight: 900, color: "#92400E", fontFamily: "inherit" }}>67</span>
+                        </div>
+                        <div style={{ fontWeight: 700, fontSize: 14, marginTop: 8 }}>Broadleaf Media</div>
+                        <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>Rachel Chen · Account Lead</div>
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                        {[["Trust", 6, C.warning], ["Loyalty", 7, C.primaryLight], ["Expectations", 7, C.primaryLight], ["Grace", 5, C.warning]].map(([name, val, color]) => (
+                          <div key={name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 12px", background: C.bg, borderRadius: 8, fontSize: 13 }}>
+                            <span style={{ color: C.textMuted }}>{name}</span>
+                            <span style={{ fontWeight: 800, color, fontFamily: "inherit" }}>{val}/10</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{ marginTop: 12, display: "flex", gap: 6 }}>
+                        <div style={{ flex: 1, padding: "6px 10px", background: "#FEE2E2", borderRadius: 8, fontSize: 11, color: "#991B1B", fontWeight: 700, textAlign: "center" }}>No room to operate</div>
+                        <div style={{ flex: 1, padding: "6px 10px", background: "#FEF3C7", borderRadius: 8, fontSize: 11, color: "#92400E", fontWeight: 700, textAlign: "center" }}>Ice wall</div>
+                      </div>
+                    </div>
+                  )}
+                  {pf.id === "health" && (
+                    <div className="r-plat-mockup">
+                      <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Health Check — Broadleaf Media</div>
+                      <div style={{ display: "flex", gap: 5, marginBottom: 16 }}>
+                        {[1,2,3,4,5].map(i => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= 2 ? C.primary : C.borderLight }} />)}
+                      </div>
+                      <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Has anything changed with this relationship?</p>
+                      {["Nothing — same as always", "Something minor, could be nothing", "Noticeably different from before", "Something has clearly changed"].map((opt, i) => (
+                        <div key={i} style={{ padding: "12px 16px", borderRadius: 10, marginBottom: 5, background: i === 2 ? C.primarySoft : C.bg, border: "1.5px solid " + (i === 2 ? C.primary : C.borderLight), fontSize: 14, color: i === 2 ? C.primary : C.textSec, fontWeight: i === 2 ? 600 : 400, cursor: "pointer", transition: "all 0.15s" }}>{opt}</div>
+                      ))}
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                        <span style={{ fontSize: 12, color: C.textMuted }}>2 of 5</span>
+                        <div style={{ padding: "8px 20px", background: C.primary, color: "#fff", borderRadius: 8, fontWeight: 600, fontSize: 13 }}>Next</div>
+                      </div>
+                    </div>
+                  )}
+                  {pf.id === "rai" && (
+                    <div className="r-plat-mockup">
+                      <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Talk to Rai</div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                        <div style={{ alignSelf: "flex-end", maxWidth: "78%", padding: "12px 16px", background: C.primary, color: "#fff", borderRadius: "14px 14px 4px 14px", fontSize: 14, lineHeight: 1.55 }}>
+                          Rachel at Broadleaf has been different lately. What should I do?
+                        </div>
+                        <div style={{ alignSelf: "flex-start", maxWidth: "88%", padding: "14px 16px", background: C.bg, borderRadius: "14px 14px 14px 4px", fontSize: 14, lineHeight: 1.65, border: "1px solid " + C.borderLight }}>
+                          <div style={{ fontWeight: 800, color: C.primary, marginBottom: 6, fontSize: 11, letterSpacing: "0.04em", textTransform: "uppercase" }}>✦ Rai</div>
+                          Rachel's score dropped from 78 to 67 over two check-ins. The "No room to operate" combo just triggered. This isn't performance — it's relationship. <strong>Call her. Not email.</strong> Ask: "I've noticed things feel different. What's on your mind?"
+                        </div>
+                        <div style={{ alignSelf: "flex-start", maxWidth: "80%", padding: "10px 14px", background: C.primarySoft, borderRadius: "14px 14px 14px 4px", fontSize: 13, color: C.primary, fontStyle: "italic", border: "1px solid " + C.primarySoft }}>
+                          I've flagged a profile re-evaluation for Broadleaf. Want me to queue that up?
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {pf.id === "rolodex" && (
+                    <div className="r-plat-mockup">
+                      <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Rolodex</div>
+                      {[
+                        { name: "Maplewood Agency", type: "Former", months: "14mo together", tags: ["Would refer", "Would come back"], priority: "high" },
+                        { name: "Clearpoint Digital", type: "One-off", months: "Site audit", tags: ["Would refer"], priority: "medium" },
+                        { name: "Harlow & Associates", type: "Former", months: "8mo together", tags: ["Would come back"], priority: "high" },
+                      ].map((r, i) => (
+                        <div key={i} style={{ padding: "13px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                            <div>
+                              <span style={{ fontWeight: 700, fontSize: 14 }}>{r.name}</span>
+                              <span style={{ fontSize: 12, color: C.textMuted, marginLeft: 8 }}>{r.type} · {r.months}</span>
+                            </div>
+                            <div style={{ width: 8, height: 8, borderRadius: "50%", background: r.priority === "high" ? C.success : C.warning }} />
+                          </div>
+                          <div style={{ display: "flex", gap: 5 }}>
+                            {r.tags.map(t => (
+                              <span key={t} style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 6, background: C.primarySoft, color: C.primary }}>{t}</span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                      <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>3 re-engagement opportunities →</div>
+                    </div>
+                  )}
+                  {pf.id === "referrals" && (
+                    <div className="r-plat-mockup">
+                      <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Referral Intelligence</div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 18 }}>
+                        {[["Total", "7"], ["Converted", "4"], ["Revenue", "$18.4k"]].map(([label, val]) => (
+                          <div key={label} style={{ background: C.bg, borderRadius: 10, padding: 12, textAlign: "center" }}>
+                            <div style={{ fontSize: 22, fontWeight: 900, color: C.primary, fontFamily: "inherit" }}>{val}</div>
+                            <div style={{ fontSize: 10, color: C.textMuted, marginTop: 3 }}>{label}</div>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10 }}>Ready to refer</div>
+                      {[
+                        { name: "Northvane Studios", readiness: 94, contact: "Sarah Chen" },
+                        { name: "Oakline Outdoors", readiness: 76, contact: "James Park" },
+                      ].map((r, i) => (
+                        <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 0", borderTop: "1px solid " + C.borderLight }}>
+                          <div>
+                            <span style={{ fontWeight: 600, fontSize: 14 }}>{r.name}</span>
+                            <span style={{ fontSize: 12, color: C.textMuted, marginLeft: 8 }}>{r.contact}</span>
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <div style={{ width: 52, height: 5, borderRadius: 3, background: C.borderLight, overflow: "hidden" }}>
+                              <div style={{ width: r.readiness + "%", height: "100%", background: "linear-gradient(90deg, " + C.primaryLight + ", " + C.success + ")", borderRadius: 3 }} />
+                            </div>
+                            <span style={{ fontSize: 12, fontWeight: 800, color: C.success }}>{r.readiness}%</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* Gradient fade */}
+        <div className="r-full-bleed" style={{ background: "linear-gradient(to bottom, " + C.primarySoft + " 0%, " + C.bg + " 100%)", height: 80 }} />
+
+        {/* ══════ Meet the Brains ══════ */}
+        <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "80px 20px 88px", position: "relative", overflow: "hidden" }}>
+          <div className="r-grain" style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.03, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
+          {/* Decorative circles */}
+          <div style={{ position: "absolute", top: "5%", right: "8%", width: 250, height: 250, border: "1px solid rgba(255,255,255,0.03)", borderRadius: "50%", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: "10%", left: "5%", width: 180, height: 180, border: "1px solid rgba(255,255,255,0.02)", borderRadius: "50%", pointerEvents: "none" }} />
+
+          <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
+            <Reveal><div style={{ textAlign: "center", marginBottom: 56 }}>
+              <h2 style={{ fontSize: 30, fontWeight: 900, color: "#fff", marginBottom: 12, letterSpacing: "-0.03em" }}>Meet the Brains of the Operation</h2>
+              <p style={{ fontSize: 16, color: "rgba(255,255,255,0.4)", lineHeight: 1.75, maxWidth: 560, margin: "0 auto" }}>
+                You have 15 clients. You're focused on the three that are screaming. Rai is watching the other twelve.
+              </p>
+            </div></Reveal>
+
+            {/* Step 1 */}
+            <Reveal direction="left"><div className="r-rai-step-card" style={{ marginBottom: 20, maxWidth: 680 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.primaryLight, textTransform: "uppercase", letterSpacing: ".1em" }}>01 — Signal Detection</div>
+                <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
+              </div>
+              <h3 style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>She sees it.</h3>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.38)", lineHeight: 1.7, marginBottom: 22, maxWidth: 560 }}>Cross-referencing health checks, score trends, billing patterns, and 20 combination signals — continuously, across your entire book.</p>
+              <div style={{ background: C.card, borderRadius: 14, border: "1px solid " + C.border, padding: "18px 20px", boxShadow: "0 8px 32px rgba(0,0,0,0.15)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: C.danger, animation: "pulse 2s infinite" }} />
+                  <span style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em" }}>Live — scanning 15 clients</span>
+                </div>
                 {[
-                  { name: "Northvane Studios", score: 91, task: "Monthly strategy review", color: C.success, tag: "Protect" },
-                  { name: "Broadleaf Media", score: 67, task: "Health Check overdue", color: C.warning, tag: "Watch" },
-                  { name: "Foxglove Partners", score: 38, task: "Rai: Call today, not email", color: C.danger, tag: "Urgent" },
-                ].map((t, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
-                    <div style={{ width: 38, height: 38, borderRadius: 8, background: t.color + "18", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 14, color: t.color, flexShrink: 0 }}>{t.score}</div>
+                  { name: "Broadleaf Media", score: 65, signals: ["78 → 65", "combo: no_room", "11d silent", "rate↑ no call"], status: "critical" },
+                  { name: "Foxglove Partners", score: 38, signals: ["42 → 38", "HC overdue", "velocity: cold"], status: "critical" },
+                  { name: "Northvane Studios", score: 91, signals: ["91 stable", "renewed", "weekly calls"], status: "clear" },
+                ].map((c, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none", opacity: c.status === "clear" ? 0.4 : 1 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, background: c.status === "critical" ? C.danger + "12" : C.success + "12", border: "1.5px solid " + (c.status === "critical" ? C.danger + "30" : C.success + "30"), display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 13, color: c.status === "critical" ? C.danger : C.success, flexShrink: 0 }}>{c.score}</div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 700, fontSize: 13 }}>{t.name}</div>
-                      <div style={{ fontSize: 11, color: C.textMuted }}>{t.task}</div>
-                    </div>
-                    <div style={{ fontSize: 10, fontWeight: 600, padding: "3px 8px", borderRadius: 4, background: t.color + "15", color: t.color }}>{t.tag}</div>
-                  </div>
-                ))}
-                <div style={{ marginTop: 10, padding: "10px 12px", background: C.primarySoft, borderRadius: 8, fontSize: 12, color: C.primary }}>
-                  <strong>Rai:</strong> 3 clients need attention today. Foxglove hasn't responded in 14 days — this is beyond busy.
-                </div>
-              </div>
-            )}
-
-            {pf.id === "scoring" && (
-              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-                <div style={{ textAlign: "center", marginBottom: 16 }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 8 }}>Retention Score</div>
-                  <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#FEF3C7", border: "3px solid #92400E30", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
-                    <span style={{ fontSize: 32, fontWeight: 900, color: "#92400E" }}>67</span>
-                  </div>
-                  <div style={{ fontWeight: 700, fontSize: 13, marginTop: 6 }}>Broadleaf Media</div>
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
-                  {[["Trust", 6, C.warning], ["Loyalty", 7, C.primaryLight], ["Expectations", 7, C.primaryLight], ["Grace", 5, C.warning]].map(([name, val, color]) => (
-                    <div key={name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 10px", background: C.bg, borderRadius: 6, fontSize: 12 }}>
-                      <span style={{ color: C.textMuted }}>{name}</span>
-                      <span style={{ fontWeight: 700, color }}>{val}/10</span>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ marginTop: 10, display: "flex", gap: 6 }}>
-                  <div style={{ flex: 1, padding: "5px 8px", background: "#FEE2E2", borderRadius: 6, fontSize: 10, color: "#991B1B", fontWeight: 600 }}>No room to operate</div>
-                  <div style={{ flex: 1, padding: "5px 8px", background: "#FEF3C7", borderRadius: 6, fontSize: 10, color: "#92400E", fontWeight: 600 }}>Ice wall</div>
-                </div>
-              </div>
-            )}
-
-            {pf.id === "health" && (
-              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Health Check — Broadleaf Media</div>
-                <div style={{ display: "flex", gap: 4, marginBottom: 14 }}>
-                  {[1,2,3,4,5].map(i => <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= 2 ? C.primary : C.borderLight }} />)}
-                </div>
-                <p style={{ fontSize: 14, fontWeight: 700, marginBottom: 10 }}>Has anything changed with this relationship?</p>
-                {["Nothing — same as always", "Something minor, could be nothing", "Noticeably different from before", "Something has clearly changed"].map((opt, i) => (
-                  <div key={i} style={{
-                    padding: "10px 14px", borderRadius: 8, marginBottom: 4,
-                    background: i === 2 ? C.primarySoft : C.bg,
-                    border: "1.5px solid " + (i === 2 ? C.primary : C.borderLight),
-                    fontSize: 13, color: i === 2 ? C.primary : C.textSec,
-                    fontWeight: i === 2 ? 600 : 400,
-                  }}>{opt}</div>
-                ))}
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
-                  <span style={{ fontSize: 12, color: C.textMuted }}>2 of 5</span>
-                  <div style={{ padding: "7px 18px", background: C.primary, color: "#fff", borderRadius: 6, fontWeight: 600, fontSize: 12 }}>Next</div>
-                </div>
-              </div>
-            )}
-
-            {pf.id === "rai" && (
-              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Talk to Rai</div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  <div style={{ alignSelf: "flex-end", maxWidth: "75%", padding: "10px 14px", background: C.primary, color: "#fff", borderRadius: "12px 12px 4px 12px", fontSize: 13, lineHeight: 1.5 }}>
-                    Rachel at Broadleaf has been different lately. What should I do?
-                  </div>
-                  <div style={{ alignSelf: "flex-start", maxWidth: "85%", padding: "12px 14px", background: C.bg, borderRadius: "12px 12px 12px 4px", fontSize: 13, lineHeight: 1.6 }}>
-                    <div style={{ fontWeight: 700, color: C.primary, marginBottom: 4, fontSize: 11 }}>Rai</div>
-                    Rachel's score dropped from 78 to 67 over two check-ins. The "No room to operate" combo just triggered — low trust combined with low grace. This isn't a performance issue. It's a relationship issue. Call her. Not email. Ask directly: "I've noticed things feel different. What's on your mind?"
-                  </div>
-                  <div style={{ alignSelf: "flex-start", maxWidth: "85%", padding: "8px 12px", background: C.primarySoft, borderRadius: "12px 12px 12px 4px", fontSize: 12, color: C.primary }}>
-                    I've also flagged a profile re-evaluation for Broadleaf. Your initial profile was 8 weeks ago — things have shifted. Want me to queue that up?
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {pf.id === "rolodex" && (
-              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Rolodex</div>
-                {[
-                  { name: "Maplewood Agency", type: "Former", months: "14mo together", tags: ["Would refer", "Would come back"], priority: "high" },
-                  { name: "Clearpoint Digital", type: "One-off", months: "Site audit", tags: ["Would refer"], priority: "medium" },
-                  { name: "Harlow & Associates", type: "Former", months: "8mo together", tags: ["Would come back"], priority: "high" },
-                ].map((r, i) => (
-                  <div key={i} style={{ padding: "12px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                      <div>
-                        <span style={{ fontWeight: 700, fontSize: 13 }}>{r.name}</span>
-                        <span style={{ fontSize: 11, color: C.textMuted, marginLeft: 8 }}>{r.type} · {r.months}</span>
+                      <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 3 }}>{c.name}</div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                        {c.signals.map(s => (
+                          <span key={s} style={{ fontSize: 10, padding: "2px 8px", borderRadius: 5, background: c.status === "critical" ? C.danger + "10" : C.primarySoft, color: c.status === "critical" ? C.danger : C.primary, fontWeight: 600 }}>{s}</span>
+                        ))}
                       </div>
-                      <div style={{ width: 7, height: 7, borderRadius: "50%", background: r.priority === "high" ? C.success : C.warning }} />
-                    </div>
-                    <div style={{ display: "flex", gap: 4 }}>
-                      {r.tags.map(t => (
-                        <span key={t} style={{ fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 4, background: C.primarySoft, color: C.primary }}>{t}</span>
-                      ))}
                     </div>
                   </div>
                 ))}
-                <div style={{ marginTop: 10, fontSize: 12, color: C.primary, fontWeight: 600 }}>3 re-engagement opportunities →</div>
               </div>
-            )}
+            </div></Reveal>
 
-            {pf.id === "referrals" && (
-              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Referral Intelligence</div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 16 }}>
-                  {[["Total", "7"], ["Converted", "4"], ["Revenue", "$18.4k"]].map(([label, val]) => (
-                    <div key={label} style={{ background: C.bg, borderRadius: 8, padding: 10, textAlign: "center" }}>
-                      <div style={{ fontSize: 20, fontWeight: 900, color: C.primary }}>{val}</div>
-                      <div style={{ fontSize: 10, color: C.textMuted, marginTop: 2 }}>{label}</div>
-                    </div>
-                  ))}
+            {/* Connector */}
+            <div style={{ display: "flex", justifyContent: "center", padding: "8px 0", marginBottom: 20 }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.08)" }} />
+                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", fontWeight: 600 }}>↓</div>
+                <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.08)" }} />
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <Reveal delay={0.15}><div className="r-rai-step-card" style={{ maxWidth: 680, margin: "0 auto 20px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.warning, textTransform: "uppercase", letterSpacing: ".1em" }}>02 — Action Delivery</div>
+                <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
+              </div>
+              <h3 style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>She puts it in front of you.</h3>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.38)", lineHeight: 1.7, marginBottom: 22, maxWidth: 560 }}>Every morning, before your first coffee. You don't go looking for the problem. The problem finds you.</p>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: C.primaryLight, textTransform: "uppercase", letterSpacing: ".04em" }}>
+                  <svg width={12} height={12} viewBox="0 0 24 24" fill="none"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primaryLight} strokeWidth="1.6" fill="none" strokeLinejoin="round"/></svg>
+                  Suggested by Rai
                 </div>
-                <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8 }}>Ready to refer</div>
                 {[
-                  { name: "Northvane Studios", readiness: 94, contact: "Sarah Chen" },
-                  { name: "Oakline Outdoors", readiness: 76, contact: "James Park" },
-                ].map((r, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0", borderTop: "1px solid " + C.borderLight }}>
-                    <div>
-                      <span style={{ fontWeight: 600, fontSize: 13 }}>{r.name}</span>
-                      <span style={{ fontSize: 11, color: C.textMuted, marginLeft: 8 }}>{r.contact}</span>
+                  { text: "Broadleaf Media: Rachel's score dropped 13 points in two check-ins. The \"No room to operate\" combo just triggered. Call her — not email.", client: "Broadleaf Media", gradient: "linear-gradient(95deg, " + C.dangerBg + " 0%, #FDF5F3 30%, " + C.card + " 100%)", actions: 3 },
+                  { text: "Foxglove Partners: Health Check is 12 days overdue. Last check flagged drift. Don't skip this one.", client: "Foxglove Partners", gradient: "linear-gradient(95deg, " + C.primarySoft + " 0%, #F0F5F1 30%, " + C.card + " 100%)", actions: 2 },
+                  { text: "Northvane: 3-year anniversary in 26 days. Plan something.", client: "Northvane Studios", gradient: "linear-gradient(95deg, " + C.primarySoft + " 0%, #F0F5F1 30%, " + C.card + " 100%)", actions: 2 },
+                ].map((card, i) => (
+                  <div key={i} style={{ background: card.gradient, borderRadius: 14, border: "1px solid " + C.border, overflow: "hidden", boxShadow: C.cardShadow }}>
+                    <div style={{ padding: "14px 18px" }}>
+                      <p style={{ fontSize: 14, color: C.text, fontWeight: 600, lineHeight: 1.55, margin: 0 }}>{card.text}</p>
+                      <p style={{ fontSize: 12, color: C.textMuted, marginTop: 5 }}>{card.client}</p>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <div style={{ width: 50, height: 4, borderRadius: 2, background: C.borderLight, overflow: "hidden" }}>
-                        <div style={{ width: `${r.readiness}%`, height: "100%", background: C.success, borderRadius: 2 }} />
-                      </div>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: C.success }}>{r.readiness}%</span>
+                    <div style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
+                      <div style={{ flex: 1, padding: 11, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
+                      {card.actions === 3 && <div style={{ flex: 1, padding: 11, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.btn, borderRight: "1px solid " + C.borderLight }}>Talk to Rai</div>}
+                      <div style={{ flex: 1, padding: 11, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
                     </div>
                   </div>
                 ))}
               </div>
-            )}
+            </div></Reveal>
+
+            {/* Connector */}
+            <div style={{ display: "flex", justifyContent: "center", padding: "8px 0", marginBottom: 20 }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.08)" }} />
+                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", fontWeight: 600 }}>↓</div>
+                <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.08)" }} />
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <Reveal direction="right" delay={0.3}><div className="r-rai-step-card" style={{ maxWidth: 680, marginLeft: "auto" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.btn, textTransform: "uppercase", letterSpacing: ".1em" }}>03 — The Script</div>
+                <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
+              </div>
+              <h3 style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>She tells you what to say.</h3>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.38)", lineHeight: 1.7, marginBottom: 22, maxWidth: 560 }}>You got the alert. You're staring at the client's name. Rai doesn't guess — she pattern-matches your situation against a library of what actually works.</p>
+              <div style={{ background: C.bg, borderRadius: 16, padding: 20 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div style={{ alignSelf: "flex-end", maxWidth: "78%", padding: "12px 16px", background: C.primary, color: "#fff", borderRadius: "14px 14px 4px 14px", fontSize: 14, lineHeight: 1.55 }}>
+                    Rachel at Broadleaf has been different lately. What do I say?
+                  </div>
+                  <div style={{ alignSelf: "flex-start", maxWidth: "90%", padding: "14px 16px", background: C.card, border: "1px solid " + C.border, borderRadius: "14px 14px 14px 4px", fontSize: 14, lineHeight: 1.65, color: C.text }}>
+                    <div style={{ fontWeight: 800, color: C.primary, marginBottom: 6, fontSize: 11, letterSpacing: "0.04em", textTransform: "uppercase" }}>✦ Rai</div>
+                    Call her. Not email. Open with: <strong>"Hey Rachel — I've been thinking about our work together and wanted to check in. How are you feeling about things?"</strong> Let her talk first. Don't pitch. Don't defend.
+                  </div>
+                  <div style={{ alignSelf: "flex-start", maxWidth: "85%", padding: "10px 14px", background: C.primarySoft, borderRadius: "14px 14px 14px 4px", fontSize: 13, color: C.primary, fontStyle: "italic", border: "1px solid " + C.primarySoft }}>
+                    If the call goes well, I'll update her profile and adjust the score. If it doesn't — we'll have a plan for that too.
+                  </div>
+                </div>
+              </div>
+            </div></Reveal>
           </div>
         </div>
-      </section>
 
+        {/* ══════ Scoring Model ══════ */}
+        <section style={{ padding: "80px 20px" }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+            <Reveal><div style={{ textAlign: "center", marginBottom: 48 }}>
+              <div style={{
+                display: "inline-block", fontSize: 10, fontWeight: 700,
+                textTransform: "uppercase", letterSpacing: ".14em",
+                color: C.primary, marginBottom: 14,
+                padding: "5px 14px", borderRadius: 6,
+                background: C.primarySoft,
+              }}>The Scoring Model</div>
+              <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 16 }}>Twelve questions that predict whether a client stays</h2>
+              <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>
+                Not surveys. Not NPS. Twelve specific dimensions about trust, loyalty, expectations, and grace — answered by you, about each client.
+              </p>
+            </div></Reveal>
 
-      {/* Meet the Brains — Rai's real value */}
-      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "64px 20px 72px" }}>
-        <div style={{ maxWidth: 720, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <h2 style={{ fontSize: 30, fontWeight: 900, letterSpacing: "-0.03em", color: "#fff", marginBottom: 8 }}>Meet the Brains of the Operation</h2>
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 20 }}>She runs things around here.</p>
-            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", lineHeight: 1.7, maxWidth: 580, margin: "0 auto" }}>
-              You have 15 clients. You're focused on the three that are screaming. Rai is watching the other twelve.
-            </p>
-          </div>
-
-          {/* Step 1 — She sees it */}
-          <div style={{ marginBottom: 32 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: C.primaryLight, textTransform: "uppercase", letterSpacing: ".08em" }}>01 — Signal Detection</div>
-              <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
-            </div>
-            <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>She sees it.</div>
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.65, marginBottom: 20, maxWidth: 560 }}>Cross-referencing health checks, score trends, billing patterns, and 20 combination signals — continuously, across your entire book.</p>
-
-            {/* Signal readout — white card on dark */}
-            <div style={{ background: C.card, borderRadius: 14, border: "1px solid " + C.border, padding: "18px 20px", boxShadow: "0 8px 32px rgba(0,0,0,0.15)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
-                <div style={{ width: 6, height: 6, borderRadius: "50%", background: C.danger, animation: "pulse 2s infinite" }} />
-                <span style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em" }}>Live — scanning 15 clients</span>
+            {/* Dimension strip */}
+            <div style={{ overflow: "hidden", marginBottom: 56, padding: "20px 0", position: "relative" }}>
+              <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 100, background: "linear-gradient(90deg, " + C.bg + ", transparent)", zIndex: 2 }} />
+              <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 100, background: "linear-gradient(270deg, " + C.bg + ", transparent)", zIndex: 2 }} />
+              <div style={{ display: "flex", alignItems: "baseline", whiteSpace: "nowrap", animation: "dimScroll 28s linear infinite", width: "max-content", marginBottom: 14 }}>
+                {[...Array(2)].flatMap(() => [
+                  { name: "Grace", style: { fontSize: 28, fontWeight: 400, letterSpacing: "0.02em", color: C.primary + "70", fontFamily: "'DM Serif Display', serif", fontStyle: "italic" } },
+                  { name: "TRUST", style: { fontSize: 24, fontWeight: 900, letterSpacing: "0.08em", color: C.primary + "90", fontFamily: "inherit" } },
+                  { name: "communication", style: { fontSize: 16, fontWeight: 400, letterSpacing: "0.2em", color: C.primary + "50", textTransform: "uppercase" } },
+                  { name: "Loyalty", style: { fontSize: 28, fontWeight: 400, letterSpacing: "-0.02em", color: C.primary + "80", fontFamily: "'DM Serif Display', serif" } },
+                  { name: "budget risk", style: { fontSize: 13, fontWeight: 700, letterSpacing: "0.12em", color: C.primary + "45", textTransform: "uppercase" } },
+                  { name: "Depth", style: { fontSize: 32, fontWeight: 400, letterSpacing: "-0.03em", color: C.primary + "60", fontFamily: "'DM Serif Display', serif", fontStyle: "italic" } },
+                ]).map((d, i) => (
+                  <span key={i} style={{ ...d.style, marginRight: 56 }}>{d.name}</span>
+                ))}
               </div>
+              <div style={{ display: "flex", alignItems: "baseline", whiteSpace: "nowrap", animation: "dimScrollReverse 32s linear infinite", width: "max-content", opacity: 0.7 }}>
+                {[...Array(2)].flatMap(() => [
+                  { name: "STRESS", style: { fontSize: 14, fontWeight: 700, letterSpacing: "0.25em", color: C.primary + "55" } },
+                  { name: "Expectations", style: { fontSize: 22, fontWeight: 400, letterSpacing: "0.04em", color: C.primary + "55", fontFamily: "'DM Serif Display', serif", fontStyle: "italic" } },
+                  { name: "FUNGIBILITY", style: { fontSize: 12, fontWeight: 600, letterSpacing: "0.18em", color: C.primary + "40" } },
+                  { name: "tone", style: { fontSize: 26, fontWeight: 300, letterSpacing: "0.08em", color: C.primary + "50", fontFamily: "'DM Serif Display', serif", fontStyle: "italic" } },
+                  { name: "AUTHORITY", style: { fontSize: 17, fontWeight: 900, letterSpacing: "0.1em", color: C.primary + "60" } },
+                  { name: "reporting", style: { fontSize: 13, fontWeight: 400, letterSpacing: "0.15em", color: C.primary + "40", textTransform: "uppercase" } },
+                ]).map((d, i) => (
+                  <span key={i} style={{ ...d.style, marginRight: 56 }}>{d.name}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* Combination Signals */}
+            <Reveal><div style={{ textAlign: "center", marginBottom: 28 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: C.textMuted, marginBottom: 8 }}>Combination Signals</div>
+              <p style={{ fontSize: 14, color: C.textSec, maxWidth: 500, margin: "0 auto" }}>When dimensions collide, patterns emerge. 20 proprietary combinations predict behavior no single metric catches.</p>
+            </div></Reveal>
+
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center" }}>
               {[
-                { name: "Broadleaf Media", score: 65, signals: ["78 → 65", "combo: no_room", "11d silent", "rate↑ no call"], status: "critical" },
-                { name: "Foxglove Partners", score: 38, signals: ["42 → 38", "HC overdue", "velocity: cold"], status: "critical" },
-                { name: "Northvane Studios", score: 91, signals: ["91 stable", "renewed", "weekly calls"], status: "clear" },
-              ].map((c, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none", opacity: c.status === "clear" ? 0.4 : 1 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 8, background: c.status === "critical" ? C.danger + "12" : C.success + "12", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 13, color: c.status === "critical" ? C.danger : C.success, flexShrink: 0 }}>{c.score}</div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 700, fontSize: 13, color: C.text, marginBottom: 3 }}>{c.name}</div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                      {c.signals.map(s => (
-                        <span key={s} style={{ fontSize: 10, padding: "2px 7px", borderRadius: 4, background: c.status === "critical" ? C.danger + "10" : C.primarySoft, color: c.status === "critical" ? C.danger : C.primary, fontWeight: 500 }}>{s}</span>
-                      ))}
+                { name: "Bulletproof", a: "Loyalty", b: "Grace", desc: "Will survive your worst month.", type: "pos" },
+                { name: "Locked Vault", a: "Loyalty", b: "Depth", desc: "Double lock on the door.", type: "pos" },
+                { name: "Ice Wall", a: "Trust", b: "Tone", desc: "Polite but completely shut down.", type: "neg" },
+                { name: "On the Clock", a: "Trust", b: "Loyalty", desc: "They've mentally left already.", type: "neg" },
+                { name: "Silent Exit", a: "Stress", b: "Depth", desc: "No warning before the email.", type: "neg" },
+                { name: "No Room to Operate", a: "Trust", b: "Grace", desc: "Tightrope with no net.", type: "neg" },
+              ].map((combo, i) => (
+                <Reveal key={i} delay={i * 0.08} style={{ flex: "0 0 auto", width: 180 }}>
+                  <div className="r-combo-card">
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 0, marginBottom: 14 }}>
+                      <div style={{ padding: "3px 9px", borderRadius: 5, fontSize: 10, fontWeight: 700, background: combo.type === "pos" ? C.success + "12" : C.danger + "12", color: combo.type === "pos" ? C.success : C.danger }}>{combo.a}</div>
+                      <div style={{ width: 20, height: 1, background: combo.type === "pos" ? C.success + "40" : C.danger + "40" }} />
+                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: combo.type === "pos" ? C.success : C.danger, flexShrink: 0 }} />
+                      <div style={{ width: 20, height: 1, background: combo.type === "pos" ? C.success + "40" : C.danger + "40" }} />
+                      <div style={{ padding: "3px 9px", borderRadius: 5, fontSize: 10, fontWeight: 700, background: combo.type === "pos" ? C.success + "12" : C.danger + "12", color: combo.type === "pos" ? C.success : C.danger }}>{combo.b}</div>
                     </div>
+                    <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 5, color: C.text }}>{combo.name}</div>
+                    <div style={{ fontSize: 12, color: C.textSec, lineHeight: 1.45 }}>{combo.desc}</div>
                   </div>
-                </div>
+                </Reveal>
               ))}
             </div>
-          </div>
-
-          {/* Vertical connector */}
-          <div style={{ display: "flex", justifyContent: "center", padding: "4px 0", marginBottom: 32 }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-              <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.1)" }} />
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)", fontWeight: 600 }}>↓</div>
-              <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.1)" }} />
+            <div style={{ textAlign: "center", marginTop: 28 }}>
+              <button className="r-hero-cta cta-btn" onClick={() => setPage("signup")} style={{ padding: "13px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                Try Free Now <span style={{ marginLeft: 6 }}>→</span>
+              </button>
             </div>
           </div>
+        </section>
 
-          {/* Step 2 — She surfaces it */}
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: C.warning, textTransform: "uppercase", letterSpacing: ".08em" }}>02 — Action Delivery</div>
-              <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
-            </div>
-            <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>She puts it in front of you.</div>
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.65, marginBottom: 20, maxWidth: 560 }}>Every morning, before your first coffee. You don't go looking for the problem. The problem finds you.</p>
-
-            {/* Rai suggestion cards — from dev spec */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {/* Header */}
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.primaryLight, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 0, display: "flex", alignItems: "center", gap: 6 }}>
-                <svg width={12} height={12} viewBox="0 0 24 24" fill="none"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primaryLight} strokeWidth="1.6" fill="none" strokeLinejoin="round"/></svg>
-                Suggested by Rai
-              </div>
-
-              {/* Alert card (red gradient) */}
-              <div style={{ background: "linear-gradient(90deg, #FAE8E4 0%, #FDF5F3 40%, " + C.card + " 100%)", borderRadius: 12, border: "1px solid " + C.border, overflow: "hidden", boxShadow: C.cardShadow }}>
-                <div style={{ padding: "14px 16px" }}>
-                  <p style={{ fontSize: 14, color: C.text, fontWeight: 600, lineHeight: 1.5, margin: 0 }}>Broadleaf Media: Rachel's score dropped 13 points in two check-ins. The "No room to operate" combo just triggered. Call her — not email.</p>
-                  <p style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}>Broadleaf Media</p>
-                </div>
-                <div style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
-                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.btn, borderRight: "1px solid " + C.borderLight }}>Talk to Rai</div>
-                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
-                </div>
-              </div>
-
-
-              {/* Green card */}
-              <div style={{ background: "linear-gradient(90deg, " + C.primarySoft + " 0%, #F0F5F1 40%, " + C.card + " 100%)", borderRadius: 12, border: "1px solid " + C.border, overflow: "hidden", boxShadow: C.cardShadow }}>
-                <div style={{ padding: "14px 16px" }}>
-                  <p style={{ fontSize: 14, color: C.text, lineHeight: 1.5, margin: 0 }}>Foxglove Partners: Health Check is 12 days overdue. Last check flagged drift. Don't skip this one.</p>
-                  <p style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}>Foxglove Partners</p>
-                </div>
-                <div style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
-                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
-                </div>
-              </div>
-
-              {/* Green card 2 */}
-              <div style={{ background: "linear-gradient(90deg, " + C.primarySoft + " 0%, #F0F5F1 40%, " + C.card + " 100%)", borderRadius: 12, border: "1px solid " + C.border, overflow: "hidden", boxShadow: C.cardShadow }}>
-                <div style={{ padding: "14px 16px" }}>
-                  <p style={{ fontSize: 14, color: C.text, lineHeight: 1.5, margin: 0 }}>Northvane: 3-year anniversary in 26 days. Plan something.</p>
-                  <p style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}>Northvane Studios</p>
-                </div>
-                <div style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
-                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Vertical connector */}
-          <div style={{ display: "flex", justifyContent: "center", padding: "4px 0", marginBottom: 32 }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-              <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.1)" }} />
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)", fontWeight: 600 }}>↓</div>
-              <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.1)" }} />
-            </div>
-          </div>
-
-          {/* Step 3 — She tells you what to say */}
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: C.btn, textTransform: "uppercase", letterSpacing: ".08em" }}>03 — The Script</div>
-              <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
-            </div>
-            <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>She tells you what to say.</div>
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.65, marginBottom: 20, maxWidth: 560 }}>You got the alert. You're staring at the client's name. You know something's wrong but you don't know how to open the conversation. Rai does — because she's built on a massive system prompt with hundreds of diagnostic scenarios, client archetypes, and communication frameworks refined over a decade of real retention work. She doesn't guess. She pattern-matches your situation against a library of what actually works.</p>
-
-            {/* Chat mockup — full width */}
-            <div style={{ background: C.bg, borderRadius: 16, padding: 20 }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <div style={{ alignSelf: "flex-end", maxWidth: "75%", padding: "10px 14px", background: C.primary, color: "#fff", borderRadius: "12px 12px 4px 12px", fontSize: 13, lineHeight: 1.5 }}>
-                  Rachel at Broadleaf has been different lately. What do I say?
-                </div>
-                <div style={{ alignSelf: "flex-start", maxWidth: "90%", padding: "12px 14px", background: C.card, border: "1px solid " + C.border, borderRadius: "12px 12px 12px 4px", fontSize: 13, lineHeight: 1.6, color: C.text }}>
-                  <div style={{ fontWeight: 700, color: C.primary, marginBottom: 4, fontSize: 11 }}>Rai</div>
-                  Call her. Not email. Open with: <strong>"Hey Rachel — I've been thinking about our work together and wanted to check in. How are you feeling about things?"</strong> Let her talk first. Don't pitch. Don't defend. If she raises the rate increase, acknowledge it without backpedaling.
-                </div>
-                <div style={{ alignSelf: "flex-start", maxWidth: "90%", padding: "8px 12px", background: C.primarySoft, borderRadius: "12px 12px 12px 4px", fontSize: 12, color: C.primary }}>
-                  If the call goes well, I'll update her profile and adjust the score. If it doesn't — we'll have a plan for that too.
-                </div>
-              </div>
-            </div>
-          </div>
-
+        {/* ══════ Philosophy Quote ══════ */}
+        <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "64px 20px", position: "relative" }}>
+          <div className="r-grain" style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.03, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
+          <Reveal><div style={{ margin: "0 auto", textAlign: "center", position: "relative", zIndex: 2 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.25)", marginBottom: 18 }}>As Rai Sees It</div>
+            <blockquote style={{ fontSize: 21, fontWeight: 600, lineHeight: 1.45, letterSpacing: "-0.02em", margin: 0, color: "#fff", maxWidth: 600, marginLeft: "auto", marginRight: "auto" }}>"The conversation you're avoiding is the one that saves the account."</blockquote>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.35)", marginTop: 18, lineHeight: 1.6 }}>Rai doesn't help you avoid hard conversations. She helps you have them.</p>
+          </div></Reveal>
         </div>
-      </div>
 
-
-      {/* The Scoring Model */}
-      <section style={{ padding: "64px 20px" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto" }}>
-          {/* Header */}
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.primaryLight, marginBottom: 10 }}>The Scoring Model</div>
-            <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 16 }}>Twelve questions that predict whether a client stays</h2>
-            <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, maxWidth: 580, margin: "0 auto" }}>
-              Not surveys. Not NPS. Twelve specific dimensions about trust, loyalty, expectations, and grace — answered by you, about each client. The system handles the math. You just answer honestly.
-            </p>
-          </div>
-
-          {/* Dimension strip — dual row, no background */}
-          <div style={{ overflow: "hidden", marginBottom: 56, padding: "20px 0", position: "relative" }}>
-            {/* Edge fade masks */}
-            <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(90deg, " + C.bg + ", transparent)", zIndex: 2 }} />
-            <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(270deg, " + C.bg + ", transparent)", zIndex: 2 }} />
-            
-            {/* Row 1 — scrolling left */}
-            <div style={{ display: "flex", alignItems: "baseline", whiteSpace: "nowrap", animation: "dimScroll 28s linear infinite", width: "max-content", marginBottom: 12 }}>
-              {[...Array(2)].flatMap(() => [
-                { name: "Grace", style: { fontSize: 26, fontWeight: 400, letterSpacing: "0.02em", color: C.primary + "70", fontFamily: "'Caveat', cursive" } },
-                { name: "TRUST", style: { fontSize: 24, fontWeight: 900, letterSpacing: "0.08em", color: C.primary + "90" } },
-                { name: "communication", style: { fontSize: 16, fontWeight: 400, letterSpacing: "0.2em", color: C.primary + "50", textTransform: "uppercase" } },
-                { name: "Loyalty", style: { fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", color: C.primary + "80" } },
-                { name: "budget risk", style: { fontSize: 13, fontWeight: 700, letterSpacing: "0.12em", color: C.primary + "45", textTransform: "uppercase" } },
-                { name: "Depth", style: { fontSize: 31, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary + "60", textTransform: "lowercase" } },
-              ]).map((d, i) => (
-                <span key={i} style={{ ...d.style, marginRight: 52 }}>{d.name}</span>
+        {/* ══════ Enterprise ══════ */}
+        <section style={{ padding: "80px 20px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 48, alignItems: "center", maxWidth: 1000, margin: "0 auto" }}>
+            <Reveal direction="left"><div style={{ flex: "1 1 340px" }}>
+              <div style={{
+                display: "inline-block", fontSize: 10, fontWeight: 700,
+                textTransform: "uppercase", letterSpacing: ".14em",
+                color: C.btn, marginBottom: 14,
+                padding: "5px 14px", borderRadius: 6,
+                background: "rgba(91,33,182,0.06)",
+              }}>Enterprise</div>
+              <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 16 }}>Autonomous relationship intelligence.</h2>
+              <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.75, marginBottom: 28 }}>
+                Connects to your communication and billing platforms, monitors every client relationship automatically, and delivers prioritized actions to your team or your AI agents every morning.
+              </p>
+              <button className="r-hero-cta cta-btn" onClick={() => setPage("contact")} style={{ padding: "13px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                Let's Talk <span style={{ marginLeft: 6 }}>→</span>
+              </button>
+            </div></Reveal>
+            <Reveal direction="right" delay={0.2}><div style={{ flex: "1 1 360px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+              {[
+                { label: "Daily Portfolio Sweeps", desc: "Every client scored and ranked automatically, every morning." },
+                { label: "Churn Detection", desc: "Converging signals identified before they become cancellations." },
+                { label: "Prioritized Task Lists", desc: "Specific actions, tailored to each client's communication style." },
+                { label: "Platform Integrations", desc: "Slack, email, Zoom, CRM, billing — Retayned reads the data, you read the tasks." },
+              ].map(item => (
+                <div key={item.label} style={{ padding: 20, background: C.card, borderRadius: 14, border: "1px solid " + C.border, boxShadow: "0 4px 20px rgba(0,0,0,0.04)", transition: "all 0.25s ease" }}>
+                  <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 5 }}>{item.label}</div>
+                  <div style={{ fontSize: 13, color: C.textSec, lineHeight: 1.5 }}>{item.desc}</div>
+                </div>
               ))}
-            </div>
-            
-            {/* Row 2 — scrolling right */}
-            <div style={{ display: "flex", alignItems: "baseline", whiteSpace: "nowrap", animation: "dimScrollReverse 32s linear infinite", width: "max-content", opacity: 0.7 }}>
-              {[...Array(2)].flatMap(() => [
-                { name: "STRESS", style: { fontSize: 14, fontWeight: 700, letterSpacing: "0.25em", color: C.primary + "55" } },
-                { name: "Expectations", style: { fontSize: 19, fontWeight: 500, letterSpacing: "0.06em", color: C.primary + "55", fontStyle: "italic" } },
-                { name: "FUNGIBILITY", style: { fontSize: 12, fontWeight: 600, letterSpacing: "0.18em", color: C.primary + "40" } },
-                { name: "tone", style: { fontSize: 23, fontWeight: 300, letterSpacing: "0.1em", color: C.primary + "50", fontStyle: "italic" } },
-                { name: "AUTHORITY", style: { fontSize: 17, fontWeight: 900, letterSpacing: "0.1em", color: C.primary + "60" } },
-                { name: "reporting", style: { fontSize: 13, fontWeight: 400, letterSpacing: "0.15em", color: C.primary + "40", textTransform: "uppercase" } },
-              ]).map((d, i) => (
-                <span key={i} style={{ ...d.style, marginRight: 52 }}>{d.name}</span>
-              ))}
-            </div>
+            </div></Reveal>
           </div>
+        </section>
 
-          {/* Combination Signals — connection visualization */}
-          <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.textMuted, marginBottom: 8 }}>Combination Signals</div>
-            <p style={{ fontSize: 14, color: C.textSec, maxWidth: 500, margin: "0 auto" }}>When dimensions collide, patterns emerge. 20 proprietary combinations predict behavior no single metric catches.</p>
-          </div>
-
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
-            {[
-              { name: "Bulletproof", a: "Loyalty", b: "Grace", desc: "Will survive your worst month.", type: "pos" },
-              { name: "Locked Vault", a: "Loyalty", b: "Depth", desc: "Double lock on the door.", type: "pos" },
-              { name: "Ice Wall", a: "Trust", b: "Tone", desc: "Polite but completely shut down.", type: "neg" },
-              { name: "On the Clock", a: "Trust", b: "Loyalty", desc: "They've mentally left already.", type: "neg" },
-              { name: "Silent Exit", a: "Stress", b: "Depth", desc: "No warning before the email.", type: "neg" },
-              { name: "No Room to Operate", a: "Trust", b: "Grace", desc: "Tightrope with no net.", type: "neg" },
-            ].map((combo, i) => (
-              <div key={i} style={{
-                flex: "0 0 auto", width: 172,
-                background: C.card, borderRadius: 14, padding: "20px 16px",
-                border: "1px solid " + C.border,
-                boxShadow: C.cardShadow,
-                textAlign: "center",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 0, marginBottom: 12 }}>
-                  <div style={{ padding: "3px 8px", borderRadius: 4, fontSize: 9, fontWeight: 600, background: combo.type === "pos" ? C.success + "12" : C.danger + "12", color: combo.type === "pos" ? C.success : C.danger }}>{combo.a}</div>
-                  <div style={{ width: 24, height: 1, background: combo.type === "pos" ? C.success + "40" : C.danger + "40" }} />
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: combo.type === "pos" ? C.success : C.danger, flexShrink: 0 }} />
-                  <div style={{ width: 24, height: 1, background: combo.type === "pos" ? C.success + "40" : C.danger + "40" }} />
-                  <div style={{ padding: "3px 8px", borderRadius: 4, fontSize: 9, fontWeight: 600, background: combo.type === "pos" ? C.success + "12" : C.danger + "12", color: combo.type === "pos" ? C.success : C.danger }}>{combo.b}</div>
-                </div>
-                <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4, color: C.text }}>{combo.name}</div>
-                <div style={{ fontSize: 11, color: C.textSec, lineHeight: 1.4 }}>{combo.desc}</div>
-              </div>
-            ))}
-          </div>
-          <div style={{ textAlign: "center", marginTop: 24 }}>
-            <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "12px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
+        {/* ══════ FAQs ══════ */}
+        <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "64px 20px 72px" }}>
+          <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+            <h2 style={{ fontSize: 30, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>FAQs</h2>
+            <FAQ fullBleed />
           </div>
         </div>
-      </section>
 
-
-      {/* PHILOSOPHY */}
-      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "56px 20px" }}>
-        <div style={{ margin: "0 auto", textAlign: "center" }}>
-          <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.3)", marginBottom: 16 }}>As Rai Sees It</div>
-          <blockquote style={{ fontSize: 21, fontWeight: 600, lineHeight: 1.45, letterSpacing: "-0.02em", margin: 0, color: "#fff" }}>"The conversation you're avoiding is the one that saves the account."</blockquote>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,.38)", marginTop: 16, lineHeight: 1.5 }}>Rai doesn't help you avoid hard conversations. She helps you have them.</p>
-        </div>
-      </div>
-
-      {/* Enterprise teaser */}
-      <section style={{ padding: "64px 20px" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 40, alignItems: "center", maxWidth: 960, margin: "0 auto" }}>
-          <div style={{ flex: "1 1 320px" }}>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.btn, marginBottom: 10 }}>Enterprise</div>
-            <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 16 }}>Autonomous relationship intelligence.</h2>
-            <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 24 }}>
-              Connects to your communication and billing platforms, monitors every client relationship automatically, and delivers prioritized actions to your team or your AI agents every morning. Stop guessing who needs attention. Let Retayned Enterprise tell you.
-            </p>
-            <button className="cta-btn" onClick={() => setPage("contact")} style={{ padding: "12px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Let's Talk</button>
-          </div>
-          <div style={{ flex: "1 1 340px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-            {[
-              { label: "Daily Portfolio Sweeps", desc: "Every client scored and ranked automatically, every morning." },
-              { label: "Churn Detection", desc: "Converging signals identified before they become cancellations." },
-              { label: "Prioritized Task Lists", desc: "Specific actions, tailored to each client's communication style." },
-              { label: "Platform Integrations", desc: "Connects to Slack, email, Zoom, CRM, and billing — Retayned reads the data, you read the tasks." },
-            ].map(item => (
-              <div key={item.label} style={{ padding: 18, background: C.card, borderRadius: 12, border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
-                <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4 }}>{item.label}</div>
-                <div style={{ fontSize: 12, color: C.textSec, lineHeight: 1.4 }}>{item.desc}</div>
-              </div>
-            ))}
+        {/* ══════ Final CTA ══════ */}
+        <div className="r-full-bleed" style={{
+          background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 40%, #1E261F 100%)",
+          padding: "88px 20px", textAlign: "center",
+          position: "relative", overflow: "hidden",
+        }}>
+          <div className="r-grain" style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.04, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
+          <div style={{ position: "relative", zIndex: 2 }}>
+            <h2 style={{ fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff" }}>
+              You work too hard to get new clients.<br />Keep them Retayned.
+            </h2>
+            <p style={{ fontSize: 17, color: "rgba(255,255,255,0.5)", marginBottom: 28, lineHeight: 1.6 }}>See the signal. Get the script. Keep the client.</p>
+            <button className="cta-btn" onClick={() => setPage("signup")} style={{
+              padding: "16px 40px", background: "#fff", color: C.btn, border: "none",
+              borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: "pointer",
+              fontFamily: "inherit",
+            }}>
+              Start Free Trial <span style={{ marginLeft: 8 }}>→</span>
+            </button>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 14 }}>No credit card · Cancel anytime</p>
           </div>
         </div>
-      </section>
-
-      {/* FAQs */}
-      <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px 64px" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
-          <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 24 }}>FAQs</h2>
-          <FAQ fullBleed />
-        </div>
-      </div>
-
-      {/* FINAL CTA */}
-      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 50%, #1E261F 100%)", padding: "72px 20px", textAlign: "center" }}>
-        <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 12, color: "#fff" }}>You work too hard to get new clients. Keep them Retayned.</h2>
-        <p style={{ fontSize: 17, color: "rgba(255,255,255,.6)", marginBottom: 24, lineHeight: 1.5 }}>See the signal. Get the script. Keep the client.</p>
-        <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "14px 32px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
       </div>
     </>
   );
@@ -2106,10 +2621,14 @@ export default function RetaynedSite() {
         .r-feat-content { flex-direction: column-reverse; }
         .r-feat-desc-full { display: none !important; }
         .r-feat-desc-mobile { display: block !important; }
+        .r-rai-step-1 { margin-left: 0; margin-right: auto; }
+        .r-rai-step-2 { margin-left: auto; margin-right: auto; }
+        .r-rai-step-3 { margin-left: auto; margin-right: 0; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         @keyframes dimScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes dimScrollReverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
         .r-full-bleed { margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); padding-left: 20px; padding-right: 20px; }
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
         .r-no-pad { padding-left: 0 !important; padding-right: 0 !important; }
         .r-stat-graphic-left { width: 60px !important; height: 45px !important; left: 12px !important; bottom: -8px !important; opacity: 0.12 !important; }
         .r-stat-graphic-right { width: 60px !important; height: 45px !important; right: 12px !important; top: -10px !important; opacity: 0.12 !important; }
@@ -2127,6 +2646,7 @@ export default function RetaynedSite() {
           .r-stat-graphic-right { width: 120px !important; height: 90px !important; right: 120px !important; top: -16px !important; opacity: 0.14 !important; }
           .r-stat-accent-left, .r-stat-accent-right { display: block !important; }
           .r-tab-btn { flex: 1 1 0 !important; }
+          .r-ent-grid { grid-template-columns: 1fr 1fr 1fr 1fr !important; max-width: 960px !important; }
           .r-feat-content { flex-direction: row !important; }
           .r-feat-desc-full { display: block !important; }
           .r-feat-desc-mobile { display: none !important; }
@@ -2139,7 +2659,7 @@ export default function RetaynedSite() {
           .r-nav-inner { padding-left: 60px !important; padding-right: 60px !important; }
           .r-hero-text { font-size: 52px !important; }
           .r-page-title { font-size: 40px !important; }
-          .r-stats { font-size: 72px !important; }
+          .r-stats { font-size: 80px !important; }
           .r-hero-center { text-align: center !important; }
           .r-hero-center p { margin-left: auto; margin-right: auto; max-width: 700px; }
           .r-brain-layout { flex-direction: row; align-items: center; gap: 40px; max-width: 1000px; margin: 0 auto; padding-bottom: 20px; }
@@ -2153,7 +2673,7 @@ export default function RetaynedSite() {
           .r-wrap { max-width: 1400px; margin: 0 auto; }
           .r-hero-text { font-size: 60px !important; }
           .r-page-title { font-size: 44px !important; }
-          .r-stats { font-size: 80px !important; }
+          .r-stats { font-size: 96px !important; }
           .r-full-bleed { padding-left: 80px; padding-right: 80px; }
         }
       `}</style>
