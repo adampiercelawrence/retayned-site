@@ -13,6 +13,8 @@ const C = {
   warning: "#B88B15", warningBg: "#FBF2DC",
   success: "#2D8659", successBg: "#E2F3EB",
   btn: "#5B21B6", btnHover: "#4C1D95",
+  cardShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04)",
+  raiGrad: "linear-gradient(145deg, #1E261F 0%, #33543E 55%, #558B68 100%)",
 };
 
 
@@ -134,9 +136,9 @@ function Nav({ page, setPage }) {
   }, []);
   const links = [
     { id: "platform", label: "Platform" },
+    { id: "pricing", label: "Pricing" },
     { id: "about", label: "About" },
     { id: "blog", label: "Resources" },
-    { id: "pricing", label: "Pricing" },
     { id: "contact", label: "Contact" },
     { id: "login", label: "Log In" },
   ];
@@ -164,7 +166,7 @@ function Nav({ page, setPage }) {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <span className="r-desktop-nav" onClick={() => setPage("login")} style={{ fontSize: 14, fontWeight: 600, color: C.textSec, cursor: "pointer" }}>Log In</span>
-          <button className="r-desktop-nav" onClick={() => setPage("demo")} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 16px", background: "transparent", border: "1.5px solid " + C.border, borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 600, color: C.text }}>
+          <button className="r-desktop-nav" onClick={() => setPage("signup")} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 16px", background: "transparent", border: "1.5px solid " + C.border, borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 600, color: C.text }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
               <line x1="8" y1="21" x2="16" y2="21" />
@@ -197,7 +199,7 @@ function Nav({ page, setPage }) {
               {l.label}
             </button>
           ))}
-          <button onClick={() => { setPage("demo"); setOpen(false); }} style={{
+          <button onClick={() => { setPage("signup"); setOpen(false); }} style={{
             width: "100%", padding: "14px 20px", background: "transparent", color: C.text,
             border: "1.5px solid " + C.border, borderRadius: 10, fontSize: 15, fontWeight: 700,
             cursor: "pointer", fontFamily: "inherit", marginTop: 24, display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
@@ -250,28 +252,26 @@ function Footer({ setPage }) {
 }
 
 // ═══ HOME ═══
+// ═══ HOME ═══
 function Home({ setPage }) {
   const [loaded, setLoaded] = useState(false);
-  const [email, setEmail] = useState("");
-  const [email2, setEmail2] = useState("");
-  const [awayFlown, setAwayFlown] = useState(false);
-  const [activeFeat, setActiveFeat] = useState(1);
+  const [activeTab, setActiveTab] = useState(0);
+  const [expandedText, setExpandedText] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 100);
-    const t2 = setTimeout(() => setAwayFlown(true), 3000);
-    return () => { clearTimeout(t); clearTimeout(t2); };
+    return () => clearTimeout(t);
   }, []);
 
-  const features = [
-    { icon: "👤", title: "Relationship Profiles", short: "Profiles", desc: "12 dimensions of every relationship creating a core archetype of each client. Not metrics — personality. Rai knows the shape of every relationship and calibrates recommendations around it.", angle: -90, color: "#2E6B60" },
-    { icon: "🩺", title: "Health Checks", short: "Health", desc: "8 honest questions every month, plus performance, communication, and event tracking. This isn't 'how satisfied are they' — Rai detects drift from their baseline, not from some universal standard.", angle: -30, color: "#B88B15" },
-    { icon: "💰", title: "Billing", short: "Billing", desc: "Track every invoice, line item, and add-on per client per month. Rai connects revenue data to relationship health — a client paying more but engaging less is a different risk than one doing both.", angle: 30, color: "#5B21B6" },
-    { icon: "◉", title: "Today", short: "Today", desc: "Every task, every note, every client you thought about today. Including recurring and company-wide tasks. Rai notices which clients need a little more attention and which ones you're outright neglecting.", angle: 90, color: "#0D9488" },
-    { icon: "📇", title: "Rolodex", short: "Rolodex", desc: "Past clients aren't dead leads — they're your warmest pipeline. Rai tracks when to reconnect, who might refer, and when to engage. Former clients and one-off contacts, prioritized and ready.", angle: 150, color: "#334155" },
-    { icon: "🤝", title: "Referrals", short: "Referrals", desc: "Your best client has never been asked for a referral. Rai knows who's ready, who's referred before, and when the relationship is strong enough to ask. The cheapest new business you'll ever win.", angle: 210, color: "#C4432B" },
+  const homeTabs = [
+    { id: "today", label: "Today", headline: "One page. Every priority.", sub: "Your Today tab knows which clients need you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value. Green clients surface first. At-risk clients with high revenue jump the line." },
+    { id: "scoring", label: "Retention Score", headline: "A number that means something.", sub: "12 dimensions. 20 combination signals. Health check modifiers. Every client gets a Retention Score from 1–99 that tells you exactly where the relationship stands — not where you hope it is." },
+    { id: "health", label: "Health Checks", headline: "Five questions. Two minutes. The truth.", sub: "Regular check-ins that detect drift before it becomes damage. Your answers blend directly into the Retention Score — bad news moves the number immediately. No lengthy forms. No busywork. Just the signal." },
+    { id: "rai", label: "Talk to Rai", headline: "She writes the words you need when it matters most.", sub: "Rai is an AI advisor calibrated to your specific relationships. When you don't know what to say — the opening line, the tone, whether to call or email — Rai gives you the script." },
+    { id: "rolodex", label: "Rolodex", headline: "Your pipeline is forward-looking.", sub: "Former clients aren't dead relationships — they're future revenue. The Rolodex tracks who left, how it ended, and whether they'd come back. One-off projects become re-engagement opportunities." },
+    { id: "referrals", label: "Referrals", headline: "Your best clients send you their friends.", sub: "Retayned tracks referral readiness based on loyalty, trust, and relationship depth. When a client is ready to refer, the system knows before you do." },
   ];
-  const channels = ["✉️ Gmail", "📅 Calendar", "💬 Slack", "📁 Drive", "💳 Stripe", "🐝 HoneyBook", "📊 Meta Ads", "🛍️ Shopify", "📸 Instagram", "📒 QuickBooks", "🎥 Loom", "📌 Pinterest"];
+  const ht = homeTabs[activeTab];
 
   return (
     <>
@@ -290,257 +290,304 @@ function Home({ setPage }) {
         </div>
         <div style={{ fontSize: 16, lineHeight: 1.6, color: C.textSec, maxWidth: 810, margin: "0 auto 28px", opacity: loaded ? 1 : 0, transition: "all 0.5s ease 0.4s" }}>
           <p style={{ marginBottom: 6, fontWeight: 600, color: C.text }}>Stop losing clients you should have kept.</p>
-          <p>Traditional CRMs track deals and contacts. Retayned tracks the health of relationships — giving you client-specific solutions to keep (and grow) the business you've earned.</p>        </div>
+          <p>Traditional CRMs track deals and contacts. Retayned tracks the health of relationships — giving you client-specific solutions to keep (and grow) the business you've earned.</p>
+        </div>
         <div style={{ opacity: loaded ? 1 : 0, transition: "all 0.5s ease 0.6s", maxWidth: 400, margin: "0 auto 12px" }}>
           <button className="cta-btn" onClick={() => setPage("signup")} style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
         </div>
         <p style={{ fontSize: 12, color: C.textMuted, opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 0.8s" }}>The secret weapon of agencies, freelancers, law firms, consultants, stylists, coaches, mobsters, and more.</p>
       </section>
 
-      {/* STATS */}
-      <section style={{ padding: "0 20px 64px", opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 0.9s" }}>
-        <div style={{ display: "flex", gap: 16 }}>
+      {/* STATS — green band */}
+      <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px", opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 0.9s" }}>
+        <div style={{ display: "flex", gap: 16, maxWidth: 700, margin: "0 auto" }}>
           {[
             { label: "Of churn is predictable", num: "90%" },
             { label: "Cheaper to retain than acquire", num: "25x" },
             { label: "Saved client pays for itself", num: "1+" },
           ].map((s, i) => (
             <div key={i} style={{ flex: 1, textAlign: "center" }}>
-              <div className="r-stats" style={{ fontSize: 48, fontWeight: 900, letterSpacing: "-0.04em", background: "linear-gradient(135deg, #33543E, #558B68)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 1, marginBottom: 6 }}>{s.num}</div>
+              <div className="r-stats" style={{ fontSize: 64, fontWeight: 900, letterSpacing: "-0.04em", background: "linear-gradient(135deg, #33543E, #558B68)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 1, marginBottom: 8 }}>{s.num}</div>
               <div style={{ fontSize: 10, fontWeight: 600, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".03em" }}>{s.label}</div>
             </div>
           ))}
         </div>
+      </div>
+
+      {/* HOW IT WORKS — header */}
+      <section style={{ padding: "48px 20px 24px" }}>
+        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>How It Works</h2>
+        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", maxWidth: 600, margin: "0 auto" }}>
+          <span style={{ fontWeight: 700 }}>Rai pays attention to every client, every day.</span> When something shifts, she catches it — and tells you what to do about it.
+        </p>
       </section>
 
-      {/* APP PREVIEW */}
-      <section style={{ padding: "0 16px 64px", opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(16px)", transition: "all 0.6s ease 1s" }}>
-        <div style={{ background: C.sidebar, borderRadius: 14, padding: 2, boxShadow: "0 16px 48px rgba(0,0,0,0.1)" }}>
-          <div style={{ background: C.card, borderRadius: 12, overflow: "hidden" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "10px 14px", borderBottom: "1px solid " + C.borderLight }}>
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.danger }} />
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.warning }} />
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.success }} />
-              <div style={{ flex: 1 }} />
-              <span style={{ fontSize: 11, color: C.textMuted, fontFamily: "monospace" }}>app.retayned.com</span>
-              <div style={{ flex: 1 }} />
+      {/* WHAT RAI SURFACES — product in action */}
+      <section style={{ padding: "0 20px 64px" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 6, display: "flex", alignItems: "center", gap: 6 }}>
+            <svg width={12} height={12} viewBox="0 0 24 24" fill="none"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primary} strokeWidth="1.6" fill="none" strokeLinejoin="round"/></svg>
+            Suggested by Rai
+          </div>
+          {/* Alert card */}
+          <div style={{ background: "linear-gradient(90deg, #FAE8E4 0%, #FDF5F3 40%, " + C.card + " 100%)", borderRadius: 12, marginBottom: 8, border: "1px solid " + C.border, overflow: "hidden", boxShadow: C.cardShadow }}>
+            <div style={{ padding: "14px 16px" }}>
+              <p style={{ fontSize: 14, color: C.text, fontWeight: 600, lineHeight: 1.5, margin: 0 }}>Broadleaf Media: Rachel's score dropped 13 points in two check-ins. The "No room to operate" combo just triggered. Call her — not email.</p>
+              <p style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}>Broadleaf Media</p>
             </div>
-            <div style={{ padding: 16, background: C.bg }}>
-              <div style={{ marginBottom: 12 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: C.danger, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>🚨 Alert</div>
-                <div style={{ background: "#FAE8E4", borderRadius: 8, border: "1px solid " + C.danger + "44", overflow: "hidden" }}>
-                  <div style={{ padding: "10px 14px" }}>
-                    <p style={{ fontSize: 14, color: C.danger, fontWeight: 700, lineHeight: 1.4 }}>Foxglove Partners: Email Tom today with something new — not a follow-up.</p>
-                    <p style={{ fontSize: 12, color: C.danger + "aa", fontWeight: 400, lineHeight: 1.4, marginTop: 4 }}>Tom's pulling back. You're overdue on a fresh campaign for his account — get something in front of him before your next call. Keep it brief. He'll notice the effort more than the detail.</p>
-                  </div>
-                  <div style={{ display: "flex", borderTop: "1px solid " + C.danger + "22" }}>
-                    <div style={{ flex: 1, padding: "7px", textAlign: "center", fontSize: 12, fontWeight: 600, color: C.danger, borderRight: "1px solid " + C.danger + "22" }}>Add to Today's Tasks</div>
-                    <div style={{ flex: 1, padding: "7px", textAlign: "center", fontSize: 12, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
-                  </div>
-                </div>
-              </div>
-              {[{ name: "Northvane Studios", ret: 91, tag: "Creative", contact: "Sarah Chen", months: 34 }, { name: "Ridgeline Supply", ret: 73, tag: "Ecommerce", contact: "Marcus Webb", months: 11 }, { name: "Copper & Sage", ret: 55, tag: "Wellness", contact: "Elena Moss", months: 6 }, { name: "Foxglove Partners", ret: 38, tag: "B2B", contact: "Tom Aldrich", months: 3 }].map((row, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: "1px solid " + C.borderLight }}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}><span style={{ fontWeight: 700, fontSize: 14 }}>{row.name}</span><span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 3, background: C.surface, color: C.textMuted }}>{row.tag}</span></div>
-                    <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>{row.contact} · {row.months}mo</div>
-                  </div>
-                  <div style={{ width: 40, height: 4, background: C.borderLight, borderRadius: 2 }}><div style={{ height: "100%", width: row.ret + "%", background: row.ret >= 70 ? C.success : row.ret >= 45 ? C.warning : C.danger, borderRadius: 2 }} /></div>
-                  <span style={{ fontFamily: "monospace", fontSize: 13, fontWeight: 700, color: row.ret >= 70 ? C.success : row.ret >= 45 ? C.warning : C.danger, minWidth: 28, textAlign: "right" }}>{row.ret}%</span>
-                </div>
-              ))}
+            <div style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
+              <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
+              <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.btn, borderRight: "1px solid " + C.borderLight }}>Talk to Rai</div>
+              <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
+            </div>
+          </div>
+          {/* Green card */}
+          <div style={{ background: "linear-gradient(90deg, " + C.primarySoft + " 0%, #F0F5F1 40%, " + C.card + " 100%)", borderRadius: 12, border: "1px solid " + C.border, overflow: "hidden", boxShadow: C.cardShadow }}>
+            <div style={{ padding: "14px 16px" }}>
+              <p style={{ fontSize: 14, color: C.text, lineHeight: 1.5, margin: 0 }}>Northvane: 3-year anniversary in 26 days. Plan something.</p>
+              <p style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}>Northvane Studios</p>
+            </div>
+            <div style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
+              <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
+              <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
             </div>
           </div>
         </div>
-        <p style={{ fontSize: 10, color: C.textMuted, textAlign: "center", marginTop: 8 }}>Based on sample client data.</p>
       </section>
 
       {/* STATEMENT */}
-      <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px", marginBottom: 64, position: "relative", overflow: "visible" }}>
-        {/* Left - professional people group */}
+      <div className="r-full-bleed" style={{ background: C.raiGrad, padding: "48px 20px", marginBottom: 64, position: "relative", overflow: "visible" }}>
         <svg style={{ position: "absolute", left: 120, bottom: -14, width: 120, height: 90, opacity: 0.14 }} className="r-stat-graphic-left" viewBox="0 0 120 90" fill="none">
-          {/* Person 1 - front */}
-          <circle cx="40" cy="22" r="14" fill={C.primary} />
-          <path d="M40,36 C28,36 20,44 18,56 L18,90 L62,90 L62,56 C60,44 52,36 40,36 Z" fill={C.primary} />
-          {/* Person 2 - behind left */}
-          <circle cx="16" cy="28" r="10" fill={C.primary} opacity="0.6" />
-          <path d="M16,38 C8,38 2,44 0,52 L0,90 L32,90 L32,52 C30,44 24,38 16,38 Z" fill={C.primary} opacity="0.6" />
-          {/* Person 3 - behind right */}
-          <circle cx="68" cy="30" r="9" fill={C.primary} opacity="0.45" />
-          <path d="M68,39 C60,39 56,44 54,50 L54,90 L82,90 L82,50 C80,44 76,39 68,39 Z" fill={C.primary} opacity="0.45" />
-          {/* Person 4 - far back */}
-          <circle cx="92" cy="34" r="7" fill={C.primary} opacity="0.3" />
-          <path d="M92,41 C86,41 82,45 81,50 L81,90 L103,90 L103,50 C102,45 98,41 92,41 Z" fill={C.primary} opacity="0.3" />
-          {/* Connecting arc */}
-          <path d="M20,70 Q45,58 68,70" stroke={C.primary} strokeWidth="1.5" strokeDasharray="3 3" fill="none" opacity="0.3" />
+          <circle cx="40" cy="22" r="14" fill="#fff" />
+          <path d="M40,36 C28,36 20,44 18,56 L18,90 L62,90 L62,56 C60,44 52,36 40,36 Z" fill="#fff" />
+          <circle cx="16" cy="28" r="10" fill="#fff" opacity="0.6" />
+          <path d="M16,38 C8,38 2,44 0,52 L0,90 L32,90 L32,52 C30,44 24,38 16,38 Z" fill="#fff" opacity="0.6" />
+          <circle cx="68" cy="30" r="9" fill="#fff" opacity="0.45" />
+          <path d="M68,39 C60,39 56,44 54,50 L54,90 L82,90 L82,50 C80,44 76,39 68,39 Z" fill="#fff" opacity="0.45" />
+          <circle cx="92" cy="34" r="7" fill="#fff" opacity="0.3" />
+          <path d="M92,41 C86,41 82,45 81,50 L81,90 L103,90 L103,50 C102,45 98,41 92,41 Z" fill="#fff" opacity="0.3" />
+          <path d="M20,70 Q45,58 68,70" stroke="#fff" strokeWidth="1.5" strokeDasharray="3 3" fill="none" opacity="0.3" />
         </svg>
-        {/* Left accent - small handshake */}
         <svg style={{ position: "absolute", left: 250, bottom: -8, width: 36, height: 36, opacity: 0.1 }} className="r-stat-accent-left" viewBox="0 0 36 36" fill="none">
-          <path d="M4,20 L12,14 L18,18 L24,12 L32,18" stroke={C.primary} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-          <path d="M12,14 L18,20 L24,14" stroke={C.primary} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.5" />
+          <path d="M4,20 L12,14 L18,18 L24,12 L32,18" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          <path d="M12,14 L18,20 L24,14" stroke="#fff" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.5" />
         </svg>
-
-        {/* Right - money / growth */}
         <svg style={{ position: "absolute", right: 120, top: -16, width: 120, height: 90, opacity: 0.14 }} className="r-stat-graphic-right" viewBox="0 0 120 90" fill="none">
-          {/* Rising bar chart */}
-          <rect x="8" y="62" width="14" height="28" rx="3" fill={C.primary} opacity="0.4" />
-          <rect x="28" y="48" width="14" height="42" rx="3" fill={C.primary} opacity="0.55" />
-          <rect x="48" y="34" width="14" height="56" rx="3" fill={C.primary} opacity="0.7" />
-          <rect x="68" y="18" width="14" height="72" rx="3" fill={C.primary} opacity="0.85" />
-          <rect x="88" y="4" width="14" height="86" rx="3" fill={C.primary} />
-          {/* Upward trend line */}
-          <path d="M15,58 Q35,46 55,30 T102,6" stroke={C.primary} strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.4" />
-          {/* Arrow tip */}
-          <path d="M96,4 L104,2 L100,10" stroke={C.primary} strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.4" />
+          <rect x="8" y="62" width="14" height="28" rx="3" fill="#fff" opacity="0.4" />
+          <rect x="28" y="48" width="14" height="42" rx="3" fill="#fff" opacity="0.55" />
+          <rect x="48" y="34" width="14" height="56" rx="3" fill="#fff" opacity="0.7" />
+          <rect x="68" y="18" width="14" height="72" rx="3" fill="#fff" opacity="0.85" />
+          <rect x="88" y="4" width="14" height="86" rx="3" fill="#fff" />
+          <path d="M15,58 Q35,46 55,30 T102,6" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.4" />
+          <path d="M96,4 L104,2 L100,10" stroke="#fff" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.4" />
         </svg>
-        {/* Right accent - dollar */}
         <svg style={{ position: "absolute", right: 250, top: -6, width: 32, height: 32, opacity: 0.1 }} className="r-stat-accent-right" viewBox="0 0 32 32" fill="none">
-          <circle cx="16" cy="16" r="14" stroke={C.primary} strokeWidth="2" fill="none" />
-          <text x="16" y="22" fontSize="16" fontWeight="800" fill={C.primary} fontFamily="Outfit, sans-serif" textAnchor="middle">$</text>
+          <circle cx="16" cy="16" r="14" stroke="#fff" strokeWidth="2" fill="none" />
+          <text x="16" y="22" fontSize="16" fontWeight="800" fill="#fff" fontFamily="Outfit, sans-serif" textAnchor="middle">$</text>
         </svg>
-        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.25, textAlign: "center", margin: "0 auto", position: "relative", zIndex: 2 }}>
-          A 5% increase in retention can{" "}<span style={{ color: C.btn }}>boost profits by 95%.</span><sup style={{ fontSize: "0.4em", color: C.textMuted, verticalAlign: "super", lineHeight: 0 }}>¹</sup>
+        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.25, textAlign: "center", margin: "0 auto", color: "#fff", position: "relative", zIndex: 2 }}>
+          A 5% increase in retention can{" "}<span style={{ color: "#fff" }}>boost profits by 95%.</span><sup style={{ fontSize: "0.4em", color: "rgba(255,255,255,0.4)", verticalAlign: "super", lineHeight: 0 }}>¹</sup>
         </h2>
       </div>
 
-      {/* BRAIN */}
-      <section style={{ padding: "16px 16px 48px" }}>
-        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>How It Works</h2>
-        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", maxWidth: 810, margin: "0 auto 24px" }}><span style={{ fontWeight: 700 }}>Rai pays attention to every client, every day.</span> She knows that Jessica shuts down under stress, Mark is blunt and data-driven, and Sarah's looking for a new job. When something shifts, Rai catches it — and tells you what to do about it.</p>
-        <div className="r-brain-layout">
-          <div className="r-brain-diagram">
-            <div style={{ position: "relative", width: "100%", maxWidth: 500, margin: "0 auto", aspectRatio: "1" }}>
-              <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }} viewBox="0 0 400 400">
-                <circle cx="200" cy="200" r="155" fill="none" stroke={C.border} strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
-                {features.map((f, i) => {
-                  const rad = (f.angle * Math.PI) / 180;
-                  const nx = 200 + 155 * Math.cos(rad), ny = 200 + 155 * Math.sin(rad);
-                  const mx = 200 + 70 * Math.cos(rad) + (i % 2 === 0 ? 15 : -15), my = 200 + 70 * Math.sin(rad) + (i % 2 === 0 ? -10 : 10);
-                  return (<g key={i}><path d={`M200,200 Q${mx},${my} ${nx},${ny}`} stroke={C.primaryLight} strokeWidth={activeFeat === i ? "2" : "1.5"} fill="none" opacity={activeFeat === i ? "0.6" : "0.3"} style={{ transition: "all 0.3s" }} /><path d={`M200,${195 + (i % 3) * 5} Q${mx + 8},${my - 5} ${nx},${ny}`} stroke={C.primaryLight} strokeWidth="0.7" fill="none" opacity="0.12" /><circle cx={200 + 50 * Math.cos(rad) + (i % 2 === 0 ? 4 : -4)} cy={200 + 50 * Math.sin(rad)} r="2" fill={C.primaryLight} opacity="0.25" /></g>);
-                })}
-                {features.map((f, i) => {
-                  const rad = (f.angle * Math.PI) / 180;
-                  const nx = 200 + 155 * Math.cos(rad), ny = 200 + 155 * Math.sin(rad);
-                  const mx = 200 + 70 * Math.cos(rad) + (i % 2 === 0 ? 15 : -15), my = 200 + 70 * Math.sin(rad) + (i % 2 === 0 ? -10 : 10);
-                  return (<circle key={"p" + i} r="2.5" fill={C.primary} opacity="0.45"><animateMotion dur={3 + i * 0.6 + "s"} repeatCount="indefinite" path={`M200,200 Q${mx},${my} ${nx},${ny}`} /></circle>);
-                })}
-              </svg>
-              <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 2, filter: "drop-shadow(0 6px 24px rgba(30,38,31,0.3))" }}>
-                <svg width="130" height="135" viewBox="0 0 130 135" fill="none">
-                  <path d="M65 18C52 18 40 22 34 28C28 34 26 42 27 48C22 52 20 58 21 64C20 70 23 77 29 82C33 88 42 94 54 96C58 97 62 97.5 65 97" fill={C.primaryDeep} stroke={C.primaryDark} strokeWidth="1.5" />
-                  <path d="M65 18C78 18 90 22 96 28C102 34 104 42 103 48C108 52 110 58 109 64C110 70 107 77 101 82C97 88 88 94 76 96C72 97 68 97.5 65 97" fill={C.primaryDeep} stroke={C.primaryDark} strokeWidth="1.5" />
-                  <path d="M65 20V95" stroke={C.primary} strokeWidth="1" opacity="0.35" />
-                  <path d="M32 42C40 46 52 44 62 39" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.35" />
-                  <path d="M25 58C36 54 48 57 62 54" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.3" />
-                  <path d="M30 72C38 68 50 70 62 68" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.25" />
-                  <path d="M98 42C90 46 78 44 68 39" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.35" />
-                  <path d="M105 58C94 54 82 57 68 54" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.3" />
-                  <path d="M100 72C92 68 80 70 68 68" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.25" />
-                  <circle cx="44" cy="48" r="5" fill={C.primaryLight} opacity="0.12" /><circle cx="82" cy="52" r="6" fill={C.primaryLight} opacity="0.1" /><circle cx="54" cy="68" r="4" fill={C.primaryLight} opacity="0.15" /><circle cx="78" cy="72" r="5" fill={C.primaryLight} opacity="0.12" /><circle cx="65" cy="44" r="4" fill={C.primaryLight} opacity="0.18" />
-                  <text x="65" y="122" textAnchor="middle" fill={C.primary} fontSize="14" fontWeight="900" fontFamily="Outfit, sans-serif" letterSpacing="0.12em">RAI</text>
-                </svg>
-              </div>
-              {features.map((f, i) => {
-                const rad = (f.angle * Math.PI) / 180;
-                const x = 50 + (155 / 200) * 50 * Math.cos(rad), y = 50 + (155 / 200) * 50 * Math.sin(rad);
-                const isA = activeFeat === i;
-                return (<div key={i} onClick={() => setActiveFeat(isA ? null : i)} style={{ position: "absolute", left: `calc(${x}% - 28px)`, top: `calc(${y}% - 28px)`, width: 56, height: 56, borderRadius: "50%", background: isA ? C.primary : C.card, border: (isA ? "2.5px solid " + C.primary : "2px solid " + C.border), display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", boxShadow: isA ? "0 4px 20px rgba(51,84,62,0.3)" : "0 2px 10px rgba(0,0,0,0.06)", zIndex: 3, cursor: "pointer", transition: "all 0.25s" }}><span style={{ fontSize: 17, lineHeight: 1 }}>{f.icon}</span><span style={{ fontSize: 7, fontWeight: 700, color: isA ? "rgba(255,255,255,.8)" : C.textMuted, marginTop: 2 }}>{f.short}</span></div>);
-              })}
+      {/* EXPLORE THE PLATFORM — Feature tabs preview */}
+      <section style={{ padding: "0 20px 64px" }}>
+        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>Every tool you need to keep your clients</h2>
+        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", maxWidth: 600, margin: "0 auto 32px" }}>
+          Relationship intelligence, health monitoring, AI advising, and pipeline management — in one system. Your clients won't know it exists. They just won't leave.
+        </p>
+
+        {/* Tab bar */}
+        <div className="r-tab-bar" style={{ display: "flex", gap: 4, background: C.surface, borderRadius: 10, padding: 4, marginBottom: 32, overflowX: "auto", maxWidth: 720, margin: "0 auto 32px", WebkitOverflowScrolling: "touch" }}>
+          {homeTabs.map((feat, i) => (
+            <button key={feat.id} onClick={() => { setActiveTab(i); setExpandedText(false); }} className="r-tab-btn" style={{
+              padding: "10px 16px", borderRadius: 8, border: "none", cursor: "pointer",
+              background: i === activeTab ? C.card : "transparent",
+              color: i === activeTab ? C.primary : C.textMuted,
+              fontFamily: "inherit", fontSize: 13, fontWeight: i === activeTab ? 700 : 500,
+              boxShadow: i === activeTab ? "0 2px 8px rgba(0,0,0,0.06)" : "none",
+              transition: "all 0.2s", whiteSpace: "nowrap", flex: "0 0 auto",
+            }}>{feat.label}</button>
+          ))}
+        </div>
+
+        {/* Feature content */}
+        <div className="r-feat-content" style={{ display: "flex", flexWrap: "wrap", gap: 40, alignItems: "flex-start", maxWidth: 960, margin: "0 auto" }}>
+          {/* Left: copy */}
+          <div style={{ flex: "1 1 320px", paddingTop: 24 }}>
+            <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 12 }}>{ht.headline}</h2>
+            <div className="r-feat-desc-full" style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 24 }}>{ht.sub}</div>
+            <div className="r-feat-desc-mobile" style={{ display: "none" }}>
+              <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 8, overflow: "hidden", maxHeight: expandedText ? "none" : 48, transition: "max-height 0.3s ease" }}>{ht.sub}</p>
+              <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 20, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
+            </div>
+            <div style={{ display: "flex", gap: 12 }}>
+              <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "12px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
+              <button onClick={() => setPage("platform")} style={{ padding: "12px 28px", background: "transparent", color: C.primary, border: "1.5px solid " + C.border, borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>See All Features</button>
             </div>
           </div>
-          <div className="r-brain-card" style={{ opacity: activeFeat !== null ? 1 : 0, transform: activeFeat !== null ? "translateY(0)" : "translateY(8px)", transition: "all 0.3s" }}>
-            {activeFeat !== null ? (<div style={{ background: C.card, borderRadius: 14, padding: "22px", border: "2px solid " + C.primary, boxShadow: "0 6px 24px rgba(51,84,62,0.12)" }}><div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}><div style={{ width: 40, height: 40, borderRadius: 10, background: C.primary, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 700 }}>{features[activeFeat].icon}</div><h3 style={{ fontSize: 18, fontWeight: 700 }}>{features[activeFeat].title}</h3></div><p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.6 }}>{features[activeFeat].desc}</p></div>) : (<div style={{ textAlign: "center", padding: "8px 0" }}><p style={{ fontSize: 14, color: C.textMuted }}>Tap a node to explore</p></div>)}
+
+          {/* Right: visual mockup */}
+          <div style={{ flex: "1 1 340px", minHeight: 380 }}>
+            {ht.id === "today" && (
+              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Today — April 11</div>
+                {[
+                  { name: "Northvane Studios", score: 91, task: "Monthly strategy review", color: C.success, tag: "Protect" },
+                  { name: "Broadleaf Media", score: 67, task: "Health Check overdue", color: C.warning, tag: "Watch" },
+                  { name: "Foxglove Partners", score: 38, task: "Rai: Call today, not email", color: C.danger, tag: "Urgent" },
+                ].map((t, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
+                    <div style={{ width: 38, height: 38, borderRadius: 8, background: t.color + "18", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 14, color: t.color, flexShrink: 0 }}>{t.score}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 700, fontSize: 13 }}>{t.name}</div>
+                      <div style={{ fontSize: 11, color: C.textMuted }}>{t.task}</div>
+                    </div>
+                    <div style={{ fontSize: 10, fontWeight: 600, padding: "3px 8px", borderRadius: 4, background: t.color + "15", color: t.color }}>{t.tag}</div>
+                  </div>
+                ))}
+                <div style={{ marginTop: 10, padding: "10px 12px", background: C.primarySoft, borderRadius: 8, fontSize: 12, color: C.primary }}>
+                  <strong>Rai:</strong> 3 clients need attention today. Foxglove hasn't responded in 14 days — this is beyond busy.
+                </div>
+              </div>
+            )}
+            {ht.id === "scoring" && (
+              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
+                <div style={{ textAlign: "center", marginBottom: 16 }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 8 }}>Retention Score</div>
+                  <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#FEF3C7", border: "3px solid #92400E30", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                    <span style={{ fontSize: 32, fontWeight: 900, color: "#92400E" }}>67</span>
+                  </div>
+                  <div style={{ fontWeight: 700, fontSize: 13, marginTop: 6 }}>Broadleaf Media</div>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                  {[["Trust", 6, C.warning], ["Loyalty", 7, C.primaryLight], ["Expectations", 7, C.primaryLight], ["Grace", 5, C.warning]].map(([name, val, color]) => (
+                    <div key={name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 10px", background: C.bg, borderRadius: 6, fontSize: 12 }}>
+                      <span style={{ color: C.textMuted }}>{name}</span>
+                      <span style={{ fontWeight: 700, color }}>{val}/10</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop: 10, display: "flex", gap: 6 }}>
+                  <div style={{ flex: 1, padding: "5px 8px", background: "#FEE2E2", borderRadius: 6, fontSize: 10, color: "#991B1B", fontWeight: 600 }}>No room to operate</div>
+                  <div style={{ flex: 1, padding: "5px 8px", background: "#FEF3C7", borderRadius: 6, fontSize: 10, color: "#92400E", fontWeight: 600 }}>Ice wall</div>
+                </div>
+              </div>
+            )}
+            {ht.id === "health" && (
+              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Health Check — Broadleaf Media</div>
+                <div style={{ display: "flex", gap: 4, marginBottom: 14 }}>
+                  {[1,2,3,4,5].map(i => <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= 2 ? C.primary : C.borderLight }} />)}
+                </div>
+                <p style={{ fontSize: 14, fontWeight: 700, marginBottom: 10 }}>Has anything changed with this relationship?</p>
+                {["Nothing — same as always", "Something minor, could be nothing", "Noticeably different from before", "Something has clearly changed"].map((opt, i) => (
+                  <div key={i} style={{ padding: "10px 14px", borderRadius: 8, marginBottom: 4, background: i === 2 ? C.primarySoft : C.bg, border: "1.5px solid " + (i === 2 ? C.primary : C.borderLight), fontSize: 13, color: i === 2 ? C.primary : C.textSec, fontWeight: i === 2 ? 600 : 400 }}>{opt}</div>
+                ))}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
+                  <span style={{ fontSize: 12, color: C.textMuted }}>2 of 5</span>
+                  <div style={{ padding: "7px 18px", background: C.primary, color: "#fff", borderRadius: 6, fontWeight: 600, fontSize: 12 }}>Next</div>
+                </div>
+              </div>
+            )}
+            {ht.id === "rai" && (
+              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Talk to Rai</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div style={{ alignSelf: "flex-end", maxWidth: "75%", padding: "10px 14px", background: C.primary, color: "#fff", borderRadius: "12px 12px 4px 12px", fontSize: 13, lineHeight: 1.5 }}>
+                    Rachel at Broadleaf has been different lately. What should I do?
+                  </div>
+                  <div style={{ alignSelf: "flex-start", maxWidth: "85%", padding: "12px 14px", background: C.bg, borderRadius: "12px 12px 12px 4px", fontSize: 13, lineHeight: 1.6 }}>
+                    <div style={{ fontWeight: 700, color: C.primary, marginBottom: 4, fontSize: 11 }}>Rai</div>
+                    Rachel's score dropped from 78 to 67 over two check-ins. The "No room to operate" combo just triggered — low trust combined with low grace. Call her. Not email. Ask directly: "I've noticed things feel different. What's on your mind?"
+                  </div>
+                  <div style={{ alignSelf: "flex-start", maxWidth: "85%", padding: "8px 12px", background: C.primarySoft, borderRadius: "12px 12px 12px 4px", fontSize: 12, color: C.primary }}>
+                    I've also flagged a profile re-evaluation for Broadleaf. Your initial profile was 8 weeks ago — things have shifted. Want me to queue that up?
+                  </div>
+                </div>
+              </div>
+            )}
+            {ht.id === "rolodex" && (
+              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Rolodex</div>
+                {[
+                  { name: "Maplewood Agency", type: "Former", months: "14mo together", tags: ["Would refer", "Would come back"], priority: "high" },
+                  { name: "Clearpoint Digital", type: "One-off", months: "Site audit", tags: ["Would refer"], priority: "medium" },
+                  { name: "Harlow & Associates", type: "Former", months: "8mo together", tags: ["Would come back"], priority: "high" },
+                ].map((r, i) => (
+                  <div key={i} style={{ padding: "12px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                      <div>
+                        <span style={{ fontWeight: 700, fontSize: 13 }}>{r.name}</span>
+                        <span style={{ fontSize: 11, color: C.textMuted, marginLeft: 8 }}>{r.type} · {r.months}</span>
+                      </div>
+                      <div style={{ width: 7, height: 7, borderRadius: "50%", background: r.priority === "high" ? C.success : C.warning }} />
+                    </div>
+                    <div style={{ display: "flex", gap: 4 }}>
+                      {r.tags.map(t => (
+                        <span key={t} style={{ fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 4, background: C.primarySoft, color: C.primary }}>{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                <div style={{ marginTop: 10, fontSize: 12, color: C.primary, fontWeight: 600 }}>3 re-engagement opportunities →</div>
+              </div>
+            )}
+            {ht.id === "referrals" && (
+              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Referral Intelligence</div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 16 }}>
+                  {[["Total", "7"], ["Converted", "4"], ["Revenue", "$18.4k"]].map(([label, val]) => (
+                    <div key={label} style={{ background: C.bg, borderRadius: 8, padding: 10, textAlign: "center" }}>
+                      <div style={{ fontSize: 20, fontWeight: 900, color: C.primary }}>{val}</div>
+                      <div style={{ fontSize: 10, color: C.textMuted, marginTop: 2 }}>{label}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8 }}>Ready to refer</div>
+                {[
+                  { name: "Northvane Studios", readiness: 94, contact: "Sarah Chen" },
+                  { name: "Oakline Outdoors", readiness: 76, contact: "James Park" },
+                ].map((r, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0", borderTop: "1px solid " + C.borderLight }}>
+                    <div>
+                      <span style={{ fontWeight: 600, fontSize: 13 }}>{r.name}</span>
+                      <span style={{ fontSize: 11, color: C.textMuted, marginLeft: 8 }}>{r.contact}</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <div style={{ width: 50, height: 4, borderRadius: 2, background: C.borderLight, overflow: "hidden" }}>
+                        <div style={{ width: `${r.readiness}%`, height: "100%", background: C.success, borderRadius: 2 }} />
+                      </div>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: C.success }}>{r.readiness}%</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* CHANNELS */}
-      {(() => {
-        const plugRef = useRef(null);
-        const [plugged, setPlugged] = useState(false);
-        useEffect(() => {
-          const el = plugRef.current;
-          if (!el) return;
-          const obs = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) { setPlugged(true); obs.disconnect(); }
-          }, { threshold: 0.5 });
-          obs.observe(el);
-          return () => obs.disconnect();
-        }, []);
-        return (
-          <section ref={plugRef} style={{ paddingTop: 32, paddingBottom: 72, position: "relative", overflow: "visible" }}>
-            <style>{`
-              @keyframes cordLeft { 0% { transform: translateX(-100%); } 100% { transform: translateX(0); } }
-              @keyframes cordRight { 0% { transform: translateX(100%); } 100% { transform: translateX(0); } }
-              @keyframes sparkPop { 0% { opacity: 0; transform: scale(0); } 50% { opacity: 1; transform: scale(1.3); } 100% { opacity: 0; transform: scale(0); } }
-            `}</style>
-            {/* Cord container */}
-            <div style={{ position: "relative", height: 60, marginBottom: 12, width: "100vw", left: "50%", transform: "translateX(-50%)", overflow: "hidden" }}>
-              {/* Left cord */}
-              <svg style={{ position: "absolute", top: 0, left: 0, width: "calc(50% - 35px)", height: 60, animation: plugged ? "cordLeft 0.8s ease-out forwards" : "none", transform: plugged ? "translateX(0)" : "translateX(-100%)" }} viewBox="0 0 500 60" preserveAspectRatio="none">
-                <path d="M0,30 Q100,30 150,20 T300,35 T420,25 T500,30" stroke={C.primary} strokeWidth="4" fill="none" strokeLinecap="round" />
-              </svg>
-              {/* Right cord */}
-              <svg style={{ position: "absolute", top: 0, right: 0, width: "calc(50% - 35px)", height: 60, animation: plugged ? "cordRight 0.8s ease-out forwards" : "none", transform: plugged ? "translateX(0)" : "translateX(100%)" }} viewBox="0 0 500 60" preserveAspectRatio="none">
-                <path d="M500,30 Q400,30 350,40 T200,25 T80,35 T0,30" stroke={C.primaryLight} strokeWidth="4" fill="none" strokeLinecap="round" />
-              </svg>
-              {/* Center plug + socket */}
-              <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 120, height: 60, opacity: plugged ? 1 : 0, transition: "opacity 0.2s ease 0.7s" }}>
-                <svg width="120" height="60" viewBox="0 0 120 60">
-                  {/* Left plug — body tapering from cord, two prongs extending right */}
-                  <path d="M0,30 C6,30 10,22 14,18 L14,42 C10,38 6,30 0,30 Z" fill={C.primary} />
-                  <rect x="14" y="16" width="18" height="28" rx="4" fill={C.primary} />
-                  <rect x="32" y="22" width="12" height="4" rx="2" fill={C.primary} />
-                  <rect x="32" y="34" width="12" height="4" rx="2" fill={C.primary} />
-                  {/* Right socket — body tapering to cord, recessed slots */}
-                  <path d="M120,30 C114,30 110,22 106,18 L106,42 C110,38 114,30 120,30 Z" fill={C.sidebar} />
-                  <rect x="82" y="16" width="24" height="28" rx="4" fill={C.sidebar} />
-                  <rect x="82" y="23" width="10" height="3" rx="1" fill={C.bg} opacity="0.3" />
-                  <rect x="82" y="34" width="10" height="3" rx="1" fill={C.bg} opacity="0.3" />
-
-
-
-
-
-                  {/* Spark lines between plug and socket */}
-                  <line x1="54" y1="6" x2="58" y2="14" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
-                  <line x1="60" y1="2" x2="60" y2="11" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
-                  <line x1="66" y1="6" x2="62" y2="14" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
-                  <line x1="54" y1="54" x2="58" y2="46" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
-                  <line x1="60" y1="58" x2="60" y2="49" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
-                  <line x1="66" y1="54" x2="62" y2="46" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
-                </svg>
+      {/* ENTERPRISE */}
+      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "64px 20px" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.3)", marginBottom: 16 }}>Enterprise</div>
+          <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 12, color: "#fff" }}>Autonomous relationship intelligence.</h2>
+          <p style={{ fontSize: 15, color: "rgba(255,255,255,.45)", maxWidth: 600, margin: "0 auto 32px", lineHeight: 1.7 }}>Connect your platforms. Retayned scores every client, detects churn patterns, and tells your team — or your agents — exactly what to address, every morning, automatically.</p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 32, maxWidth: 500, margin: "0 auto 32px" }}>
+            {[
+              { label: "Daily Portfolio Sweeps", desc: "Every client scored and ranked automatically, every morning." },
+              { label: "Churn Detection", desc: "Converging signals identified before they become cancellations." },
+              { label: "Prioritized Task Lists", desc: "Specific actions, tailored to each client's communication style." },
+              { label: "Platform Integrations", desc: "Connects to Slack, email, Zoom, CRM, and billing — Retayned reads the data, you read the tasks." },
+            ].map(item => (
+              <div key={item.label} style={{ padding: "16px 14px", background: "rgba(255,255,255,0.05)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.08)", textAlign: "left" }}>
+                <div style={{ fontWeight: 700, fontSize: 13, color: "#fff", marginBottom: 4 }}>{item.label}</div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", lineHeight: 1.4 }}>{item.desc}</div>
               </div>
-              {/* Spark */}
-              {plugged && (
-                <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                  {[0,1,2,3,4,5,6,7].map(i => (
-                    <div key={i} style={{ position: "absolute", width: 4 + Math.random() * 4, height: 4 + Math.random() * 4, borderRadius: "50%", background: i % 2 === 0 ? "#FFD700" : "#FFA500", boxShadow: `0 0 ${6 + i * 2}px ${i % 2 === 0 ? "#FFD700" : "#FFA500"}`, left: Math.cos(i * Math.PI / 4) * (12 + Math.random() * 10), top: Math.sin(i * Math.PI / 4) * (12 + Math.random() * 10), animation: `sparkPop 0.4s ease-out ${0.75 + i * 0.04}s forwards`, opacity: 0 }} />
-                  ))}
-                </div>
-              )}
-            </div>
-            <div style={{ padding: "0 20px" }}>
-              <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 12 }}>Plugs Into Your Workflow</h2>
-            </div>
-            <div style={{ padding: "0 20px" }}>
-              <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 24 }}>Enterprise integrations help the engine adapt and learn, supplying you with even more insight.</p>
-              <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap" }}>
-                {["✉️ Gmail", "📁 Meets", "📅 Calendar", "💬 Slack", "🎥 Zoom"].map((ch, i) => (
-                  <div key={i} className="ch-pill" style={{ padding: "10px 14px", background: C.card, borderRadius: 10, border: "1px solid " + C.border, fontSize: 13, fontWeight: 500 }}>{ch}</div>
-                ))}
-              </div>
-            </div>
-          </section>
-        );
-      })()}
-
-      {/* PHILOSOPHY */}
-      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "56px 20px", marginBottom: 64 }}>
-        <div style={{ margin: "0 auto", textAlign: "center" }}>
-          <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.3)", marginBottom: 16 }}>Retayned Wisdom</div>
-          <blockquote style={{ fontSize: 21, fontWeight: 600, lineHeight: 1.45, letterSpacing: "-0.02em", margin: 0, color: "#fff" }}>"The conversation you're avoiding is the one that saves the account."</blockquote>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,.38)", marginTop: 16, lineHeight: 1.5 }}>Retayned doesn't help you avoid hard conversations. It just helps you have them.</p>
+            ))}
+          </div>
+          <button className="cta-btn" onClick={() => setPage("contact")} style={{ padding: "14px 32px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Let's Talk</button>
         </div>
       </div>
 
@@ -1522,15 +1569,17 @@ function Terms() {
 
 // ═══ PLATFORM ═══
 function Platform({ setPage }) {
-  const [activeF, setActiveF] = useState(null);
-  const features = [
-    { icon: "👤", title: "Relationship Profiles", desc: "12 dimensions of every relationship creating a core archetype of each client. Not metrics — personality. Rai knows the shape of every relationship and calibrates recommendations around it.", color: "#2E6B60" },
-    { icon: "🩺", title: "Health Checks", desc: "8 honest questions every month, plus performance, communication, and event tracking. This isn't 'how satisfied are they' — Rai detects drift from their baseline, not from some universal standard.", color: "#B88B15" },
-    { icon: "◉", title: "Today", desc: "Every task, every note, every client you thought about today. Including recurring and company-wide tasks. Rai notices which clients need a little more attention and which ones you're outright neglecting.", color: "#0D9488" },
-    { icon: "💰", title: "Billing", desc: "Track every invoice, line item, and add-on per client per month. Rai connects revenue data to relationship health — a client paying more but engaging less is a different risk than one doing both.", color: "#5B21B6" },
-    { icon: "📇", title: "Rolodex", desc: "Past clients aren't dead leads — they're your warmest pipeline. Rai tracks when to reconnect, who might refer, and when to engage. Former clients and one-off contacts, prioritized and ready.", color: "#334155" },
-    { icon: "🤝", title: "Referrals", desc: "Your best client has never been asked for a referral. Rai knows who's ready, who's referred before, and when the relationship is strong enough to ask. The cheapest new business you'll ever win.", color: "#C4432B" },
+  const [activeFeat, setActiveFeat] = useState(0);
+  const [expandedText, setExpandedText] = useState(false);
+  const platformFeatures = [
+    { id: "today", label: "Today", headline: "One page. Every priority.", sub: "Your Today tab knows which clients need you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value. Green clients surface first to protect what's working. At-risk clients with high revenue jump the line. You never have to decide who to focus on. The system already did." },
+    { id: "scoring", label: "Retention Score", headline: "A number that means something.", sub: "12 dimensions. 20 combination signals. Health check modifiers. Every client gets a Retention Score from 1–99 that tells you exactly where the relationship stands — not where you hope it is. The score catches silent churners, rewards genuine trust, and penalizes the patterns that kill contracts. Your gut feeling, quantified." },
+    { id: "health", label: "Health Checks", headline: "Five questions. Two minutes. The truth.", sub: "Regular check-ins that detect drift before it becomes damage. Has anything changed? Is the relationship trending up or down? Would you be surprised if they cancelled? Your answers blend directly into the Retention Score — bad news moves the number immediately. No lengthy forms. No busywork. Just the signal." },
+    { id: "rai", label: "Talk to Rai", headline: "She writes the words you need when it matters most.", sub: "Rai isn't a chatbot. She's an AI advisor calibrated to your specific relationships. When you're staring at a client's name and don't know what to say — the opening line, the tone, whether to call or email — Rai gives you the script. She knows this client's personality, their history, what worked last time, and what didn't. Most of the time you won't need her. But when you do, she's the difference between saving the account and losing it." },
+    { id: "rolodex", label: "Rolodex", headline: "Your pipeline is forward-looking.", sub: "Former clients aren't dead relationships — they're future revenue. The Rolodex tracks who left, how it ended, and whether they'd come back. One-off projects become re-engagement opportunities. Past clients become referral sources. This isn't a CRM graveyard. It's a pipeline you forgot you had." },
+    { id: "referrals", label: "Referrals", headline: "Your best clients send you their friends.", sub: "Retayned tracks referral readiness based on loyalty, trust, and relationship depth — the same dimensions driving your Retention Score. When a client is ready to refer, the system knows before you do. Track who referred who, whether they converted, and the revenue they generated. Your network, measured." },
   ];
+  const pf = platformFeatures[activeFeat];
 
   return (
     <>
@@ -1539,287 +1588,466 @@ function Platform({ setPage }) {
         <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 12 }}>
           Your clients won't know Retayned exists.<br />They'll just stay.
         </h1>
-        <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.6 }}>
-          Retayned is built on something no one else has: a proprietary retention engine trained on over a decade of real client relationships. Our AI isn't just smart, it's <strong>emotionally intelligent</strong>.
+        <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.6, maxWidth: 600 }}>
+          Retayned brings relationship intelligence, health monitoring, AI advising, and pipeline management into one system. Our AI isn't just smart, it's <strong>emotionally intelligent</strong>.
         </p>
       </section>
 
-      {/* Retayned AI — app preview */}
-      <section style={{ padding: "0 20px 48px" }}>
-        <div style={{ background: C.sidebar, borderRadius: 14, padding: 2, boxShadow: "0 16px 48px rgba(0,0,0,0.1)" }}>
-          <div style={{ background: C.card, borderRadius: 12, overflow: "hidden" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "10px 14px", borderBottom: "1px solid " + C.borderLight }}>
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.danger }} />
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.warning }} />
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.success }} />
-              <div style={{ flex: 1 }} />
-              <span style={{ fontSize: 11, color: C.textMuted, fontFamily: "monospace" }}>app.retayned.com</span>
-              <div style={{ flex: 1 }} />
+      {/* Feature Tabs */}
+      <section style={{ padding: "32px 20px 64px" }}>
+        {/* Tab bar */}
+        <div className="r-tab-bar" style={{ display: "flex", gap: 4, background: C.surface, borderRadius: 10, padding: 4, marginBottom: 32, overflowX: "auto", maxWidth: 720, margin: "0 auto 32px", WebkitOverflowScrolling: "touch" }}>
+          {platformFeatures.map((feat, i) => (
+            <button key={feat.id} onClick={() => { setActiveFeat(i); setExpandedText(false); }} className="r-tab-btn" style={{
+              padding: "10px 16px", borderRadius: 8, border: "none", cursor: "pointer",
+              background: i === activeFeat ? C.card : "transparent",
+              color: i === activeFeat ? C.primary : C.textMuted,
+              fontFamily: "inherit", fontSize: 13, fontWeight: i === activeFeat ? 700 : 500,
+              boxShadow: i === activeFeat ? "0 2px 8px rgba(0,0,0,0.06)" : "none",
+              transition: "all 0.2s", whiteSpace: "nowrap", flex: "0 0 auto",
+            }}>{feat.label}</button>
+          ))}
+        </div>
+
+        {/* Feature content — two column on desktop */}
+        <div className="r-feat-content" style={{ display: "flex", flexWrap: "wrap", gap: 40, alignItems: "flex-start", maxWidth: 960, margin: "0 auto" }}>
+          {/* Left: copy */}
+          <div style={{ flex: "1 1 320px", paddingTop: 24 }}>
+            <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 12 }}>{pf.headline}</h2>
+            <div className="r-feat-desc-full" style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 24 }}>{pf.sub}</div>
+            <div className="r-feat-desc-mobile" style={{ display: "none" }}>
+              <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 8, overflow: "hidden", maxHeight: expandedText ? "none" : 48, transition: "max-height 0.3s ease" }}>{pf.sub}</p>
+              <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 20, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
             </div>
-            <div style={{ padding: 16, background: C.bg }}>
-              <div style={{ marginBottom: 12 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: C.danger, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>🚨 Alert</div>
-                <div style={{ background: "#FAE8E4", borderRadius: 8, border: "1px solid " + C.danger + "44", overflow: "hidden" }}>
-                  <div style={{ padding: "10px 14px" }}>
-                    <p style={{ fontSize: 14, color: C.danger, fontWeight: 700, lineHeight: 1.4 }}>Foxglove Partners: Email Tom today with something new — not a follow-up.</p>
-                    <p style={{ fontSize: 12, color: C.danger + "aa", fontWeight: 400, lineHeight: 1.4, marginTop: 4 }}>Tom's pulling back. You're overdue on a fresh campaign for his account — get something in front of him before your next call. Keep it brief. He'll notice the effort more than the detail.</p>
+            <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "12px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
+          </div>
+
+          {/* Right: visual mockup */}
+
+          <div style={{ flex: "1 1 340px", height: 380, overflow: "auto" }}>
+            {pf.id === "today" && (
+              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Today — April 11</div>
+                {[
+                  { name: "Northvane Studios", score: 91, task: "Monthly strategy review", color: C.success, tag: "Protect" },
+                  { name: "Broadleaf Media", score: 67, task: "Health Check overdue", color: C.warning, tag: "Watch" },
+                  { name: "Foxglove Partners", score: 38, task: "Rai: Call today, not email", color: C.danger, tag: "Urgent" },
+                ].map((t, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
+                    <div style={{ width: 38, height: 38, borderRadius: 8, background: t.color + "18", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 14, color: t.color, flexShrink: 0 }}>{t.score}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 700, fontSize: 13 }}>{t.name}</div>
+                      <div style={{ fontSize: 11, color: C.textMuted }}>{t.task}</div>
+                    </div>
+                    <div style={{ fontSize: 10, fontWeight: 600, padding: "3px 8px", borderRadius: 4, background: t.color + "15", color: t.color }}>{t.tag}</div>
                   </div>
-                  <div style={{ display: "flex", borderTop: "1px solid " + C.danger + "22" }}>
-                    <div style={{ flex: 1, padding: "7px", textAlign: "center", fontSize: 12, fontWeight: 600, color: C.danger, borderRight: "1px solid " + C.danger + "22" }}>Add to Today's Tasks</div>
-                    <div style={{ flex: 1, padding: "7px", textAlign: "center", fontSize: 12, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
+                ))}
+                <div style={{ marginTop: 10, padding: "10px 12px", background: C.primarySoft, borderRadius: 8, fontSize: 12, color: C.primary }}>
+                  <strong>Rai:</strong> 3 clients need attention today. Foxglove hasn't responded in 14 days — this is beyond busy.
+                </div>
+              </div>
+            )}
+
+            {pf.id === "scoring" && (
+              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
+                <div style={{ textAlign: "center", marginBottom: 16 }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 8 }}>Retention Score</div>
+                  <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#FEF3C7", border: "3px solid #92400E30", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                    <span style={{ fontSize: 32, fontWeight: 900, color: "#92400E" }}>67</span>
+                  </div>
+                  <div style={{ fontWeight: 700, fontSize: 13, marginTop: 6 }}>Broadleaf Media</div>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                  {[["Trust", 6, C.warning], ["Loyalty", 7, C.primaryLight], ["Expectations", 7, C.primaryLight], ["Grace", 5, C.warning]].map(([name, val, color]) => (
+                    <div key={name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 10px", background: C.bg, borderRadius: 6, fontSize: 12 }}>
+                      <span style={{ color: C.textMuted }}>{name}</span>
+                      <span style={{ fontWeight: 700, color }}>{val}/10</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop: 10, display: "flex", gap: 6 }}>
+                  <div style={{ flex: 1, padding: "5px 8px", background: "#FEE2E2", borderRadius: 6, fontSize: 10, color: "#991B1B", fontWeight: 600 }}>No room to operate</div>
+                  <div style={{ flex: 1, padding: "5px 8px", background: "#FEF3C7", borderRadius: 6, fontSize: 10, color: "#92400E", fontWeight: 600 }}>Ice wall</div>
+                </div>
+              </div>
+            )}
+
+            {pf.id === "health" && (
+              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Health Check — Broadleaf Media</div>
+                <div style={{ display: "flex", gap: 4, marginBottom: 14 }}>
+                  {[1,2,3,4,5].map(i => <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= 2 ? C.primary : C.borderLight }} />)}
+                </div>
+                <p style={{ fontSize: 14, fontWeight: 700, marginBottom: 10 }}>Has anything changed with this relationship?</p>
+                {["Nothing — same as always", "Something minor, could be nothing", "Noticeably different from before", "Something has clearly changed"].map((opt, i) => (
+                  <div key={i} style={{
+                    padding: "10px 14px", borderRadius: 8, marginBottom: 4,
+                    background: i === 2 ? C.primarySoft : C.bg,
+                    border: "1.5px solid " + (i === 2 ? C.primary : C.borderLight),
+                    fontSize: 13, color: i === 2 ? C.primary : C.textSec,
+                    fontWeight: i === 2 ? 600 : 400,
+                  }}>{opt}</div>
+                ))}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
+                  <span style={{ fontSize: 12, color: C.textMuted }}>2 of 5</span>
+                  <div style={{ padding: "7px 18px", background: C.primary, color: "#fff", borderRadius: 6, fontWeight: 600, fontSize: 12 }}>Next</div>
+                </div>
+              </div>
+            )}
+
+            {pf.id === "rai" && (
+              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Talk to Rai</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div style={{ alignSelf: "flex-end", maxWidth: "75%", padding: "10px 14px", background: C.primary, color: "#fff", borderRadius: "12px 12px 4px 12px", fontSize: 13, lineHeight: 1.5 }}>
+                    Rachel at Broadleaf has been different lately. What should I do?
+                  </div>
+                  <div style={{ alignSelf: "flex-start", maxWidth: "85%", padding: "12px 14px", background: C.bg, borderRadius: "12px 12px 12px 4px", fontSize: 13, lineHeight: 1.6 }}>
+                    <div style={{ fontWeight: 700, color: C.primary, marginBottom: 4, fontSize: 11 }}>Rai</div>
+                    Rachel's score dropped from 78 to 67 over two check-ins. The "No room to operate" combo just triggered — low trust combined with low grace. This isn't a performance issue. It's a relationship issue. Call her. Not email. Ask directly: "I've noticed things feel different. What's on your mind?"
+                  </div>
+                  <div style={{ alignSelf: "flex-start", maxWidth: "85%", padding: "8px 12px", background: C.primarySoft, borderRadius: "12px 12px 12px 4px", fontSize: 12, color: C.primary }}>
+                    I've also flagged a profile re-evaluation for Broadleaf. Your initial profile was 8 weeks ago — things have shifted. Want me to queue that up?
                   </div>
                 </div>
               </div>
-              {[{ name: "Northvane Studios", ret: 91, tag: "Creative", contact: "Sarah Chen", months: 34 }, { name: "Ridgeline Supply", ret: 73, tag: "Ecommerce", contact: "Marcus Webb", months: 11 }, { name: "Copper & Sage", ret: 55, tag: "Wellness", contact: "Elena Moss", months: 6 }, { name: "Foxglove Partners", ret: 38, tag: "B2B", contact: "Tom Aldrich", months: 3 }].map((row, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: "1px solid " + C.borderLight }}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}><span style={{ fontWeight: 700, fontSize: 14 }}>{row.name}</span><span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 3, background: C.surface, color: C.textMuted }}>{row.tag}</span></div>
-                    <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>{row.contact} · {row.months}mo</div>
+            )}
+
+            {pf.id === "rolodex" && (
+              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Rolodex</div>
+                {[
+                  { name: "Maplewood Agency", type: "Former", months: "14mo together", tags: ["Would refer", "Would come back"], priority: "high" },
+                  { name: "Clearpoint Digital", type: "One-off", months: "Site audit", tags: ["Would refer"], priority: "medium" },
+                  { name: "Harlow & Associates", type: "Former", months: "8mo together", tags: ["Would come back"], priority: "high" },
+                ].map((r, i) => (
+                  <div key={i} style={{ padding: "12px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                      <div>
+                        <span style={{ fontWeight: 700, fontSize: 13 }}>{r.name}</span>
+                        <span style={{ fontSize: 11, color: C.textMuted, marginLeft: 8 }}>{r.type} · {r.months}</span>
+                      </div>
+                      <div style={{ width: 7, height: 7, borderRadius: "50%", background: r.priority === "high" ? C.success : C.warning }} />
+                    </div>
+                    <div style={{ display: "flex", gap: 4 }}>
+                      {r.tags.map(t => (
+                        <span key={t} style={{ fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 4, background: C.primarySoft, color: C.primary }}>{t}</span>
+                      ))}
+                    </div>
                   </div>
-                  <div style={{ width: 40, height: 4, background: C.borderLight, borderRadius: 2 }}><div style={{ height: "100%", width: row.ret + "%", background: row.ret >= 70 ? C.success : row.ret >= 45 ? C.warning : C.danger, borderRadius: 2 }} /></div>
-                  <span style={{ fontFamily: "monospace", fontSize: 13, fontWeight: 700, color: row.ret >= 70 ? C.success : row.ret >= 45 ? C.warning : C.danger, minWidth: 28, textAlign: "right" }}>{row.ret}%</span>
+                ))}
+                <div style={{ marginTop: 10, fontSize: 12, color: C.primary, fontWeight: 600 }}>3 re-engagement opportunities →</div>
+              </div>
+            )}
+
+            {pf.id === "referrals" && (
+              <div style={{ background: C.card, borderRadius: 16, border: "1px solid " + C.border, padding: 20, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>Referral Intelligence</div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 16 }}>
+                  {[["Total", "7"], ["Converted", "4"], ["Revenue", "$18.4k"]].map(([label, val]) => (
+                    <div key={label} style={{ background: C.bg, borderRadius: 8, padding: 10, textAlign: "center" }}>
+                      <div style={{ fontSize: 20, fontWeight: 900, color: C.primary }}>{val}</div>
+                      <div style={{ fontSize: 10, color: C.textMuted, marginTop: 2 }}>{label}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8 }}>Ready to refer</div>
+                {[
+                  { name: "Northvane Studios", readiness: 94, contact: "Sarah Chen" },
+                  { name: "Oakline Outdoors", readiness: 76, contact: "James Park" },
+                ].map((r, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0", borderTop: "1px solid " + C.borderLight }}>
+                    <div>
+                      <span style={{ fontWeight: 600, fontSize: 13 }}>{r.name}</span>
+                      <span style={{ fontSize: 11, color: C.textMuted, marginLeft: 8 }}>{r.contact}</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <div style={{ width: 50, height: 4, borderRadius: 2, background: C.borderLight, overflow: "hidden" }}>
+                        <div style={{ width: `${r.readiness}%`, height: "100%", background: C.success, borderRadius: 2 }} />
+                      </div>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: C.success }}>{r.readiness}%</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+
+      {/* Meet the Brains — Rai's real value */}
+      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "64px 20px 72px" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <h2 style={{ fontSize: 30, fontWeight: 900, letterSpacing: "-0.03em", color: "#fff", marginBottom: 8 }}>Meet the Brains of the Operation</h2>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 20 }}>She runs things around here.</p>
+            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", lineHeight: 1.7, maxWidth: 580, margin: "0 auto" }}>
+              You have 15 clients. You're focused on the three that are screaming. Rai is watching the other twelve.
+            </p>
+          </div>
+
+          {/* Step 1 — She sees it */}
+          <div style={{ marginBottom: 32 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.primaryLight, textTransform: "uppercase", letterSpacing: ".08em" }}>01 — Signal Detection</div>
+              <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>She sees it.</div>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.65, marginBottom: 20, maxWidth: 560 }}>Cross-referencing health checks, score trends, billing patterns, and 20 combination signals — continuously, across your entire book.</p>
+
+            {/* Signal readout — white card on dark */}
+            <div style={{ background: C.card, borderRadius: 14, border: "1px solid " + C.border, padding: "18px 20px", boxShadow: "0 8px 32px rgba(0,0,0,0.15)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
+                <div style={{ width: 6, height: 6, borderRadius: "50%", background: C.danger, animation: "pulse 2s infinite" }} />
+                <span style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em" }}>Live — scanning 15 clients</span>
+              </div>
+              {[
+                { name: "Broadleaf Media", score: 65, signals: ["78 → 65", "combo: no_room", "11d silent", "rate↑ no call"], status: "critical" },
+                { name: "Foxglove Partners", score: 38, signals: ["42 → 38", "HC overdue", "velocity: cold"], status: "critical" },
+                { name: "Northvane Studios", score: 91, signals: ["91 stable", "renewed", "weekly calls"], status: "clear" },
+              ].map((c, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none", opacity: c.status === "clear" ? 0.4 : 1 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 8, background: c.status === "critical" ? C.danger + "12" : C.success + "12", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 13, color: c.status === "critical" ? C.danger : C.success, flexShrink: 0 }}>{c.score}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 700, fontSize: 13, color: C.text, marginBottom: 3 }}>{c.name}</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                      {c.signals.map(s => (
+                        <span key={s} style={{ fontSize: 10, padding: "2px 7px", borderRadius: 4, background: c.status === "critical" ? C.danger + "10" : C.primarySoft, color: c.status === "critical" ? C.danger : C.primary, fontWeight: 500 }}>{s}</span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-        <p style={{ fontSize: 10, color: C.textMuted, textAlign: "center", marginTop: 8 }}>Based on sample client data.</p>
-      </section>
 
-      {/* STATEMENT */}
-      <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px", marginBottom: 64, position: "relative", overflow: "visible" }}>
-        {/* Left - professional people group */}
-        <svg style={{ position: "absolute", left: 120, bottom: -14, width: 120, height: 90, opacity: 0.14 }} className="r-stat-graphic-left" viewBox="0 0 120 90" fill="none">
-          <circle cx="40" cy="22" r="14" fill={C.primary} />
-          <path d="M40,36 C28,36 20,44 18,56 L18,90 L62,90 L62,56 C60,44 52,36 40,36 Z" fill={C.primary} />
-          <circle cx="16" cy="28" r="10" fill={C.primary} opacity="0.6" />
-          <path d="M16,38 C8,38 2,44 0,52 L0,90 L32,90 L32,52 C30,44 24,38 16,38 Z" fill={C.primary} opacity="0.6" />
-          <circle cx="68" cy="30" r="9" fill={C.primary} opacity="0.45" />
-          <path d="M68,39 C60,39 56,44 54,50 L54,90 L82,90 L82,50 C80,44 76,39 68,39 Z" fill={C.primary} opacity="0.45" />
-          <circle cx="92" cy="34" r="7" fill={C.primary} opacity="0.3" />
-          <path d="M92,41 C86,41 82,45 81,50 L81,90 L103,90 L103,50 C102,45 98,41 92,41 Z" fill={C.primary} opacity="0.3" />
-          <path d="M20,70 Q45,58 68,70" stroke={C.primary} strokeWidth="1.5" strokeDasharray="3 3" fill="none" opacity="0.3" />
-        </svg>
-        <svg style={{ position: "absolute", left: 250, bottom: -8, width: 36, height: 36, opacity: 0.1 }} className="r-stat-accent-left" viewBox="0 0 36 36" fill="none">
-          <path d="M4,20 L12,14 L18,18 L24,12 L32,18" stroke={C.primary} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-          <path d="M12,14 L18,20 L24,14" stroke={C.primary} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.5" />
-        </svg>
-        <svg style={{ position: "absolute", right: 120, top: -16, width: 120, height: 90, opacity: 0.14 }} className="r-stat-graphic-right" viewBox="0 0 120 90" fill="none">
-          <rect x="8" y="62" width="14" height="28" rx="3" fill={C.primary} opacity="0.4" />
-          <rect x="28" y="48" width="14" height="42" rx="3" fill={C.primary} opacity="0.55" />
-          <rect x="48" y="34" width="14" height="56" rx="3" fill={C.primary} opacity="0.7" />
-          <rect x="68" y="18" width="14" height="72" rx="3" fill={C.primary} opacity="0.85" />
-          <rect x="88" y="4" width="14" height="86" rx="3" fill={C.primary} />
-          <path d="M15,58 Q35,46 55,30 T102,6" stroke={C.primary} strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.4" />
-          <path d="M96,4 L104,2 L100,10" stroke={C.primary} strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.4" />
-        </svg>
-        <svg style={{ position: "absolute", right: 250, top: -6, width: 32, height: 32, opacity: 0.1 }} className="r-stat-accent-right" viewBox="0 0 32 32" fill="none">
-          <circle cx="16" cy="16" r="14" stroke={C.primary} strokeWidth="2" fill="none" />
-          <text x="16" y="22" fontSize="16" fontWeight="800" fill={C.primary} fontFamily="Outfit, sans-serif" textAnchor="middle">$</text>
-        </svg>
-        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.25, textAlign: "center", margin: "0 auto", position: "relative", zIndex: 2 }}>
-          A 5% increase in retention can{" "}<span style={{ color: C.btn }}>boost profits by 95%.</span><sup style={{ fontSize: "0.4em", color: C.textMuted, verticalAlign: "super", lineHeight: 0 }}>¹</sup>
-        </h2>
+          {/* Vertical connector */}
+          <div style={{ display: "flex", justifyContent: "center", padding: "4px 0", marginBottom: 32 }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+              <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.1)" }} />
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)", fontWeight: 600 }}>↓</div>
+              <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.1)" }} />
+            </div>
+          </div>
+
+          {/* Step 2 — She surfaces it */}
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.warning, textTransform: "uppercase", letterSpacing: ".08em" }}>02 — Action Delivery</div>
+              <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>She puts it in front of you.</div>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.65, marginBottom: 20, maxWidth: 560 }}>Every morning, before your first coffee. You don't go looking for the problem. The problem finds you.</p>
+
+            {/* Rai suggestion cards — from dev spec */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {/* Header */}
+              <div style={{ fontSize: 12, fontWeight: 700, color: C.primaryLight, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 0, display: "flex", alignItems: "center", gap: 6 }}>
+                <svg width={12} height={12} viewBox="0 0 24 24" fill="none"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primaryLight} strokeWidth="1.6" fill="none" strokeLinejoin="round"/></svg>
+                Suggested by Rai
+              </div>
+
+              {/* Alert card (red gradient) */}
+              <div style={{ background: "linear-gradient(90deg, #FAE8E4 0%, #FDF5F3 40%, " + C.card + " 100%)", borderRadius: 12, border: "1px solid " + C.border, overflow: "hidden", boxShadow: C.cardShadow }}>
+                <div style={{ padding: "14px 16px" }}>
+                  <p style={{ fontSize: 14, color: C.text, fontWeight: 600, lineHeight: 1.5, margin: 0 }}>Broadleaf Media: Rachel's score dropped 13 points in two check-ins. The "No room to operate" combo just triggered. Call her — not email.</p>
+                  <p style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}>Broadleaf Media</p>
+                </div>
+                <div style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
+                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
+                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.btn, borderRight: "1px solid " + C.borderLight }}>Talk to Rai</div>
+                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
+                </div>
+              </div>
+
+
+              {/* Green card */}
+              <div style={{ background: "linear-gradient(90deg, " + C.primarySoft + " 0%, #F0F5F1 40%, " + C.card + " 100%)", borderRadius: 12, border: "1px solid " + C.border, overflow: "hidden", boxShadow: C.cardShadow }}>
+                <div style={{ padding: "14px 16px" }}>
+                  <p style={{ fontSize: 14, color: C.text, lineHeight: 1.5, margin: 0 }}>Foxglove Partners: Health Check is 12 days overdue. Last check flagged drift. Don't skip this one.</p>
+                  <p style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}>Foxglove Partners</p>
+                </div>
+                <div style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
+                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
+                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
+                </div>
+              </div>
+
+              {/* Green card 2 */}
+              <div style={{ background: "linear-gradient(90deg, " + C.primarySoft + " 0%, #F0F5F1 40%, " + C.card + " 100%)", borderRadius: 12, border: "1px solid " + C.border, overflow: "hidden", boxShadow: C.cardShadow }}>
+                <div style={{ padding: "14px 16px" }}>
+                  <p style={{ fontSize: 14, color: C.text, lineHeight: 1.5, margin: 0 }}>Northvane: 3-year anniversary in 26 days. Plan something.</p>
+                  <p style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}>Northvane Studios</p>
+                </div>
+                <div style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
+                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
+                  <div style={{ flex: 1, padding: 10, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Vertical connector */}
+          <div style={{ display: "flex", justifyContent: "center", padding: "4px 0", marginBottom: 32 }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+              <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.1)" }} />
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)", fontWeight: 600 }}>↓</div>
+              <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.1)" }} />
+            </div>
+          </div>
+
+          {/* Step 3 — She tells you what to say */}
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.btn, textTransform: "uppercase", letterSpacing: ".08em" }}>03 — The Script</div>
+              <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>She tells you what to say.</div>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.65, marginBottom: 20, maxWidth: 560 }}>You got the alert. You're staring at the client's name. You know something's wrong but you don't know how to open the conversation. Rai does — because she's built on a massive system prompt with hundreds of diagnostic scenarios, client archetypes, and communication frameworks refined over a decade of real retention work. She doesn't guess. She pattern-matches your situation against a library of what actually works.</p>
+
+            {/* Chat mockup — full width */}
+            <div style={{ background: C.bg, borderRadius: 16, padding: 20 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <div style={{ alignSelf: "flex-end", maxWidth: "75%", padding: "10px 14px", background: C.primary, color: "#fff", borderRadius: "12px 12px 4px 12px", fontSize: 13, lineHeight: 1.5 }}>
+                  Rachel at Broadleaf has been different lately. What do I say?
+                </div>
+                <div style={{ alignSelf: "flex-start", maxWidth: "90%", padding: "12px 14px", background: C.card, border: "1px solid " + C.border, borderRadius: "12px 12px 12px 4px", fontSize: 13, lineHeight: 1.6, color: C.text }}>
+                  <div style={{ fontWeight: 700, color: C.primary, marginBottom: 4, fontSize: 11 }}>Rai</div>
+                  Call her. Not email. Open with: <strong>"Hey Rachel — I've been thinking about our work together and wanted to check in. How are you feeling about things?"</strong> Let her talk first. Don't pitch. Don't defend. If she raises the rate increase, acknowledge it without backpedaling.
+                </div>
+                <div style={{ alignSelf: "flex-start", maxWidth: "90%", padding: "8px 12px", background: C.primarySoft, borderRadius: "12px 12px 12px 4px", fontSize: 12, color: C.primary }}>
+                  If the call goes well, I'll update her profile and adjust the score. If it doesn't — we'll have a plan for that too.
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
 
-      {/* Brain graphic */}
-      <section style={{ padding: "0 16px 32px" }}>
-        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>Emotionally Intelligent</h2>
-        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 16 }}>We built Rai to strengthen working relationships, not replace them. You know your clients. She just makes sure you don't lose one by surprise.</p>
-        <div style={{ position: "relative", width: "100%", maxWidth: 500, margin: "0 auto", aspectRatio: "1" }}>
-          <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }} viewBox="0 0 400 400">
-            <circle cx="200" cy="200" r="155" fill="none" stroke={C.border} strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
-            {[[-90],[-30],[30],[90],[150],[210]].map(([angle], i) => {
-              const rad = (angle * Math.PI) / 180;
-              const nx = 200 + 155 * Math.cos(rad), ny = 200 + 155 * Math.sin(rad);
-              const mx = 200 + 70 * Math.cos(rad) + (i % 2 === 0 ? 15 : -15), my = 200 + 70 * Math.sin(rad) + (i % 2 === 0 ? -10 : 10);
-              return (<g key={i}><path d={`M200,200 Q${mx},${my} ${nx},${ny}`} stroke={C.primaryLight} strokeWidth="1.5" fill="none" opacity="0.3" /><path d={`M200,${195 + (i % 3) * 5} Q${mx + 8},${my - 5} ${nx},${ny}`} stroke={C.primaryLight} strokeWidth="0.7" fill="none" opacity="0.12" /><circle cx={200 + 50 * Math.cos(rad) + (i % 2 === 0 ? 4 : -4)} cy={200 + 50 * Math.sin(rad)} r="2" fill={C.primaryLight} opacity="0.25" /></g>);
-            })}
-            {[[-90],[-30],[30],[90],[150],[210]].map(([angle], i) => {
-              const rad = (angle * Math.PI) / 180;
-              const nx = 200 + 155 * Math.cos(rad), ny = 200 + 155 * Math.sin(rad);
-              const mx = 200 + 70 * Math.cos(rad) + (i % 2 === 0 ? 15 : -15), my = 200 + 70 * Math.sin(rad) + (i % 2 === 0 ? -10 : 10);
-              return (<circle key={"p" + i} r="2.5" fill={C.primary} opacity="0.45"><animateMotion dur={3 + i * 0.6 + "s"} repeatCount="indefinite" path={`M200,200 Q${mx},${my} ${nx},${ny}`} /></circle>);
-            })}
-          </svg>
-          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 2, filter: "drop-shadow(0 6px 24px rgba(30,38,31,0.3))" }}>
-            <svg width="130" height="135" viewBox="0 0 130 135" fill="none">
-              <path d="M65 18C52 18 40 22 34 28C28 34 26 42 27 48C22 52 20 58 21 64C20 70 23 77 29 82C33 88 42 94 54 96C58 97 62 97.5 65 97" fill={C.primaryDeep} stroke={C.primaryDark} strokeWidth="1.5" />
-              <path d="M65 18C78 18 90 22 96 28C102 34 104 42 103 48C108 52 110 58 109 64C110 70 107 77 101 82C97 88 88 94 76 96C72 97 68 97.5 65 97" fill={C.primaryDeep} stroke={C.primaryDark} strokeWidth="1.5" />
-              <path d="M65 20V95" stroke={C.primary} strokeWidth="1" opacity="0.35" />
-              <path d="M32 42C40 46 52 44 62 39" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.35" />
-              <path d="M25 58C36 54 48 57 62 54" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.3" />
-              <path d="M30 72C38 68 50 70 62 68" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.25" />
-              <path d="M98 42C90 46 78 44 68 39" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.35" />
-              <path d="M105 58C94 54 82 57 68 54" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.3" />
-              <path d="M100 72C92 68 80 70 68 68" stroke={C.primaryLight} strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.25" />
-              <circle cx="44" cy="48" r="5" fill={C.primaryLight} opacity="0.12" /><circle cx="82" cy="52" r="6" fill={C.primaryLight} opacity="0.1" /><circle cx="54" cy="68" r="4" fill={C.primaryLight} opacity="0.15" /><circle cx="78" cy="72" r="5" fill={C.primaryLight} opacity="0.12" /><circle cx="65" cy="44" r="4" fill={C.primaryLight} opacity="0.18" />
-              <text x="65" y="122" textAnchor="middle" fill={C.primary} fontSize="14" fontWeight="900" fontFamily="Outfit, sans-serif" letterSpacing="0.12em">RAI</text>
-            </svg>
-          </div>
-          {[[-90,"👤","Profiles"],[-30,"🩺","Health"],[30,"💰","Billing"],[90,"◉","Today"],[150,"📇","Rolodex"],[210,"🤝","Referrals"]].map(([angle, icon, label], i) => {
-            const rad = (angle * Math.PI) / 180;
-            const x = 50 + (155 / 200) * 50 * Math.cos(rad), y = 50 + (155 / 200) * 50 * Math.sin(rad);
-            return (<div key={i} style={{ position: "absolute", left: `calc(${x}% - 28px)`, top: `calc(${y}% - 28px)`, width: 56, height: 56, borderRadius: "50%", background: C.card, border: "2px solid " + C.border, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.06)", zIndex: 3 }}><span style={{ fontSize: 17, color: C.primary, lineHeight: 1 }}>{icon}</span><span style={{ fontSize: 7, fontWeight: 700, color: C.textMuted, marginTop: 2 }}>{label}</span></div>);
-          })}
-        </div>
-      </section>
 
-      {/* 6 Inputs */}
-      <section style={{ padding: "0 20px 12px" }}>
-        <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 4 }}>Six inputs. One brain.</h2>
-        <p style={{ fontSize: 14, color: C.textSec, marginBottom: 20 }}>Rai connects the dots between what you know, what you haven't noticed yet, and what to do next to keep your clients fanatical about working with you.</p>
-      </section>
-      <section style={{ padding: "0 20px 64px" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          {features.map((f, i) => {
-            const isOpen = activeF === i;
-            return (
-              <div key={i} onClick={() => setActiveF(isOpen ? null : i)} style={{
-                background: C.card, borderRadius: 14, padding: "24px 22px",
-                border: isOpen ? "2px solid " + C.primary : "1.5px solid " + C.border,
-                boxShadow: isOpen ? "0 6px 24px rgba(51,84,62,0.12)" : "0 2px 8px rgba(0,0,0,0.04)",
-                cursor: "pointer", transition: "all 0.2s ease",
+      {/* The Scoring Model */}
+      <section style={{ padding: "64px 20px" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          {/* Header */}
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.primaryLight, marginBottom: 10 }}>The Scoring Model</div>
+            <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 16 }}>Twelve questions that predict whether a client stays</h2>
+            <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, maxWidth: 580, margin: "0 auto" }}>
+              Not surveys. Not NPS. Twelve specific dimensions about trust, loyalty, expectations, and grace — answered by you, about each client. The system handles the math. You just answer honestly.
+            </p>
+          </div>
+
+          {/* Dimension strip — dual row, no background */}
+          <div style={{ overflow: "hidden", marginBottom: 56, padding: "20px 0", position: "relative" }}>
+            {/* Edge fade masks */}
+            <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(90deg, " + C.bg + ", transparent)", zIndex: 2 }} />
+            <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(270deg, " + C.bg + ", transparent)", zIndex: 2 }} />
+            
+            {/* Row 1 — scrolling left */}
+            <div style={{ display: "flex", alignItems: "baseline", whiteSpace: "nowrap", animation: "dimScroll 28s linear infinite", width: "max-content", marginBottom: 12 }}>
+              {[...Array(2)].flatMap(() => [
+                { name: "Grace", style: { fontSize: 26, fontWeight: 400, letterSpacing: "0.02em", color: C.primary + "70", fontFamily: "'Caveat', cursive" } },
+                { name: "TRUST", style: { fontSize: 24, fontWeight: 900, letterSpacing: "0.08em", color: C.primary + "90" } },
+                { name: "communication", style: { fontSize: 16, fontWeight: 400, letterSpacing: "0.2em", color: C.primary + "50", textTransform: "uppercase" } },
+                { name: "Loyalty", style: { fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", color: C.primary + "80" } },
+                { name: "budget risk", style: { fontSize: 13, fontWeight: 700, letterSpacing: "0.12em", color: C.primary + "45", textTransform: "uppercase" } },
+                { name: "Depth", style: { fontSize: 31, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary + "60", textTransform: "lowercase" } },
+              ]).map((d, i) => (
+                <span key={i} style={{ ...d.style, marginRight: 52 }}>{d.name}</span>
+              ))}
+            </div>
+            
+            {/* Row 2 — scrolling right */}
+            <div style={{ display: "flex", alignItems: "baseline", whiteSpace: "nowrap", animation: "dimScrollReverse 32s linear infinite", width: "max-content", opacity: 0.7 }}>
+              {[...Array(2)].flatMap(() => [
+                { name: "STRESS", style: { fontSize: 14, fontWeight: 700, letterSpacing: "0.25em", color: C.primary + "55" } },
+                { name: "Expectations", style: { fontSize: 19, fontWeight: 500, letterSpacing: "0.06em", color: C.primary + "55", fontStyle: "italic" } },
+                { name: "FUNGIBILITY", style: { fontSize: 12, fontWeight: 600, letterSpacing: "0.18em", color: C.primary + "40" } },
+                { name: "tone", style: { fontSize: 23, fontWeight: 300, letterSpacing: "0.1em", color: C.primary + "50", fontStyle: "italic" } },
+                { name: "AUTHORITY", style: { fontSize: 17, fontWeight: 900, letterSpacing: "0.1em", color: C.primary + "60" } },
+                { name: "reporting", style: { fontSize: 13, fontWeight: 400, letterSpacing: "0.15em", color: C.primary + "40", textTransform: "uppercase" } },
+              ]).map((d, i) => (
+                <span key={i} style={{ ...d.style, marginRight: 52 }}>{d.name}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Combination Signals — connection visualization */}
+          <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.textMuted, marginBottom: 8 }}>Combination Signals</div>
+            <p style={{ fontSize: 14, color: C.textSec, maxWidth: 500, margin: "0 auto" }}>When dimensions collide, patterns emerge. 20 proprietary combinations predict behavior no single metric catches.</p>
+          </div>
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
+            {[
+              { name: "Bulletproof", a: "Loyalty", b: "Grace", desc: "Will survive your worst month.", type: "pos" },
+              { name: "Locked Vault", a: "Loyalty", b: "Depth", desc: "Double lock on the door.", type: "pos" },
+              { name: "Ice Wall", a: "Trust", b: "Tone", desc: "Polite but completely shut down.", type: "neg" },
+              { name: "On the Clock", a: "Trust", b: "Loyalty", desc: "They've mentally left already.", type: "neg" },
+              { name: "Silent Exit", a: "Stress", b: "Depth", desc: "No warning before the email.", type: "neg" },
+              { name: "No Room to Operate", a: "Trust", b: "Grace", desc: "Tightrope with no net.", type: "neg" },
+            ].map((combo, i) => (
+              <div key={i} style={{
+                flex: "0 0 auto", width: 172,
+                background: C.card, borderRadius: 14, padding: "20px 16px",
+                border: "1px solid " + C.border,
+                boxShadow: C.cardShadow,
+                textAlign: "center",
               }}>
-                <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-                  <div style={{
-                    width: 46, height: 46, borderRadius: 12,
-                    background: isOpen ? C.primary : C.primarySoft,
-                    color: isOpen ? "#fff" : C.primary,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 20, fontWeight: 700, flexShrink: 0, transition: "all 0.2s ease",
-                  }}>
-                    {f.icon}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <h3 style={{ fontSize: 18, fontWeight: 700 }}>{f.title}</h3>
-                    </div>
-                    {isOpen && (
-                      <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.65, marginTop: 10 }}>{f.desc}</p>
-                    )}
-                  </div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 0, marginBottom: 12 }}>
+                  <div style={{ padding: "3px 8px", borderRadius: 4, fontSize: 9, fontWeight: 600, background: combo.type === "pos" ? C.success + "12" : C.danger + "12", color: combo.type === "pos" ? C.success : C.danger }}>{combo.a}</div>
+                  <div style={{ width: 24, height: 1, background: combo.type === "pos" ? C.success + "40" : C.danger + "40" }} />
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: combo.type === "pos" ? C.success : C.danger, flexShrink: 0 }} />
+                  <div style={{ width: 24, height: 1, background: combo.type === "pos" ? C.success + "40" : C.danger + "40" }} />
+                  <div style={{ padding: "3px 8px", borderRadius: 4, fontSize: 9, fontWeight: 600, background: combo.type === "pos" ? C.success + "12" : C.danger + "12", color: combo.type === "pos" ? C.success : C.danger }}>{combo.b}</div>
                 </div>
+                <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4, color: C.text }}>{combo.name}</div>
+                <div style={{ fontSize: 11, color: C.textSec, lineHeight: 1.4 }}>{combo.desc}</div>
               </div>
-            );
-          })}
+            ))}
+          </div>
+          <div style={{ textAlign: "center", marginTop: 24 }}>
+            <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "12px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
+          </div>
         </div>
       </section>
 
-      {/* Integrations — with plug animation */}
-      {(() => {
-        const plugRef2 = useRef(null);
-        const [plugged2, setPlugged2] = useState(false);
-        useEffect(() => {
-          const el = plugRef2.current;
-          if (!el) return;
-          const obs = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) { setPlugged2(true); obs.disconnect(); }
-          }, { threshold: 0.5 });
-          obs.observe(el);
-          return () => obs.disconnect();
-        }, []);
-        return (
-          <section ref={plugRef2} style={{ paddingTop: 48, paddingBottom: 80, position: "relative", overflow: "visible" }}>
-            <style>{`
-              @keyframes cordLeft2 { 0% { transform: translateX(-100%); } 100% { transform: translateX(0); } }
-              @keyframes cordRight2 { 0% { transform: translateX(100%); } 100% { transform: translateX(0); } }
-              @keyframes sparkPop2 { 0% { opacity: 0; transform: scale(0); } 50% { opacity: 1; transform: scale(1.3); } 100% { opacity: 0; transform: scale(0); } }
-            `}</style>
-            {/* Cord container */}
-            <div style={{ position: "relative", height: 60, marginBottom: 12, width: "100vw", left: "50%", transform: "translateX(-50%)", overflow: "hidden" }}>
-              {/* Left cord */}
-              <svg style={{ position: "absolute", top: 0, left: 0, width: "calc(50% - 35px)", height: 60, animation: plugged2 ? "cordLeft2 0.8s ease-out forwards" : "none", transform: plugged2 ? "translateX(0)" : "translateX(-100%)" }} viewBox="0 0 500 60" preserveAspectRatio="none">
-                <path d="M0,30 Q100,30 150,20 T300,35 T420,25 T500,30" stroke={C.primary} strokeWidth="4" fill="none" strokeLinecap="round" />
-              </svg>
-              {/* Right cord */}
-              <svg style={{ position: "absolute", top: 0, right: 0, width: "calc(50% - 35px)", height: 60, animation: plugged2 ? "cordRight2 0.8s ease-out forwards" : "none", transform: plugged2 ? "translateX(0)" : "translateX(100%)" }} viewBox="0 0 500 60" preserveAspectRatio="none">
-                <path d="M500,30 Q400,30 350,40 T200,25 T80,35 T0,30" stroke={C.primaryLight} strokeWidth="4" fill="none" strokeLinecap="round" />
-              </svg>
-              {/* Center plug + socket */}
-              <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 120, height: 60, opacity: plugged2 ? 1 : 0, transition: "opacity 0.2s ease 0.7s" }}>
-                <svg width="120" height="60" viewBox="0 0 120 60">
-                  {/* Left plug — body tapering from cord, two prongs extending right */}
-                  <path d="M0,30 C6,30 10,22 14,18 L14,42 C10,38 6,30 0,30 Z" fill={C.primary} />
-                  <rect x="14" y="16" width="18" height="28" rx="4" fill={C.primary} />
-                  <rect x="32" y="22" width="12" height="4" rx="2" fill={C.primary} />
-                  <rect x="32" y="34" width="12" height="4" rx="2" fill={C.primary} />
-                  {/* Right socket — body tapering to cord, recessed slots */}
-                  <path d="M120,30 C114,30 110,22 106,18 L106,42 C110,38 114,30 120,30 Z" fill={C.sidebar} />
-                  <rect x="82" y="16" width="24" height="28" rx="4" fill={C.sidebar} />
-                  <rect x="82" y="23" width="10" height="3" rx="1" fill={C.bg} opacity="0.3" />
-                  <rect x="82" y="34" width="10" height="3" rx="1" fill={C.bg} opacity="0.3" />
 
-
-
-
-
-                  {/* Spark lines between plug and socket */}
-                  <line x1="54" y1="6" x2="58" y2="14" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
-                  <line x1="60" y1="2" x2="60" y2="11" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
-                  <line x1="66" y1="6" x2="62" y2="14" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
-                  <line x1="54" y1="54" x2="58" y2="46" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
-                  <line x1="60" y1="58" x2="60" y2="49" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
-                  <line x1="66" y1="54" x2="62" y2="46" stroke={C.primary} strokeWidth="2" strokeLinecap="round" />
-                </svg>
-              </div>
-              {/* Spark */}
-              {plugged2 && (
-                <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                  {[0,1,2,3,4,5,6,7].map(i => (
-                    <div key={i} style={{ position: "absolute", width: 4 + Math.random() * 4, height: 4 + Math.random() * 4, borderRadius: "50%", background: i % 2 === 0 ? "#FFD700" : "#FFA500", boxShadow: `0 0 ${6 + i * 2}px ${i % 2 === 0 ? "#FFD700" : "#FFA500"}`, left: Math.cos(i * Math.PI / 4) * (12 + Math.random() * 10), top: Math.sin(i * Math.PI / 4) * (12 + Math.random() * 10), animation: `sparkPop2 0.4s ease-out ${0.75 + i * 0.04}s forwards`, opacity: 0 }} />
-                  ))}
-                </div>
-              )}
-            </div>
-            <div style={{ padding: "0 20px" }}>
-              <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 12 }}>Plugs Into Your Workflow</h2>
-            </div>
-            <div style={{ padding: "0 20px" }}>
-              <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 24 }}>Enterprise integrations help the engine adapt and learn, supplying you with even more insight.</p>
-              <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap" }}>
-                {["✉️ Gmail", "📁 Meets", "📅 Calendar", "💬 Slack", "🎥 Zoom"].map((ch, i) => (
-                  <div key={i} className="ch-pill" style={{ padding: "10px 14px", background: C.card, borderRadius: 10, border: "1px solid " + C.border, fontSize: 13, fontWeight: 500 }}>{ch}</div>
-                ))}
-              </div>
-            </div>
-          </section>
-        );
-      })()}
-
-      {/* How they connect — full bleed */}
-      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "56px 20px", marginBottom: 64 }}>
+      {/* PHILOSOPHY */}
+      <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "56px 20px" }}>
         <div style={{ margin: "0 auto", textAlign: "center" }}>
-          <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 12, color: "#fff" }}>Everything feeds everything.</h2>
-          <div style={{ fontSize: 14, color: "rgba(255,255,255,.65)", lineHeight: 1.65 }}>
-            <p>Every profile teaches Rai how a client thinks. Every health check tells her what's shifting. Every task you complete — or skip — is a signal. And it all compounds.</p>
-          </div>
+          <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.3)", marginBottom: 16 }}>As Rai Sees It</div>
+          <blockquote style={{ fontSize: 21, fontWeight: 600, lineHeight: 1.45, letterSpacing: "-0.02em", margin: 0, color: "#fff" }}>"The conversation you're avoiding is the one that saves the account."</blockquote>
+          <p style={{ fontSize: 14, color: "rgba(255,255,255,.38)", marginTop: 16, lineHeight: 1.5 }}>Rai doesn't help you avoid hard conversations. She helps you have them.</p>
         </div>
       </div>
 
-      {/* TESTIMONIALS */}
-      <section style={{ padding: "0 20px 64px" }}>
-        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", textAlign: "center", marginBottom: 8 }}>What Folks Are Saying</h2>
-        <p style={{ fontSize: 16, color: C.textSec, textAlign: "center", marginBottom: 24 }}>From our own Retayned business.</p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
-          {[
-            { quote: "I used to lose 2-3 clients a year and just accept it as cost of doing business. Retayned showed me an actual pattern. It was the same signs every time and we just ignored them. Not anymore!", name: "Agency Owner", role: "50+ Clients", stars: 5 },
-            { quote: "It gave me the exact words to say to a client I was about to lose. I had the conversation that afternoon. They're still with me 8 months later. I'm still with Retayned.", name: "Solo Operator", role: "1-5 Clients", stars: 5 },
-            { quote: "The health check questions are uncomfortable in the best way. They force you to admit what you already know but haven't said out loud. It's something we thought we'd use for crises and it's turned into our daily operations hub.", name: "Freelance Consultant", role: "10-50 Clients", stars: 5 },
-          ].map((t, i) => (
-            <div key={i} style={{ background: C.card, borderRadius: 14, padding: "24px 22px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280, display: "flex", flexDirection: "column", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
-              <div style={{ display: "flex", gap: 2, marginBottom: 12 }}>
-                {Array(t.stars).fill(0).map((_, j) => (
-                  <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>
-                ))}
+      {/* Enterprise teaser */}
+      <section style={{ padding: "64px 20px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 40, alignItems: "center", maxWidth: 960, margin: "0 auto" }}>
+          <div style={{ flex: "1 1 320px" }}>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.btn, marginBottom: 10 }}>Enterprise</div>
+            <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 16 }}>Autonomous relationship intelligence.</h2>
+            <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 24 }}>
+              Connects to your communication and billing platforms, monitors every client relationship automatically, and delivers prioritized actions to your team or your AI agents every morning. Stop guessing who needs attention. Let Retayned Enterprise tell you.
+            </p>
+            <button className="cta-btn" onClick={() => setPage("contact")} style={{ padding: "12px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Let's Talk</button>
+          </div>
+          <div style={{ flex: "1 1 340px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            {[
+              { label: "Daily Portfolio Sweeps", desc: "Every client scored and ranked automatically, every morning." },
+              { label: "Churn Detection", desc: "Converging signals identified before they become cancellations." },
+              { label: "Prioritized Task Lists", desc: "Specific actions, tailored to each client's communication style." },
+              { label: "Platform Integrations", desc: "Connects to Slack, email, Zoom, CRM, and billing — Retayned reads the data, you read the tasks." },
+            ].map(item => (
+              <div key={item.label} style={{ padding: 18, background: C.card, borderRadius: 12, border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+                <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4 }}>{item.label}</div>
+                <div style={{ fontSize: 12, color: C.textSec, lineHeight: 1.4 }}>{item.desc}</div>
               </div>
-              <p style={{ fontSize: 15, color: C.text, lineHeight: 1.6, marginBottom: 16, fontStyle: "italic", flex: 1 }}>"{t.quote}"</p>
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{t.name}</div>
-                <div style={{ fontSize: 12, color: C.textMuted }}>{t.role}</div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
@@ -1831,15 +2059,11 @@ function Platform({ setPage }) {
         </div>
       </div>
 
-      {/* CTA — gradient full bleed */}
+      {/* FINAL CTA */}
       <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 50%, #1E261F 100%)", padding: "72px 20px", textAlign: "center" }}>
-        <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 12, color: "#fff" }}>
-          See the platform in action.
-        </h2>
-        <p style={{ fontSize: 16, color: "rgba(255,255,255,.6)", marginBottom: 24 }}>14-day free trial. Cancel anytime.</p>
-        <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "14px 32px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
-          Try Free Now
-        </button>
+        <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 12, color: "#fff" }}>You work too hard to get new clients. Keep them Retayned.</h2>
+        <p style={{ fontSize: 17, color: "rgba(255,255,255,.6)", marginBottom: 24, lineHeight: 1.5 }}>See the signal. Get the script. Keep the client.</p>
+        <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "14px 32px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
       </div>
     </>
   );
@@ -1878,6 +2102,13 @@ export default function RetaynedSite() {
         input[type=range]::-moz-range-thumb { width: 28px; height: 28px; border-radius: 50%; background: #5B21B6; cursor: pointer; border: none; }
         .r-conf-inner { border-radius: 0; }
         .r-conf-img { border-radius: 0; }
+        .r-tab-btn { }
+        .r-feat-content { flex-direction: column-reverse; }
+        .r-feat-desc-full { display: none !important; }
+        .r-feat-desc-mobile { display: block !important; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes dimScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes dimScrollReverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
         .r-full-bleed { margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); padding-left: 20px; padding-right: 20px; }
         .r-no-pad { padding-left: 0 !important; padding-right: 0 !important; }
         .r-stat-graphic-left { width: 60px !important; height: 45px !important; left: 12px !important; bottom: -8px !important; opacity: 0.12 !important; }
@@ -1895,6 +2126,10 @@ export default function RetaynedSite() {
           .r-stat-graphic-left { width: 120px !important; height: 90px !important; left: 120px !important; bottom: -14px !important; opacity: 0.14 !important; }
           .r-stat-graphic-right { width: 120px !important; height: 90px !important; right: 120px !important; top: -16px !important; opacity: 0.14 !important; }
           .r-stat-accent-left, .r-stat-accent-right { display: block !important; }
+          .r-tab-btn { flex: 1 1 0 !important; }
+          .r-feat-content { flex-direction: row !important; }
+          .r-feat-desc-full { display: block !important; }
+          .r-feat-desc-mobile { display: none !important; }
           .r-conf-inner { max-width: 900px; border-radius: 14px; overflow: hidden; }
           .r-conf-img { border-radius: 14px; }
           .r-conf { padding: 0 40px !important; margin-bottom: 64px !important; }
