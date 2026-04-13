@@ -195,7 +195,7 @@ function Nav({ page, setPage }) {
             </svg>
             <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.02em" }}>Get a Demo</span>
           </button>
-          <button className="cta-btn" onClick={() => { setPage("signup"); setOpen(false); }} style={{ padding: "10px 22px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+          <button className="cta-btn" onClick={() => { setPage("signup"); setOpen(false); }} style={{ padding: "10px 22px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
             Start Free Trial
           </button>
         </div>
@@ -438,7 +438,7 @@ function Home({ setPage }) {
       <div className="r-home">
         {/* ══════════════ HERO ══════════════ */}
         <div className="r-full-bleed" style={{
-          background: `radial-gradient(ellipse 100% 80% at 25% 35%, #DCE8E0 0%, ${C.primarySoft} 40%, ${C.bg} 85%)`,
+          background: `radial-gradient(ellipse 100% 80% at 25% 35%, ${C.primarySoft} 0%, ${C.bg} 55%)`,
           padding: "56px 20px 48px",
           position: "relative", overflow: "hidden",
         }}>
@@ -551,15 +551,13 @@ function Home({ setPage }) {
                   cursor: "default", transform: "rotate(2.5deg)",
                 }}>
                   <div style={{ padding: "16px 18px" }}>
-                    <p style={{ fontSize: 15, color: C.text, fontWeight: 600, lineHeight: 1.55, margin: 0 }}>
-                      Foxglove Partners: Response time doubled this month. Velocity is cold. <span style={{ fontWeight: 700 }}>Schedule a check-in before Friday.</span>
+                    <p style={{ fontSize: 15, color: C.text, lineHeight: 1.55, margin: 0 }}>
+                      Foxglove Partners: Response time doubled this month. Velocity is cold. Schedule a check-in before Friday.
                     </p>
                     <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Foxglove Partners · Velocity alert</p>
                   </div>
                   <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-                    <div style={{ color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
-                    <div style={{ color: C.btn, borderRight: "1px solid " + C.borderLight }}>Talk to Rai</div>
-                    <div style={{ color: C.textMuted }}>Dismiss</div>
+                    <div style={{ color: C.primary }}>Add to Tasks</div>
                   </div>
                 </div>
                 </div>
@@ -575,13 +573,12 @@ function Home({ setPage }) {
                 }}>
                   <div style={{ padding: "16px 18px" }}>
                     <p style={{ fontSize: 15, color: C.text, lineHeight: 1.55, margin: 0 }}>
-                      Northvane: <span style={{ fontWeight: 600 }}>3-year anniversary in 26 days.</span> Plan something.
+                      Northvane Studios: Health Check due today.
                     </p>
-                    <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Northvane Studios · Milestone</p>
+                    <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Northvane Studios · Health Check</p>
                   </div>
                   <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-                    <div style={{ color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
-                    <div style={{ color: C.textMuted }}>Dismiss</div>
+                    <div style={{ color: C.primary }}>Add to Tasks</div>
                   </div>
                 </div>
                 </div>
@@ -596,15 +593,13 @@ function Home({ setPage }) {
                   cursor: "default", transform: "rotate(0.5deg)",
                 }}>
                   <div style={{ padding: "16px 18px" }}>
-                    <p style={{ fontSize: 15, color: C.text, fontWeight: 600, lineHeight: 1.55, margin: 0 }}>
-                      Broadleaf Media: Rachel's score dropped 13 points in two check-ins. The "No room to operate" combo just triggered. <span style={{ fontWeight: 700 }}>Call her — not email.</span>
+                    <p style={{ fontSize: 15, color: C.text, lineHeight: 1.55, margin: 0 }}>
+                      Broadleaf Media: Rachel's score dropped 9 points on last Monday's check-in and you've only emailed her since. Get a call on the books with a new deliverable ready.
                     </p>
                     <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Broadleaf Media · 2 minutes ago</p>
                   </div>
                   <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-                    <div style={{ color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
-                    <div style={{ color: C.btn, borderRight: "1px solid " + C.borderLight }}>Talk to Rai</div>
-                    <div style={{ color: C.textMuted }}>Dismiss</div>
+                    <div style={{ color: C.primary }}>Add to Tasks</div>
                   </div>
                 </div>
                 </div>
@@ -617,7 +612,7 @@ function Home({ setPage }) {
         {/* ══════════════ HOW IT WORKS ══════════════ */}
         <section style={{ padding: "48px 20px 64px" }}>
           <Reveal>
-            <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <div className="r-section-head" style={{ textAlign: "center", marginBottom: 48 }}>
               <div style={{
                 display: "inline-block", fontSize: 11, fontWeight: 700,
                 textTransform: "uppercase", letterSpacing: ".12em",
@@ -636,9 +631,9 @@ function Home({ setPage }) {
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20, maxWidth: 1100, margin: "0 auto" }}>
             {[
-              { num: "01", title: "She sees it.", desc: "Cross-referencing tasks, health checks, score trends, 20+ combination signals \u2014 continuously, across your entire book.", icon: "⬡" },
-              { num: "02", title: "She puts it in front of you.", desc: "Every morning, before your first coffee. You don\u2019t go looking for the problem. The problem finds you without any trouble.", icon: "◈" },
-              { num: "03", title: "She tells you what to say.", desc: "You got the alert. Now it\u2019s time to act. Need backup? Rai\u2019s ready with an arsenal of custom-tailored guidance just for this.", icon: "✧" },
+              { num: "01", title: "She sees it.", desc: "Cross-referencing tasks, health checks, score trends, 20+ combination signals \u2014 continuously, across your entire book.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> },
+              { num: "02", title: "She puts it in front of you.", desc: "Every morning, before your first coffee. You don\u2019t go looking for the problem. The problem finds you without any trouble.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> },
+              { num: "03", title: "She knows where it goes.", desc: "Using a proprietary scoring engine, Rai weighs all of the day\u2019s tasks by retention impact. Your highest-value move is next up.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> },
             ].map((step, i) => (
               <Reveal key={i} delay={i * 0.15} style={{ flex: "1 1 300px", minWidth: 280 }}>
                 <div className="r-rai-alert-wrap" style={{ borderRadius: 16 }}>
@@ -649,7 +644,7 @@ function Home({ setPage }) {
                 }}>
                   <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 14 }}>
                     <span style={{ fontSize: 32, fontWeight: 900, color: C.borderLight, lineHeight: 1 }}>{step.num}</span>
-                    <span style={{ fontSize: 24, marginTop: 4, opacity: 0.4 }}>{step.icon}</span>
+                    <span style={{ marginTop: 6, opacity: 0.6 }}>{step.icon}</span>
                   </div>
                   <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8, lineHeight: 1.25 }}>{step.title}</h3>
                   <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7, margin: 0 }}>{step.desc}</p>
@@ -716,7 +711,7 @@ function Home({ setPage }) {
         {/* ══════════════ FEATURE TABS ══════════════ */}
         <section style={{ padding: "64px 20px 64px" }}>
           <Reveal>
-            <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <div className="r-section-head" style={{ textAlign: "center", marginBottom: 48 }}>
               <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 8 }}>
                 Every tool you need to keep your clients
               </h2>
@@ -729,7 +724,7 @@ function Home({ setPage }) {
           {/* Tab bar */}
           <div className="r-tab-bar-wrap" style={{
             display: "flex", gap: 4, background: C.surface, borderRadius: 12,
-            padding: 5, marginBottom: 40, overflowX: "auto", maxWidth: 740,
+            padding: 5, overflowX: "auto", maxWidth: 740,
             margin: "0 auto 40px", WebkitOverflowScrolling: "touch",
           }}>
             {homeTabs.map((feat, i) => (
@@ -757,7 +752,7 @@ function Home({ setPage }) {
             alignItems: "flex-start", maxWidth: 1000, margin: "0 auto",
           }}>
             {/* Left: copy */}
-            <div style={{ flex: "1 1 340px", paddingTop: 16 }}>
+            <div style={{ flex: "1 1 340px" }}>
               <h2 style={{
                 fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15,
                 marginBottom: 12,
@@ -767,9 +762,9 @@ function Home({ setPage }) {
               }}>{ht.sub}</div>
               <div className="r-feat-desc-mobile" style={{ display: "none" }}>
                 <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 8, overflow: "hidden", maxHeight: expandedText ? "none" : 48, transition: "max-height 0.3s ease" }}>{ht.sub}</p>
-                <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 24, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
+                <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 10, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
               </div>
-              <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
+              <div style={{ display: "flex", gap: 12 }}>
                 <button className="r-hero-cta" onClick={() => setPage("signup")} style={{ padding: "13px 26px", fontSize: 14 }}>
                   Try Free Now 
                 </button>
@@ -1091,7 +1086,7 @@ function Pricing({ setPage }) {
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20, alignItems: "stretch" }}>
             {/* Main pricing card */}
             <div style={{ flex: "1 1 400px", display: "flex" }}>
-              <div style={{ background: `linear-gradient(to bottom, ${C.card} 55%, ${C.primarySoft} 100%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", width: "100%" }}>
+              <div style={{ background: `radial-gradient(ellipse 90% 50% at 50% 35%, ${C.primarySoft} 0%, ${C.card} 70%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", width: "100%" }}>
                 <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: C.textMuted, marginBottom: 20, textAlign: "center" }}>One plan. Every feature. Impossibly easy.</div>
                 <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4, marginBottom: 4 }}>
                   <span style={{ fontSize: 52, fontWeight: 900, letterSpacing: "-0.03em" }}>$19.99</span>
@@ -1115,7 +1110,7 @@ function Pricing({ setPage }) {
 
             {/* Enterprise card */}
             <div style={{ flex: "1 1 400px", display: "flex" }}>
-              <div style={{ background: `linear-gradient(to bottom, ${C.card} 70%, ${C.primarySoft} 100%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", width: "100%" }}>
+              <div style={{ background: `radial-gradient(ellipse 90% 50% at 50% 35%, ${C.primarySoft} 0%, ${C.card} 70%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", width: "100%" }}>
                 <div style={{ position: "absolute", top: 28, right: -32, background: C.danger, color: "#fff", fontSize: 9, fontWeight: 700, padding: "5px 40px", transform: "rotate(45deg)", letterSpacing: ".06em", textAlign: "center" }}>EARLY ACCESS</div>
                 <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.textMuted, marginBottom: 4 }}>Enterprise</div>
                 <div style={{ fontSize: 14, color: C.textSec, marginBottom: 16 }}>Autonomous relationship intelligence.</div>
@@ -2089,12 +2084,12 @@ function Platform({ setPage }) {
 
             {/* Feature content */}
             <div className="r-feat-content" style={{ display: "flex", flexWrap: "wrap", gap: 48, alignItems: "flex-start", maxWidth: 1000, margin: "0 auto" }}>
-              <div style={{ flex: "1 1 340px", paddingTop: 16 }}>
+              <div style={{ flex: "1 1 340px" }}>
                 <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 12 }}>{pf.headline}</h2>
                 <div className="r-feat-desc-full" style={{ fontSize: 15, color: C.textSec, lineHeight: 1.75, marginBottom: 28 }}>{pf.sub}</div>
                 <div className="r-feat-desc-mobile" style={{ display: "none" }}>
                   <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 8, overflow: "hidden", maxHeight: expandedText ? "none" : 48, transition: "max-height 0.3s ease" }}>{pf.sub}</p>
-                  <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 24, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
+                  <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 10, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
                 </div>
                 <button className="r-hero-cta cta-btn" onClick={() => setPage("signup")} style={{ padding: "13px 26px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
                   Try Free Now 
@@ -2326,19 +2321,16 @@ function Platform({ setPage }) {
                   Suggested by Rai
                 </div>
                 {[
-                  { text: "Broadleaf Media: Rachel's score dropped 13 points in two check-ins. The \"No room to operate\" combo just triggered. Call her — not email.", client: "Broadleaf Media", gradient: "linear-gradient(95deg, " + C.dangerBg + " 0%, #FDF5F3 30%, " + C.card + " 100%)", actions: 3 },
-                  { text: "Foxglove Partners: Health Check is 12 days overdue. Last check flagged drift. Don't skip this one.", client: "Foxglove Partners", gradient: "linear-gradient(95deg, " + C.primarySoft + " 0%, #F0F5F1 30%, " + C.card + " 100%)", actions: 2 },
-                  { text: "Northvane: 3-year anniversary in 26 days. Plan something.", client: "Northvane Studios", gradient: "linear-gradient(95deg, " + C.primarySoft + " 0%, #F0F5F1 30%, " + C.card + " 100%)", actions: 2 },
+                  { text: "Rachel\u2019s score dropped 9 points on last Monday\u2019s check-in, triggering the \u201CNo room to operate\u201D combination. It looks like you\u2019ve only emailed her since then. Get a call on the books with a net new deliverable ready.", client: "Broadleaf Media", gradient: "linear-gradient(95deg, " + C.dangerBg + " 0%, #FDF5F3 30%, " + C.card + " 100%)", actions: 3 },
+                  { text: "Health Check is 12 days overdue. Last check flagged drift. Don\u2019t skip this one. I also recommend updating Foxglove\u2019s client profile after their recent new hire.", client: "Foxglove Partners", gradient: "linear-gradient(95deg, " + C.primarySoft + " 0%, #F0F5F1 30%, " + C.card + " 100%)", actions: 2 },
                 ].map((card, i) => (
                   <div key={i} style={{ background: card.gradient, borderRadius: 14, border: "1px solid " + C.border, overflow: "hidden", boxShadow: C.cardShadow }}>
                     <div style={{ padding: "14px 18px" }}>
-                      <p style={{ fontSize: 14, color: C.text, fontWeight: 600, lineHeight: 1.55, margin: 0 }}>{card.text}</p>
+                      <p style={{ fontSize: 14, color: C.text, lineHeight: 1.55, margin: 0 }}>{card.text}</p>
                       <p style={{ fontSize: 12, color: C.textMuted, marginTop: 5 }}>{card.client}</p>
                     </div>
                     <div style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-                      <div style={{ flex: 1, padding: 11, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
-                      {card.actions === 3 && <div style={{ flex: 1, padding: 11, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.btn, borderRight: "1px solid " + C.borderLight }}>Talk to Rai</div>}
-                      <div style={{ flex: 1, padding: 11, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.textMuted }}>Dismiss</div>
+                      <div style={{ flex: 1, padding: 11, textAlign: "center", fontSize: 13, fontWeight: 600, color: C.primary }}>Add to Tasks</div>
                     </div>
                   </div>
                 ))}
@@ -2360,8 +2352,8 @@ function Platform({ setPage }) {
                 <div style={{ fontSize: 10, fontWeight: 700, color: C.btn, textTransform: "uppercase", letterSpacing: ".1em" }}>03 — The Script</div>
                 <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
               </div>
-              <h3 style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>She tells you what to say.</h3>
-              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.38)", lineHeight: 1.7, marginBottom: 22, maxWidth: 560 }}>You got the alert. You're staring at the client's name. Rai doesn't guess — she pattern-matches your situation against a library of what actually works.</p>
+              <h3 style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>She knows where it goes.</h3>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.38)", lineHeight: 1.7, marginBottom: 22, maxWidth: 560 }}>Using a proprietary scoring engine, Rai weighs all of the day's tasks by retention impact. Your highest-value move is next up.</p>
               <div style={{ background: C.bg, borderRadius: 16, padding: 20 }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   <div style={{ alignSelf: "flex-end", maxWidth: "78%", padding: "12px 16px", background: C.primary, color: "#fff", borderRadius: "14px 14px 4px 14px", fontSize: 14, lineHeight: 1.55 }}>
@@ -2383,7 +2375,7 @@ function Platform({ setPage }) {
         {/* ══════ Scoring Model ══════ */}
         <section style={{ padding: "64px 20px" }}>
           <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-            <Reveal><div style={{ textAlign: "center", marginBottom: 48 }}>
+            <Reveal><div className="r-section-head" style={{ textAlign: "center", marginBottom: 48 }}>
               <div style={{
                 display: "inline-block", fontSize: 10, fontWeight: 700,
                 textTransform: "uppercase", letterSpacing: ".14em",
@@ -2403,24 +2395,24 @@ function Platform({ setPage }) {
               <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 100, background: "linear-gradient(270deg, " + C.bg + ", transparent)", zIndex: 2 }} />
               <div style={{ display: "flex", alignItems: "baseline", whiteSpace: "nowrap", animation: "dimScroll 28s linear infinite", width: "max-content", marginBottom: 14 }}>
                 {[...Array(2)].flatMap(() => [
-                  { name: "Grace", style: { fontSize: 28, fontWeight: 400, letterSpacing: "0.02em", color: C.primary + "70", fontFamily: "'DM Serif Display', serif", fontStyle: "italic" } },
-                  { name: "TRUST", style: { fontSize: 24, fontWeight: 900, letterSpacing: "0.08em", color: C.primary + "90", fontFamily: "inherit" } },
-                  { name: "communication", style: { fontSize: 16, fontWeight: 400, letterSpacing: "0.2em", color: C.primary + "50", textTransform: "uppercase" } },
-                  { name: "Loyalty", style: { fontSize: 28, fontWeight: 400, letterSpacing: "-0.02em", color: C.primary + "80", fontFamily: "'DM Serif Display', serif" } },
-                  { name: "budget risk", style: { fontSize: 13, fontWeight: 700, letterSpacing: "0.12em", color: C.primary + "45", textTransform: "uppercase" } },
-                  { name: "Depth", style: { fontSize: 32, fontWeight: 400, letterSpacing: "-0.03em", color: C.primary + "60", fontFamily: "'DM Serif Display', serif", fontStyle: "italic" } },
+                  { name: "Grace", style: { fontSize: 28, fontWeight: 400, letterSpacing: "0.02em", color: C.primary + "B0", fontFamily: "'DM Serif Display', serif", fontStyle: "italic" } },
+                  { name: "TRUST", style: { fontSize: 24, fontWeight: 900, letterSpacing: "0.08em", color: C.primary + "D0", fontFamily: "inherit" } },
+                  { name: "communication", style: { fontSize: 16, fontWeight: 400, letterSpacing: "0.2em", color: C.primary + "90", textTransform: "uppercase" } },
+                  { name: "Loyalty", style: { fontSize: 28, fontWeight: 400, letterSpacing: "-0.02em", color: C.primary + "C0", fontFamily: "'DM Serif Display', serif" } },
+                  { name: "budget risk", style: { fontSize: 13, fontWeight: 700, letterSpacing: "0.12em", color: C.primary + "80", textTransform: "uppercase" } },
+                  { name: "Depth", style: { fontSize: 32, fontWeight: 400, letterSpacing: "-0.03em", color: C.primary + "A0", fontFamily: "'DM Serif Display', serif", fontStyle: "italic" } },
                 ]).map((d, i) => (
                   <span key={i} style={{ ...d.style, marginRight: 56 }}>{d.name}</span>
                 ))}
               </div>
               <div style={{ display: "flex", alignItems: "baseline", whiteSpace: "nowrap", animation: "dimScrollReverse 32s linear infinite", width: "max-content", opacity: 0.7 }}>
                 {[...Array(2)].flatMap(() => [
-                  { name: "STRESS", style: { fontSize: 14, fontWeight: 700, letterSpacing: "0.25em", color: C.primary + "55" } },
-                  { name: "Expectations", style: { fontSize: 22, fontWeight: 400, letterSpacing: "0.04em", color: C.primary + "55", fontFamily: "'DM Serif Display', serif", fontStyle: "italic" } },
-                  { name: "FUNGIBILITY", style: { fontSize: 12, fontWeight: 600, letterSpacing: "0.18em", color: C.primary + "40" } },
-                  { name: "tone", style: { fontSize: 26, fontWeight: 300, letterSpacing: "0.08em", color: C.primary + "50", fontFamily: "'DM Serif Display', serif", fontStyle: "italic" } },
-                  { name: "AUTHORITY", style: { fontSize: 17, fontWeight: 900, letterSpacing: "0.1em", color: C.primary + "60" } },
-                  { name: "reporting", style: { fontSize: 13, fontWeight: 400, letterSpacing: "0.15em", color: C.primary + "40", textTransform: "uppercase" } },
+                  { name: "STRESS", style: { fontSize: 14, fontWeight: 700, letterSpacing: "0.25em", color: C.primary + "90" } },
+                  { name: "Expectations", style: { fontSize: 22, fontWeight: 400, letterSpacing: "0.04em", color: C.primary + "90", fontFamily: "'DM Serif Display', serif", fontStyle: "italic" } },
+                  { name: "FUNGIBILITY", style: { fontSize: 12, fontWeight: 600, letterSpacing: "0.18em", color: C.primary + "75" } },
+                  { name: "tone", style: { fontSize: 26, fontWeight: 300, letterSpacing: "0.08em", color: C.primary + "85", fontFamily: "'DM Serif Display', serif", fontStyle: "italic" } },
+                  { name: "AUTHORITY", style: { fontSize: 17, fontWeight: 900, letterSpacing: "0.1em", color: C.primary + "95" } },
+                  { name: "reporting", style: { fontSize: 13, fontWeight: 400, letterSpacing: "0.15em", color: C.primary + "75", textTransform: "uppercase" } },
                 ]).map((d, i) => (
                   <span key={i} style={{ ...d.style, marginRight: 56 }}>{d.name}</span>
                 ))}
@@ -2433,7 +2425,7 @@ function Platform({ setPage }) {
               <p style={{ fontSize: 14, color: C.textSec, maxWidth: 500, margin: "0 auto" }}>When dimensions collide, patterns emerge. 20 proprietary combinations predict behavior no single metric catches.</p>
             </div></Reveal>
 
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center" }}>
+            <div className="r-combo-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 14, maxWidth: 600, margin: "0 auto" }}>
               {[
                 { name: "Bulletproof", a: "Loyalty", b: "Grace", desc: "Will survive your worst month.", type: "pos" },
                 { name: "Locked Vault", a: "Loyalty", b: "Depth", desc: "Double lock on the door.", type: "pos" },
@@ -2442,7 +2434,7 @@ function Platform({ setPage }) {
                 { name: "Silent Exit", a: "Stress", b: "Depth", desc: "No warning before the email.", type: "neg" },
                 { name: "No Room to Operate", a: "Trust", b: "Grace", desc: "Tightrope with no net.", type: "neg" },
               ].map((combo, i) => (
-                <Reveal key={i} delay={i * 0.08} style={{ flex: "0 0 auto", width: 180 }}>
+                <Reveal key={i} delay={i * 0.08}>
                   <div className="r-combo-card">
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 0, marginBottom: 14 }}>
                       <div style={{ padding: "3px 9px", borderRadius: 5, fontSize: 10, fontWeight: 700, background: combo.type === "pos" ? C.success + "12" : C.danger + "12", color: combo.type === "pos" ? C.success : C.danger }}>{combo.a}</div>
@@ -2579,7 +2571,7 @@ export default function RetaynedSite() {
         .r-conf-inner { border-radius: 0; }
         .r-conf-img { border-radius: 0; }
         .r-tab-btn { }
-        .r-feat-content { flex-direction: column; gap: 16px !important; }
+        .r-feat-content { flex-direction: column; }
         .r-ent-stamp { top: -30px !important; left: 50% !important; transform: translateX(-50%) rotate(-6deg) !important; font-size: 11px !important; padding: 6px 16px !important; }
         .r-feat-desc-full { display: none !important; }
         .r-feat-desc-mobile { display: block !important; }
@@ -2589,16 +2581,16 @@ export default function RetaynedSite() {
         .r-rai-step-1 { margin-left: 0; margin-right: auto; }
         .r-rai-step-2 { margin-left: auto; margin-right: auto; }
         .r-rai-step-3 { margin-left: auto; margin-right: 0; }
+        .r-stat-graphic-left { width: 60px !important; height: 45px !important; left: 12px !important; bottom: -8px !important; opacity: 0.12 !important; }
+        .r-stat-graphic-right { width: 60px !important; height: 45px !important; right: 12px !important; top: -10px !important; opacity: 0.12 !important; }
+        .r-stat-accent-left, .r-stat-accent-right { display: none !important; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         @keyframes dimScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes dimScrollReverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
         .r-full-bleed { margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); padding-left: 20px; padding-right: 20px; }
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
         .r-no-pad { padding-left: 0 !important; padding-right: 0 !important; }
-        .r-stat-graphic-left { width: 60px !important; height: 45px !important; left: 12px !important; bottom: -8px !important; opacity: 0.12 !important; }
-        .r-stat-graphic-right { width: 60px !important; height: 45px !important; right: 12px !important; top: -10px !important; opacity: 0.12 !important; }
-        .r-stat-accent-left, .r-stat-accent-right { display: none !important; }
-        section { }
+        
         @media (min-width: 768px) {
           section { padding-left: 40px !important; padding-right: 40px !important; }
           .r-nav-inner { padding-left: 40px !important; padding-right: 40px !important; }
@@ -2612,9 +2604,10 @@ export default function RetaynedSite() {
           .r-stat-accent-left, .r-stat-accent-right { display: block !important; }
           .r-tab-btn { flex: 1 1 0 !important; }
           .r-ent-grid { grid-template-columns: 1fr 1fr 1fr 1fr !important; max-width: 960px !important; }
-          .r-feat-content { flex-direction: row !important; }
+          .r-feat-content { flex-direction: row !important; gap: 48px !important; }
           .r-feat-desc-full { display: block !important; }
           .r-feat-desc-mobile { display: none !important; }
+
           .r-conf-inner { max-width: 900px; border-radius: 14px; overflow: hidden; }
           .r-conf-img { border-radius: 14px; }
           .r-conf { padding: 0 40px !important; margin-bottom: 64px !important; }
