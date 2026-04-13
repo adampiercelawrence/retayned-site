@@ -187,7 +187,7 @@ function Nav({ page, setPage }) {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <span className="r-desktop-nav" onClick={() => setPage("login")} style={{ fontSize: 14, fontWeight: 600, color: C.textSec, cursor: "pointer" }}>Log In</span>
-          <button className="r-desktop-nav" onClick={() => setPage("signup")} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 16px", background: "transparent", border: "1.5px solid " + C.border, borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 600, color: C.text }}>
+          <button className="r-desktop-nav r-ghost-cta" onClick={() => setPage("signup")} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 16px", background: "transparent", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 600, color: C.text }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
               <line x1="8" y1="21" x2="16" y2="21" />
@@ -636,9 +636,9 @@ function Home({ setPage }) {
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20, maxWidth: 1100, margin: "0 auto" }}>
             {[
-              { num: "01", title: "Profile your clients", desc: "Score each relationship across 12 behavioral dimensions. Retayned builds a unique communication fingerprint for every client.", icon: "⬡" },
-              { num: "02", title: "Rai monitors the signals", desc: "Health checks, engagement velocity, and sentiment patterns feed into a retention engine that scores every client daily.", icon: "◈" },
-              { num: "03", title: "Get the script, not just the alert", desc: "When something shifts, Rai tells you who needs attention, what the real problem is, and exactly what to say.", icon: "✧" },
+              { num: "01", title: "She sees it.", desc: "Cross-referencing tasks, health checks, score trends, 20+ combination signals \u2014 continuously, across your entire book.", icon: "⬡" },
+              { num: "02", title: "She puts it in front of you.", desc: "Every morning, before your first coffee. You don\u2019t go looking for the problem. The problem finds you without any trouble.", icon: "◈" },
+              { num: "03", title: "She tells you what to say.", desc: "You got the alert. Now it\u2019s time to act. Need backup? Rai\u2019s ready with an arsenal of custom-tailored guidance just for this.", icon: "✧" },
             ].map((step, i) => (
               <Reveal key={i} delay={i * 0.15} style={{ flex: "1 1 300px", minWidth: 280 }}>
                 <div className="r-rai-alert-wrap" style={{ borderRadius: 16 }}>
@@ -727,7 +727,7 @@ function Home({ setPage }) {
           </Reveal>
 
           {/* Tab bar */}
-          <div style={{
+          <div className="r-tab-bar-wrap" style={{
             display: "flex", gap: 4, background: C.surface, borderRadius: 12,
             padding: 5, marginBottom: 40, overflowX: "auto", maxWidth: 740,
             margin: "0 auto 40px", WebkitOverflowScrolling: "touch",
@@ -769,7 +769,7 @@ function Home({ setPage }) {
                 <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 8, overflow: "hidden", maxHeight: expandedText ? "none" : 48, transition: "max-height 0.3s ease" }}>{ht.sub}</p>
                 <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 24, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
               </div>
-              <div style={{ display: "flex", gap: 12 }}>
+              <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
                 <button className="r-hero-cta" onClick={() => setPage("signup")} style={{ padding: "13px 26px", fontSize: 14 }}>
                   Try Free Now 
                 </button>
@@ -780,7 +780,7 @@ function Home({ setPage }) {
             </div>
 
             {/* Right: visual mockup */}
-            <div style={{ flex: "1 1 360px", minHeight: 380 }}>
+            <div style={{ flex: "1 1 360px" }}>
               <div key={ht.id} style={{ animation: "fadeInScale 0.35s ease" }}>
                 {ht.id === "today" && (
                   <div className="r-mockup-card">
@@ -947,12 +947,17 @@ function Home({ setPage }) {
           <div style={{ position: "absolute", top: 60, right: 80, width: 160, height: 160, border: "1px solid rgba(255,255,255,0.03)", borderRadius: "50%", pointerEvents: "none" }} />
 
           <Reveal><div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 2 }}>
-            <div style={{
-              display: "inline-block", fontSize: 10, fontWeight: 700,
-              textTransform: "uppercase", letterSpacing: ".14em",
-              color: "rgba(255,255,255,0.3)", marginBottom: 20,
-              padding: "5px 16px", borderRadius: 6,
-              background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)",
+            {/* Top Secret stamp */}
+            <div className="r-ent-stamp" style={{
+              position: "absolute", top: -10, left: "8%",
+              transform: "rotate(-6deg)",
+              padding: "8px 24px", borderRadius: 4,
+              border: "3px solid rgba(196,67,43,0.5)",
+              color: "rgba(196,67,43,0.6)",
+              fontSize: 14, fontWeight: 900, fontFamily: "'Courier New', Courier, monospace",
+              textTransform: "uppercase", letterSpacing: "0.2em",
+              pointerEvents: "none",
+              boxShadow: "inset 0 0 0 1px rgba(196,67,43,0.2)",
             }}>Enterprise</div>
             <h2 style={{
               fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff",
@@ -1076,48 +1081,55 @@ function Pricing({ setPage }) {
         <p style={{ fontSize: 16, color: C.textSec, marginBottom: 24 }}>The math works. Still not convinced? 14-day free trial. Cancel anytime.</p>
       </section>
       <section style={{ padding: "0 20px 48px" }}>
-        <div style={{ maxWidth: 720, margin: "0 auto" }}>
-          {/* Main pricing card — full width */}
-          <div style={{ background: `linear-gradient(to bottom, ${C.card} 55%, ${C.primarySoft} 100%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", marginBottom: 28, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: C.textMuted, marginBottom: 20, textAlign: "center" }}>One plan. Every feature. Impossibly easy.</div>
-            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4, marginBottom: 4 }}>
-              <span style={{ fontSize: 52, fontWeight: 900, letterSpacing: "-0.03em" }}>$19.99</span>
-              <span style={{ fontSize: 15, color: C.textMuted }}>/mo</span>
-            </div>
-            <div style={{ fontSize: 16, color: C.textSec, marginBottom: 28, lineHeight: 1.5, textAlign: "center" }}>+ <span style={{ fontWeight: 700 }}>$1 per Client</span></div>
-            <p style={{ fontSize: 14, color: C.textSec, textAlign: "center", marginBottom: 28 }}>Solve your business's most consequential problem for less than a Netflix subscription.</p>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          {/* Enterprise bridge */}
+          <div style={{ textAlign: "center", padding: "0 0 20px" }}>
+            <p style={{ fontSize: 14, color: C.textSec }}>One plan for you. One plan for your org.</p>
+          </div>
 
-            <button className="cta-btn" onClick={() => setPage("signup")} style={{ width: "100%", padding: "15px 20px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: C.btn, color: "#fff", border: "none", marginBottom: 28 }}>Start Free Trial</button>
+          {/* Cards side by side */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 20, alignItems: "stretch" }}>
+            {/* Main pricing card */}
+            <div style={{ flex: "1 1 400px", display: "flex" }}>
+              <div style={{ background: `linear-gradient(to bottom, ${C.card} 55%, ${C.primarySoft} 100%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", width: "100%" }}>
+                <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: C.textMuted, marginBottom: 20, textAlign: "center" }}>One plan. Every feature. Impossibly easy.</div>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4, marginBottom: 4 }}>
+                  <span style={{ fontSize: 52, fontWeight: 900, letterSpacing: "-0.03em" }}>$19.99</span>
+                  <span style={{ fontSize: 15, color: C.textMuted }}>/mo</span>
+                </div>
+                <div style={{ fontSize: 16, color: C.textSec, marginBottom: 28, lineHeight: 1.5, textAlign: "center" }}>+ <span style={{ fontWeight: 700 }}>$1 per Client</span></div>
+                <p style={{ fontSize: 14, color: C.textSec, textAlign: "center", marginBottom: 28 }}>Solve your business's most consequential problem for less than a Netflix subscription.</p>
 
-            {/* Features */}
-            <div>
-              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.primary, marginBottom: 16, textAlign: "center" }}>Everything's included</div>
-              <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
-                {["Suggested tasks daily", "Priority retention alerts", "Dynamic client scoring", "Monthly health checks", "Dedicated, priority support", "Unlimited chats with Rai", "Unlimited Rolodex slots", "Unlimited team members"].map((f, j) => (
-                  <span key={j} style={{ fontSize: 13, color: C.text, padding: "8px 14px", borderRadius: 10, background: "rgba(51,84,62,0.06)", border: "1px solid " + C.borderLight, fontWeight: 500 }}>{f}</span>
-                ))}
+                <button className="cta-btn" onClick={() => setPage("signup")} style={{ width: "100%", padding: "15px 20px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: C.btn, color: "#fff", border: "none", marginBottom: 28 }}>Start Free Trial</button>
+
+                <div style={{ marginTop: "auto" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.primary, marginBottom: 16, textAlign: "center" }}>Everything's included</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                    {["Suggested tasks daily", "Priority retention alerts", "Dynamic client scoring", "Monthly health checks", "Dedicated, priority support", "Unlimited chats with Rai", "Unlimited Rolodex slots", "Unlimited team members"].map((f, j) => (
+                      <span key={j} style={{ fontSize: 13, color: C.text, padding: "8px 14px", borderRadius: 10, background: "rgba(51,84,62,0.06)", border: "1px solid " + C.borderLight, fontWeight: 500, textAlign: "center" }}>{f}</span>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Enterprise bridge */}
-          <div style={{ textAlign: "center", padding: "16px 0 12px" }}>
-            <h2 style={{ fontSize: 21, fontWeight: 600, letterSpacing: "-0.02em", color: C.text }}>Let AI do the work.</h2>
-            <p style={{ fontSize: 14, color: C.textSec, marginTop: 6 }}>Connect your platforms. Retayned scores every client, detects churn patterns, and tells your team — or your agents — exactly what to address, every morning, automatically.</p>
-          </div>
-
-          {/* Enterprise */}
-          <div style={{ background: `linear-gradient(to bottom, ${C.card} 70%, ${C.primarySoft} 100%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
-            <div style={{ position: "absolute", top: 28, right: -32, background: C.danger, color: "#fff", fontSize: 9, fontWeight: 700, padding: "5px 40px", transform: "rotate(45deg)", letterSpacing: ".06em", textAlign: "center" }}>EARLY ACCESS</div>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.textMuted, marginBottom: 4 }}>Enterprise</div>
-            <div style={{ fontSize: 14, color: C.textSec, marginBottom: 16 }}>Autonomous relationship intelligence.</div>
-            <div style={{ fontSize: 40, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 20 }}>Let's Talk</div>
-            <button onClick={() => setPage("contact")} className="cta-btn" style={{ width: "100%", padding: "15px 20px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginBottom: 24, background: C.btn, color: "#fff", border: "none" }}>Contact Us</button>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.primary, marginBottom: 16, textAlign: "center" }}>Built for large orgs and AI agents</div>
-            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
-              {["Slack, email, Zoom, CRM integrations", "Automated daily portfolio sweeps", "Churn archetype detection", "Prioritized client rankings", "Multi-signal alerts", "Score history and drift tracking", "API + webhook delivery", "Dedicated onboarding"].map((f, j) => (
-                <span key={j} style={{ fontSize: 13, color: C.text, padding: "6px 14px", borderRadius: 20, background: "rgba(51,84,62,0.06)", border: "1px solid " + C.borderLight, fontWeight: 500 }}>{f}</span>
-              ))}
+            {/* Enterprise card */}
+            <div style={{ flex: "1 1 400px", display: "flex" }}>
+              <div style={{ background: `linear-gradient(to bottom, ${C.card} 70%, ${C.primarySoft} 100%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", width: "100%" }}>
+                <div style={{ position: "absolute", top: 28, right: -32, background: C.danger, color: "#fff", fontSize: 9, fontWeight: 700, padding: "5px 40px", transform: "rotate(45deg)", letterSpacing: ".06em", textAlign: "center" }}>EARLY ACCESS</div>
+                <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.textMuted, marginBottom: 4 }}>Enterprise</div>
+                <div style={{ fontSize: 14, color: C.textSec, marginBottom: 16 }}>Autonomous relationship intelligence.</div>
+                <div style={{ fontSize: 40, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 20 }}>Let's Talk</div>
+                <button onClick={() => setPage("contact")} className="cta-btn" style={{ width: "100%", padding: "15px 20px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginBottom: 24, background: C.btn, color: "#fff", border: "none" }}>Contact Us</button>
+                <div style={{ marginTop: "auto" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.primary, marginBottom: 16, textAlign: "center" }}>Built for large orgs and AI agents</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                    {["Slack, email, Zoom, CRM integrations", "Automated daily portfolio sweeps", "Churn archetype detection", "Prioritized client rankings", "Multi-signal alerts", "Score history and drift tracking", "API + webhook delivery", "Dedicated onboarding"].map((f, j) => (
+                      <span key={j} style={{ fontSize: 13, color: C.text, padding: "6px 14px", borderRadius: 20, background: "rgba(51,84,62,0.06)", border: "1px solid " + C.borderLight, fontWeight: 500, textAlign: "center" }}>{f}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -2567,9 +2579,13 @@ export default function RetaynedSite() {
         .r-conf-inner { border-radius: 0; }
         .r-conf-img { border-radius: 0; }
         .r-tab-btn { }
-        .r-feat-content { flex-direction: column-reverse; }
+        .r-feat-content { flex-direction: column; gap: 16px !important; }
+        .r-ent-stamp { top: -30px !important; left: 50% !important; transform: translateX(-50%) rotate(-6deg) !important; font-size: 11px !important; padding: 6px 16px !important; }
         .r-feat-desc-full { display: none !important; }
         .r-feat-desc-mobile { display: block !important; }
+        .r-tab-btn { flex: 0 0 auto !important; }
+        .r-tab-bar-wrap { scrollbar-width: none; -ms-overflow-style: none; }
+        .r-tab-bar-wrap::-webkit-scrollbar { display: none; }
         .r-rai-step-1 { margin-left: 0; margin-right: auto; }
         .r-rai-step-2 { margin-left: auto; margin-right: auto; }
         .r-rai-step-3 { margin-left: auto; margin-right: 0; }
