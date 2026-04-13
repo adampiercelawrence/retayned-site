@@ -193,10 +193,10 @@ function Nav({ page, setPage }) {
               <line x1="8" y1="21" x2="16" y2="21" />
               <line x1="12" y1="17" x2="12" y2="21" />
             </svg>
-            <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.02em" }}>DEMO</span>
+            <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.02em" }}>Get a Demo</span>
           </button>
-          <button className="cta-btn" onClick={() => { setPage("signup"); setOpen(false); }} style={{ padding: "10px 22px", background: C.btn, color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-            Try Free Now
+          <button className="cta-btn" onClick={() => { setPage("signup"); setOpen(false); }} style={{ padding: "10px 22px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+            Start Free Trial
           </button>
         </div>
       </div>
@@ -249,7 +249,7 @@ function Nav({ page, setPage }) {
 // ═══ Footer ═══
 function Footer({ setPage }) {
   return (
-    <footer style={{ borderTop: "1px solid " + C.border, padding: "24px 20px" }}>
+    <footer style={{ borderTop: "1px solid " + C.border, padding: "32px 20px 24px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
         <div style={{ display: "flex", alignItems: "baseline", cursor: "pointer" }} onClick={() => setPage("home")}>
           <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
@@ -314,24 +314,6 @@ function AnimatedStat({ value, suffix = "", duration = 1800 }) {
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
-// ═══ Floating badge component ═══
-function FloatingBadge({ children, delay = 0, style = {} }) {
-  return (
-    <div style={{
-      display: "inline-flex", alignItems: "center", gap: 6,
-      padding: "6px 14px", borderRadius: 100,
-      background: "rgba(255,255,255,0.9)", backdropFilter: "blur(8px)",
-      border: "1px solid rgba(216,223,216,0.6)",
-      boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
-      fontSize: 12, fontWeight: 600, color: C.text,
-      animation: `floatBadge 0.6s ease ${delay}s both`,
-      ...style,
-    }}>
-      {children}
-    </div>
-  );
-}
-
 // ═══ HOME ═══
 function Home({ setPage }) {
   const [loaded, setLoaded] = useState(false);
@@ -354,25 +336,16 @@ function Home({ setPage }) {
   ];
   const ht = homeTabs[activeTab];
 
-  // How it works steps
-  const howSteps = [
-    { num: "01", title: "Profile your clients", desc: "Score each relationship across 12 behavioral dimensions. Retayned builds a unique communication fingerprint for every client.", icon: "⬡" },
-    { num: "02", title: "Rai monitors the signals", desc: "Health checks, engagement velocity, and sentiment patterns feed into a retention engine that scores every client daily.", icon: "◈" },
-    { num: "03", title: "Get the script, not just the alert", desc: "When something shifts, Rai tells you who needs attention, what the real problem is, and exactly what to say.", icon: "✧" },
-  ];
-
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
 
-        @keyframes floatBadge { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
         @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(91,33,182,0.15); } 50% { box-shadow: 0 0 0 12px rgba(91,33,182,0); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes drawLine { from { width: 0; } to { width: 108%; } }
         @keyframes fadeInScale { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
-        @keyframes subtleBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
         @keyframes grain { 0%, 100% { transform: translate(0, 0); } 10% { transform: translate(-2%, -2%); } 20% { transform: translate(1%, 3%); } 30% { transform: translate(-3%, 1%); } 40% { transform: translate(3%, -1%); } 50% { transform: translate(-1%, 2%); } 60% { transform: translate(2%, -3%); } 70% { transform: translate(-2%, 1%); } 80% { transform: translate(1%, -2%); } 90% { transform: translate(-1%, 3%); } }
 
         .r-serif { font-family: 'DM Serif Display', Georgia, serif; }
@@ -414,15 +387,13 @@ function Home({ setPage }) {
         }
         .r-mockup-card:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(0,0,0,0.09), 0 4px 12px rgba(0,0,0,0.04); }
 
-        .r-feature-step {
-          padding: 28px 24px; border-radius: 16px; border: 1.5px solid ${C.borderLight};
-          background: ${C.card}; transition: all 0.3s ease; cursor: default;
-          position: relative; overflow: hidden;
+        .r-rai-alert-wrap {
+          transition: transform 0.25s ease, filter 0.25s ease;
         }
-        .r-feature-step:hover {
-          border-color: ${C.primary}; box-shadow: 0 8px 32px rgba(51,84,62,0.08);
+        .r-rai-alert-wrap:hover {
+          transform: translateY(-3px);
+          filter: drop-shadow(0 8px 16px rgba(0,0,0,0.06));
         }
-        .r-feature-step:hover .step-num { color: ${C.btn}; }
 
         .r-ent-feature {
           padding: 20px 18px; background: rgba(255,255,255,0.04);
@@ -458,18 +429,19 @@ function Home({ setPage }) {
           transition: transform 0.2s;
         }
 
+        @keyframes subtleBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
         .r-alert-actions > div {
           flex: 1; padding: 11px; text-align: center; font-size: 13px;
-          font-weight: 600; cursor: pointer; transition: background 0.15s;
+          font-weight: 600; cursor: default;
         }
-        .r-alert-actions > div:hover { background: rgba(0,0,0,0.02); }
       `}</style>
 
       <div className="r-home">
         {/* ══════════════ HERO ══════════════ */}
         <div className="r-full-bleed" style={{
-          background: `radial-gradient(ellipse 80% 60% at 20% 40%, ${C.primarySoft} 0%, ${C.bg} 70%)`,
-          padding: "56px 20px 72px",
+          background: `radial-gradient(ellipse 100% 80% at 25% 35%, #DCE8E0 0%, ${C.primarySoft} 40%, ${C.bg} 85%)`,
+          padding: "56px 20px 48px",
           position: "relative", overflow: "hidden",
         }}>
           {/* Subtle decorative elements */}
@@ -482,10 +454,17 @@ function Home({ setPage }) {
 
               {/* Trust badge */}
               <div style={{ marginBottom: 20, opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 0.3s" }}>
-                <FloatingBadge delay={0.6}>
+                <div style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  padding: "6px 14px", borderRadius: 100,
+                  background: "rgba(255,255,255,0.9)",
+                  border: "1px solid rgba(216,223,216,0.6)",
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+                  fontSize: 12, fontWeight: 600, color: C.text,
+                }}>
                   <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.success, display: "inline-block" }} />
-                  Built for agencies, freelancers & consultants
-                </FloatingBadge>
+                  Built for agencies, freelancers, consultants, and mobsters
+                </div>
               </div>
 
               <h1 style={{
@@ -493,20 +472,10 @@ function Home({ setPage }) {
                 marginBottom: 24, color: C.text,
               }}>
                 The CRM that{" "}
-                <span style={{ position: "relative", display: "inline-block" }}>
+                <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
                   <span style={{ color: C.text }}>predicts</span>
-                  <span style={{
-                    position: "absolute", left: "-2%", top: "50%", height: "2px",
-                    background: C.danger, borderRadius: 2,
-                    animation: loaded ? "drawLine 0.4s ease-out 0.9s both" : "none",
-                  }} />
-                </span>
-                <br />
-                <span style={{
-                  fontFamily: "'Caveat', cursive", fontSize: "0.75em", fontWeight: 700, color: C.primary,
-                  opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 1.1s",
-                }}>
-                  and prevents
+                  <span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} />
+                  <span style={{ position: "absolute", top: "-0.7em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.6em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap", opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 1.2s" }}>prevents</span>
                 </span>{" "}
                 churn.
               </h1>
@@ -527,7 +496,7 @@ function Home({ setPage }) {
               <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", opacity: loaded ? 1 : 0, transition: "all 0.5s ease 0.7s", marginBottom: 16 }}>
                 <button className="r-hero-cta" onClick={() => setPage("signup")}>
                   Start Free Trial
-                  <span style={{ marginLeft: 8, fontSize: 14 }}>→</span>
+                  
                 </button>
                 <button className="r-ghost-cta" onClick={() => setPage("contact")}>
                   Contact Sales
@@ -535,83 +504,123 @@ function Home({ setPage }) {
               </div>
 
               <p style={{ fontSize: 13, color: C.textMuted, opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 0.9s", letterSpacing: "0.01em" }}>
-                No credit card required · 14-day free trial
+                14-day free trial. Cancel anytime.
               </p>
             </div>
 
             {/* Right — app mockup */}
             <div style={{
               flex: "1 1 400px",
-              opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0) rotate(0deg)" : "translateY(30px)",
+              opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(30px)",
               transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s",
             }}>
-              <div className="r-mockup-card" style={{ position: "relative" }}>
-                {/* Window dots */}
-                <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FF5F57" }} />
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FEBC2E" }} />
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#28C840" }} />
-                  <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".08em" }}>Today — April 12</span>
-                </div>
-
-                {[
-                  { name: "Northvane Studios", score: 91, task: "Monthly strategy review — on track", color: C.success, tag: "Protect" },
-                  { name: "Broadleaf Media", score: 67, task: "Health Check overdue · 3 days", color: C.warning, tag: "Watch" },
-                  { name: "Foxglove Partners", score: 38, task: "Rai: Call today, not email", color: C.danger, tag: "Urgent" },
-                ].map((t, i) => (
-                  <div key={i} style={{
-                    display: "flex", alignItems: "center", gap: 14, padding: "14px 0",
-                    borderTop: i > 0 ? "1px solid " + C.borderLight : "none",
-                    animation: `slideUp 0.4s ease ${0.8 + i * 0.12}s both`,
-                  }}>
-                    <div className="r-score-ring" style={{ background: t.color + "14", color: t.color, border: `1.5px solid ${t.color}30` }}>
-                      {t.score}
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 700, fontSize: 14, letterSpacing: "-0.01em", marginBottom: 2 }}>{t.name}</div>
-                      <div style={{ fontSize: 12, color: C.textMuted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.task}</div>
-                    </div>
-                    <div style={{
-                      fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 6,
-                      background: t.color + "10", color: t.color, letterSpacing: "0.02em",
-                      textTransform: "uppercase",
-                    }}>{t.tag}</div>
-                  </div>
-                ))}
-
-                {/* Rai insight */}
-                <div style={{
-                  marginTop: 14, padding: "12px 14px", borderRadius: 12,
-                  background: "linear-gradient(135deg, rgba(51,84,62,0.06) 0%, rgba(85,139,104,0.04) 100%)",
-                  border: "1px solid " + C.primarySoft,
-                  animation: "slideUp 0.5s ease 1.2s both",
-                }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-                    <span style={{ fontSize: 10, fontWeight: 800, color: C.primary, letterSpacing: "0.04em", textTransform: "uppercase" }}>✦ Rai</span>
-                  </div>
-                  <p style={{ fontSize: 13, color: C.primary, lineHeight: 1.5, margin: 0, fontWeight: 500 }}>
-                    3 clients need attention today. Foxglove hasn't responded in 14 days — this is beyond busy.
-                  </p>
-                </div>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                fontSize: 11, fontWeight: 700, color: C.primary,
+                textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14,
+              }}>
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primary} strokeWidth="1.8" fill="none" strokeLinejoin="round"/>
+                </svg>
+                Suggested by Rai
               </div>
 
-              {/* Floating badges around mockup */}
-              <div style={{ position: "relative", height: 0 }}>
+              {/* Stacked cards */}
+              <div style={{ position: "relative", height: 400, maxWidth: 480 }}>
+
+                {/* 12% badge */}
                 <div style={{
-                  position: "absolute", top: -380, right: -10,
-                  animation: "subtleBob 4s ease-in-out infinite",
+                  position: "absolute", top: -18, right: -10, zIndex: 10,
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  padding: "6px 14px", borderRadius: 100,
+                  background: "rgba(255,255,255,0.9)",
+                  border: "1px solid rgba(216,223,216,0.6)",
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+                  fontSize: 12, fontWeight: 600, color: C.text,
+                  opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 1.2s",
+                  animation: loaded ? "subtleBob 4s ease-in-out 1.5s infinite" : "none",
                 }}>
-                  <FloatingBadge delay={1.4} style={{ fontSize: 11 }}>
-                    <span style={{ color: C.success }}>↑ 12%</span> retention this quarter
-                  </FloatingBadge>
+                  <span style={{ color: C.success, fontWeight: 700 }}>↑ 12%</span> retention this quarter
                 </div>
+
+                {/* Back card — Yellow (warning) */}
+                <div className="r-rai-alert-wrap" style={{ position: "absolute", top: 0, left: 8, right: -4, zIndex: 1, animation: "slideUp 0.4s ease 0.7s both" }}>
+                <div className="r-rai-alert" style={{
+                  borderRadius: 14, overflow: "hidden",
+                  border: "1px solid " + C.border,
+                  boxShadow: "0 2px 16px rgba(0,0,0,0.04)",
+                  background: `linear-gradient(95deg, ${C.warningBg} 0%, #FDF8EC 30%, ${C.card} 100%)`,
+                  cursor: "default",
+                  transform: "rotate(2.5deg)",
+                }}>
+                  <div style={{ padding: "16px 18px" }}>
+                    <p style={{ fontSize: 15, color: C.text, fontWeight: 600, lineHeight: 1.55, margin: 0 }}>
+                      Foxglove Partners: Response time doubled this month. Velocity is cold. <span style={{ fontWeight: 700 }}>Schedule a check-in before Friday.</span>
+                    </p>
+                    <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Foxglove Partners · Velocity alert</p>
+                  </div>
+                  <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
+                    <div style={{ color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
+                    <div style={{ color: C.btn, borderRight: "1px solid " + C.borderLight }}>Talk to Rai</div>
+                    <div style={{ color: C.textMuted }}>Dismiss</div>
+                  </div>
+                </div>
+                </div>
+
+                {/* Middle card — Green */}
+                <div className="r-rai-alert-wrap" style={{ position: "absolute", top: 55, left: -6, right: 10, zIndex: 2, animation: "slideUp 0.4s ease 0.85s both" }}>
+                <div className="r-rai-alert" style={{
+                  borderRadius: 14, overflow: "hidden",
+                  border: "1px solid " + C.border,
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+                  background: `linear-gradient(95deg, ${C.primarySoft} 0%, #F0F5F1 30%, ${C.card} 100%)`,
+                  cursor: "default",
+                  transform: "rotate(-1.5deg)",
+                }}>
+                  <div style={{ padding: "16px 18px" }}>
+                    <p style={{ fontSize: 15, color: C.text, lineHeight: 1.55, margin: 0 }}>
+                      Northvane: <span style={{ fontWeight: 600 }}>3-year anniversary in 26 days.</span> Plan something.
+                    </p>
+                    <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Northvane Studios · Milestone</p>
+                  </div>
+                  <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
+                    <div style={{ color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
+                    <div style={{ color: C.textMuted }}>Dismiss</div>
+                  </div>
+                </div>
+                </div>
+
+                {/* Front card — Red (danger) */}
+                <div className="r-rai-alert-wrap" style={{ position: "absolute", top: 115, left: 2, right: 2, zIndex: 3, animation: "slideUp 0.4s ease 1s both" }}>
+                <div className="r-rai-alert" style={{
+                  borderRadius: 14, overflow: "hidden",
+                  border: "1px solid " + C.border,
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
+                  background: `linear-gradient(95deg, ${C.dangerBg} 0%, #FDF5F3 30%, ${C.card} 100%)`,
+                  cursor: "default",
+                  transform: "rotate(0.5deg)",
+                }}>
+                  <div style={{ padding: "16px 18px" }}>
+                    <p style={{ fontSize: 15, color: C.text, fontWeight: 600, lineHeight: 1.55, margin: 0 }}>
+                      Broadleaf Media: Rachel's score dropped 13 points in two check-ins. The "No room to operate" combo just triggered. <span style={{ fontWeight: 700 }}>Call her — not email.</span>
+                    </p>
+                    <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Broadleaf Media · 2 minutes ago</p>
+                  </div>
+                  <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
+                    <div style={{ color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
+                    <div style={{ color: C.btn, borderRight: "1px solid " + C.borderLight }}>Talk to Rai</div>
+                    <div style={{ color: C.textMuted }}>Dismiss</div>
+                  </div>
+                </div>
+                </div>
+
               </div>
             </div>
           </div>
         </div>
 
         {/* ══════════════ HOW IT WORKS ══════════════ */}
-        <section style={{ padding: "0 20px 80px" }}>
+        <section style={{ padding: "48px 20px 64px" }}>
           <Reveal>
             <div style={{ textAlign: "center", marginBottom: 48 }}>
               <div style={{
@@ -631,80 +640,28 @@ function Home({ setPage }) {
           </Reveal>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20, maxWidth: 1100, margin: "0 auto" }}>
-            {howSteps.map((step, i) => (
+              { num: "01", title: "Profile your clients", desc: "Score each relationship across 12 behavioral dimensions. Retayned builds a unique communication fingerprint for every client.", icon: "⬡" },
+              { num: "02", title: "Rai monitors the signals", desc: "Health checks, engagement velocity, and sentiment patterns feed into a retention engine that scores every client daily.", icon: "◈" },
+              { num: "03", title: "Get the script, not just the alert", desc: "When something shifts, Rai tells you who needs attention, what the real problem is, and exactly what to say.", icon: "✧" },
+            ].map((step, i) => (
               <Reveal key={i} delay={i * 0.15} style={{ flex: "1 1 300px", minWidth: 280 }}>
-                <div className="r-feature-step">
+                <div className="r-rai-alert-wrap" style={{ borderRadius: 16 }}>
+                <div style={{
+                  padding: "28px 24px", borderRadius: 16, border: "1.5px solid " + C.borderLight,
+                  background: C.card, cursor: "default",
+                  position: "relative", overflow: "hidden",
+                }}>
                   <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 14 }}>
-                    <span className="step-num" style={{
-                      fontSize: 32, fontWeight: 900, color: C.borderLight,
-                      fontFamily: "inherit", lineHeight: 1,
-                      transition: "color 0.3s",
-                    }}>{step.num}</span>
+                    <span style={{ fontSize: 32, fontWeight: 900, color: C.borderLight, lineHeight: 1 }}>{step.num}</span>
                     <span style={{ fontSize: 24, marginTop: 4, opacity: 0.4 }}>{step.icon}</span>
                   </div>
                   <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8, lineHeight: 1.25 }}>{step.title}</h3>
                   <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7, margin: 0 }}>{step.desc}</p>
                 </div>
+                </div>
               </Reveal>
             ))}
           </div>
-        </section>
-
-        {/* ══════════════ RAI SURFACES — Product in action ══════════════ */}
-        <section style={{ padding: "0 20px 80px" }}>
-          <Reveal>
-            <div style={{ maxWidth: 680, margin: "0 auto" }}>
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                fontSize: 11, fontWeight: 700, color: C.primary,
-                textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14,
-              }}>
-                <svg width={14} height={14} viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primary} strokeWidth="1.8" fill="none" strokeLinejoin="round"/>
-                </svg>
-                Suggested by Rai
-              </div>
-
-              {/* Danger alert card */}
-              <div style={{
-                borderRadius: 14, marginBottom: 10, overflow: "hidden",
-                border: "1px solid " + C.border,
-                boxShadow: "0 4px 24px rgba(0,0,0,0.05)",
-                background: `linear-gradient(95deg, ${C.dangerBg} 0%, #FDF5F3 30%, ${C.card} 100%)`,
-              }}>
-                <div style={{ padding: "16px 18px" }}>
-                  <p style={{ fontSize: 15, color: C.text, fontWeight: 600, lineHeight: 1.55, margin: 0 }}>
-                    Broadleaf Media: Rachel's score dropped 13 points in two check-ins. The "No room to operate" combo just triggered. <span style={{ fontWeight: 700 }}>Call her — not email.</span>
-                  </p>
-                  <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Broadleaf Media · 2 minutes ago</p>
-                </div>
-                <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-                  <div style={{ color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
-                  <div style={{ color: C.btn, borderRight: "1px solid " + C.borderLight }}>Talk to Rai</div>
-                  <div style={{ color: C.textMuted }}>Dismiss</div>
-                </div>
-              </div>
-
-              {/* Green alert card */}
-              <div style={{
-                borderRadius: 14, overflow: "hidden",
-                border: "1px solid " + C.border,
-                boxShadow: "0 4px 24px rgba(0,0,0,0.04)",
-                background: `linear-gradient(95deg, ${C.primarySoft} 0%, #F0F5F1 30%, ${C.card} 100%)`,
-              }}>
-                <div style={{ padding: "16px 18px" }}>
-                  <p style={{ fontSize: 15, color: C.text, lineHeight: 1.55, margin: 0 }}>
-                    Northvane: <span style={{ fontWeight: 600 }}>3-year anniversary in 26 days.</span> Plan something.
-                  </p>
-                  <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Northvane Studios · Milestone</p>
-                </div>
-                <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-                  <div style={{ color: C.primary, borderRight: "1px solid " + C.borderLight }}>Add to Tasks</div>
-                  <div style={{ color: C.textMuted }}>Dismiss</div>
-                </div>
-              </div>
-            </div>
-          </Reveal>
         </section>
 
         {/* ══════════════ 5% STAT BAR ══════════════ */}
@@ -736,21 +693,18 @@ function Home({ setPage }) {
             A 5% increase in retention can boost profits by 95%.
             <sup style={{ fontSize: "0.35em", color: "rgba(255,255,255,0.3)", verticalAlign: "super" }}>¹</sup>
           </h2>
-          <p style={{
-            textAlign: "center", fontSize: 14, color: "rgba(255,255,255,0.35)",
-            marginTop: 12, position: "relative", zIndex: 2,
-          }}>
-            Harvard Business School / Bain & Company
-          </p>
+
+          {/* Fade separator */}
+          <div style={{ width: 120, height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)", margin: "24px auto 0", position: "relative", zIndex: 2 }} />
 
           {/* Stats row */}
-          <div style={{ display: "flex", gap: 16, maxWidth: 720, margin: "32px auto 0", position: "relative", zIndex: 2 }}>
+          <div style={{ display: "flex", gap: 16, maxWidth: 1400, margin: "20px auto 0", position: "relative", zIndex: 2 }}>
             {[
               { num: "90", suffix: "%", label: "Of churn is predictable" },
               { num: "25", suffix: "x", label: "Cheaper to retain than acquire" },
               { num: "1", suffix: "+", label: "Saved client pays for itself" },
             ].map((s, i) => (
-              <div key={i} style={{ flex: 1, textAlign: "center", padding: "16px 0", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+              <div key={i} style={{ flex: 1, textAlign: "center", padding: "16px 0" }}>
                 <div className="r-stats" style={{
                   fontSize: 48, fontWeight: 900, letterSpacing: "-0.04em",
                   color: "#fff", lineHeight: 1, marginBottom: 6,
@@ -764,7 +718,7 @@ function Home({ setPage }) {
         </div>
 
         {/* ══════════════ FEATURE TABS ══════════════ */}
-        <section style={{ padding: "80px 20px 80px" }}>
+        <section style={{ padding: "64px 20px 64px" }}>
           <Reveal>
             <div style={{ textAlign: "center", marginBottom: 48 }}>
               <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 8 }}>
@@ -821,7 +775,7 @@ function Home({ setPage }) {
               </div>
               <div style={{ display: "flex", gap: 12 }}>
                 <button className="r-hero-cta" onClick={() => setPage("signup")} style={{ padding: "13px 26px", fontSize: 14 }}>
-                  Try Free Now <span style={{ marginLeft: 6 }}>→</span>
+                  Try Free Now 
                 </button>
                 <button className="r-ghost-cta" onClick={() => setPage("platform")} style={{ padding: "13px 26px", fontSize: 14 }}>
                   See All Features
@@ -947,7 +901,7 @@ function Home({ setPage }) {
                         </div>
                       </div>
                     ))}
-                    <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>3 re-engagement opportunities →</div>
+                    <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>3 re-engagement opportunities</div>
                   </div>
                 )}
                 {ht.id === "referrals" && (
@@ -988,7 +942,7 @@ function Home({ setPage }) {
 
         {/* ══════════════ ENTERPRISE ══════════════ */}
         <div className="r-full-bleed" style={{
-          background: C.heroGrad, padding: "80px 20px",
+          background: C.heroGrad, padding: "64px 20px",
           position: "relative", overflow: "hidden",
         }}>
           <div className="r-grain" />
@@ -1027,12 +981,12 @@ function Home({ setPage }) {
             </div>
             <button className="r-hero-cta" onClick={() => setPage("contact")} style={{
               background: "#fff", color: C.btn,
-            }}>Let's Talk <span style={{ marginLeft: 6 }}>→</span></button>
+            }}>Let's Talk </button>
           </div></Reveal>
         </div>
 
         {/* ══════════════ TESTIMONIALS ══════════════ */}
-        <section style={{ padding: "80px 20px 80px" }}>
+        <section style={{ padding: "64px 20px 64px" }}>
           <div style={{ textAlign: "center", marginBottom: 40 }}>
             <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 8 }}>What Folks Are Saying</h2>
             <p style={{ fontSize: 16, color: C.textSec }}>From our own Retayned business.</p>
@@ -1064,7 +1018,7 @@ function Home({ setPage }) {
 
         {/* ══════════════ FAQ ══════════════ */}
         <div className="r-full-bleed" style={{
-          background: C.primarySoft, padding: "64px 20px 72px",
+          background: C.primarySoft, padding: "48px 20px 56px",
         }}>
           <div style={{ maxWidth: 1400, margin: "0 auto" }}>
             <h2 style={{ fontSize: 30, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>FAQs</h2>
@@ -1075,7 +1029,7 @@ function Home({ setPage }) {
         {/* ══════════════ FINAL CTA ══════════════ */}
         <div className="r-full-bleed" style={{
           background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 40%, #1E261F 100%)",
-          padding: "88px 20px", textAlign: "center",
+          padding: "64px 20px", textAlign: "center",
           position: "relative", overflow: "hidden",
         }}>
           <div className="r-grain" style={{ opacity: 0.04 }} />
@@ -1093,10 +1047,10 @@ function Home({ setPage }) {
               background: "#fff", color: C.btn, padding: "16px 40px", fontSize: 16,
               animation: "pulseGlow 3s ease-in-out infinite",
             }}>
-              Start Free Trial <span style={{ marginLeft: 8 }}>→</span>
+              Start Free Trial
             </button>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 14 }}>
-              No credit card · Cancel anytime
+              14-day free trial. Cancel anytime.
             </p>
           </div>
         </div>
@@ -1108,29 +1062,22 @@ function Home({ setPage }) {
 
 // ═══ PRICING ═══
 function Pricing({ setPage }) {
-  const [annual, setAnnual] = useState(true);
-  const [clientCount, setClientCount] = useState(5);
-  const calcClientCost = (n) => n * 1;
-  const tiers = [
-    { name: "Starter", desc: "Freelancers and solos", monthly: 29, annual: 19, clients: "Up to 10 clients", hl: false, features: ["Client registry + profiles", "Retention scoring engine", "Monthly health checks", "Suggested tasks daily", "Unlimited Rai client chats", "20 Rolodex slots", "Email support"] },
-    { name: "Growth", desc: "Small, agile teams", monthly: 49, annual: 39, clients: "Up to 50 clients", hl: true, features: ["Everything in Starter, plus:", "Up to 2 team members", "2 channel integrations", "Additional velocity detection", "Additional task suggestions", "100 Rolodex slots", "Priority support"] },
-    { name: "Scale", desc: "Large, complex teams", monthly: 249, annual: 199, clients: "Up to 500 clients", hl: false, features: ["Everything in Starter, plus:", "Manager dashboard", "Up to 20 team members", "Unlimited channel integrations", "Unlimited Rolodex slots", "Additional velocity detection", "Custom setup and support"] },
-  ];
+
   return (
     <>
-      <section style={{ padding: "48px 20px 24px", textAlign: "center" }}>
-        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 12 }}>One client saved pays for{" "}
+      <section style={{ padding: "56px 20px 28px", textAlign: "center" }}>
+        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 14 }}>One client saved pays for{" "}
           <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
             <span style={{ color: C.textMuted }}>a year<span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} /></span>
             <span style={{ position: "absolute", top: "-0.55em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>years</span>
           </span>{" "}of Retayned.
         </h1>
-        <p style={{ fontSize: 16, color: C.textSec, marginBottom: 24 }}>The math works. Still not convinced? Try it free for 14 days. 🤝</p>
+        <p style={{ fontSize: 16, color: C.textSec, marginBottom: 24 }}>The math works. Still not convinced? 14-day free trial. Cancel anytime.</p>
       </section>
       <section style={{ padding: "0 20px 48px" }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
           {/* Main pricing card — full width */}
-          <div style={{ background: `linear-gradient(to bottom, ${C.card} 55%, ${C.primarySoft} 100%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "36px 32px", marginBottom: 24, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+          <div style={{ background: `linear-gradient(to bottom, ${C.card} 55%, ${C.primarySoft} 100%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", marginBottom: 28, boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
             <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: C.textMuted, marginBottom: 20, textAlign: "center" }}>One plan. Every feature. Impossibly easy.</div>
             <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4, marginBottom: 4 }}>
               <span style={{ fontSize: 52, fontWeight: 900, letterSpacing: "-0.03em" }}>$19.99</span>
@@ -1139,7 +1086,7 @@ function Pricing({ setPage }) {
             <div style={{ fontSize: 16, color: C.textSec, marginBottom: 28, lineHeight: 1.5, textAlign: "center" }}>+ <span style={{ fontWeight: 700 }}>$1 per Client</span></div>
             <p style={{ fontSize: 14, color: C.textSec, textAlign: "center", marginBottom: 28 }}>Solve your business's most consequential problem for less than a Netflix subscription.</p>
 
-            <button className="cta-btn" onClick={() => setPage("signup")} style={{ width: "100%", padding: "14px 20px", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: C.btn, color: "#fff", border: "none", marginBottom: 28 }}>Start Free Trial</button>
+            <button className="cta-btn" onClick={() => setPage("signup")} style={{ width: "100%", padding: "15px 20px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: C.btn, color: "#fff", border: "none", marginBottom: 28 }}>Start Free Trial</button>
 
             {/* Features */}
             <div>
@@ -1159,12 +1106,12 @@ function Pricing({ setPage }) {
           </div>
 
           {/* Enterprise */}
-          <div style={{ background: `linear-gradient(to bottom, ${C.card} 70%, ${C.primarySoft} 100%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "36px 32px", position: "relative", overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+          <div style={{ background: `linear-gradient(to bottom, ${C.card} 70%, ${C.primarySoft} 100%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}>
             <div style={{ position: "absolute", top: 28, right: -32, background: C.danger, color: "#fff", fontSize: 9, fontWeight: 700, padding: "5px 40px", transform: "rotate(45deg)", letterSpacing: ".06em", textAlign: "center" }}>EARLY ACCESS</div>
             <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.textMuted, marginBottom: 4 }}>Enterprise</div>
             <div style={{ fontSize: 14, color: C.textSec, marginBottom: 16 }}>Autonomous relationship intelligence.</div>
             <div style={{ fontSize: 40, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 20 }}>Let's Talk</div>
-            <button onClick={() => setPage("contact")} className="cta-btn" style={{ width: "100%", padding: "13px 20px", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginBottom: 24, background: C.btn, color: "#fff", border: "none" }}>Contact Us</button>
+            <button onClick={() => setPage("contact")} className="cta-btn" style={{ width: "100%", padding: "15px 20px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginBottom: 24, background: C.btn, color: "#fff", border: "none" }}>Contact Us</button>
             <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.primary, marginBottom: 16, textAlign: "center" }}>Built for large orgs and AI agents</div>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
               {["Slack, email, Zoom, CRM integrations", "Automated daily portfolio sweeps", "Churn archetype detection", "Prioritized client rankings", "Multi-signal alerts", "Score history and drift tracking", "API + webhook delivery", "Dedicated onboarding"].map((f, j) => (
@@ -1174,10 +1121,14 @@ function Pricing({ setPage }) {
           </div>
         </div>
       </section>
-      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 50%, #1E261F 100%)", padding: "72px 20px", textAlign: "center" }}>
-        <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 12, color: "#fff" }}>You work too hard to get new clients. Keep them Retayned.</h2>
-        <p style={{ fontSize: 17, color: "rgba(255,255,255,.6)", marginBottom: 24, lineHeight: 1.5 }}>See the signal. Get the script. Keep the client.</p>
-        <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "14px 32px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Try Free Now</button>
+      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 40%, #1E261F 100%)", padding: "64px 20px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div className="r-grain" />
+        <div style={{ position: "relative", zIndex: 2 }}>
+          <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 14, color: "#fff" }}>You work too hard to get new clients.<br />Keep them Retayned.</h2>
+          <p style={{ fontSize: 17, color: "rgba(255,255,255,.5)", marginBottom: 28, lineHeight: 1.6 }}>See the signal. Get the script. Keep the client.</p>
+          <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "16px 40px", background: "#fff", color: C.btn, border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Start Free Trial</button>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 14 }}>14-day free trial. Cancel anytime.</p>
+        </div>
       </div>
     </>
   );
@@ -1187,7 +1138,7 @@ function Pricing({ setPage }) {
 function About({ setPage }) {
   return (
     <>
-      <section style={{ padding: "48px 20px 40px" }}>
+      <section style={{ padding: "56px 20px 40px" }}>
         <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 16 }}>
           Built by a team that's kept clients for{" "}
           <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
@@ -1210,8 +1161,8 @@ function About({ setPage }) {
       </section>
 
       <section style={{ padding: "0 20px 40px" }}>
-        <div style={{ background: C.card, borderRadius: 14, padding: "28px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
-          <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.textMuted, marginBottom: 16 }}>The backstory</div>
+        <div style={{ background: C.card, borderRadius: 16, padding: "32px 28px", border: "1px solid " + C.border, boxShadow: "0 8px 32px rgba(0,0,0,0.05)" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: C.textMuted, marginBottom: 18 }}>The backstory</div>
           <div style={{ fontSize: 15, color: C.text, lineHeight: 1.7 }}>
             <p style={{ marginBottom: 14 }}>Adam Lawrence spent most of his career running a paid social agency, managing campaigns and client relationships for agencies, DTC brands, and enterprise clients.</p>
             <p style={{ marginBottom: 14 }}>Over that time, one pattern became impossible to ignore: he rarely lost accounts. And even when he did, the client would often come back later or refer business.</p>
@@ -1227,7 +1178,8 @@ function About({ setPage }) {
         </div>
       </section>
       <section style={{ padding: "0 20px 40px" }}>
-        <div style={{ background: C.heroGrad, borderRadius: 14, padding: "32px 24px", color: "#fff" }}>
+        <div style={{ background: C.heroGrad, borderRadius: 16, padding: "36px 28px", color: "#fff", position: "relative", overflow: "hidden" }}>
+          <div className="r-grain" />
           <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: "rgba(255,255,255,.35)", marginBottom: 12 }}>Washington, DC</div>
           <p style={{ fontSize: 16, lineHeight: 1.6, color: "rgba(255,255,255,.8)" }}>Based in the District, we're a small, focused team building a tool we want you to LOVE using. We want to help you turn client relationships into lifelong partnerships that matter and have real weight.</p>
         </div>
@@ -1372,7 +1324,7 @@ function Blog() {
   );
 
   const BackBtn = ({ onClick }) => <button onClick={onClick} style={{ padding: "8px 16px", background: C.surface, color: C.textSec, border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>← Back</button>;
-  const NextBtn = ({ onClick, disabled, label }) => <button onClick={onClick} style={{ padding: "8px 20px", background: disabled ? C.surface : C.btn, color: disabled ? C.textMuted : "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: disabled ? "default" : "pointer", fontFamily: "inherit" }}>{label || "Next →"}</button>;
+  const NextBtn = ({ onClick, disabled, label }) => <button onClick={onClick} style={{ padding: "8px 20px", background: disabled ? C.surface : C.btn, color: disabled ? C.textMuted : "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: disabled ? "default" : "pointer", fontFamily: "inherit" }}>{label || "Next"}</button>;
 
   // ── MODULE RENDERERS ──
 
@@ -1444,7 +1396,7 @@ function Blog() {
           )}
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: 14 }}>
             {step > 0 ? <BackBtn onClick={() => setStep(step - 1)} /> : <div />}
-            {revealed && <NextBtn onClick={() => setStep(step + 1)} label={step < total - 1 ? "Next →" : "See Results →"} />}
+            {revealed && <NextBtn onClick={() => setStep(step + 1)} label={step < total - 1 ? "Next" : "See Results"} />}
           </div>
         </div>
       );
@@ -1526,7 +1478,7 @@ function Blog() {
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             {step > 0 ? <BackBtn onClick={() => setStep(step - 1)} /> : <div />}
-            <NextBtn onClick={() => hasVal && setStep(step + 1)} disabled={!hasVal} label={step < total - 1 ? "Next →" : "See Profile →"} />
+            <NextBtn onClick={() => hasVal && setStep(step + 1)} disabled={!hasVal} label={step < total - 1 ? "Next" : "See Profile"} />
           </div>
         </div>
       );
@@ -1583,7 +1535,7 @@ function Blog() {
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: 14 }}>
             {step > 0 ? <BackBtn onClick={() => setStep(step - 1)} /> : <div />}
-            {revealed && <NextBtn onClick={() => setStep(step + 1)} label={step < total - 1 ? "Next →" : "See Results →"} />}
+            {revealed && <NextBtn onClick={() => setStep(step + 1)} label={step < total - 1 ? "Next" : "See Results"} />}
           </div>
         </div>
       );
@@ -1643,13 +1595,13 @@ function Blog() {
   return (
     <>
       <section style={{ padding: "48px 20px 40px" }}>
-        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Resources</h1>
+        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 10 }}>Resources</h1>
         <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32 }}>Interactive tools to sharpen your retention instincts. Free. No sign-up required.</p>
 
         {!activeModule ? (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
             {modules.map((m, i) => (
-              <div key={i} onClick={() => { reset(); setActiveModule(m.id); window.scrollTo(0, 0); }} style={{ background: C.card, borderRadius: 14, padding: "24px 22px", border: "1.5px solid " + C.border, cursor: "pointer", flex: "1 1 280px", minWidth: 280, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+              <div key={i} onClick={() => { reset(); setActiveModule(m.id); window.scrollTo(0, 0); }} style={{ background: C.card, borderRadius: 16, padding: "26px 24px", border: "1.5px solid " + C.border, cursor: "pointer", flex: "1 1 280px", minWidth: 280, boxShadow: "0 4px 20px rgba(0,0,0,0.04)", transition: "all 0.25s ease" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
                   <span style={{ fontSize: 32 }}>{m.emoji}</span>
                   <div style={{ display: "flex", gap: 6 }}>
@@ -1659,7 +1611,7 @@ function Blog() {
                 </div>
                 <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{m.title}</h2>
                 <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.55 }}>{m.desc}</p>
-                <div style={{ marginTop: 14, fontSize: 13, fontWeight: 600, color: C.btn }}>Start →</div>
+                <div style={{ marginTop: 14, fontSize: 13, fontWeight: 600, color: C.btn }}>Start</div>
               </div>
             ))}
           </div>
@@ -1687,7 +1639,7 @@ function Blog() {
             { title: "What 50 lost clients taught us about communication velocity", desc: "When response times double, cancellation follows within 8 weeks.", tag: "Signals" },
             { title: "How to have the conversation you're avoiding", desc: "The opening line matters more than you think. We break down the script.", tag: "AI Coach" },
           ].map((p, i) => (
-            <div key={i} style={{ background: C.card, borderRadius: 14, padding: "24px 22px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+            <div key={i} style={{ background: C.card, borderRadius: 16, padding: "26px 24px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280, boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
               <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
                 <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", background: C.primarySoft, color: C.primary, borderRadius: 4 }}>{p.tag}</span>
                 <span style={{ fontSize: 11, color: C.textMuted, padding: "3px 0" }}>Coming soon</span>
@@ -1700,8 +1652,9 @@ function Blog() {
       </section>
 
       {/* Subscribe */}
-      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 50%, #1E261F 100%)", padding: "48px 20px", textAlign: "center" }}>
-        <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 12, color: "#fff" }}>Get notified when we publish!</h2>
+      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 40%, #1E261F 100%)", padding: "64px 20px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div className="r-grain" />
+        <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 12, color: "#fff", position: "relative", zIndex: 2 }}>Get notified when we publish!</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 320, margin: "0 auto" }}>
           <input style={{ width: "100%", padding: "12px 14px", border: "2px solid rgba(255,255,255,0.2)", borderRadius: 10, fontSize: 14, fontFamily: "inherit", background: "rgba(255,255,255,0.08)", color: "#fff", outline: "none", boxSizing: "border-box" }} placeholder="you@agency.com" />
           <button className="cta-btn" style={{ width: "100%", padding: "12px 20px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Subscribe</button>
@@ -1713,20 +1666,20 @@ function Blog() {
 // ═══ DEMO ═══
 function Demo() {
   return (
-    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
-      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get a Demo</h1>
-      <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Get a prerecorded demo of the Retayned platform!</p>
-      <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+    <section style={{ padding: "56px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
+      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 10 }}>Get a Demo</h1>
+      <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.6 }}>Get a prerecorded demo of the Retayned platform.</p>
+      <div style={{ background: C.card, borderRadius: 18, padding: "32px 28px", border: "1px solid " + C.border, boxShadow: "0 8px 32px rgba(0,0,0,0.05)" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Name</label><input style={inputStyle} placeholder="Your name" /></div>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Email</label><input style={inputStyle} placeholder="you@agency.com" type="email" /></div>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Message</label><textarea style={{ ...inputStyle, minHeight: 120, resize: "vertical" }} placeholder="What parts of the platform do you want to see? What features are you most interested in?" /></div>
-          <button className="cta-btn" style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Send Me the Demo</button>
+          <button className="cta-btn" style={{ width: "100%", padding: "15px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Send Me the Demo</button>
         </div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 24 }}>
         {[["Email", "hello@retayned.com"], ["Based in", "Washington, DC"], ["Response time", "Usually within a few hours"]].map(([l, v], i) => (
-          <div key={i} style={{ background: C.card, borderRadius: 12, padding: "16px 20px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}><div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{l}</div><div style={{ fontSize: 14, color: C.textSec }}>{v}</div></div>
+          <div key={i} style={{ background: C.card, borderRadius: 14, padding: "18px 22px", border: "1px solid " + C.border, boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}><div style={{ fontSize: 12, fontWeight: 700, marginBottom: 3, textTransform: "uppercase", letterSpacing: ".04em", color: C.textMuted }}>{l}</div><div style={{ fontSize: 15, color: C.text, fontWeight: 500 }}>{v}</div></div>
         ))}
       </div>
     </section>
@@ -1735,20 +1688,20 @@ function Demo() {
 // ═══ CONTACT ═══
 function Contact() {
   return (
-    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
-      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get in Touch</h1>
-      <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Questions, feedback, partnerships, or just want to talk retention.</p>
-      <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+    <section style={{ padding: "56px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
+      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 10 }}>Get in Touch</h1>
+      <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.6 }}>Questions, feedback, partnerships, or just want to talk retention.</p>
+      <div style={{ background: C.card, borderRadius: 18, padding: "32px 28px", border: "1px solid " + C.border, boxShadow: "0 8px 32px rgba(0,0,0,0.05)" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Name</label><input style={inputStyle} placeholder="Your name" /></div>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Email</label><input style={inputStyle} placeholder="you@agency.com" type="email" /></div>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Message</label><textarea style={{ ...inputStyle, minHeight: 120, resize: "vertical" }} placeholder="What's on your mind?" /></div>
-          <button className="cta-btn" style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Send Message</button>
+          <button className="cta-btn" style={{ width: "100%", padding: "15px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Send Message</button>
         </div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 24 }}>
         {[["Email", "hello@retayned.com"], ["Based in", "Washington, DC"], ["Response time", "Usually within a few hours"]].map(([l, v], i) => (
-          <div key={i} style={{ background: C.card, borderRadius: 12, padding: "16px 20px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}><div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{l}</div><div style={{ fontSize: 14, color: C.textSec }}>{v}</div></div>
+          <div key={i} style={{ background: C.card, borderRadius: 14, padding: "18px 22px", border: "1px solid " + C.border, boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}><div style={{ fontSize: 12, fontWeight: 700, marginBottom: 3, textTransform: "uppercase", letterSpacing: ".04em", color: C.textMuted }}>{l}</div><div style={{ fontSize: 15, color: C.text, fontWeight: 500 }}>{v}</div></div>
         ))}
       </div>
     </section>
@@ -1758,15 +1711,15 @@ function Contact() {
 // ═══ LOGIN ═══
 function Login({ setPage }) {
   return (
-    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
+    <section style={{ padding: "56px 20px 48px", maxWidth: 480, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", marginBottom: 32 }}>
         <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
         <span style={{ fontSize: 32, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
       </div>
-      <div style={{ background: C.card, borderRadius: 16, padding: "32px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
-        <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>Welcome back.</h1>
+      <div style={{ background: C.card, borderRadius: 18, padding: "36px 28px", border: "1px solid " + C.border, boxShadow: "0 8px 32px rgba(0,0,0,0.05)" }}>
+        <h1 style={{ fontSize: 24, fontWeight: 900, marginBottom: 6, letterSpacing: "-0.03em" }}>Welcome back.</h1>
         <p style={{ fontSize: 14, color: C.textMuted, marginBottom: 24 }}>Sign in to your account.</p>
-        <button style={{ width: "100%", padding: "13px 16px", borderRadius: 10, border: "1.5px solid " + C.border, background: C.card, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: C.text, marginBottom: 20 }}>
+        <button style={{ width: "100%", padding: "14px 16px", borderRadius: 12, border: "1.5px solid " + C.border, background: C.card, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: C.text, marginBottom: 20, transition: "all 0.2s" }}>
           <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
           Continue with Google
         </button>
@@ -1774,7 +1727,7 @@ function Login({ setPage }) {
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <input style={inputStyle} placeholder="Email" type="email" />
           <input style={inputStyle} placeholder="Password" type="password" />
-          <button className="cta-btn" style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Sign In</button>
+          <button className="cta-btn" style={{ width: "100%", padding: "15px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Sign In</button>
         </div>
         <p style={{ fontSize: 13, color: C.textMuted, marginTop: 16 }}>Don't have an account? <span onClick={() => setPage("signup")} style={{ color: C.primary, fontWeight: 600, cursor: "pointer" }}>Start free trial</span></p>
       </div>
@@ -1785,15 +1738,15 @@ function Login({ setPage }) {
 // ═══ SIGNUP ═══
 function Signup({ setPage }) {
   return (
-    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
+    <section style={{ padding: "56px 20px 48px", maxWidth: 480, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", marginBottom: 32 }}>
         <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
         <span style={{ fontSize: 32, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
       </div>
-      <div style={{ background: C.card, borderRadius: 16, padding: "32px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
-        <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>Start your free trial.</h1>
-        <p style={{ fontSize: 14, color: C.textMuted, marginBottom: 24 }}>14 days free. No credit card required.</p>
-        <button style={{ width: "100%", padding: "13px 16px", borderRadius: 10, border: "1.5px solid " + C.border, background: C.card, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: C.text, marginBottom: 20 }}>
+      <div style={{ background: C.card, borderRadius: 18, padding: "36px 28px", border: "1px solid " + C.border, boxShadow: "0 8px 32px rgba(0,0,0,0.05)" }}>
+        <h1 style={{ fontSize: 24, fontWeight: 900, marginBottom: 6, letterSpacing: "-0.03em" }}>Start your free trial.</h1>
+        <p style={{ fontSize: 14, color: C.textMuted, marginBottom: 24 }}>14-day free trial. Cancel anytime.</p>
+        <button style={{ width: "100%", padding: "14px 16px", borderRadius: 12, border: "1.5px solid " + C.border, background: C.card, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: C.text, marginBottom: 20, transition: "all 0.2s" }}>
           <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
           Sign up with Google
         </button>
@@ -1802,7 +1755,7 @@ function Signup({ setPage }) {
           <input style={inputStyle} placeholder="Full name" />
           <input style={inputStyle} placeholder="Email" type="email" />
           <input style={inputStyle} placeholder="Password" type="password" />
-          <button className="cta-btn" style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Start Free Trial</button>
+          <button className="cta-btn" style={{ width: "100%", padding: "15px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Start Free Trial</button>
         </div>
         <p style={{ fontSize: 13, color: C.textMuted, marginTop: 16 }}>Already have an account? <span onClick={() => setPage("login")} style={{ color: C.primary, fontWeight: 600, cursor: "pointer" }}>Sign in</span></p>
       </div>
@@ -1880,15 +1833,18 @@ function FAQ({ fullBleed }) {
 function FAQPage({ setPage }) {
   return (
     <>
-      <section style={{ padding: "48px 20px 48px" }}>
-        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 8 }}>Frequently Asked Questions</h1>
+      <section style={{ padding: "56px 20px 48px" }}>
+        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 10 }}>Frequently Asked Questions</h1>
         <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32 }}>Everything you need to know about Retayned.</p>
         <FAQ />
       </section>
-      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 50%, #1E261F 100%)", padding: "48px 20px", textAlign: "center" }}>
-        <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 12, color: "#fff" }}>Still have questions?</h2>
-        <p style={{ fontSize: 16, color: "rgba(255,255,255,.6)", marginBottom: 20 }}>We'd love to hear from you.</p>
-        <button onClick={() => setPage("contact")} className="cta-btn" style={{ padding: "12px 28px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Contact Us</button>
+      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 40%, #1E261F 100%)", padding: "56px 20px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div className="r-grain" />
+        <div style={{ position: "relative", zIndex: 2 }}>
+          <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 14, color: "#fff" }}>Still have questions?</h2>
+          <p style={{ fontSize: 16, color: "rgba(255,255,255,.5)", marginBottom: 24 }}>We'd love to hear from you.</p>
+          <button onClick={() => setPage("contact")} className="cta-btn" style={{ padding: "14px 32px", background: "#fff", color: C.btn, border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Contact Us</button>
+        </div>
       </div>
     </>
   );
@@ -1897,7 +1853,7 @@ function FAQPage({ setPage }) {
 // ═══ PRIVACY ═══
 function Privacy() {
   return (
-    <section style={{ padding: "48px 20px 48px", margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
+    <section style={{ padding: "56px 20px 48px", margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 32 }}>Privacy Policy</h1>
       <div style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7 }}>
         <p style={{ marginBottom: 12 }}><strong style={{ color: C.text }}>Last updated:</strong> April 2026</p>
@@ -2083,16 +2039,9 @@ function Platform({ setPage }) {
         {/* ══════ Hero ══════ */}
         <div className="r-full-bleed" style={{
           background: "radial-gradient(ellipse 70% 50% at 50% 60%, " + C.primarySoft + " 0%, " + C.bg + " 80%)",
-          padding: "56px 20px 24px",
+          padding: "48px 20px 24px",
         }}>
           <div style={{ textAlign: "center", maxWidth: 680, margin: "0 auto" }}>
-            <div style={{
-              display: "inline-block", fontSize: 10, fontWeight: 700,
-              textTransform: "uppercase", letterSpacing: ".14em",
-              color: C.btn, marginBottom: 16,
-              padding: "5px 14px", borderRadius: 6,
-              background: "rgba(91,33,182,0.06)",
-            }}>Platform</div>
             <h1 style={{
               fontSize: 36, fontWeight: 900, lineHeight: 1.1, marginBottom: 12,
               letterSpacing: "-0.04em",
@@ -2135,7 +2084,7 @@ function Platform({ setPage }) {
                   <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 24, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
                 </div>
                 <button className="r-hero-cta cta-btn" onClick={() => setPage("signup")} style={{ padding: "13px 26px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-                  Try Free Now <span style={{ marginLeft: 6 }}>→</span>
+                  Try Free Now 
                 </button>
               </div>
 
@@ -2250,7 +2199,7 @@ function Platform({ setPage }) {
                           </div>
                         </div>
                       ))}
-                      <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>3 re-engagement opportunities →</div>
+                      <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>3 re-engagement opportunities</div>
                     </div>
                   )}
                   {pf.id === "referrals" && (
@@ -2294,7 +2243,7 @@ function Platform({ setPage }) {
         <div className="r-full-bleed" style={{ background: "linear-gradient(to bottom, " + C.primarySoft + " 0%, " + C.bg + " 100%)", height: 80 }} />
 
         {/* ══════ Meet the Brains ══════ */}
-        <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "80px 20px 88px", position: "relative", overflow: "hidden" }}>
+        <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "64px 20px 64px", position: "relative", overflow: "hidden" }}>
           <div className="r-grain" style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.03, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
           {/* Decorative circles */}
           <div style={{ position: "absolute", top: "5%", right: "8%", width: 250, height: 250, border: "1px solid rgba(255,255,255,0.03)", borderRadius: "50%", pointerEvents: "none" }} />
@@ -2420,7 +2369,7 @@ function Platform({ setPage }) {
         </div>
 
         {/* ══════ Scoring Model ══════ */}
-        <section style={{ padding: "80px 20px" }}>
+        <section style={{ padding: "64px 20px" }}>
           <div style={{ maxWidth: 1200, margin: "0 auto" }}>
             <Reveal><div style={{ textAlign: "center", marginBottom: 48 }}>
               <div style={{
@@ -2498,7 +2447,7 @@ function Platform({ setPage }) {
             </div>
             <div style={{ textAlign: "center", marginTop: 28 }}>
               <button className="r-hero-cta cta-btn" onClick={() => setPage("signup")} style={{ padding: "13px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-                Try Free Now <span style={{ marginLeft: 6 }}>→</span>
+                Try Free Now 
               </button>
             </div>
           </div>
@@ -2515,7 +2464,7 @@ function Platform({ setPage }) {
         </div>
 
         {/* ══════ Enterprise ══════ */}
-        <section style={{ padding: "80px 20px" }}>
+        <section style={{ padding: "64px 20px" }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 48, alignItems: "center", maxWidth: 1000, margin: "0 auto" }}>
             <Reveal direction="left"><div style={{ flex: "1 1 340px" }}>
               <div style={{
@@ -2530,7 +2479,7 @@ function Platform({ setPage }) {
                 Connects to your communication and billing platforms, monitors every client relationship automatically, and delivers prioritized actions to your team or your AI agents every morning.
               </p>
               <button className="r-hero-cta cta-btn" onClick={() => setPage("contact")} style={{ padding: "13px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-                Let's Talk <span style={{ marginLeft: 6 }}>→</span>
+                Let's Talk 
               </button>
             </div></Reveal>
             <Reveal direction="right" delay={0.2}><div style={{ flex: "1 1 360px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
@@ -2550,7 +2499,7 @@ function Platform({ setPage }) {
         </section>
 
         {/* ══════ FAQs ══════ */}
-        <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "64px 20px 72px" }}>
+        <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px 56px" }}>
           <div style={{ maxWidth: 1400, margin: "0 auto" }}>
             <h2 style={{ fontSize: 30, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>FAQs</h2>
             <FAQ fullBleed />
@@ -2560,7 +2509,7 @@ function Platform({ setPage }) {
         {/* ══════ Final CTA ══════ */}
         <div className="r-full-bleed" style={{
           background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 40%, #1E261F 100%)",
-          padding: "88px 20px", textAlign: "center",
+          padding: "64px 20px", textAlign: "center",
           position: "relative", overflow: "hidden",
         }}>
           <div className="r-grain" style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.04, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
@@ -2574,9 +2523,9 @@ function Platform({ setPage }) {
               borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: "pointer",
               fontFamily: "inherit",
             }}>
-              Start Free Trial <span style={{ marginLeft: 8 }}>→</span>
+              Start Free Trial
             </button>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 14 }}>No credit card · Cancel anytime</p>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 14 }}>14-day free trial. Cancel anytime.</p>
           </div>
         </div>
       </div>
