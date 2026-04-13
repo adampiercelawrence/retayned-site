@@ -341,12 +341,9 @@ function Home({ setPage }) {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
 
-        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
         @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(91,33,182,0.15); } 50% { box-shadow: 0 0 0 12px rgba(91,33,182,0); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes drawLine { from { width: 0; } to { width: 108%; } }
+        @keyframes fadeInPlace { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
         @keyframes fadeInScale { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
-        @keyframes grain { 0%, 100% { transform: translate(0, 0); } 10% { transform: translate(-2%, -2%); } 20% { transform: translate(1%, 3%); } 30% { transform: translate(-3%, 1%); } 40% { transform: translate(3%, -1%); } 50% { transform: translate(-1%, 2%); } 60% { transform: translate(2%, -3%); } 70% { transform: translate(-2%, 1%); } 80% { transform: translate(1%, -2%); } 90% { transform: translate(-1%, 3%); } }
 
         .r-serif { font-family: 'DM Serif Display', Georgia, serif; }
 
@@ -364,9 +361,10 @@ function Home({ setPage }) {
           padding: 15px 32px; background: transparent; color: ${C.text};
           border: 1.5px solid ${C.border}; border-radius: 12px; font-size: 15px;
           font-weight: 600; cursor: pointer; font-family: inherit;
-          transition: border-color 0.2s, background 0.2s;
+          transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
         }
-        .r-ghost-cta:hover { border-color: ${C.primary}; background: ${C.primaryGhost}; }
+        .r-ghost-cta:hover { transform: translateY(-2px); border-color: ${C.btn}; background: rgba(91,33,182,0.04); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .r-ghost-cta:active { transform: translateY(0); }
 
         .r-tab-pill {
           padding: 10px 18px; border-radius: 10px; border: none; cursor: pointer;
@@ -475,7 +473,7 @@ function Home({ setPage }) {
                 <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
                   <span style={{ color: C.text }}>predicts</span>
                   <span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} />
-                  <span style={{ position: "absolute", top: "-0.7em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.6em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap", opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 1.2s" }}>prevents</span>
+                  <span style={{ position: "absolute", top: "-0.7em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.75em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap", opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 1.2s" }}>prevents</span>
                 </span>{" "}
                 churn.
               </h1>
@@ -498,8 +496,8 @@ function Home({ setPage }) {
                   Start Free Trial
                   
                 </button>
-                <button className="r-ghost-cta" onClick={() => setPage("contact")}>
-                  Contact Sales
+                <button className="r-ghost-cta" onClick={() => setPage("pricing")}>
+                  See Pricing
                 </button>
               </div>
 
@@ -544,14 +542,13 @@ function Home({ setPage }) {
                 </div>
 
                 {/* Back card — Yellow (warning) */}
-                <div className="r-rai-alert-wrap" style={{ position: "absolute", top: 0, left: 8, right: -4, zIndex: 1, animation: "slideUp 0.4s ease 0.7s both" }}>
+                <div className="r-rai-alert-wrap" style={{ position: "absolute", top: 0, left: 8, right: -4, zIndex: 1, animation: "fadeInPlace 0.4s ease 0.5s both" }}>
                 <div className="r-rai-alert" style={{
                   borderRadius: 14, overflow: "hidden",
                   border: "1px solid " + C.border,
                   boxShadow: "0 2px 16px rgba(0,0,0,0.04)",
                   background: `linear-gradient(95deg, ${C.warningBg} 0%, #FDF8EC 30%, ${C.card} 100%)`,
-                  cursor: "default",
-                  transform: "rotate(2.5deg)",
+                  cursor: "default", transform: "rotate(2.5deg)",
                 }}>
                   <div style={{ padding: "16px 18px" }}>
                     <p style={{ fontSize: 15, color: C.text, fontWeight: 600, lineHeight: 1.55, margin: 0 }}>
@@ -568,14 +565,13 @@ function Home({ setPage }) {
                 </div>
 
                 {/* Middle card — Green */}
-                <div className="r-rai-alert-wrap" style={{ position: "absolute", top: 55, left: -6, right: 10, zIndex: 2, animation: "slideUp 0.4s ease 0.85s both" }}>
+                <div className="r-rai-alert-wrap" style={{ position: "absolute", top: 55, left: -6, right: 10, zIndex: 2, animation: "fadeInPlace 0.4s ease 0.7s both" }}>
                 <div className="r-rai-alert" style={{
                   borderRadius: 14, overflow: "hidden",
                   border: "1px solid " + C.border,
                   boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
                   background: `linear-gradient(95deg, ${C.primarySoft} 0%, #F0F5F1 30%, ${C.card} 100%)`,
-                  cursor: "default",
-                  transform: "rotate(-1.5deg)",
+                  cursor: "default", transform: "rotate(-1.5deg)",
                 }}>
                   <div style={{ padding: "16px 18px" }}>
                     <p style={{ fontSize: 15, color: C.text, lineHeight: 1.55, margin: 0 }}>
@@ -591,14 +587,13 @@ function Home({ setPage }) {
                 </div>
 
                 {/* Front card — Red (danger) */}
-                <div className="r-rai-alert-wrap" style={{ position: "absolute", top: 115, left: 2, right: 2, zIndex: 3, animation: "slideUp 0.4s ease 1s both" }}>
+                <div className="r-rai-alert-wrap" style={{ position: "absolute", top: 115, left: 2, right: 2, zIndex: 3, animation: "fadeInPlace 0.4s ease 0.9s both" }}>
                 <div className="r-rai-alert" style={{
                   borderRadius: 14, overflow: "hidden",
                   border: "1px solid " + C.border,
                   boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
                   background: `linear-gradient(95deg, ${C.dangerBg} 0%, #FDF5F3 30%, ${C.card} 100%)`,
-                  cursor: "default",
-                  transform: "rotate(0.5deg)",
+                  cursor: "default", transform: "rotate(0.5deg)",
                 }}>
                   <div style={{ padding: "16px 18px" }}>
                     <p style={{ fontSize: 15, color: C.text, fontWeight: 600, lineHeight: 1.55, margin: 0 }}>
@@ -640,6 +635,7 @@ function Home({ setPage }) {
           </Reveal>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20, maxWidth: 1100, margin: "0 auto" }}>
+            {[
               { num: "01", title: "Profile your clients", desc: "Score each relationship across 12 behavioral dimensions. Retayned builds a unique communication fingerprint for every client.", icon: "⬡" },
               { num: "02", title: "Rai monitors the signals", desc: "Health checks, engagement velocity, and sentiment patterns feed into a retention engine that scores every client daily.", icon: "◈" },
               { num: "03", title: "Get the script, not just the alert", desc: "When something shifts, Rai tells you who needs attention, what the real problem is, and exactly what to say.", icon: "✧" },
@@ -979,9 +975,14 @@ function Home({ setPage }) {
                 </div>
               ))}
             </div>
-            <button className="r-hero-cta" onClick={() => setPage("contact")} style={{
-              background: "#fff", color: C.btn,
-            }}>Let's Talk </button>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+              <button className="r-hero-cta" onClick={() => setPage("contact")} style={{
+                background: "#fff", color: C.btn,
+              }}>Let's Talk</button>
+              <button className="r-ghost-cta" onClick={() => setPage("pricing")} style={{
+                borderColor: "rgba(255,255,255,0.2)", color: "#fff",
+              }}>See Pricing</button>
+            </div>
           </div></Reveal>
         </div>
 
@@ -1069,7 +1070,7 @@ function Pricing({ setPage }) {
         <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 14 }}>One client saved pays for{" "}
           <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
             <span style={{ color: C.textMuted }}>a year<span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} /></span>
-            <span style={{ position: "absolute", top: "-0.55em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>years</span>
+            <span style={{ position: "absolute", top: "-0.55em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.85em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>years</span>
           </span>{" "}of Retayned.
         </h1>
         <p style={{ fontSize: 16, color: C.textSec, marginBottom: 24 }}>The math works. Still not convinced? 14-day free trial. Cancel anytime.</p>
@@ -2239,8 +2240,7 @@ function Platform({ setPage }) {
           </section>
         </div>
 
-        {/* Gradient fade */}
-        <div className="r-full-bleed" style={{ background: "linear-gradient(to bottom, " + C.primarySoft + " 0%, " + C.bg + " 100%)", height: 80 }} />
+
 
         {/* ══════ Meet the Brains ══════ */}
         <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "64px 20px 64px", position: "relative", overflow: "hidden" }}>
