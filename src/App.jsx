@@ -471,7 +471,7 @@ function Home({ setPage }) {
               }}>
                 The CRM that{" "}
                 <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
-                  <span style={{ color: C.text }}>predicts</span>
+                  <span style={{ color: C.textMuted }}>predicts</span>
                   <span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} />
                   <span style={{ position: "absolute", top: "-0.7em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.75em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap", opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 1.2s" }}>prevents</span>
                 </span>{" "}
@@ -636,10 +636,13 @@ function Home({ setPage }) {
               { num: "03", title: "She knows where it goes.", desc: "Using a proprietary scoring engine, Rai weighs all of the day\u2019s tasks by retention impact. Your highest-value move is next up.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> },
             ].map((step, i) => (
               <Reveal key={i} delay={i * 0.15} style={{ flex: "1 1 300px", minWidth: 280 }}>
-                <div className="r-rai-alert-wrap" style={{ borderRadius: 16 }}>
+                <div className="r-rai-alert-wrap" style={{ borderRadius: 16 }}
+                  onMouseEnter={() => setHoveredFeature(i)}
+                  onMouseLeave={() => setHoveredFeature(null)}
+                  onClick={() => setHoveredFeature(hoveredFeature === i ? null : i)}>
                 <div style={{
                   padding: "28px 24px", borderRadius: 16, border: "1.5px solid " + C.borderLight,
-                  background: C.card, cursor: "default",
+                  background: C.card, cursor: "pointer",
                   position: "relative", overflow: "hidden",
                 }}>
                   <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 14 }}>
@@ -648,6 +651,68 @@ function Home({ setPage }) {
                   </div>
                   <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8, lineHeight: 1.25 }}>{step.title}</h3>
                   <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7, margin: 0 }}>{step.desc}</p>
+                  <p className="r-mobile-only" style={{ fontSize: 11, color: C.textMuted, marginTop: 10, display: "none" }}>{hoveredFeature === i ? "Tap to close" : "Tap to preview"}</p>
+
+                  {/* Hover mockup overlay */}
+                  {hoveredFeature === i && (
+                    <div style={{
+                      position: "absolute", inset: 0, background: C.card,
+                      borderRadius: 16, padding: "16px 18px",
+                      animation: "fadeInScale 0.2s ease",
+                      display: "flex", flexDirection: "column", justifyContent: "center",
+                    }}>
+                      {i === 0 && <>
+                        <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 10 }}>
+                          <div style={{ width: 5, height: 5, borderRadius: "50%", background: C.danger, animation: "pulse 2s infinite" }} />
+                          <span style={{ fontSize: 9, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".05em" }}>Live — scanning 15 clients</span>
+                        </div>
+                        {[
+                          { name: "Broadleaf Media", score: 65, signals: ["78 → 65", "combo: no_room"], color: C.danger },
+                          { name: "Foxglove Partners", score: 38, signals: ["42 → 38", "HC overdue"], color: C.danger },
+                          { name: "Northvane Studios", score: 91, signals: ["91 stable", "renewed"], color: C.success },
+                        ].map((c, ci) => (
+                          <div key={ci} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0", borderTop: ci > 0 ? "1px solid " + C.borderLight : "none", opacity: c.color === C.success ? 0.4 : 1 }}>
+                            <div style={{ width: 30, height: 30, borderRadius: 7, background: c.color + "12", border: "1px solid " + c.color + "30", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 11, color: c.color, flexShrink: 0 }}>{c.score}</div>
+                            <div>
+                              <div style={{ fontWeight: 700, fontSize: 12, color: C.text }}>{c.name}</div>
+                              <div style={{ display: "flex", gap: 3 }}>{c.signals.map(s => <span key={s} style={{ fontSize: 8, padding: "1px 5px", borderRadius: 4, background: c.color + "10", color: c.color, fontWeight: 600 }}>{s}</span>)}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </>}
+                      {i === 1 && <>
+                        <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
+                          <svg width={10} height={10} viewBox="0 0 24 24" fill="none"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primary} strokeWidth="1.6" fill="none" strokeLinejoin="round"/></svg>
+                          <span style={{ fontSize: 9, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".04em" }}>Suggested by Rai</span>
+                        </div>
+                        {[
+                          { text: "Rachel's score dropped 9 pts. Get a call on the books.", client: "Broadleaf Media", bg: C.dangerBg },
+                          { text: "Health Check 12 days overdue. Don't skip this one.", client: "Foxglove Partners", bg: C.primarySoft },
+                        ].map((c, ci) => (
+                          <div key={ci} style={{ background: `linear-gradient(95deg, ${c.bg} 0%, ${C.card} 100%)`, borderRadius: 8, border: "1px solid " + C.borderLight, padding: "8px 10px", marginBottom: 5 }}>
+                            <p style={{ fontSize: 11, color: C.text, lineHeight: 1.4, margin: 0 }}>{c.text}</p>
+                            <p style={{ fontSize: 9, color: C.textMuted, marginTop: 2 }}>{c.client}</p>
+                          </div>
+                        ))}
+                      </>}
+                      {i === 2 && <>
+                        <div style={{ fontSize: 9, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".05em", marginBottom: 8 }}>Today — sorted by impact</div>
+                        {[
+                          { name: "Broadleaf Media", score: 65, task: "Call Rachel", color: C.danger },
+                          { name: "Foxglove Partners", score: 38, task: "Complete Health Check", color: C.danger },
+                          { name: "Northvane Studios", score: 91, task: "Strategy review", color: C.success },
+                        ].map((c, ci) => (
+                          <div key={ci} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", borderTop: ci > 0 ? "1px solid " + C.borderLight : "none" }}>
+                            <div style={{ width: 24, height: 24, borderRadius: 6, background: c.color + "12", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 9, color: c.color, flexShrink: 0 }}>{c.score}</div>
+                            <div>
+                              <div style={{ fontWeight: 700, fontSize: 11, color: C.text }}>{c.name}</div>
+                              <div style={{ fontSize: 10, color: C.textSec }}>{c.task}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </>}
+                    </div>
+                  )}
                 </div>
                 </div>
               </Reveal>
@@ -713,10 +778,10 @@ function Home({ setPage }) {
           <Reveal>
             <div className="r-section-head" style={{ textAlign: "center", marginBottom: 48 }}>
               <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 8 }}>
-                Every tool you need to keep your clients
+                Tools You Need To Keep Clients
               </h2>
               <p style={{ fontSize: 16, color: C.textSec, maxWidth: 580, margin: "0 auto", lineHeight: 1.7 }}>
-                Relationship intelligence, health monitoring, AI advising, and pipeline management — in one system. Your clients won't know it exists. They just won't leave.
+                A CRM you won't hate using built for client retention. Your clients won't know it exists. They just won't leave.
               </p>
             </div>
           </Reveal>
@@ -946,13 +1011,13 @@ function Home({ setPage }) {
             <div className="r-ent-stamp" style={{
               position: "absolute", top: -10, left: "8%",
               transform: "rotate(-6deg)",
-              padding: "8px 24px", borderRadius: 4,
-              border: "3px solid rgba(196,67,43,0.5)",
-              color: "rgba(196,67,43,0.6)",
-              fontSize: 14, fontWeight: 900, fontFamily: "'Courier New', Courier, monospace",
-              textTransform: "uppercase", letterSpacing: "0.2em",
+              padding: "10px 30px", borderRadius: 4,
+              border: "3px solid rgba(196,67,43,0.7)",
+              color: "rgba(196,67,43,0.85)",
+              fontSize: 18, fontWeight: 900, fontFamily: "'Courier New', Courier, monospace",
+              textTransform: "uppercase", letterSpacing: "0.25em",
               pointerEvents: "none",
-              boxShadow: "inset 0 0 0 1px rgba(196,67,43,0.2)",
+              boxShadow: "inset 0 0 0 1.5px rgba(196,67,43,0.35)",
             }}>Enterprise</div>
             <h2 style={{
               fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff",
@@ -964,10 +1029,10 @@ function Home({ setPage }) {
 
             <div className="r-ent-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 40, maxWidth: 560, margin: "0 auto 40px" }}>
               {[
-                { label: "Daily Portfolio Sweeps", desc: "Every client scored and ranked automatically, every morning." },
-                { label: "Churn Detection", desc: "Converging signals identified before they become cancellations." },
+                { label: "Portfolio Sweeps", desc: "Every client scored and ranked automatically, every morning." },
+                { label: "Churn Detection", desc: "Converging signals identified before they're cancellations." },
                 { label: "Prioritized Task Lists", desc: "Specific actions, tailored to each client's communication style." },
-                { label: "Platform Integrations", desc: "Slack, email, Zoom, CRM, billing — Retayned reads the data, you read the tasks." },
+                { label: "Useful Integrations", desc: "Slack, email, Zoom, CRM, billing — Retayned reads the data." },
               ].map(item => (
                 <div key={item.label} className="r-ent-feature">
                   <div style={{ fontWeight: 700, fontSize: 14, color: "#fff", marginBottom: 5 }}>{item.label}</div>
@@ -979,9 +1044,6 @@ function Home({ setPage }) {
               <button className="r-hero-cta" onClick={() => setPage("contact")} style={{
                 background: "#fff", color: C.btn,
               }}>Let's Talk</button>
-              <button className="r-ghost-cta" onClick={() => setPage("pricing")} style={{
-                borderColor: "rgba(255,255,255,0.2)", color: "#fff",
-              }}>See Pricing</button>
             </div>
           </div></Reveal>
         </div>
@@ -2488,10 +2550,10 @@ function Platform({ setPage }) {
             </div></Reveal>
             <Reveal direction="right" delay={0.2}><div style={{ flex: "1 1 360px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
               {[
-                { label: "Daily Portfolio Sweeps", desc: "Every client scored and ranked automatically, every morning." },
-                { label: "Churn Detection", desc: "Converging signals identified before they become cancellations." },
+                { label: "Portfolio Sweeps", desc: "Every client scored and ranked automatically, every morning." },
+                { label: "Churn Detection", desc: "Converging signals identified before they're cancellations." },
                 { label: "Prioritized Task Lists", desc: "Specific actions, tailored to each client's communication style." },
-                { label: "Platform Integrations", desc: "Slack, email, Zoom, CRM, billing — Retayned reads the data, you read the tasks." },
+                { label: "Useful Integrations", desc: "Slack, email, Zoom, CRM, billing — Retayned reads the data." },
               ].map(item => (
                 <div key={item.label} style={{ padding: 20, background: C.card, borderRadius: 14, border: "1px solid " + C.border, boxShadow: "0 4px 20px rgba(0,0,0,0.04)", transition: "all 0.25s ease" }}>
                   <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 5 }}>{item.label}</div>
@@ -2572,7 +2634,7 @@ export default function RetaynedSite() {
         .r-conf-img { border-radius: 0; }
         .r-tab-btn { }
         .r-feat-content { flex-direction: column; }
-        .r-ent-stamp { top: -30px !important; left: 50% !important; transform: translateX(-50%) rotate(-6deg) !important; font-size: 11px !important; padding: 6px 16px !important; }
+        .r-ent-stamp { top: -30px !important; left: 50% !important; transform: translateX(-50%) rotate(-6deg) !important; font-size: 13px !important; padding: 8px 20px !important; }
         .r-feat-desc-full { display: none !important; }
         .r-feat-desc-mobile { display: block !important; }
         .r-tab-btn { flex: 0 0 auto !important; }
