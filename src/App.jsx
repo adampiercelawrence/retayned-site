@@ -187,7 +187,7 @@ function Nav({ page, setPage }) {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <span className="r-desktop-nav" onClick={() => setPage("login")} style={{ fontSize: 14, fontWeight: 600, color: C.textSec, cursor: "pointer" }}>Log In</span>
-          <button className="r-desktop-nav r-ghost-cta" onClick={() => setPage("signup")} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 16px", background: "transparent", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 600, color: C.text }}>
+          <button className="r-desktop-nav r-ghost-cta" onClick={() => setPage("signup")} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 16px", background: "transparent", border: "1.5px solid " + C.border, borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 600, color: C.text }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
               <line x1="8" y1="21" x2="16" y2="21" />
@@ -314,6 +314,199 @@ function AnimatedStat({ value, suffix = "", duration = 1800 }) {
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
+// ═══ HERO INTERACTIVE DEMO ═══
+function HeroDemo({ loaded }) {
+  const [phase, setPhase] = useState(0);
+
+  useEffect(() => {
+    if (!loaded) return;
+    const timers = [
+      setTimeout(() => setPhase(1), 2000),
+      setTimeout(() => setPhase(2), 2500),
+      setTimeout(() => setPhase(3), 3000),
+      setTimeout(() => setPhase(4), 3800),   // show unsorted tasks
+      setTimeout(() => setPhase(5), 5200),   // "Ranking..." message
+      setTimeout(() => setPhase(6), 6200),   // highlight "Call Rachel" (currently pos 1, needs to go to 0)
+      setTimeout(() => setPhase(7), 7200),   // move "Call Rachel" to top, shift others down
+      setTimeout(() => setPhase(8), 8200),   // highlight "Schedule Foxglove" (needs to move up)
+      setTimeout(() => setPhase(9), 9200),   // move "Schedule Foxglove" into position 1
+      setTimeout(() => setPhase(10), 10200),  // final sorted state
+      setTimeout(() => setPhase(0), 14000),   // restart
+    ];
+    return () => timers.forEach(clearTimeout);
+  }, [loaded, phase === 0]);
+
+  // Task ordering at each phase
+  // Unsorted:  0-Slack, 1-Rachel, 2-Oakline, 3-Northvane, 4-Foxglove
+  // Step 1:    1-Rachel moves to top → Rachel, Slack, Oakline, Northvane, Foxglove
+  // Step 2:    4-Foxglove moves to pos 1 → Rachel, Foxglove, Slack, Oakline, Northvane (wait, that's not right)
+  // Final:     Rachel, Foxglove, Northvane, Slack, Oakline
+
+  const tasks = [
+    { id: "slack", text: "Review Slack for client messages", client: "All Clients" },
+    { id: "rachel", text: "Call Rachel at Broadleaf", client: "Broadleaf Media" },
+    { id: "oakline", text: "Review Oakline Q1 numbers", client: "Oakline Outdoors" },
+    { id: "northvane", text: "Complete Northvane Health Check", client: "Northvane Studios" },
+    { id: "foxglove", text: "Schedule Foxglove check-in", client: "Foxglove Partners" },
+  ];
+
+  if (phase <= 3) {
+    return (
+      <div style={{ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(30px)", transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s" }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="none"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primary} strokeWidth="1.8" fill="none" strokeLinejoin="round"/></svg>
+          Suggested by Rai
+        </div>
+        <div style={{ position: "relative", height: 340, maxWidth: 480 }}>
+          <div style={{
+            position: "absolute", top: -18, right: -10, zIndex: 10,
+            display: "inline-flex", alignItems: "center", gap: 6,
+            padding: "6px 14px", borderRadius: 100,
+            background: "rgba(255,255,255,0.9)", border: "1px solid rgba(216,223,216,0.6)",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+            fontSize: 12, fontWeight: 600, color: C.text,
+            opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 1.2s",
+            animation: loaded ? "subtleBob 4s ease-in-out 1.5s infinite" : "none",
+          }}>
+            <span style={{ color: C.success, fontWeight: 700 }}>↑ 12%</span> retention this quarter
+          </div>
+
+          {/* Yellow (Foxglove) */}
+          <div style={{
+            position: "absolute", top: 0, left: 8, right: -4, zIndex: 1,
+            opacity: phase >= 3 ? 0 : 1, transform: phase >= 3 ? "translateX(30px) scale(0.95)" : "none",
+            transition: "opacity 0.5s ease, transform 0.5s ease",
+            animation: phase === 0 ? "fadeInPlace 0.4s ease 0.5s both" : "none",
+          }}>
+            <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid " + C.border, boxShadow: "0 2px 16px rgba(0,0,0,0.04)", background: "linear-gradient(95deg, " + C.warningBg + " 0%, #FDF8EC 30%, " + C.card + " 100%)", transform: "rotate(2.5deg)" }}>
+              <div style={{ padding: "16px 18px" }}>
+                <p style={{ fontSize: 15, color: C.text, lineHeight: 1.55, margin: 0 }}>Foxglove Partners: Response time doubled this month. Velocity is cold. Schedule a check-in before Friday.</p>
+                <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Foxglove Partners · Velocity alert</p>
+              </div>
+              <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}><div style={{ color: C.primary }}>Add to Tasks</div></div>
+            </div>
+          </div>
+
+          {/* Green (Northvane) */}
+          <div style={{
+            position: "absolute", top: 55, left: -6, right: 10, zIndex: 2,
+            opacity: phase >= 2 ? 0 : 1, transform: phase >= 2 ? "translateX(30px) scale(0.95)" : "none",
+            transition: "opacity 0.5s ease, transform 0.5s ease",
+            animation: phase === 0 ? "fadeInPlace 0.4s ease 0.7s both" : "none",
+          }}>
+            <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid " + C.border, boxShadow: "0 4px 20px rgba(0,0,0,0.05)", background: "linear-gradient(95deg, " + C.primarySoft + " 0%, #F0F5F1 30%, " + C.card + " 100%)", transform: "rotate(-1.5deg)" }}>
+              <div style={{ padding: "16px 18px" }}>
+                <p style={{ fontSize: 15, color: C.text, lineHeight: 1.55, margin: 0 }}>Northvane Studios: Health Check due today.</p>
+                <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Northvane Studios · Health Check</p>
+              </div>
+              <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}><div style={{ color: C.primary }}>Add to Tasks</div></div>
+            </div>
+          </div>
+
+          {/* Red (Broadleaf) */}
+          <div style={{
+            position: "absolute", top: 115, left: 2, right: 2, zIndex: 3,
+            opacity: phase >= 1 ? 0 : 1, transform: phase >= 1 ? "translateX(30px) scale(0.95)" : "none",
+            transition: "opacity 0.5s ease, transform 0.5s ease",
+            animation: phase === 0 ? "fadeInPlace 0.4s ease 0.9s both" : "none",
+          }}>
+            <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid " + C.border, boxShadow: "0 8px 32px rgba(0,0,0,0.08)", background: "linear-gradient(95deg, " + C.dangerBg + " 0%, #FDF5F3 30%, " + C.card + " 100%)", transform: "rotate(0.5deg)" }}>
+              <div style={{ padding: "16px 18px" }}>
+                <p style={{ fontSize: 15, color: C.text, lineHeight: 1.55, margin: 0 }}>Broadleaf Media: Rachel's score dropped 9 points on last Monday's check-in and you've only emailed her since. Get a call on the books with a new deliverable ready.</p>
+                <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Broadleaf Media · 2 minutes ago</p>
+              </div>
+              <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}><div style={{ color: C.primary }}>Add to Tasks</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Each row is 44px tall (8px padding top + 8px bottom + ~28px content)
+  const ROW = 44;
+
+  // Position map: where each task sits at each phase
+  // unsorted order: slack=0, rachel=1, oakline=2, northvane=3, foxglove=4
+  // after rachel moves: rachel=0, slack=1, oakline=2, northvane=3, foxglove=4
+  // after foxglove moves: rachel=0, foxglove=1, northvane=2, slack=3, oakline=4
+  const positions = {
+    4:  { slack: 0, rachel: 1, oakline: 2, northvane: 3, foxglove: 4 },
+    5:  { slack: 0, rachel: 1, oakline: 2, northvane: 3, foxglove: 4 },
+    6:  { slack: 0, rachel: 1, oakline: 2, northvane: 3, foxglove: 4 },  // rachel highlighted
+    7:  { rachel: 0, slack: 1, oakline: 2, northvane: 3, foxglove: 4 },  // rachel moved to top
+    8:  { rachel: 0, slack: 1, oakline: 2, northvane: 3, foxglove: 4 },  // foxglove highlighted
+    9:  { rachel: 0, foxglove: 1, northvane: 2, slack: 3, oakline: 4 },  // foxglove moved up
+    10: { rachel: 0, foxglove: 1, northvane: 2, slack: 3, oakline: 4 },  // done
+  };
+
+  const highlightId = phase === 6 ? "rachel" : phase === 8 ? "foxglove" : null;
+  const currentPos = positions[Math.min(phase, 10)] || positions[4];
+
+  return (
+    <div style={{ animation: "fadeInPlace 0.4s ease both" }}>
+      <div className="r-mockup-card">
+        <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: phase >= 5 && phase < 10 ? 6 : 16 }}>Your Tasks</div>
+        {phase >= 5 && phase < 10 && <div style={{ fontSize: 11, fontWeight: 700, color: C.btn, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid " + C.borderLight }}>Ranking by retention impact...</div>}
+        {phase >= 10 && <div style={{ fontSize: 13, color: C.btn, fontWeight: 700, marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid " + C.borderLight }}>Sorted. Highest-value move is first.</div>}
+        <div style={{ position: "relative", height: ROW * 5 }}>
+          {tasks.map(t => {
+            const isHighlighted = t.id === highlightId;
+            const pos = currentPos[t.id];
+            return (
+              <div key={t.id} style={{
+                position: "absolute", left: 0, right: 0, top: 0,
+                transform: `translateY(${pos * ROW}px)${isHighlighted ? " scale(1.03)" : ""}`,
+                display: "flex", alignItems: "center", gap: 10,
+                padding: "8px 6px", height: ROW,
+                background: isHighlighted ? "rgba(91,33,182,0.06)" : C.card,
+                borderRadius: isHighlighted ? 8 : 0,
+                boxShadow: isHighlighted ? "0 4px 20px rgba(91,33,182,0.12), 0 0 0 1px rgba(91,33,182,0.15)" : "none",
+                zIndex: isHighlighted ? 10 : 1,
+                transition: isHighlighted
+                  ? "transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease"
+                  : "transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background 0.3s ease",
+              }}>
+                <div style={{ width: 16, height: 16, borderRadius: 4, border: "1.5px solid " + (isHighlighted ? C.btn + "50" : C.border), flexShrink: 0, transition: "border-color 0.2s" }} />
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: isHighlighted ? C.btn : C.text, lineHeight: 1.3, transition: "color 0.2s" }}>{t.text}</div>
+                  <div style={{ fontSize: 11, color: C.textMuted }}>{t.client}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══ TODAY STATIC MOCKUP ═══
+function TodayDemo() {
+  return (
+    <div className="r-mockup-card">
+      <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Your Tasks</div>
+      {[
+        { text: "Call Rachel at Broadleaf", client: "Broadleaf Media" },
+        { text: "Complete Foxglove Health Check", client: "Foxglove Partners" },
+        { text: "Review Slack for client messages", client: "All Clients" },
+        { text: "Review Oakline Q1 numbers", client: "Oakline Outdoors" },
+        { text: "Plan Northvane anniversary", client: "Northvane Studios" },
+      ].map((t, ti) => (
+        <div key={ti} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderTop: ti > 0 ? "1px solid " + C.borderLight : "none" }}>
+          <div style={{ width: 16, height: 16, borderRadius: 4, border: "1.5px solid " + C.border, flexShrink: 0 }} />
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: C.text, lineHeight: 1.3 }}>{t.text}</div>
+            <div style={{ fontSize: 11, color: C.textMuted }}>{t.client}</div>
+          </div>
+        </div>
+      ))}
+      <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>Sorted. Highest-value move is first.</div>
+    </div>
+  );
+}
+
+
 // ═══ HOME ═══
 function Home({ setPage }) {
   const [loaded, setLoaded] = useState(false);
@@ -327,12 +520,12 @@ function Home({ setPage }) {
   }, []);
 
   const homeTabs = [
-    { id: "today", label: "Today", icon: "◉", headline: "One page. Every priority.", sub: "Your Today tab knows which clients need you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value. Green clients surface first. At-risk clients with high revenue jump the line." },
     { id: "scoring", label: "Retention Score", icon: "◎", headline: "A number that means something.", sub: "12 dimensions. 20 combination signals. Health check modifiers. Every client gets a Retention Score from 1–99 that tells you exactly where the relationship stands — not where you hope it is." },
     { id: "health", label: "Health Checks", icon: "♡", headline: "Five questions. Two minutes. The truth.", sub: "Regular check-ins that detect drift before it becomes damage. Your answers blend directly into the Retention Score — bad news moves the number immediately. No lengthy forms. No busywork. Just the signal." },
     { id: "rai", label: "Talk to Rai", icon: "✦", headline: "She writes the words you need when it matters most.", sub: "Rai is an AI advisor calibrated to your specific relationships. When you don't know what to say — the opening line, the tone, whether to call or email — Rai gives you the script." },
     { id: "rolodex", label: "Rolodex", icon: "⟐", headline: "Your pipeline is forward-looking.", sub: "Former clients aren't dead relationships — they're future revenue. The Rolodex tracks who left, how it ended, and whether they'd come back. One-off projects become re-engagement opportunities." },
     { id: "referrals", label: "Referrals", icon: "⟡", headline: "Your best clients send you their friends.", sub: "Retayned tracks referral readiness based on loyalty, trust, and relationship depth. When a client is ready to refer, the system knows before you do." },
+    { id: "today", label: "Today", icon: "◉", headline: "One page. Every priority.", sub: "Your Today tab knows which clients need you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value. Green clients surface first. At-risk clients with high revenue jump the line." },
   ];
   const ht = homeTabs[activeTab];
 
@@ -506,105 +699,9 @@ function Home({ setPage }) {
               </p>
             </div>
 
-            {/* Right — app mockup */}
-            <div style={{
-              flex: "1 1 400px",
-              opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(30px)",
-              transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s",
-            }}>
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                fontSize: 11, fontWeight: 700, color: C.primary,
-                textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14,
-              }}>
-                <svg width={14} height={14} viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primary} strokeWidth="1.8" fill="none" strokeLinejoin="round"/>
-                </svg>
-                Suggested by Rai
-              </div>
-
-              {/* Stacked cards */}
-              <div style={{ position: "relative", height: 400, maxWidth: 480 }}>
-
-                {/* 12% badge */}
-                <div style={{
-                  position: "absolute", top: -18, right: -10, zIndex: 10,
-                  display: "inline-flex", alignItems: "center", gap: 6,
-                  padding: "6px 14px", borderRadius: 100,
-                  background: "rgba(255,255,255,0.9)",
-                  border: "1px solid rgba(216,223,216,0.6)",
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
-                  fontSize: 12, fontWeight: 600, color: C.text,
-                  opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 1.2s",
-                  animation: loaded ? "subtleBob 4s ease-in-out 1.5s infinite" : "none",
-                }}>
-                  <span style={{ color: C.success, fontWeight: 700 }}>↑ 12%</span> retention this quarter
-                </div>
-
-                {/* Back card — Yellow (warning) */}
-                <div className="r-rai-alert-wrap" style={{ position: "absolute", top: 0, left: 8, right: -4, zIndex: 1, animation: "fadeInPlace 0.4s ease 0.5s both" }}>
-                <div className="r-rai-alert" style={{
-                  borderRadius: 14, overflow: "hidden",
-                  border: "1px solid " + C.border,
-                  boxShadow: "0 2px 16px rgba(0,0,0,0.04)",
-                  background: `linear-gradient(95deg, ${C.warningBg} 0%, #FDF8EC 30%, ${C.card} 100%)`,
-                  cursor: "default", transform: "rotate(2.5deg)",
-                }}>
-                  <div style={{ padding: "16px 18px" }}>
-                    <p style={{ fontSize: 15, color: C.text, lineHeight: 1.55, margin: 0 }}>
-                      Foxglove Partners: Response time doubled this month. Velocity is cold. Schedule a check-in before Friday.
-                    </p>
-                    <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Foxglove Partners · Velocity alert</p>
-                  </div>
-                  <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-                    <div style={{ color: C.primary }}>Add to Tasks</div>
-                  </div>
-                </div>
-                </div>
-
-                {/* Middle card — Green */}
-                <div className="r-rai-alert-wrap" style={{ position: "absolute", top: 55, left: -6, right: 10, zIndex: 2, animation: "fadeInPlace 0.4s ease 0.7s both" }}>
-                <div className="r-rai-alert" style={{
-                  borderRadius: 14, overflow: "hidden",
-                  border: "1px solid " + C.border,
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
-                  background: `linear-gradient(95deg, ${C.primarySoft} 0%, #F0F5F1 30%, ${C.card} 100%)`,
-                  cursor: "default", transform: "rotate(-1.5deg)",
-                }}>
-                  <div style={{ padding: "16px 18px" }}>
-                    <p style={{ fontSize: 15, color: C.text, lineHeight: 1.55, margin: 0 }}>
-                      Northvane Studios: Health Check due today.
-                    </p>
-                    <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Northvane Studios · Health Check</p>
-                  </div>
-                  <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-                    <div style={{ color: C.primary }}>Add to Tasks</div>
-                  </div>
-                </div>
-                </div>
-
-                {/* Front card — Red (danger) */}
-                <div className="r-rai-alert-wrap" style={{ position: "absolute", top: 115, left: 2, right: 2, zIndex: 3, animation: "fadeInPlace 0.4s ease 0.9s both" }}>
-                <div className="r-rai-alert" style={{
-                  borderRadius: 14, overflow: "hidden",
-                  border: "1px solid " + C.border,
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
-                  background: `linear-gradient(95deg, ${C.dangerBg} 0%, #FDF5F3 30%, ${C.card} 100%)`,
-                  cursor: "default", transform: "rotate(0.5deg)",
-                }}>
-                  <div style={{ padding: "16px 18px" }}>
-                    <p style={{ fontSize: 15, color: C.text, lineHeight: 1.55, margin: 0 }}>
-                      Broadleaf Media: Rachel's score dropped 9 points on last Monday's check-in and you've only emailed her since. Get a call on the books with a new deliverable ready.
-                    </p>
-                    <p style={{ fontSize: 12, color: C.textMuted, marginTop: 6 }}>Broadleaf Media · 2 minutes ago</p>
-                  </div>
-                  <div className="r-alert-actions" style={{ display: "flex", borderTop: "1px solid " + C.borderLight }}>
-                    <div style={{ color: C.primary }}>Add to Tasks</div>
-                  </div>
-                </div>
-                </div>
-
-              </div>
+            {/* Right — interactive hero demo */}
+            <div style={{ flex: "1 1 400px" }}>
+              <HeroDemo loaded={loaded} />
             </div>
           </div>
         </div>
@@ -631,9 +728,9 @@ function Home({ setPage }) {
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20, maxWidth: 1100, margin: "0 auto" }}>
             {[
-              { num: "01", title: "She sees it.", desc: "Cross-referencing tasks, health checks, score trends, 20+ combination signals \u2014 continuously, across your entire book.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> },
-              { num: "02", title: "She puts it in front of you.", desc: "Every morning, before your first coffee. You don\u2019t go looking for the problem. The problem finds you without any trouble.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> },
-              { num: "03", title: "She knows where it goes.", desc: "Using a proprietary scoring engine, Rai weighs all of the day\u2019s tasks by retention impact. Your highest-value move is next up.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> },
+              { num: "01", title: "She sees it.", desc: "Cross-referencing tasks, health checks, score trends, 20+ combination signals — continuously, across your entire book.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> },
+              { num: "02", title: "She puts it in front of you.", desc: "Every morning, before your first coffee. You don't go looking for the problem. The problem finds you without any trouble.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> },
+              { num: "03", title: "She knows where it goes.", desc: "Using a proprietary scoring engine, Rai weighs all of the day's tasks by retention impact. Your highest-value move is next up.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> },
             ].map((step, i) => (
               <Reveal key={i} delay={i * 0.15} style={{ flex: "1 1 300px", minWidth: 280 }}>
                 <div className="r-rai-alert-wrap" style={{ borderRadius: 16 }}
@@ -696,18 +793,23 @@ function Home({ setPage }) {
                         ))}
                       </>}
                       {i === 2 && <>
-                        <div style={{ fontSize: 9, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".05em", marginBottom: 8 }}>Today — sorted by impact</div>
+                        <div style={{ fontSize: 9, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".05em", marginBottom: 8 }}>Your Tasks</div>
                         {[
-                          { name: "Broadleaf Media", score: 65, task: "Call Rachel", color: C.danger },
-                          { name: "Foxglove Partners", score: 38, task: "Complete Health Check", color: C.danger },
-                          { name: "Northvane Studios", score: 91, task: "Strategy review", color: C.success },
+                          { task: "Review Slack for client messages", client: "All Clients", recurring: true },
+                          { task: "Review Oakline Q1 numbers before call", client: "Oakline Outdoors", recurring: false },
+                          { task: "Follow up on Broadleaf invoice", client: "Broadleaf Media", recurring: false },
+                          { task: "Send creative brief to Marcus", client: "Ridgeline Supply", recurring: false },
                         ].map((c, ci) => (
                           <div key={ci} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", borderTop: ci > 0 ? "1px solid " + C.borderLight : "none" }}>
-                            <div style={{ width: 24, height: 24, borderRadius: 6, background: c.color + "12", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 9, color: c.color, flexShrink: 0 }}>{c.score}</div>
-                            <div>
-                              <div style={{ fontWeight: 700, fontSize: 11, color: C.text }}>{c.name}</div>
-                              <div style={{ fontSize: 10, color: C.textSec }}>{c.task}</div>
+                            <div style={{ width: 16, height: 16, borderRadius: 4, border: "1.5px solid " + C.border, flexShrink: 0 }} />
+                            <div style={{ flex: 1 }}>
+                              <div style={{ fontSize: 11, fontWeight: 600, color: C.text, lineHeight: 1.3 }}>{c.task}</div>
+                              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                                <span style={{ fontSize: 9, color: C.textMuted }}>{c.client}</span>
+                                {c.recurring && <span style={{ fontSize: 8, color: C.textMuted, border: "1px solid " + C.borderLight, borderRadius: 3, padding: "0 3px" }}>↻</span>}
+                              </div>
                             </div>
+                            <span style={{ fontSize: 12, color: C.borderLight, cursor: "pointer" }}>×</span>
                           </div>
                         ))}
                       </>}
@@ -842,34 +944,7 @@ function Home({ setPage }) {
             {/* Right: visual mockup */}
             <div style={{ flex: "1 1 360px" }}>
               <div key={ht.id} style={{ animation: "fadeInScale 0.35s ease" }}>
-                {ht.id === "today" && (
-                  <div className="r-mockup-card">
-                    <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
-                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FF5F57" }} />
-                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FEBC2E" }} />
-                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#28C840" }} />
-                      <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em" }}>Today — April 12</span>
-                    </div>
-                    {[
-                      { name: "Northvane Studios", score: 91, task: "Monthly strategy review", color: C.success, tag: "Protect" },
-                      { name: "Broadleaf Media", score: 67, task: "Health Check overdue", color: C.warning, tag: "Watch" },
-                      { name: "Foxglove Partners", score: 38, task: "Rai: Call today, not email", color: C.danger, tag: "Urgent" },
-                    ].map((t, i) => (
-                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, padding: "13px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
-                        <div className="r-score-ring" style={{ background: t.color + "14", color: t.color, border: `1.5px solid ${t.color}30` }}>{t.score}</div>
-                        <div style={{ flex: 1 }}>
-                          <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>{t.name}</div>
-                          <div style={{ fontSize: 12, color: C.textMuted }}>{t.task}</div>
-                        </div>
-                        <div style={{ fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 6, background: t.color + "10", color: t.color, textTransform: "uppercase", letterSpacing: "0.02em" }}>{t.tag}</div>
-                      </div>
-                    ))}
-                    <div style={{ marginTop: 12, padding: "12px 14px", background: "linear-gradient(135deg, rgba(51,84,62,0.06), rgba(85,139,104,0.03))", borderRadius: 10, border: "1px solid " + C.primarySoft }}>
-                      <span style={{ fontSize: 10, fontWeight: 800, color: C.primary, letterSpacing: "0.04em", textTransform: "uppercase" }}>✦ Rai:</span>
-                      <span style={{ fontSize: 13, color: C.primary, marginLeft: 6, fontWeight: 500 }}>3 clients need attention today.</span>
-                    </div>
-                  </div>
-                )}
+                {ht.id === "today" && <TodayDemo />}
                 {ht.id === "scoring" && (
                   <div className="r-mockup-card">
                     <div style={{ textAlign: "center", marginBottom: 20 }}>
@@ -2383,8 +2458,8 @@ function Platform({ setPage }) {
                   Suggested by Rai
                 </div>
                 {[
-                  { text: "Rachel\u2019s score dropped 9 points on last Monday\u2019s check-in, triggering the \u201CNo room to operate\u201D combination. It looks like you\u2019ve only emailed her since then. Get a call on the books with a net new deliverable ready.", client: "Broadleaf Media", gradient: "linear-gradient(95deg, " + C.dangerBg + " 0%, #FDF5F3 30%, " + C.card + " 100%)", actions: 3 },
-                  { text: "Health Check is 12 days overdue. Last check flagged drift. Don\u2019t skip this one. I also recommend updating Foxglove\u2019s client profile after their recent new hire.", client: "Foxglove Partners", gradient: "linear-gradient(95deg, " + C.primarySoft + " 0%, #F0F5F1 30%, " + C.card + " 100%)", actions: 2 },
+                  { text: "Rachel's score dropped 9 points on last Monday's check-in, triggering the “No room to operate” combination. It looks like you've only emailed her since then. Get a call on the books with a net new deliverable ready.", client: "Broadleaf Media", gradient: "linear-gradient(95deg, " + C.dangerBg + " 0%, #FDF5F3 30%, " + C.card + " 100%)", actions: 3 },
+                  { text: "Health Check is 12 days overdue. Last check flagged drift. Don't skip this one. I also recommend updating Foxglove's client profile after their recent new hire.", client: "Foxglove Partners", gradient: "linear-gradient(95deg, " + C.primarySoft + " 0%, #F0F5F1 30%, " + C.card + " 100%)", actions: 2 },
                 ].map((card, i) => (
                   <div key={i} style={{ background: card.gradient, borderRadius: 14, border: "1px solid " + C.border, overflow: "hidden", boxShadow: C.cardShadow }}>
                     <div style={{ padding: "14px 18px" }}>
@@ -2411,24 +2486,33 @@ function Platform({ setPage }) {
             {/* Step 3 */}
             <Reveal direction="right" delay={0.3}><div className="r-rai-step-card" style={{ maxWidth: 680, marginLeft: "auto" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.btn, textTransform: "uppercase", letterSpacing: ".1em" }}>03 — The Script</div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.btn, textTransform: "uppercase", letterSpacing: ".1em" }}>03 — Priority Engine</div>
                 <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
               </div>
               <h3 style={{ fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>She knows where it goes.</h3>
               <p style={{ fontSize: 14, color: "rgba(255,255,255,0.38)", lineHeight: 1.7, marginBottom: 22, maxWidth: 560 }}>Using a proprietary scoring engine, Rai weighs all of the day's tasks by retention impact. Your highest-value move is next up.</p>
-              <div style={{ background: C.bg, borderRadius: 16, padding: 20 }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  <div style={{ alignSelf: "flex-end", maxWidth: "78%", padding: "12px 16px", background: C.primary, color: "#fff", borderRadius: "14px 14px 4px 14px", fontSize: 14, lineHeight: 1.55 }}>
-                    Rachel at Broadleaf has been different lately. What do I say?
+              <div style={{ background: C.card, borderRadius: 14, border: "1px solid " + C.border, padding: "18px 20px", boxShadow: "0 8px 32px rgba(0,0,0,0.15)" }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".05em", marginBottom: 12 }}>Your Tasks</div>
+                {[
+                  { task: "Review Slack for client messages", client: "All Clients", recurring: true },
+                  { task: "Log time in project tracker", client: "All Clients", recurring: true },
+                  { task: "Review Oakline Q1 numbers before call", client: "Oakline Outdoors", recurring: false },
+                  { task: "Follow up on Broadleaf invoice", client: "Broadleaf Media", recurring: false },
+                  { task: "Send creative brief to Marcus", client: "Ridgeline Supply", recurring: false },
+                ].map((c, ci) => (
+                  <div key={ci} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderTop: ci > 0 ? "1px solid " + C.borderLight : "none" }}>
+                    <div style={{ width: 20, height: 20, borderRadius: 5, border: "1.5px solid " + C.border, flexShrink: 0 }} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: C.text, lineHeight: 1.3 }}>{c.task}</div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 2 }}>
+                        <span style={{ fontSize: 12, color: C.textMuted }}>{c.client}</span>
+                        {c.recurring && <span style={{ fontSize: 10, color: C.textMuted, border: "1px solid " + C.borderLight, borderRadius: 4, padding: "0 4px" }}>↻</span>}
+                      </div>
+                    </div>
+                    <span style={{ fontSize: 14, color: C.border, cursor: "pointer" }}>×</span>
                   </div>
-                  <div style={{ alignSelf: "flex-start", maxWidth: "90%", padding: "14px 16px", background: C.card, border: "1px solid " + C.border, borderRadius: "14px 14px 14px 4px", fontSize: 14, lineHeight: 1.65, color: C.text }}>
-                    <div style={{ fontWeight: 800, color: C.primary, marginBottom: 6, fontSize: 11, letterSpacing: "0.04em", textTransform: "uppercase" }}>✦ Rai</div>
-                    Call her. Not email. Open with: <strong>"Hey Rachel — I've been thinking about our work together and wanted to check in. How are you feeling about things?"</strong> Let her talk first. Don't pitch. Don't defend.
-                  </div>
-                  <div style={{ alignSelf: "flex-start", maxWidth: "85%", padding: "10px 14px", background: C.primarySoft, borderRadius: "14px 14px 14px 4px", fontSize: 13, color: C.primary, fontStyle: "italic", border: "1px solid " + C.primarySoft }}>
-                    If the call goes well, I'll update her profile and adjust the score. If it doesn't — we'll have a plan for that too.
-                  </div>
-                </div>
+                ))}
+                <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>Sorted. Highest-value move is first.</div>
               </div>
             </div></Reveal>
           </div>
