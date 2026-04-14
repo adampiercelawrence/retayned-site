@@ -296,16 +296,12 @@ function AnimatedStat({ value, suffix = "", duration = 1800 }) {
     const num = parseInt(value);
     if (isNaN(num)) { setDisplay(value); return; }
     const steps = 40;
-    const increment = num / steps;
-    let current = 0;
     let step = 0;
     const timer = setInterval(() => {
       step++;
-      // easeOutQuart
       const t = step / steps;
       const ease = 1 - Math.pow(1 - t, 4);
-      current = Math.round(ease * num);
-      setDisplay(String(current));
+      setDisplay(String(Math.round(ease * num)));
       if (step >= steps) { setDisplay(String(num)); clearInterval(timer); }
     }, duration / steps);
     return () => clearInterval(timer);
@@ -321,28 +317,21 @@ function HeroDemo({ loaded }) {
   useEffect(() => {
     if (!loaded) return;
     const timers = [
-      setTimeout(() => setPhase(1), 2500),
-      setTimeout(() => setPhase(2), 3000),
-      setTimeout(() => setPhase(3), 3500),
-      setTimeout(() => setPhase(4), 4300),   // show unsorted tasks
-      setTimeout(() => setPhase(5), 5700),   // "Ranking..." message
-      setTimeout(() => setPhase(6), 6700),   // highlight "Call Rachel"
-      setTimeout(() => setPhase(7), 7700),   // move "Call Rachel" to top (still highlighted)
-      setTimeout(() => setPhase(71), 8500),  // rachel settles — drop highlight
-      setTimeout(() => setPhase(8), 9200),   // highlight "Schedule Foxglove"
-      setTimeout(() => setPhase(9), 10200),  // move "Schedule Foxglove" up (still highlighted)
-      setTimeout(() => setPhase(91), 11000), // foxglove settles — drop highlight
-      setTimeout(() => setPhase(10), 11500), // final sorted state
-      setTimeout(() => setPhase(11), 14500), // revert to alert cards
+      setTimeout(() => setPhase(1), 3000),
+      setTimeout(() => setPhase(2), 4000),
+      setTimeout(() => setPhase(3), 5000),
+      setTimeout(() => setPhase(4), 5800),
+      setTimeout(() => setPhase(6), 7000),
+      setTimeout(() => setPhase(7), 7800),
+      setTimeout(() => setPhase(71), 8800),
+      setTimeout(() => setPhase(8), 9100),
+      setTimeout(() => setPhase(9), 9900),
+      setTimeout(() => setPhase(91), 11800),
+      setTimeout(() => setPhase(98), 12800),
+      setTimeout(() => setPhase(99), 14000),
     ];
     return () => timers.forEach(clearTimeout);
   }, [loaded]);
-
-  // Task ordering at each phase
-  // Unsorted:  0-Slack, 1-Rachel, 2-Oakline, 3-Northvane, 4-Foxglove
-  // Step 1:    1-Rachel moves to top → Rachel, Slack, Oakline, Northvane, Foxglove
-  // Step 2:    4-Foxglove moves to pos 1 → Rachel, Foxglove, Slack, Oakline, Northvane (wait, that's not right)
-  // Final:     Rachel, Foxglove, Northvane, Slack, Oakline
 
   const tasks = [
     { id: "slack", text: "Review Slack for client messages", client: "All Clients" },
@@ -352,14 +341,38 @@ function HeroDemo({ loaded }) {
     { id: "foxglove", text: "Schedule Foxglove check-in", client: "Foxglove Partners" },
   ];
 
-  if (phase <= 3 || phase >= 11) {
-    return (
-      <div style={{ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(30px)", transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s" }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>
-          <svg width={14} height={14} viewBox="0 0 24 24" fill="none"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primary} strokeWidth="1.8" fill="none" strokeLinejoin="round"/></svg>
-          Suggested by Rai
-        </div>
-        <div style={{ position: "relative", height: 340, maxWidth: 480 }}>
+  const ROW = 44;
+  const positions = {
+    4:  { slack: 0, rachel: 1, oakline: 2, northvane: 3, foxglove: 4 },
+    6:  { slack: 0, rachel: 1, oakline: 2, northvane: 3, foxglove: 4 },
+    7:  { rachel: 0, slack: 1, oakline: 2, northvane: 3, foxglove: 4 },
+    71: { rachel: 0, slack: 1, oakline: 2, northvane: 3, foxglove: 4 },
+    8:  { rachel: 0, slack: 1, oakline: 2, northvane: 3, foxglove: 4 },
+    9:  { rachel: 0, foxglove: 1, northvane: 2, slack: 3, oakline: 4 },
+    91: { rachel: 0, foxglove: 1, northvane: 2, slack: 3, oakline: 4 },
+    10: { rachel: 0, foxglove: 1, northvane: 2, slack: 3, oakline: 4 },
+    98: { rachel: 0, foxglove: 1, northvane: 2, slack: 3, oakline: 4 },
+  };
+  const highlightId = (phase === 6 || phase === 7) ? "rachel" : (phase === 8 || phase === 9) ? "foxglove" : null;
+  const currentPos = positions[phase] || positions[4];
+
+  const cardsVisible = phase <= 3 || phase >= 98;
+  const cardsReturning = phase >= 99;
+  const taskVisible = phase >= 4 && phase < 98;
+
+  return (
+    <div style={{ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(30px)", transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s", position: "relative" }}>
+      {/* Suggested by Rai label */}
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14, opacity: (phase >= 3 && phase < 99) ? 0 : 1, transition: cardsReturning ? "opacity 1.45s ease" : "opacity 0.8s ease" }}>
+        <svg width={14} height={14} viewBox="0 0 24 24" fill="none"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primary} strokeWidth="1.8" fill="none" strokeLinejoin="round"/></svg>
+        Suggested by Rai
+      </div>
+
+      <div style={{ position: "relative", height: 340, maxWidth: 480 }}>
+
+        {/* ── Cards layer ── */}
+        <div style={{ position: "absolute", inset: 0, opacity: cardsVisible ? 1 : 0, transition: cardsReturning ? "opacity 1.45s ease" : "opacity 0.7s ease", zIndex: cardsVisible ? 2 : 1 }}>
+          {/* +12% badge */}
           <div style={{
             position: "absolute", top: -18, right: -10, zIndex: 10,
             display: "inline-flex", alignItems: "center", gap: 6,
@@ -367,8 +380,9 @@ function HeroDemo({ loaded }) {
             background: "rgba(255,255,255,0.9)", border: "1px solid rgba(216,223,216,0.6)",
             boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
             fontSize: 12, fontWeight: 600, color: C.text,
-            opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 1.2s",
-            animation: loaded ? "subtleBob 4s ease-in-out 1.5s infinite" : "none",
+            opacity: (phase >= 3 && phase < 99) ? 0 : (loaded ? 1 : 0),
+            transition: cardsReturning ? "opacity 1.45s ease 0.5s" : "opacity 0.8s ease",
+            animation: ((phase <= 3 && loaded) || cardsReturning) ? "subtleBob 4s ease-in-out infinite" : "none",
           }}>
             <span style={{ color: C.success, fontWeight: 700 }}>↑ 12%</span> retention this quarter
           </div>
@@ -376,9 +390,9 @@ function HeroDemo({ loaded }) {
           {/* Yellow (Foxglove) */}
           <div style={{
             position: "absolute", top: 0, left: 8, right: -4, zIndex: 1,
-            opacity: (phase >= 3 && phase < 11) ? 0 : 1, transform: (phase >= 3 && phase < 11) ? "translateX(30px) scale(0.95)" : "none",
-            transition: "opacity 0.5s ease, transform 0.5s ease",
-            animation: (phase === 0 || phase === 11) ? "fadeInPlace 0.4s ease 0.5s both" : "none",
+            opacity: (phase >= 3 && phase < 99) ? 0 : 1,
+            transform: (phase >= 3 && phase < 99) ? "translateX(30px) scale(0.95)" : "none",
+            transition: cardsReturning ? "opacity 1.45s ease" : "opacity 0.7s ease, transform 0.7s ease",
           }}>
             <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid " + C.border, boxShadow: "0 2px 16px rgba(0,0,0,0.04)", background: "linear-gradient(95deg, " + C.warningBg + " 0%, #FDF8EC 30%, " + C.card + " 100%)", transform: "rotate(2.5deg)" }}>
               <div style={{ padding: "16px 18px" }}>
@@ -392,9 +406,9 @@ function HeroDemo({ loaded }) {
           {/* Green (Northvane) */}
           <div style={{
             position: "absolute", top: 55, left: -6, right: 10, zIndex: 2,
-            opacity: (phase >= 2 && phase < 11) ? 0 : 1, transform: (phase >= 2 && phase < 11) ? "translateX(30px) scale(0.95)" : "none",
-            transition: "opacity 0.5s ease, transform 0.5s ease",
-            animation: (phase === 0 || phase === 11) ? "fadeInPlace 0.4s ease 0.7s both" : "none",
+            opacity: (phase >= 2 && phase < 99) ? 0 : 1,
+            transform: (phase >= 2 && phase < 99) ? "translateX(30px) scale(0.95)" : "none",
+            transition: cardsReturning ? "opacity 1.45s ease 0.25s" : "opacity 0.7s ease, transform 0.7s ease",
           }}>
             <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid " + C.border, boxShadow: "0 4px 20px rgba(0,0,0,0.05)", background: "linear-gradient(95deg, " + C.primarySoft + " 0%, #F0F5F1 30%, " + C.card + " 100%)", transform: "rotate(-1.5deg)" }}>
               <div style={{ padding: "16px 18px" }}>
@@ -408,9 +422,9 @@ function HeroDemo({ loaded }) {
           {/* Red (Broadleaf) */}
           <div style={{
             position: "absolute", top: 115, left: 2, right: 2, zIndex: 3,
-            opacity: (phase >= 1 && phase < 11) ? 0 : 1, transform: (phase >= 1 && phase < 11) ? "translateX(30px) scale(0.95)" : "none",
-            transition: "opacity 0.5s ease, transform 0.5s ease",
-            animation: (phase === 0 || phase === 11) ? "fadeInPlace 0.4s ease 0.9s both" : "none",
+            opacity: (phase >= 1 && phase < 99) ? 0 : 1,
+            transform: (phase >= 1 && phase < 99) ? "translateX(30px) scale(0.95)" : "none",
+            transition: cardsReturning ? "opacity 1.45s ease 0.4s" : "opacity 0.7s ease, transform 0.7s ease",
           }}>
             <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid " + C.border, boxShadow: "0 8px 32px rgba(0,0,0,0.08)", background: "linear-gradient(95deg, " + C.dangerBg + " 0%, #FDF5F3 30%, " + C.card + " 100%)", transform: "rotate(0.5deg)" }}>
               <div style={{ padding: "16px 18px" }}>
@@ -421,65 +435,44 @@ function HeroDemo({ loaded }) {
             </div>
           </div>
         </div>
-      </div>
-    );
-  }
 
-  // Each row is 44px tall (8px padding top + 8px bottom + ~28px content)
-  const ROW = 44;
-
-  // Position map: where each task sits at each phase
-  // unsorted order: slack=0, rachel=1, oakline=2, northvane=3, foxglove=4
-  // after rachel moves: rachel=0, slack=1, oakline=2, northvane=3, foxglove=4
-  // after foxglove moves: rachel=0, foxglove=1, northvane=2, slack=3, oakline=4
-  const positions = {
-    4:  { slack: 0, rachel: 1, oakline: 2, northvane: 3, foxglove: 4 },
-    5:  { slack: 0, rachel: 1, oakline: 2, northvane: 3, foxglove: 4 },
-    6:  { slack: 0, rachel: 1, oakline: 2, northvane: 3, foxglove: 4 },  // rachel highlighted
-    7:  { rachel: 0, slack: 1, oakline: 2, northvane: 3, foxglove: 4 },  // rachel moved (still highlighted)
-    71: { rachel: 0, slack: 1, oakline: 2, northvane: 3, foxglove: 4 },  // rachel settled
-    8:  { rachel: 0, slack: 1, oakline: 2, northvane: 3, foxglove: 4 },  // foxglove highlighted
-    9:  { rachel: 0, foxglove: 1, northvane: 2, slack: 3, oakline: 4 },  // foxglove moved (still highlighted)
-    91: { rachel: 0, foxglove: 1, northvane: 2, slack: 3, oakline: 4 },  // foxglove settled
-    10: { rachel: 0, foxglove: 1, northvane: 2, slack: 3, oakline: 4 },  // done
-  };
-
-  const highlightId = (phase === 6 || phase === 7) ? "rachel" : (phase === 8 || phase === 9) ? "foxglove" : null;
-  const currentPos = positions[phase] || positions[4];
-
-  return (
-    <div style={{ animation: "fadeInPlace 0.4s ease both" }}>
-      <div className="r-mockup-card">
-        <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: phase >= 5 && phase !== 10 ? 6 : 16 }}>Your Tasks</div>
-        {phase >= 5 && phase !== 10 && <div style={{ fontSize: 11, fontWeight: 700, color: C.btn, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid " + C.borderLight }}>Ranking by retention impact...</div>}
-        {phase === 10 && <div style={{ fontSize: 13, color: C.btn, fontWeight: 700, marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid " + C.borderLight }}>Sorted. Highest-value move is first.</div>}
-        <div style={{ position: "relative", height: ROW * 5 }}>
-          {tasks.map(t => {
-            const isHighlighted = t.id === highlightId;
-            const pos = currentPos[t.id];
-            return (
-              <div key={t.id} style={{
-                position: "absolute", left: 0, right: 0, top: 0,
-                transform: `translateY(${pos * ROW}px)${isHighlighted ? " scale(1.03)" : ""}`,
-                display: "flex", alignItems: "center", gap: 10,
-                padding: "8px 6px", height: ROW,
-                background: isHighlighted ? "rgba(91,33,182,0.06)" : C.card,
-                borderRadius: isHighlighted ? 8 : 0,
-                boxShadow: isHighlighted ? "0 4px 20px rgba(91,33,182,0.12), 0 0 0 1px rgba(91,33,182,0.15)" : "none",
-                zIndex: isHighlighted ? 10 : 1,
-                transition: isHighlighted
-                  ? "transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease"
-                  : "transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background 0.3s ease",
-              }}>
-                <div style={{ width: 16, height: 16, borderRadius: 4, border: "1.5px solid " + (isHighlighted ? C.btn + "50" : C.border), flexShrink: 0, transition: "border-color 0.2s" }} />
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: isHighlighted ? C.btn : C.text, lineHeight: 1.3, transition: "color 0.2s" }}>{t.text}</div>
-                  <div style={{ fontSize: 11, color: C.textMuted }}>{t.client}</div>
-                </div>
-              </div>
-            );
-          })}
+        {/* ── Task list layer ── */}
+        <div style={{ position: "absolute", inset: 0, opacity: taskVisible ? 1 : (phase >= 98 ? 0 : 0), transition: phase >= 98 ? "opacity 1.5s ease" : "opacity 1.0s ease", zIndex: taskVisible ? 3 : 0 }}>
+          <div className="r-mockup-card">
+            <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Your Tasks</div>
+            <div style={{ position: "relative", height: ROW * 5 }}>
+              {tasks.map(t => {
+                const isHighlighted = t.id === highlightId;
+                const pos = currentPos[t.id];
+                const isFoxgloveMoving = t.id === "foxglove" && phase === 9;
+                return (
+                  <div key={t.id} style={{
+                    position: "absolute", left: 0, right: 0, top: 0,
+                    transform: `translateY(${pos * ROW}px)${isHighlighted ? " scale(1.03)" : ""}`,
+                    display: "flex", alignItems: "center", gap: 10,
+                    padding: "8px 6px", height: ROW,
+                    background: isHighlighted ? "rgba(91,33,182,0.06)" : C.card,
+                    borderRadius: isHighlighted ? 8 : 0,
+                    boxShadow: isHighlighted ? "0 4px 20px rgba(91,33,182,0.12), 0 0 0 1px rgba(91,33,182,0.15)" : "none",
+                    zIndex: isHighlighted ? 10 : 1,
+                    transition: isHighlighted
+                      ? "transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease"
+                      : isFoxgloveMoving
+                        ? "transform 3.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background 0.3s ease"
+                        : "transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background 0.3s ease",
+                  }}>
+                    <div style={{ width: 16, height: 16, borderRadius: 4, border: "1.5px solid " + (isHighlighted ? C.btn + "50" : C.border), flexShrink: 0, transition: "border-color 0.2s" }} />
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: isHighlighted ? C.btn : C.text, lineHeight: 1.3, transition: "color 0.2s" }}>{t.text}</div>
+                      <div style={{ fontSize: 11, color: C.textMuted }}>{t.client}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   );
@@ -739,10 +732,7 @@ function Home({ setPage }) {
                   background: C.card, cursor: "default",
                   position: "relative", overflow: "hidden",
                 }}>
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 14 }}>
-                    <span style={{ fontSize: 32, fontWeight: 900, color: C.borderLight, lineHeight: 1 }}>{step.num}</span>
-                    <span style={{ marginTop: 6, opacity: 0.6 }}>{step.icon}</span>
-                  </div>
+                  <div style={{ marginBottom: 14, opacity: 0.7 }}>{step.icon}</div>
                   <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8, lineHeight: 1.25 }}>{step.title}</h3>
                   <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7, margin: 0 }}>{step.desc}</p>
                 </div>
@@ -1146,7 +1136,7 @@ function Pricing({ setPage }) {
 
   return (
     <>
-      <section style={{ padding: "56px 20px 28px", textAlign: "center" }}>
+      <section style={{ padding: "56px 20px 40px", textAlign: "center" }}>
         <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 14 }}>One client saved pays for{" "}
           <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
             <span style={{ color: C.textMuted }}>a year<span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} /></span>
@@ -1157,16 +1147,11 @@ function Pricing({ setPage }) {
       </section>
       <section style={{ padding: "0 20px 48px" }}>
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
-          {/* Enterprise bridge */}
-          <div style={{ textAlign: "center", padding: "0 0 20px" }}>
-            <p style={{ fontSize: 14, color: C.textSec }}>Simple pricing for individuals. Custom pricing for teams.</p>
-          </div>
-
           {/* Cards side by side */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20, alignItems: "stretch" }}>
             {/* Main pricing card */}
             <div style={{ flex: "1 1 400px", display: "flex" }}>
-              <div style={{ background: `radial-gradient(ellipse 90% 50% at 50% 35%, ${C.primarySoft} 0%, ${C.card} 70%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", width: "100%" }}>
+              <div style={{ background: `radial-gradient(ellipse 115% 60% at 50% 32%, #DCE9E0 0%, ${C.primarySoft} 35%, ${C.card} 78%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", width: "100%" }}>
                 <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: C.textMuted, marginBottom: 20, textAlign: "center" }}>One plan. Every feature. Impossibly easy.</div>
                 <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4, marginBottom: 4 }}>
                   <span style={{ fontSize: 52, fontWeight: 900, letterSpacing: "-0.03em" }}>$19.99</span>
@@ -1190,7 +1175,7 @@ function Pricing({ setPage }) {
 
             {/* Enterprise card */}
             <div style={{ flex: "1 1 400px", display: "flex" }}>
-              <div style={{ background: `radial-gradient(ellipse 90% 50% at 50% 35%, ${C.primarySoft} 0%, ${C.card} 70%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", width: "100%" }}>
+              <div style={{ background: `radial-gradient(ellipse 115% 60% at 50% 32%, #DCE9E0 0%, ${C.primarySoft} 35%, ${C.card} 78%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", width: "100%" }}>
                 <div style={{ position: "absolute", top: 28, right: -32, background: C.danger, color: "#fff", fontSize: 9, fontWeight: 700, padding: "5px 40px", transform: "rotate(45deg)", letterSpacing: ".06em", textAlign: "center" }}>EARLY ACCESS</div>
                 <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.textMuted, marginBottom: 4 }}>Enterprise</div>
                 <div style={{ fontSize: 14, color: C.textSec, marginBottom: 16 }}>Autonomous relationship intelligence.</div>
@@ -1374,7 +1359,7 @@ function BlogPosts() {
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
       {blogPostData.map((p, i) => (
-        <div key={i} onClick={() => { setExpandedPost(i); window.scrollTo(0, 0); }} style={{ background: C.card, borderRadius: 16, padding: "26px 24px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280, boxShadow: "0 4px 20px rgba(0,0,0,0.04)", cursor: "pointer", transition: "all 0.25s ease" }}>
+        <div key={i} onClick={() => { setExpandedPost(i); window.scrollTo(0, 0); }} style={{ background: C.card, borderRadius: 16, padding: "26px 24px", border: "1.5px solid " + C.border, cursor: "pointer", flex: "1 1 280px", minWidth: 280, boxShadow: C.cardShadow, transition: "transform 0.25s ease, box-shadow 0.25s ease" }} onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.08)"; }} onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = C.cardShadow; }}>
           <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
             <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", background: C.primarySoft, color: C.primary, borderRadius: 4 }}>{p.tag}</span>
             <span style={{ fontSize: 11, color: C.textMuted, padding: "3px 0" }}>{p.readTime} read</span>
@@ -1801,7 +1786,7 @@ function Blog() {
         {!activeModule ? (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
             {modules.map((m, i) => (
-              <div key={i} onClick={() => { reset(); setActiveModule(m.id); window.scrollTo(0, 0); }} style={{ background: C.card, borderRadius: 16, padding: "26px 24px", border: "1.5px solid " + C.border, cursor: "pointer", flex: "1 1 280px", minWidth: 280, boxShadow: "0 4px 20px rgba(0,0,0,0.04)", transition: "all 0.25s ease" }}>
+              <div key={i} onClick={() => { reset(); setActiveModule(m.id); window.scrollTo(0, 0); }} style={{ background: C.card, borderRadius: 16, padding: "26px 24px", border: "1.5px solid " + C.border, cursor: "pointer", flex: "1 1 280px", minWidth: 280, boxShadow: C.cardShadow, transition: "transform 0.25s ease, box-shadow 0.25s ease" }} onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.08)"; }} onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = C.cardShadow; }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
                   <span style={{ fontSize: 32 }}>{m.emoji}</span>
                   <div style={{ display: "flex", gap: 6 }}>
@@ -2234,7 +2219,7 @@ function Platform({ setPage }) {
               <span style={{ fontFamily: "'Caveat', cursive", fontWeight: 700, color: C.primary }}>They'll just stay.</span>
             </h1>
             <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>
-              Relationship intelligence, health monitoring, AI advising, and pipeline management in one system. Our AI isn't just smart — it's <strong style={{ color: C.text }}>emotionally intelligent</strong>.
+              Relationship intelligence, health monitoring, and pipeline management in one system. Our AI isn't just smart — it's <strong style={{ color: C.text }}>emotionally intelligent</strong>.
             </p>
           </div>
 
@@ -2769,7 +2754,7 @@ export default function RetaynedSite() {
         .r-no-pad { padding-left: 0 !important; padding-right: 0 !important; }
         
         @media (min-width: 768px) {
-          section { padding-left: 40px !important; padding-right: 40px !important; }
+          section { padding-left: 40px !important; padding-right: 40px !important; padding-bottom: 64px !important; }
           .r-nav-inner { padding-left: 40px !important; padding-right: 40px !important; }
           .r-hero-section { padding-top: 72px !important; }
           .r-wrap { max-width: 100%; }
