@@ -169,7 +169,7 @@ function Nav({ page, setPage }) {
         <div className="r-nav-inner" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", maxWidth: 1600, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <button className="r-mobile-only" onClick={() => setOpen(!open)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2, display: "flex", alignItems: "center", zIndex: 110 }}>
+            <button className="r-mobile-only" onClick={() => setOpen(!open)} aria-label={open ? "Close menu" : "Open menu"} style={{ background: "none", border: "none", cursor: "pointer", padding: 2, display: "flex", alignItems: "center", zIndex: 110 }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={C.text} strokeWidth="2.5" strokeLinecap="round">
                 {open ? <><line x1="6" y1="6" x2="18" y2="18" /><line x1="6" y1="18" x2="18" y2="6" /></> : <><line x1="3" y1="7" x2="21" y2="7" /><line x1="3" y1="12" x2="17" y2="12" /><line x1="3" y1="17" x2="21" y2="17" /></>}
               </svg>
@@ -181,13 +181,13 @@ function Nav({ page, setPage }) {
           </div>
           <div className="r-desktop-nav" style={{ display: "none", alignItems: "baseline", gap: 28 }}>
             {links.filter(l => l.id !== "login").map(l => (
-              <span key={l.id} onClick={() => setPage(l.id)} style={{ fontSize: 15, fontWeight: page === l.id ? 700 : 600, color: page === l.id ? C.primary : C.text, cursor: "pointer", letterSpacing: "-0.01em", borderBottom: page === l.id ? "2px solid " + C.btn : "2px solid transparent", paddingBottom: 2, transition: "border-color 0.2s" }}>{l.label}</span>
+              <span key={l.id} onClick={() => setPage(l.id)} role="button" tabIndex={0} onKeyDown={e => e.key === "Enter" && setPage(l.id)} style={{ fontSize: 15, fontWeight: page === l.id ? 700 : 600, color: page === l.id ? C.primary : C.text, cursor: "pointer", letterSpacing: "-0.01em", borderBottom: page === l.id ? "2px solid " + C.btn : "2px solid transparent", paddingBottom: 2, transition: "border-color 0.2s" }}>{l.label}</span>
             ))}
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span className="r-desktop-nav" onClick={() => setPage("login")} style={{ fontSize: 14, fontWeight: 600, color: C.textSec, cursor: "pointer" }}>Log In</span>
-          <button className="r-desktop-nav r-ghost-cta" onClick={() => setPage("signup")} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 16px", background: "transparent", border: "1.5px solid " + C.border, borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 600, color: C.text }}>
+          <span className="r-desktop-nav" onClick={() => setPage("login")} role="button" tabIndex={0} onKeyDown={e => e.key === "Enter" && setPage("login")} style={{ fontSize: 14, fontWeight: 600, color: C.textSec, cursor: "pointer" }}>Log In</span>
+          <button className="r-desktop-nav r-ghost-cta" onClick={() => setPage("demo")} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 16px", background: "transparent", border: "1.5px solid " + C.border, borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 600, color: C.text }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
               <line x1="8" y1="21" x2="16" y2="21" />
@@ -220,7 +220,7 @@ function Nav({ page, setPage }) {
               {l.label}
             </button>
           ))}
-          <button onClick={() => { setPage("signup"); setOpen(false); }} style={{
+          <button onClick={() => { setPage("demo"); setOpen(false); }} style={{
             width: "100%", padding: "14px 20px", background: "transparent", color: C.text,
             border: "1.5px solid " + C.border, borderRadius: 10, fontSize: 15, fontWeight: 700,
             cursor: "pointer", fontFamily: "inherit", marginTop: 24, display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
@@ -259,7 +259,7 @@ function Footer({ setPage }) {
       </div>
       <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 12 }}>
         {[["platform","Platform"],["pricing","Pricing"],["about","About"],["faq","FAQs"],["contact","Contact"],["privacy","Privacy"],["terms","Terms"]].map(([id, label]) => (
-          <span key={id} onClick={() => setPage(id)} style={{ fontSize: 12, color: C.textMuted, cursor: "pointer" }}>{label}</span>
+          <span key={id} onClick={() => setPage(id)} role="button" tabIndex={0} onKeyDown={e => e.key === "Enter" && setPage(id)} style={{ fontSize: 12, color: C.textMuted, cursor: "pointer" }}>{label}</span>
         ))}
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 8 }}>
@@ -331,10 +331,9 @@ function HeroDemo({ loaded }) {
       setTimeout(() => setPhase(8), 8200),   // highlight "Schedule Foxglove" (needs to move up)
       setTimeout(() => setPhase(9), 9200),   // move "Schedule Foxglove" into position 1
       setTimeout(() => setPhase(10), 10200),  // final sorted state
-      setTimeout(() => setPhase(0), 14000),   // restart
     ];
     return () => timers.forEach(clearTimeout);
-  }, [loaded, phase === 0]);
+  }, [loaded]);
 
   // Task ordering at each phase
   // Unsorted:  0-Slack, 1-Rachel, 2-Oakline, 3-Northvane, 4-Foxglove
@@ -510,9 +509,8 @@ function TodayDemo() {
 // ═══ HOME ═══
 function Home({ setPage }) {
   const [loaded, setLoaded] = useState(false);
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(1);
   const [expandedText, setExpandedText] = useState(false);
-  const [hoveredFeature, setHoveredFeature] = useState(null);
 
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 100);
@@ -520,12 +518,12 @@ function Home({ setPage }) {
   }, []);
 
   const homeTabs = [
+    { id: "today", label: "Today", icon: "◉", headline: "One page. Every priority.", sub: "Your Today tab knows which clients need you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value. Green clients surface first. At-risk clients with high revenue jump the line." },
     { id: "scoring", label: "Retention Score", icon: "◎", headline: "A number that means something.", sub: "12 dimensions. 20 combination signals. Health check modifiers. Every client gets a Retention Score from 1–99 that tells you exactly where the relationship stands — not where you hope it is." },
     { id: "health", label: "Health Checks", icon: "♡", headline: "Five questions. Two minutes. The truth.", sub: "Regular check-ins that detect drift before it becomes damage. Your answers blend directly into the Retention Score — bad news moves the number immediately. No lengthy forms. No busywork. Just the signal." },
     { id: "rai", label: "Talk to Rai", icon: "✦", headline: "She writes the words you need when it matters most.", sub: "Rai is an AI advisor calibrated to your specific relationships. When you don't know what to say — the opening line, the tone, whether to call or email — Rai gives you the script." },
     { id: "rolodex", label: "Rolodex", icon: "⟐", headline: "Your pipeline is forward-looking.", sub: "Former clients aren't dead relationships — they're future revenue. The Rolodex tracks who left, how it ended, and whether they'd come back. One-off projects become re-engagement opportunities." },
     { id: "referrals", label: "Referrals", icon: "⟡", headline: "Your best clients send you their friends.", sub: "Retayned tracks referral readiness based on loyalty, trust, and relationship depth. When a client is ready to refer, the system knows before you do." },
-    { id: "today", label: "Today", icon: "◉", headline: "One page. Every priority.", sub: "Your Today tab knows which clients need you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value. Green clients surface first. At-risk clients with high revenue jump the line." },
   ];
   const ht = homeTabs[activeTab];
 
@@ -689,9 +687,6 @@ function Home({ setPage }) {
                   Start Free Trial
                   
                 </button>
-                <button className="r-ghost-cta" onClick={() => setPage("pricing")}>
-                  See Pricing
-                </button>
               </div>
 
               <p style={{ fontSize: 13, color: C.textMuted, opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 0.9s", letterSpacing: "0.01em" }}>
@@ -733,13 +728,10 @@ function Home({ setPage }) {
               { num: "03", title: "She knows where it goes.", desc: "Using a proprietary scoring engine, Rai weighs all of the day's tasks by retention impact. Your highest-value move is next up.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> },
             ].map((step, i) => (
               <Reveal key={i} delay={i * 0.15} style={{ flex: "1 1 300px", minWidth: 280 }}>
-                <div className="r-rai-alert-wrap" style={{ borderRadius: 16 }}
-                  onMouseEnter={() => setHoveredFeature(i)}
-                  onMouseLeave={() => setHoveredFeature(null)}
-                  onClick={() => setHoveredFeature(hoveredFeature === i ? null : i)}>
+                <div className="r-rai-alert-wrap" style={{ borderRadius: 16 }}>
                 <div style={{
                   padding: "28px 24px", borderRadius: 16, border: "1.5px solid " + C.borderLight,
-                  background: C.card, cursor: "pointer",
+                  background: C.card, cursor: "default",
                   position: "relative", overflow: "hidden",
                 }}>
                   <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 14 }}>
@@ -748,73 +740,6 @@ function Home({ setPage }) {
                   </div>
                   <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8, lineHeight: 1.25 }}>{step.title}</h3>
                   <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7, margin: 0 }}>{step.desc}</p>
-                  <p className="r-mobile-only" style={{ fontSize: 11, color: C.textMuted, marginTop: 10, display: "none" }}>{hoveredFeature === i ? "Tap to close" : "Tap to preview"}</p>
-
-                  {/* Hover mockup overlay */}
-                  {hoveredFeature === i && (
-                    <div style={{
-                      position: "absolute", inset: 0, background: C.card,
-                      borderRadius: 16, padding: "16px 18px",
-                      animation: "fadeInScale 0.2s ease",
-                      display: "flex", flexDirection: "column", justifyContent: "center",
-                    }}>
-                      {i === 0 && <>
-                        <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 10 }}>
-                          <div style={{ width: 5, height: 5, borderRadius: "50%", background: C.danger, animation: "pulse 2s infinite" }} />
-                          <span style={{ fontSize: 9, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".05em" }}>Live — scanning 15 clients</span>
-                        </div>
-                        {[
-                          { name: "Broadleaf Media", score: 65, signals: ["78 → 65", "combo: no_room"], color: C.danger },
-                          { name: "Foxglove Partners", score: 38, signals: ["42 → 38", "HC overdue"], color: C.danger },
-                          { name: "Northvane Studios", score: 91, signals: ["91 stable", "renewed"], color: C.success },
-                        ].map((c, ci) => (
-                          <div key={ci} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0", borderTop: ci > 0 ? "1px solid " + C.borderLight : "none", opacity: c.color === C.success ? 0.4 : 1 }}>
-                            <div style={{ width: 30, height: 30, borderRadius: 7, background: c.color + "12", border: "1px solid " + c.color + "30", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 11, color: c.color, flexShrink: 0 }}>{c.score}</div>
-                            <div>
-                              <div style={{ fontWeight: 700, fontSize: 12, color: C.text }}>{c.name}</div>
-                              <div style={{ display: "flex", gap: 3 }}>{c.signals.map(s => <span key={s} style={{ fontSize: 8, padding: "1px 5px", borderRadius: 4, background: c.color + "10", color: c.color, fontWeight: 600 }}>{s}</span>)}</div>
-                            </div>
-                          </div>
-                        ))}
-                      </>}
-                      {i === 1 && <>
-                        <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
-                          <svg width={10} height={10} viewBox="0 0 24 24" fill="none"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primary} strokeWidth="1.6" fill="none" strokeLinejoin="round"/></svg>
-                          <span style={{ fontSize: 9, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".04em" }}>Suggested by Rai</span>
-                        </div>
-                        {[
-                          { text: "Rachel's score dropped 9 pts. Get a call on the books.", client: "Broadleaf Media", bg: C.dangerBg },
-                          { text: "Health Check 12 days overdue. Don't skip this one.", client: "Foxglove Partners", bg: C.primarySoft },
-                        ].map((c, ci) => (
-                          <div key={ci} style={{ background: `linear-gradient(95deg, ${c.bg} 0%, ${C.card} 100%)`, borderRadius: 8, border: "1px solid " + C.borderLight, padding: "8px 10px", marginBottom: 5 }}>
-                            <p style={{ fontSize: 11, color: C.text, lineHeight: 1.4, margin: 0 }}>{c.text}</p>
-                            <p style={{ fontSize: 9, color: C.textMuted, marginTop: 2 }}>{c.client}</p>
-                          </div>
-                        ))}
-                      </>}
-                      {i === 2 && <>
-                        <div style={{ fontSize: 9, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".05em", marginBottom: 8 }}>Your Tasks</div>
-                        {[
-                          { task: "Review Slack for client messages", client: "All Clients", recurring: true },
-                          { task: "Review Oakline Q1 numbers before call", client: "Oakline Outdoors", recurring: false },
-                          { task: "Follow up on Broadleaf invoice", client: "Broadleaf Media", recurring: false },
-                          { task: "Send creative brief to Marcus", client: "Ridgeline Supply", recurring: false },
-                        ].map((c, ci) => (
-                          <div key={ci} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", borderTop: ci > 0 ? "1px solid " + C.borderLight : "none" }}>
-                            <div style={{ width: 16, height: 16, borderRadius: 4, border: "1.5px solid " + C.border, flexShrink: 0 }} />
-                            <div style={{ flex: 1 }}>
-                              <div style={{ fontSize: 11, fontWeight: 600, color: C.text, lineHeight: 1.3 }}>{c.task}</div>
-                              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                                <span style={{ fontSize: 9, color: C.textMuted }}>{c.client}</span>
-                                {c.recurring && <span style={{ fontSize: 8, color: C.textMuted, border: "1px solid " + C.borderLight, borderRadius: 3, padding: "0 3px" }}>↻</span>}
-                              </div>
-                            </div>
-                            <span style={{ fontSize: 12, color: C.borderLight, cursor: "pointer" }}>×</span>
-                          </div>
-                        ))}
-                      </>}
-                    </div>
-                  )}
                 </div>
                 </div>
               </Reveal>
@@ -914,23 +839,24 @@ function Home({ setPage }) {
           </div>
 
           {/* Feature content */}
+          {/* Mobile: headline → mockup → description + CTAs */}
+          {/* Desktop: left (headline + desc + CTAs) | right (mockup) */}
+          <div className="r-feat-heading-mobile" style={{ display: "none", maxWidth: 1000, margin: "0 auto 16px" }}>
+            <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15 }}>{ht.headline}</h2>
+          </div>
           <div className="r-feat-content" style={{
             display: "flex", flexWrap: "wrap", gap: 48,
             alignItems: "flex-start", maxWidth: 1000, margin: "0 auto",
           }}>
             {/* Left: copy */}
             <div style={{ flex: "1 1 340px" }}>
-              <h2 style={{
+              <h2 className="r-feat-heading-desktop" style={{
                 fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15,
                 marginBottom: 12,
               }}>{ht.headline}</h2>
-              <div className="r-feat-desc-full" style={{
+              <p style={{
                 fontSize: 15, color: C.textSec, lineHeight: 1.75, marginBottom: 28,
-              }}>{ht.sub}</div>
-              <div className="r-feat-desc-mobile" style={{ display: "none" }}>
-                <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 8, overflow: "hidden", maxHeight: expandedText ? "none" : 48, transition: "max-height 0.3s ease" }}>{ht.sub}</p>
-                <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 10, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
-              </div>
+              }}>{ht.sub}</p>
               <div style={{ display: "flex", gap: 12 }}>
                 <button className="r-hero-cta" onClick={() => setPage("signup")} style={{ padding: "13px 26px", fontSize: 14 }}>
                   Try Free Now 
@@ -1093,7 +1019,7 @@ function Home({ setPage }) {
               textTransform: "uppercase", letterSpacing: "0.25em",
               pointerEvents: "none",
               boxShadow: "inset 0 0 0 1.5px rgba(196,67,43,0.35)",
-            }}>Enterprise</div>
+            }}>Early Access</div>
             <h2 style={{
               fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff",
             }}>Autonomous relationship intelligence.</h2>
@@ -1132,9 +1058,9 @@ function Home({ setPage }) {
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 16, maxWidth: 1100, margin: "0 auto" }}>
             {[
-              { quote: "I used to lose 2-3 clients a year and just accept it as cost of doing business. Retayned showed me an actual pattern. It was the same signs every time and we just ignored them. Not anymore!", name: "Agency Owner", role: "50+ Clients", stars: 5 },
-              { quote: "It gave me the exact words to say to a client I was about to lose. I had the conversation that afternoon. They're still with me 8 months later. I'm still with Retayned.", name: "Solo Operator", role: "1-5 Clients", stars: 5 },
-              { quote: "The health check questions are uncomfortable in the best way. They force you to admit what you already know but haven't said out loud. It's something we thought we'd use for crises and it's turned into our daily operations hub.", name: "Freelance Consultant", role: "10-50 Clients", stars: 5 },
+              { quote: "I used to lose 2-3 clients a year and just accept it as cost of doing business. Retayned showed me an actual pattern. It was the same signs every time and we just ignored them. Not anymore!", name: "Agency Owner", role: "50+ Clients", stars: 5, initials: "MK", color: "#558B68" },
+              { quote: "It gave me the exact words to say to a client I was about to lose. I had the conversation that afternoon. They're still with me 8 months later. I'm still with Retayned.", name: "Solo Operator", role: "1-5 Clients", stars: 5, initials: "JR", color: "#5B21B6" },
+              { quote: "The health check questions are uncomfortable in the best way. They force you to admit what you already know but haven't said out loud. It's something we thought we'd use for crises and it's turned into our daily operations hub.", name: "Freelance Consultant", role: "10-50 Clients", stars: 5, initials: null, color: "#92A596", beta: true },
             ].map((t, i) => (
               <Reveal key={i} delay={i * 0.12} style={{ flex: "1 1 300px", minWidth: 280 }}>
                 <div className="r-testimonial-card">
@@ -1144,9 +1070,21 @@ function Home({ setPage }) {
                     ))}
                   </div>
                   <p style={{ fontSize: 15, color: C.text, lineHeight: 1.65, marginBottom: 20, fontStyle: "italic", flex: 1 }}>"{t.quote}"</p>
-                  <div style={{ borderTop: "1px solid " + C.borderLight, paddingTop: 14 }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{t.name}</div>
-                    <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>{t.role}</div>
+                  <div style={{ borderTop: "1px solid " + C.borderLight, paddingTop: 14, display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: t.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      {t.initials ? (
+                        <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>{t.initials}</span>
+                      ) : (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                      )}
+                    </div>
+                    <div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <span style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{t.name}</span>
+                        {t.beta && <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 4, background: C.primarySoft, color: C.primary, textTransform: "uppercase", letterSpacing: ".04em" }}>From our beta</span>}
+                      </div>
+                      <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>{t.role}</div>
+                    </div>
                   </div>
                 </div>
               </Reveal>
@@ -1216,7 +1154,7 @@ function Pricing({ setPage }) {
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
           {/* Enterprise bridge */}
           <div style={{ textAlign: "center", padding: "0 0 20px" }}>
-            <p style={{ fontSize: 14, color: C.textSec }}>One plan for you. One plan for your org.</p>
+            <p style={{ fontSize: 14, color: C.textSec }}>Simple pricing for individuals. Custom pricing for teams.</p>
           </div>
 
           {/* Cards side by side */}
@@ -1257,7 +1195,7 @@ function Pricing({ setPage }) {
                   <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.primary, marginBottom: 16, textAlign: "center" }}>Built for large orgs and AI agents</div>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                     {["Slack, email, Zoom, CRM integrations", "Automated daily portfolio sweeps", "Churn archetype detection", "Prioritized client rankings", "Multi-signal alerts", "Score history and drift tracking", "API + webhook delivery", "Dedicated onboarding"].map((f, j) => (
-                      <span key={j} style={{ fontSize: 13, color: C.text, padding: "6px 14px", borderRadius: 20, background: "rgba(51,84,62,0.06)", border: "1px solid " + C.borderLight, fontWeight: 500, textAlign: "center" }}>{f}</span>
+                      <span key={j} style={{ fontSize: 13, color: C.text, padding: "6px 14px", borderRadius: 10, background: "rgba(51,84,62,0.06)", border: "1px solid " + C.borderLight, fontWeight: 500, textAlign: "center" }}>{f}</span>
                     ))}
                   </div>
                 </div>
@@ -1330,6 +1268,118 @@ function About({ setPage }) {
         </div>
       </section>
     </>
+  );
+}
+
+// ═══ BLOG POSTS ═══
+const blogPostData = [
+  {
+    title: "Why your best clients leave without warning",
+    desc: "It's not performance. It's the gap between what they expected and what they experienced.",
+    tag: "Retention",
+    readTime: "4 min",
+    body: [
+      "You delivered great work. The metrics were solid. The client said everything was fine. Then one Tuesday, they emailed to say they were \"going in a different direction.\" No fight. No complaint. No warning.",
+      "This is the most common way good clients leave. Not with a blow-up, but with a slow fade that only looks sudden in hindsight.",
+      "Here's what actually happened: somewhere along the way, a gap opened between what the client expected and what they experienced. Not in quality — in the relationship itself. Maybe they expected a proactive partner and got a reactive one. Maybe they expected to feel like a priority and started feeling like a task. Maybe they expected transparency and got polished reports that hid the messy truth.",
+      "The work was fine. The relationship wasn't.",
+      "We've seen this pattern dozens of times. The client stops giving detailed feedback. Replies get shorter. Meetings get rescheduled. They stop pushing back — which feels like agreement but is actually disengagement. By the time they tell you, the decision was made weeks ago.",
+      "The fix isn't more status reports or check-in meetings. It's learning to read the signals that predict this gap before it becomes a canyon. That's what Retayned's Health Check system is built for: five questions that force you to confront what you already know but haven't said out loud.",
+      "The clients you lose aren't the ones who complain. They're the ones who go quiet.",
+    ]
+  },
+  {
+    title: "The 5 questions that predict client churn",
+    desc: "Forget satisfaction surveys. These five questions force honesty — and the answers tell you everything.",
+    tag: "Health Checks",
+    readTime: "5 min",
+    body: [
+      "Satisfaction surveys are useless for predicting churn. A client can be satisfied on Tuesday and gone by Friday. Satisfaction is a snapshot of politeness, not a measure of loyalty.",
+      "After years of watching clients leave and trying to reverse-engineer the warning signs, we narrowed it down to five questions. Not questions you ask the client — questions you ask yourself, about the client.",
+      "Question 1: Has this client's communication pattern changed recently? This isn't about frequency. It's about the texture. Did they used to send voice notes and now it's one-line emails? Did they used to reply within an hour and now it's two days? The shift matters more than the baseline.",
+      "Question 2: When was your last meaningful conversation? Not a status update. Not a Slack message about a deadline. A real conversation where you talked about the work, the relationship, or the future. If you have to think about it, it's been too long.",
+      "Question 3: How honest is the feedback you're getting? Engaged clients push back. They challenge ideas, request changes, and have opinions. When feedback shifts from specific to vague — from \"can we try a different angle on the headline\" to \"looks good\" — something has changed.",
+      "Question 4: Is there a conversation you've been putting off? This is the hardest one to answer honestly. If there's something you've been meaning to bring up but keep delaying, that avoidance is a signal. The conversation you're avoiding is usually the one that saves the relationship.",
+      "Question 5: If they cancelled tomorrow, how would you feel? Not how you'd respond — how you'd feel. Surprised? Or would you think \"yeah, I could see that coming\"? Your gut knows before your brain admits it.",
+      "These five questions form the foundation of every Health Check inside Retayned. They're uncomfortable by design. Because the truth about a client relationship is always available — most people just don't ask.",
+    ]
+  },
+  {
+    title: "What 50 lost clients taught us about communication velocity",
+    desc: "When response times double, cancellation follows within 8 weeks.",
+    tag: "Signals",
+    readTime: "3 min",
+    body: [
+      "We went back through every client we'd lost over a decade of agency work and looked at one metric: how fast they responded to us in the months before they left versus the months before that.",
+      "The pattern was impossible to ignore. In 42 out of 50 cases, the client's average response time at least doubled in the 8 weeks before they cancelled. Not gradually — there was usually a clear inflection point. One week they're replying same-day, the next week it's three days, and it never comes back.",
+      "We call this communication velocity, and it's one of the strongest leading indicators of churn we've found.",
+      "What makes velocity so useful is that it's objective. You don't have to interpret body language or read between the lines of an email. The data is right there in your inbox: timestamps don't lie.",
+      "But here's the thing most people miss: velocity dropping doesn't always mean the client is unhappy with you. Sometimes they're drowning internally. Sometimes they got a new boss who's restructuring priorities. Sometimes it's a budget freeze and they don't know how to tell you yet.",
+      "The signal isn't a diagnosis — it's a prompt. When velocity drops, that's your cue to reach out, not with a status update, but with a genuine question: \"I noticed we haven't connected as much lately. Everything good on your end?\"",
+      "Retayned tracks velocity automatically by reading metadata from your connected communication channels — timestamps, not content. When a client's pattern shifts, you'll know before the pattern becomes permanent.",
+    ]
+  },
+  {
+    title: "How to have the conversation you're avoiding",
+    desc: "The opening line matters more than you think. We break down the script.",
+    tag: "AI Coach",
+    readTime: "4 min",
+    body: [
+      "You know the conversation. The one you've been putting off for two weeks. Maybe the client's been distant. Maybe the scope is creeping and you haven't said anything. Maybe you know something is wrong and you're hoping it fixes itself.",
+      "It won't. The longer you wait, the harder it gets — and the more likely the client fills the silence with their own narrative, which is always worse than reality.",
+      "Here's the framework we use for every hard client conversation, and it's the same logic Rai uses when she writes you a script.",
+      "Step 1: Lead with observation, not accusation. Don't say \"You've been unresponsive.\" Say \"I've noticed our communication has shifted over the last couple weeks.\" The first one makes them defensive. The second one opens a door.",
+      "Step 2: Name the feeling without projecting. \"I want to make sure we're still aligned\" works better than \"I'm worried you're unhappy.\" You're acknowledging the tension without telling them how they feel.",
+      "Step 3: Ask a question that requires a real answer. Not \"Is everything okay?\" — they'll say yes. Try: \"If you could change one thing about how we're working together, what would it be?\" That question is specific enough to force a genuine response.",
+      "Step 4: Shut up. This is the hardest part. After you ask the real question, stop talking. Let the silence do its work. The client will fill it — and what they say next is the truth you've been missing.",
+      "The conversation you're avoiding is almost never as bad as you think. And in our experience, having it early — even imperfectly — saves accounts that silence would have killed.",
+    ]
+  },
+];
+
+function BlogPosts() {
+  const [expandedPost, setExpandedPost] = useState(null);
+
+  if (expandedPost !== null) {
+    const post = blogPostData[expandedPost];
+    return (
+      <div>
+        <button onClick={() => setExpandedPost(null)} style={{ background: "none", border: "none", fontSize: 13, fontWeight: 600, color: C.textMuted, cursor: "pointer", fontFamily: "inherit", marginBottom: 20, padding: 0 }}>← Back to all posts</button>
+        <div style={{ background: C.card, borderRadius: 16, padding: "32px 28px", border: "1px solid " + C.border, boxShadow: "0 8px 32px rgba(0,0,0,0.05)" }}>
+          <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+            <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", background: C.primarySoft, color: C.primary, borderRadius: 4 }}>{post.tag}</span>
+            <span style={{ fontSize: 11, color: C.textMuted, padding: "3px 0" }}>{post.readTime} read</span>
+          </div>
+          <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 20 }}>{post.title}</h2>
+          <div style={{ fontSize: 15, color: C.text, lineHeight: 1.75 }}>
+            {post.body.map((p, i) => (
+              <p key={i} style={{ marginBottom: 16 }}>{p}</p>
+            ))}
+          </div>
+          <div style={{ marginTop: 28, padding: "24px 20px", background: C.primarySoft, borderRadius: 12, textAlign: "center" }}>
+            <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Want to catch these signals automatically?</p>
+            <p style={{ fontSize: 13, color: C.textSec, marginBottom: 14 }}>Retayned monitors your client relationships and tells you when to act.</p>
+            <button className="cta-btn" onClick={() => {}} style={{ padding: "12px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Start Free Trial</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
+      {blogPostData.map((p, i) => (
+        <div key={i} onClick={() => { setExpandedPost(i); window.scrollTo(0, 0); }} style={{ background: C.card, borderRadius: 16, padding: "26px 24px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280, boxShadow: "0 4px 20px rgba(0,0,0,0.04)", cursor: "pointer", transition: "all 0.25s ease" }}>
+          <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+            <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", background: C.primarySoft, color: C.primary, borderRadius: 4 }}>{p.tag}</span>
+            <span style={{ fontSize: 11, color: C.textMuted, padding: "3px 0" }}>{p.readTime} read</span>
+          </div>
+          <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{p.title}</h3>
+          <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.55 }}>{p.desc}</p>
+          <div style={{ marginTop: 12, fontSize: 13, fontWeight: 600, color: C.btn }}>Read post</div>
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -1777,23 +1827,7 @@ function Blog() {
       {/* Blog Posts */}
       <section style={{ padding: "0 20px 48px" }}>
         <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 16 }}>From the Blog</h2>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
-          {[
-            { title: "Why your best clients leave without warning", desc: "It's not performance. It's the gap between what they expected and what they experienced.", tag: "Retention" },
-            { title: "The 5 questions that predict client churn", desc: "Forget satisfaction surveys. These five questions force honesty — and the answers tell you everything.", tag: "Health Checks" },
-            { title: "What 50 lost clients taught us about communication velocity", desc: "When response times double, cancellation follows within 8 weeks.", tag: "Signals" },
-            { title: "How to have the conversation you're avoiding", desc: "The opening line matters more than you think. We break down the script.", tag: "AI Coach" },
-          ].map((p, i) => (
-            <div key={i} style={{ background: C.card, borderRadius: 16, padding: "26px 24px", border: "1px solid " + C.border, flex: "1 1 280px", minWidth: 280, boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
-              <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-                <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", background: C.primarySoft, color: C.primary, borderRadius: 4 }}>{p.tag}</span>
-                <span style={{ fontSize: 11, color: C.textMuted, padding: "3px 0" }}>Coming soon</span>
-              </div>
-              <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{p.title}</h3>
-              <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.55 }}>{p.desc}</p>
-            </div>
-          ))}
-        </div>
+        <BlogPosts />
       </section>
 
       {/* Subscribe */}
@@ -1811,20 +1845,20 @@ function Blog() {
 // ═══ DEMO ═══
 function Demo() {
   return (
-    <section style={{ padding: "56px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
-      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 10 }}>Get a Demo</h1>
-      <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.6 }}>Get a prerecorded demo of the Retayned platform.</p>
-      <div style={{ background: C.card, borderRadius: 18, padding: "32px 28px", border: "1px solid " + C.border, boxShadow: "0 8px 32px rgba(0,0,0,0.05)" }}>
+    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
+      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get a Demo</h1>
+      <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Get a prerecorded demo of the Retayned platform!</p>
+      <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Name</label><input style={inputStyle} placeholder="Your name" /></div>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Email</label><input style={inputStyle} placeholder="you@agency.com" type="email" /></div>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Message</label><textarea style={{ ...inputStyle, minHeight: 120, resize: "vertical" }} placeholder="What parts of the platform do you want to see? What features are you most interested in?" /></div>
-          <button className="cta-btn" style={{ width: "100%", padding: "15px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Send Me the Demo</button>
+          <button className="cta-btn" style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Send Me the Demo</button>
         </div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 24 }}>
         {[["Email", "hello@retayned.com"], ["Based in", "Washington, DC"], ["Response time", "Usually within a few hours"]].map(([l, v], i) => (
-          <div key={i} style={{ background: C.card, borderRadius: 14, padding: "18px 22px", border: "1px solid " + C.border, boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}><div style={{ fontSize: 12, fontWeight: 700, marginBottom: 3, textTransform: "uppercase", letterSpacing: ".04em", color: C.textMuted }}>{l}</div><div style={{ fontSize: 15, color: C.text, fontWeight: 500 }}>{v}</div></div>
+          <div key={i} style={{ background: C.card, borderRadius: 12, padding: "16px 20px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}><div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{l}</div><div style={{ fontSize: 14, color: C.textSec }}>{v}</div></div>
         ))}
       </div>
     </section>
@@ -1833,20 +1867,20 @@ function Demo() {
 // ═══ CONTACT ═══
 function Contact() {
   return (
-    <section style={{ padding: "56px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
-      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 10 }}>Get in Touch</h1>
-      <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.6 }}>Questions, feedback, partnerships, or just want to talk retention.</p>
-      <div style={{ background: C.card, borderRadius: 18, padding: "32px 28px", border: "1px solid " + C.border, boxShadow: "0 8px 32px rgba(0,0,0,0.05)" }}>
+    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
+      <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>Get in Touch</h1>
+      <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32, lineHeight: 1.5 }}>Questions, feedback, partnerships, or just want to talk retention.</p>
+      <div style={{ background: C.card, borderRadius: 16, padding: "28px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Name</label><input style={inputStyle} placeholder="Your name" /></div>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Email</label><input style={inputStyle} placeholder="you@agency.com" type="email" /></div>
           <div><label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Message</label><textarea style={{ ...inputStyle, minHeight: 120, resize: "vertical" }} placeholder="What's on your mind?" /></div>
-          <button className="cta-btn" style={{ width: "100%", padding: "15px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Send Message</button>
+          <button className="cta-btn" style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Send Message</button>
         </div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 24 }}>
         {[["Email", "hello@retayned.com"], ["Based in", "Washington, DC"], ["Response time", "Usually within a few hours"]].map(([l, v], i) => (
-          <div key={i} style={{ background: C.card, borderRadius: 14, padding: "18px 22px", border: "1px solid " + C.border, boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}><div style={{ fontSize: 12, fontWeight: 700, marginBottom: 3, textTransform: "uppercase", letterSpacing: ".04em", color: C.textMuted }}>{l}</div><div style={{ fontSize: 15, color: C.text, fontWeight: 500 }}>{v}</div></div>
+          <div key={i} style={{ background: C.card, borderRadius: 12, padding: "16px 20px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}><div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{l}</div><div style={{ fontSize: 14, color: C.textSec }}>{v}</div></div>
         ))}
       </div>
     </section>
@@ -1856,15 +1890,15 @@ function Contact() {
 // ═══ LOGIN ═══
 function Login({ setPage }) {
   return (
-    <section style={{ padding: "56px 20px 48px", maxWidth: 480, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
+    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", marginBottom: 32 }}>
         <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
         <span style={{ fontSize: 32, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
       </div>
-      <div style={{ background: C.card, borderRadius: 18, padding: "36px 28px", border: "1px solid " + C.border, boxShadow: "0 8px 32px rgba(0,0,0,0.05)" }}>
-        <h1 style={{ fontSize: 24, fontWeight: 900, marginBottom: 6, letterSpacing: "-0.03em" }}>Welcome back.</h1>
+      <div style={{ background: C.card, borderRadius: 16, padding: "32px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+        <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>Welcome back.</h1>
         <p style={{ fontSize: 14, color: C.textMuted, marginBottom: 24 }}>Sign in to your account.</p>
-        <button style={{ width: "100%", padding: "14px 16px", borderRadius: 12, border: "1.5px solid " + C.border, background: C.card, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: C.text, marginBottom: 20, transition: "all 0.2s" }}>
+        <button style={{ width: "100%", padding: "13px 16px", borderRadius: 10, border: "1.5px solid " + C.border, background: C.card, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: C.text, marginBottom: 20 }}>
           <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
           Continue with Google
         </button>
@@ -1872,7 +1906,7 @@ function Login({ setPage }) {
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <input style={inputStyle} placeholder="Email" type="email" />
           <input style={inputStyle} placeholder="Password" type="password" />
-          <button className="cta-btn" style={{ width: "100%", padding: "15px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Sign In</button>
+          <button className="cta-btn" style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Sign In</button>
         </div>
         <p style={{ fontSize: 13, color: C.textMuted, marginTop: 16 }}>Don't have an account? <span onClick={() => setPage("signup")} style={{ color: C.primary, fontWeight: 600, cursor: "pointer" }}>Start free trial</span></p>
       </div>
@@ -1883,15 +1917,15 @@ function Login({ setPage }) {
 // ═══ SIGNUP ═══
 function Signup({ setPage }) {
   return (
-    <section style={{ padding: "56px 20px 48px", maxWidth: 480, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
+    <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", marginBottom: 32 }}>
         <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
         <span style={{ fontSize: 32, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
       </div>
-      <div style={{ background: C.card, borderRadius: 18, padding: "36px 28px", border: "1px solid " + C.border, boxShadow: "0 8px 32px rgba(0,0,0,0.05)" }}>
-        <h1 style={{ fontSize: 24, fontWeight: 900, marginBottom: 6, letterSpacing: "-0.03em" }}>Start your free trial.</h1>
-        <p style={{ fontSize: 14, color: C.textMuted, marginBottom: 24 }}>14-day free trial. Cancel anytime.</p>
-        <button style={{ width: "100%", padding: "14px 16px", borderRadius: 12, border: "1.5px solid " + C.border, background: C.card, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: C.text, marginBottom: 20, transition: "all 0.2s" }}>
+      <div style={{ background: C.card, borderRadius: 16, padding: "32px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+        <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>Start your free trial.</h1>
+        <p style={{ fontSize: 14, color: C.textMuted, marginBottom: 24 }}>14 days free. No credit card required.</p>
+        <button style={{ width: "100%", padding: "13px 16px", borderRadius: 10, border: "1.5px solid " + C.border, background: C.card, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: C.text, marginBottom: 20 }}>
           <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
           Sign up with Google
         </button>
@@ -1900,7 +1934,7 @@ function Signup({ setPage }) {
           <input style={inputStyle} placeholder="Full name" />
           <input style={inputStyle} placeholder="Email" type="email" />
           <input style={inputStyle} placeholder="Password" type="password" />
-          <button className="cta-btn" style={{ width: "100%", padding: "15px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Start Free Trial</button>
+          <button className="cta-btn" style={{ width: "100%", padding: "14px 20px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Start Free Trial</button>
         </div>
         <p style={{ fontSize: 13, color: C.textMuted, marginTop: 16 }}>Already have an account? <span onClick={() => setPage("login")} style={{ color: C.primary, fontWeight: 600, cursor: "pointer" }}>Sign in</span></p>
       </div>
@@ -2131,15 +2165,15 @@ function Terms() {
 
 // ═══ PLATFORM ═══
 function Platform({ setPage }) {
-  const [activeFeat, setActiveFeat] = useState(0);
+  const [activeFeat, setActiveFeat] = useState(1);
   const [expandedText, setExpandedText] = useState(false);
   const platformFeatures = [
-    { id: "today", label: "Today", icon: "◉", headline: "One page. Every priority.", sub: "Your Today tab knows which clients need you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value. Green clients surface first to protect what's working. At-risk clients with high revenue jump the line. You never have to decide who to focus on. The system already did." },
-    { id: "scoring", label: "Retention Score", icon: "◎", headline: "A number that means something.", sub: "12 dimensions. 20 combination signals. Health check modifiers. Every client gets a Retention Score from 1–99 that tells you exactly where the relationship stands — not where you hope it is. The score catches silent churners, rewards genuine trust, and penalizes the patterns that kill contracts. Your gut feeling, quantified." },
-    { id: "health", label: "Health Checks", icon: "♡", headline: "Five questions. Two minutes. The truth.", sub: "Regular check-ins that detect drift before it becomes damage. Has anything changed? Is the relationship trending up or down? Would you be surprised if they cancelled? Your answers blend directly into the Retention Score — bad news moves the number immediately. No lengthy forms. No busywork. Just the signal." },
-    { id: "rai", label: "Talk to Rai", icon: "✦", headline: "She writes the words you need when it matters most.", sub: "Rai isn't a chatbot. She's an AI advisor calibrated to your specific relationships. When you're staring at a client's name and don't know what to say — the opening line, the tone, whether to call or email — Rai gives you the script. She knows this client's personality, their history, what worked last time, and what didn't. Most of the time you won't need her. But when you do, she's the difference between saving the account and losing it." },
-    { id: "rolodex", label: "Rolodex", icon: "⟐", headline: "Your pipeline is forward-looking.", sub: "Former clients aren't dead relationships — they're future revenue. The Rolodex tracks who left, how it ended, and whether they'd come back. One-off projects become re-engagement opportunities. Past clients become referral sources. This isn't a CRM graveyard. It's a pipeline you forgot you had." },
-    { id: "referrals", label: "Referrals", icon: "⟡", headline: "Your best clients send you their friends.", sub: "Retayned tracks referral readiness based on loyalty, trust, and relationship depth — the same dimensions driving your Retention Score. When a client is ready to refer, the system knows before you do. Track who referred who, whether they converted, and the revenue they generated. Your network, measured." },
+    { id: "today", label: "Today", icon: "◉", headline: "One page. Every priority.", sub: "Your Today tab knows which clients need you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value. Green clients surface first. At-risk clients with high revenue jump the line." },
+    { id: "scoring", label: "Retention Score", icon: "◎", headline: "A number that means something.", sub: "12 dimensions. 20 combination signals. Health check modifiers. Every client gets a Retention Score from 1–99 that tells you exactly where the relationship stands — not where you hope it is." },
+    { id: "health", label: "Health Checks", icon: "♡", headline: "Five questions. Two minutes. The truth.", sub: "Regular check-ins that detect drift before it becomes damage. Your answers blend directly into the Retention Score — bad news moves the number immediately. No lengthy forms. No busywork. Just the signal." },
+    { id: "rai", label: "Talk to Rai", icon: "✦", headline: "She writes the words you need when it matters most.", sub: "Rai is an AI advisor calibrated to your specific relationships. When you don't know what to say — the opening line, the tone, whether to call or email — Rai gives you the script." },
+    { id: "rolodex", label: "Rolodex", icon: "⟐", headline: "Your pipeline is forward-looking.", sub: "Former clients aren't dead relationships — they're future revenue. The Rolodex tracks who left, how it ended, and whether they'd come back. One-off projects become re-engagement opportunities." },
+    { id: "referrals", label: "Referrals", icon: "⟡", headline: "Your best clients send you their friends.", sub: "Retayned tracks referral readiness based on loyalty, trust, and relationship depth. When a client is ready to refer, the system knows before you do." },
   ];
   const pf = platformFeatures[activeFeat];
 
@@ -2201,7 +2235,7 @@ function Platform({ setPage }) {
 
           {/* ══════ Feature Tabs ══════ */}
           <section style={{ padding: "36px 20px 64px" }}>
-            <div style={{
+            <div className="r-tab-bar-wrap" style={{
               display: "flex", gap: 4, background: C.surface, borderRadius: 12,
               padding: 5, marginBottom: 36, overflowX: "auto", maxWidth: 740,
               margin: "0 auto 36px", WebkitOverflowScrolling: "touch",
@@ -2220,14 +2254,13 @@ function Platform({ setPage }) {
             </div>
 
             {/* Feature content */}
+            <div className="r-feat-heading-mobile" style={{ display: "none", maxWidth: 1000, margin: "0 auto 16px" }}>
+              <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15 }}>{pf.headline}</h2>
+            </div>
             <div className="r-feat-content" style={{ display: "flex", flexWrap: "wrap", gap: 48, alignItems: "flex-start", maxWidth: 1000, margin: "0 auto" }}>
               <div style={{ flex: "1 1 340px" }}>
-                <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 12 }}>{pf.headline}</h2>
-                <div className="r-feat-desc-full" style={{ fontSize: 15, color: C.textSec, lineHeight: 1.75, marginBottom: 28 }}>{pf.sub}</div>
-                <div className="r-feat-desc-mobile" style={{ display: "none" }}>
-                  <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7, marginBottom: 8, overflow: "hidden", maxHeight: expandedText ? "none" : 48, transition: "max-height 0.3s ease" }}>{pf.sub}</p>
-                  <button onClick={() => setExpandedText(!expandedText)} style={{ background: "none", border: "none", color: C.primary, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 10, fontFamily: "inherit" }}>{expandedText ? "Show less" : "Read more"}</button>
-                </div>
+                <h2 className="r-feat-heading-desktop" style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 12 }}>{pf.headline}</h2>
+                <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.75, marginBottom: 28 }}>{pf.sub}</p>
                 <button className="r-hero-cta cta-btn" onClick={() => setPage("signup")} style={{ padding: "13px 26px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
                   Try Free Now 
                 </button>
@@ -2238,30 +2271,23 @@ function Platform({ setPage }) {
                 <div key={pf.id} style={{ animation: "fadeInScale 0.35s ease" }}>
                   {pf.id === "today" && (
                     <div className="r-plat-mockup">
-                      <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
-                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FF5F57" }} />
-                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FEBC2E" }} />
-                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#28C840" }} />
-                        <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em" }}>Today — April 12</span>
-                      </div>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Your Tasks</div>
                       {[
-                        { name: "Northvane Studios", score: 91, task: "Monthly strategy review", color: C.success, tag: "Protect" },
-                        { name: "Broadleaf Media", score: 67, task: "Health Check overdue", color: C.warning, tag: "Watch" },
-                        { name: "Foxglove Partners", score: 38, task: "Rai: Call today, not email", color: C.danger, tag: "Urgent" },
-                      ].map((t, i) => (
-                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, padding: "13px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
-                          <div style={{ width: 42, height: 42, borderRadius: 10, background: t.color + "14", border: "1.5px solid " + t.color + "30", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14, color: t.color, flexShrink: 0 }}>{t.score}</div>
-                          <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>{t.name}</div>
-                            <div style={{ fontSize: 12, color: C.textMuted }}>{t.task}</div>
+                        { text: "Call Rachel at Broadleaf", client: "Broadleaf Media" },
+                        { text: "Complete Foxglove Health Check", client: "Foxglove Partners" },
+                        { text: "Review Slack for client messages", client: "All Clients" },
+                        { text: "Review Oakline Q1 numbers", client: "Oakline Outdoors" },
+                        { text: "Plan Northvane anniversary", client: "Northvane Studios" },
+                      ].map((t, ti) => (
+                        <div key={ti} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderTop: ti > 0 ? "1px solid " + C.borderLight : "none" }}>
+                          <div style={{ width: 20, height: 20, borderRadius: 5, border: "1.5px solid " + C.border, flexShrink: 0 }} />
+                          <div>
+                            <div style={{ fontSize: 14, fontWeight: 600, color: C.text, lineHeight: 1.3 }}>{t.text}</div>
+                            <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>{t.client}</div>
                           </div>
-                          <div style={{ fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 6, background: t.color + "10", color: t.color, textTransform: "uppercase", letterSpacing: "0.02em" }}>{t.tag}</div>
                         </div>
                       ))}
-                      <div style={{ marginTop: 12, padding: "12px 14px", background: "linear-gradient(135deg, rgba(51,84,62,0.06), rgba(85,139,104,0.03))", borderRadius: 10, border: "1px solid " + C.primarySoft }}>
-                        <span style={{ fontSize: 10, fontWeight: 800, color: C.primary, letterSpacing: "0.04em", textTransform: "uppercase" }}>✦ Rai:</span>
-                        <span style={{ fontSize: 13, color: C.primary, marginLeft: 6, fontWeight: 500 }}>3 clients need attention today. Foxglove hasn't responded in 14 days.</span>
-                      </div>
+                      <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>Sorted. Highest-value move is first.</div>
                     </div>
                   )}
                   {pf.id === "scoring" && (
@@ -2494,22 +2520,24 @@ function Platform({ setPage }) {
               <div style={{ background: C.card, borderRadius: 14, border: "1px solid " + C.border, padding: "18px 20px", boxShadow: "0 8px 32px rgba(0,0,0,0.15)" }}>
                 <div style={{ fontSize: 11, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".05em", marginBottom: 12 }}>Your Tasks</div>
                 {[
-                  { task: "Review Slack for client messages", client: "All Clients", recurring: true },
-                  { task: "Log time in project tracker", client: "All Clients", recurring: true },
-                  { task: "Review Oakline Q1 numbers before call", client: "Oakline Outdoors", recurring: false },
-                  { task: "Follow up on Broadleaf invoice", client: "Broadleaf Media", recurring: false },
-                  { task: "Send creative brief to Marcus", client: "Ridgeline Supply", recurring: false },
+                  { task: "Call Rachel at Broadleaf", client: "Broadleaf Media", score: 67, status: "danger" },
+                  { task: "Schedule Foxglove check-in", client: "Foxglove Partners", score: 38, status: "danger" },
+                  { task: "Complete Northvane Health Check", client: "Northvane Studios", score: 91, status: "success" },
+                  { task: "Review Slack for client messages", client: "All Clients", score: null, status: "neutral" },
+                  { task: "Review Oakline Q1 numbers", client: "Oakline Outdoors", score: 72, status: "warning" },
                 ].map((c, ci) => (
                   <div key={ci} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderTop: ci > 0 ? "1px solid " + C.borderLight : "none" }}>
-                    <div style={{ width: 20, height: 20, borderRadius: 5, border: "1.5px solid " + C.border, flexShrink: 0 }} />
+                    {c.score !== null ? (
+                      <div style={{ width: 28, height: 28, borderRadius: 7, background: c.status === "danger" ? C.danger + "12" : c.status === "success" ? C.success + "12" : C.warning + "12", border: "1.5px solid " + (c.status === "danger" ? C.danger + "30" : c.status === "success" ? C.success + "30" : C.warning + "30"), display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 10, color: c.status === "danger" ? C.danger : c.status === "success" ? C.success : C.warning, flexShrink: 0 }}>{c.score}</div>
+                    ) : (
+                      <div style={{ width: 28, height: 28, borderRadius: 7, border: "1.5px solid " + C.border, flexShrink: 0 }} />
+                    )}
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 14, fontWeight: 600, color: C.text, lineHeight: 1.3 }}>{c.task}</div>
                       <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 2 }}>
                         <span style={{ fontSize: 12, color: C.textMuted }}>{c.client}</span>
-                        {c.recurring && <span style={{ fontSize: 10, color: C.textMuted, border: "1px solid " + C.borderLight, borderRadius: 4, padding: "0 4px" }}>↻</span>}
                       </div>
                     </div>
-                    <span style={{ fontSize: 14, color: C.border, cursor: "pointer" }}>×</span>
                   </div>
                 ))}
                 <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>Sorted. Highest-value move is first.</div>
@@ -2623,7 +2651,7 @@ function Platform({ setPage }) {
                 color: C.btn, marginBottom: 14,
                 padding: "5px 14px", borderRadius: 6,
                 background: "rgba(91,33,182,0.06)",
-              }}>Enterprise</div>
+              }}>Early Access</div>
               <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 16 }}>Autonomous relationship intelligence.</h2>
               <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.75, marginBottom: 28 }}>
                 Connects to your communication and billing platforms, monitors every client relationship automatically, and delivers prioritized actions to your team or your AI agents every morning.
@@ -2716,12 +2744,11 @@ export default function RetaynedSite() {
         input[type=range]::-moz-range-thumb { width: 28px; height: 28px; border-radius: 50%; background: #5B21B6; cursor: pointer; border: none; }
         .r-conf-inner { border-radius: 0; }
         .r-conf-img { border-radius: 0; }
-        .r-tab-btn { }
-        .r-feat-content { flex-direction: column; }
-        .r-ent-stamp { top: -30px !important; left: 50% !important; transform: translateX(-50%) rotate(-6deg) !important; font-size: 13px !important; padding: 8px 20px !important; }
-        .r-feat-desc-full { display: none !important; }
-        .r-feat-desc-mobile { display: block !important; }
         .r-tab-btn { flex: 0 0 auto !important; }
+        .r-feat-content { flex-direction: column-reverse; gap: 24px !important; }
+        .r-feat-heading-mobile { display: block !important; }
+        .r-feat-heading-desktop { display: none !important; }
+        .r-ent-stamp { top: -30px !important; left: 50% !important; transform: translateX(-50%) rotate(-6deg) !important; font-size: 13px !important; padding: 8px 20px !important; }
         .r-tab-bar-wrap { scrollbar-width: none; -ms-overflow-style: none; }
         .r-tab-bar-wrap::-webkit-scrollbar { display: none; }
         .r-rai-step-1 { margin-left: 0; margin-right: auto; }
@@ -2734,7 +2761,6 @@ export default function RetaynedSite() {
         @keyframes dimScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes dimScrollReverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
         .r-full-bleed { margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); padding-left: 20px; padding-right: 20px; }
-        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
         .r-no-pad { padding-left: 0 !important; padding-right: 0 !important; }
         
         @media (min-width: 768px) {
@@ -2751,8 +2777,8 @@ export default function RetaynedSite() {
           .r-tab-btn { flex: 1 1 0 !important; }
           .r-ent-grid { grid-template-columns: 1fr 1fr 1fr 1fr !important; max-width: 960px !important; }
           .r-feat-content { flex-direction: row !important; gap: 48px !important; }
-          .r-feat-desc-full { display: block !important; }
-          .r-feat-desc-mobile { display: none !important; }
+          .r-feat-heading-mobile { display: none !important; }
+          .r-feat-heading-desktop { display: block !important; }
 
           .r-conf-inner { max-width: 900px; border-radius: 14px; overflow: hidden; }
           .r-conf-img { border-radius: 14px; }
