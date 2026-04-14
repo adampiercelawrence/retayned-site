@@ -321,16 +321,19 @@ function HeroDemo({ loaded }) {
   useEffect(() => {
     if (!loaded) return;
     const timers = [
-      setTimeout(() => setPhase(1), 2000),
-      setTimeout(() => setPhase(2), 2500),
-      setTimeout(() => setPhase(3), 3000),
-      setTimeout(() => setPhase(4), 3800),   // show unsorted tasks
-      setTimeout(() => setPhase(5), 5200),   // "Ranking..." message
-      setTimeout(() => setPhase(6), 6200),   // highlight "Call Rachel" (currently pos 1, needs to go to 0)
-      setTimeout(() => setPhase(7), 7200),   // move "Call Rachel" to top, shift others down
-      setTimeout(() => setPhase(8), 8200),   // highlight "Schedule Foxglove" (needs to move up)
-      setTimeout(() => setPhase(9), 9200),   // move "Schedule Foxglove" into position 1
-      setTimeout(() => setPhase(10), 10200),  // final sorted state
+      setTimeout(() => setPhase(1), 2500),
+      setTimeout(() => setPhase(2), 3000),
+      setTimeout(() => setPhase(3), 3500),
+      setTimeout(() => setPhase(4), 4300),   // show unsorted tasks
+      setTimeout(() => setPhase(5), 5700),   // "Ranking..." message
+      setTimeout(() => setPhase(6), 6700),   // highlight "Call Rachel"
+      setTimeout(() => setPhase(7), 7700),   // move "Call Rachel" to top (still highlighted)
+      setTimeout(() => setPhase(71), 8500),  // rachel settles — drop highlight
+      setTimeout(() => setPhase(8), 9200),   // highlight "Schedule Foxglove"
+      setTimeout(() => setPhase(9), 10200),  // move "Schedule Foxglove" up (still highlighted)
+      setTimeout(() => setPhase(91), 11000), // foxglove settles — drop highlight
+      setTimeout(() => setPhase(10), 11500), // final sorted state
+      setTimeout(() => setPhase(11), 14500), // revert to alert cards
     ];
     return () => timers.forEach(clearTimeout);
   }, [loaded]);
@@ -349,7 +352,7 @@ function HeroDemo({ loaded }) {
     { id: "foxglove", text: "Schedule Foxglove check-in", client: "Foxglove Partners" },
   ];
 
-  if (phase <= 3) {
+  if (phase <= 3 || phase >= 11) {
     return (
       <div style={{ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(30px)", transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s" }}>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14 }}>
@@ -373,9 +376,9 @@ function HeroDemo({ loaded }) {
           {/* Yellow (Foxglove) */}
           <div style={{
             position: "absolute", top: 0, left: 8, right: -4, zIndex: 1,
-            opacity: phase >= 3 ? 0 : 1, transform: phase >= 3 ? "translateX(30px) scale(0.95)" : "none",
+            opacity: (phase >= 3 && phase < 11) ? 0 : 1, transform: (phase >= 3 && phase < 11) ? "translateX(30px) scale(0.95)" : "none",
             transition: "opacity 0.5s ease, transform 0.5s ease",
-            animation: phase === 0 ? "fadeInPlace 0.4s ease 0.5s both" : "none",
+            animation: (phase === 0 || phase === 11) ? "fadeInPlace 0.4s ease 0.5s both" : "none",
           }}>
             <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid " + C.border, boxShadow: "0 2px 16px rgba(0,0,0,0.04)", background: "linear-gradient(95deg, " + C.warningBg + " 0%, #FDF8EC 30%, " + C.card + " 100%)", transform: "rotate(2.5deg)" }}>
               <div style={{ padding: "16px 18px" }}>
@@ -389,9 +392,9 @@ function HeroDemo({ loaded }) {
           {/* Green (Northvane) */}
           <div style={{
             position: "absolute", top: 55, left: -6, right: 10, zIndex: 2,
-            opacity: phase >= 2 ? 0 : 1, transform: phase >= 2 ? "translateX(30px) scale(0.95)" : "none",
+            opacity: (phase >= 2 && phase < 11) ? 0 : 1, transform: (phase >= 2 && phase < 11) ? "translateX(30px) scale(0.95)" : "none",
             transition: "opacity 0.5s ease, transform 0.5s ease",
-            animation: phase === 0 ? "fadeInPlace 0.4s ease 0.7s both" : "none",
+            animation: (phase === 0 || phase === 11) ? "fadeInPlace 0.4s ease 0.7s both" : "none",
           }}>
             <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid " + C.border, boxShadow: "0 4px 20px rgba(0,0,0,0.05)", background: "linear-gradient(95deg, " + C.primarySoft + " 0%, #F0F5F1 30%, " + C.card + " 100%)", transform: "rotate(-1.5deg)" }}>
               <div style={{ padding: "16px 18px" }}>
@@ -405,9 +408,9 @@ function HeroDemo({ loaded }) {
           {/* Red (Broadleaf) */}
           <div style={{
             position: "absolute", top: 115, left: 2, right: 2, zIndex: 3,
-            opacity: phase >= 1 ? 0 : 1, transform: phase >= 1 ? "translateX(30px) scale(0.95)" : "none",
+            opacity: (phase >= 1 && phase < 11) ? 0 : 1, transform: (phase >= 1 && phase < 11) ? "translateX(30px) scale(0.95)" : "none",
             transition: "opacity 0.5s ease, transform 0.5s ease",
-            animation: phase === 0 ? "fadeInPlace 0.4s ease 0.9s both" : "none",
+            animation: (phase === 0 || phase === 11) ? "fadeInPlace 0.4s ease 0.9s both" : "none",
           }}>
             <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid " + C.border, boxShadow: "0 8px 32px rgba(0,0,0,0.08)", background: "linear-gradient(95deg, " + C.dangerBg + " 0%, #FDF5F3 30%, " + C.card + " 100%)", transform: "rotate(0.5deg)" }}>
               <div style={{ padding: "16px 18px" }}>
@@ -433,21 +436,23 @@ function HeroDemo({ loaded }) {
     4:  { slack: 0, rachel: 1, oakline: 2, northvane: 3, foxglove: 4 },
     5:  { slack: 0, rachel: 1, oakline: 2, northvane: 3, foxglove: 4 },
     6:  { slack: 0, rachel: 1, oakline: 2, northvane: 3, foxglove: 4 },  // rachel highlighted
-    7:  { rachel: 0, slack: 1, oakline: 2, northvane: 3, foxglove: 4 },  // rachel moved to top
+    7:  { rachel: 0, slack: 1, oakline: 2, northvane: 3, foxglove: 4 },  // rachel moved (still highlighted)
+    71: { rachel: 0, slack: 1, oakline: 2, northvane: 3, foxglove: 4 },  // rachel settled
     8:  { rachel: 0, slack: 1, oakline: 2, northvane: 3, foxglove: 4 },  // foxglove highlighted
-    9:  { rachel: 0, foxglove: 1, northvane: 2, slack: 3, oakline: 4 },  // foxglove moved up
+    9:  { rachel: 0, foxglove: 1, northvane: 2, slack: 3, oakline: 4 },  // foxglove moved (still highlighted)
+    91: { rachel: 0, foxglove: 1, northvane: 2, slack: 3, oakline: 4 },  // foxglove settled
     10: { rachel: 0, foxglove: 1, northvane: 2, slack: 3, oakline: 4 },  // done
   };
 
-  const highlightId = phase === 6 ? "rachel" : phase === 8 ? "foxglove" : null;
-  const currentPos = positions[Math.min(phase, 10)] || positions[4];
+  const highlightId = (phase === 6 || phase === 7) ? "rachel" : (phase === 8 || phase === 9) ? "foxglove" : null;
+  const currentPos = positions[phase] || positions[4];
 
   return (
     <div style={{ animation: "fadeInPlace 0.4s ease both" }}>
       <div className="r-mockup-card">
-        <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: phase >= 5 && phase < 10 ? 6 : 16 }}>Your Tasks</div>
-        {phase >= 5 && phase < 10 && <div style={{ fontSize: 11, fontWeight: 700, color: C.btn, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid " + C.borderLight }}>Ranking by retention impact...</div>}
-        {phase >= 10 && <div style={{ fontSize: 13, color: C.btn, fontWeight: 700, marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid " + C.borderLight }}>Sorted. Highest-value move is first.</div>}
+        <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: phase >= 5 && phase !== 10 ? 6 : 16 }}>Your Tasks</div>
+        {phase >= 5 && phase !== 10 && <div style={{ fontSize: 11, fontWeight: 700, color: C.btn, textTransform: "uppercase", letterSpacing: ".04em", marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid " + C.borderLight }}>Ranking by retention impact...</div>}
+        {phase === 10 && <div style={{ fontSize: 13, color: C.btn, fontWeight: 700, marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid " + C.borderLight }}>Sorted. Highest-value move is first.</div>}
         <div style={{ position: "relative", height: ROW * 5 }}>
           {tasks.map(t => {
             const isHighlighted = t.id === highlightId;
@@ -801,7 +806,7 @@ function Home({ setPage }) {
         </div>
 
         {/* ══════════════ FEATURE TABS ══════════════ */}
-        <section style={{ padding: "64px 20px 64px" }}>
+        <section style={{ padding: "64px 20px 40px" }}>
           <Reveal>
             <div className="r-section-head" style={{ textAlign: "center", marginBottom: 48 }}>
               <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 8 }}>
@@ -1050,7 +1055,7 @@ function Home({ setPage }) {
         </div>
 
         {/* ══════════════ TESTIMONIALS ══════════════ */}
-        <section style={{ padding: "64px 20px 64px" }}>
+        <section style={{ padding: "48px 20px 40px" }}>
           <div style={{ textAlign: "center", marginBottom: 40 }}>
             <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 8 }}>What Folks Are Saying</h2>
             <p style={{ fontSize: 16, color: C.textSec }}>From our own Retayned business.</p>
