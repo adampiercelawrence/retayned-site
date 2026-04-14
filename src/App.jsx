@@ -249,24 +249,24 @@ function Nav({ page, setPage }) {
 // ═══ Footer ═══
 function Footer({ setPage }) {
   return (
-    <footer style={{ borderTop: "1px solid " + C.border, padding: "32px 20px 24px" }}>
+    <footer style={{ background: "#1E261F", borderTop: "none", padding: "32px 20px 24px", marginTop: -1 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
         <div style={{ display: "flex", alignItems: "baseline", cursor: "pointer" }} onClick={() => setPage("home")}>
-          <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
-          <span style={{ fontSize: 16, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
+          <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: "-0.04em", color: "rgba(255,255,255,0.7)" }}>Retayned</span>
+          <span style={{ fontSize: 16, fontWeight: 900, color: "rgba(255,255,255,0.7)", marginLeft: 1 }}>.</span>
         </div>
-        <div style={{ fontSize: 12, color: C.textMuted }}>There's no "i" in Retayned.</div>
+        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.25)" }}>There's no "i" in Retayned.</div>
       </div>
       <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 12 }}>
         {[["platform","Platform"],["pricing","Pricing"],["about","About"],["faq","FAQs"],["contact","Contact"],["privacy","Privacy"],["terms","Terms"]].map(([id, label]) => (
-          <span key={id} onClick={() => setPage(id)} role="button" tabIndex={0} onKeyDown={e => e.key === "Enter" && setPage(id)} style={{ fontSize: 12, color: C.textMuted, cursor: "pointer" }}>{label}</span>
+          <span key={id} onClick={() => setPage(id)} role="button" tabIndex={0} onKeyDown={e => e.key === "Enter" && setPage(id)} style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", cursor: "pointer" }}>{label}</span>
         ))}
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 8 }}>
-        <div style={{ fontSize: 10, color: C.textMuted, lineHeight: 1.5 }}>
+        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", lineHeight: 1.5 }}>
           <sup>1</sup> Reichheld, F. & Schefter, P. "The Economics of E-Loyalty." Harvard Business School / Bain & Company.
         </div>
-        <div style={{ fontSize: 10, color: C.textMuted, whiteSpace: "nowrap" }}>© {new Date().getFullYear()} Maniac Digital, LLC</div>
+        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}>© {new Date().getFullYear()} Maniac Digital, LLC</div>
       </div>
     </footer>
   );
@@ -313,9 +313,22 @@ function AnimatedStat({ value, suffix = "", duration = 1800 }) {
 // ═══ HERO INTERACTIVE DEMO ═══
 function HeroDemo({ loaded }) {
   const [phase, setPhase] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const demoRef = useRef(null);
+
+  // Start animation only when the demo is scrolled into view
+  useEffect(() => {
+    const el = demoRef.current;
+    if (!el || !loaded) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setVisible(true); obs.disconnect(); }
+    }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [loaded]);
 
   useEffect(() => {
-    if (!loaded) return;
+    if (!visible) return;
     const timers = [
       setTimeout(() => setPhase(1), 3000),
       setTimeout(() => setPhase(2), 4000),
@@ -323,15 +336,15 @@ function HeroDemo({ loaded }) {
       setTimeout(() => setPhase(4), 5800),
       setTimeout(() => setPhase(6), 7000),
       setTimeout(() => setPhase(7), 7800),
-      setTimeout(() => setPhase(71), 8800),
-      setTimeout(() => setPhase(8), 9100),
-      setTimeout(() => setPhase(9), 9900),
-      setTimeout(() => setPhase(91), 11800),
-      setTimeout(() => setPhase(98), 12800),
-      setTimeout(() => setPhase(99), 14000),
+      setTimeout(() => setPhase(71), 9300),
+      setTimeout(() => setPhase(8), 9600),
+      setTimeout(() => setPhase(9), 10400),
+      setTimeout(() => setPhase(91), 11900),
+      setTimeout(() => setPhase(98), 12900),
+      setTimeout(() => setPhase(99), 14100),
     ];
     return () => timers.forEach(clearTimeout);
-  }, [loaded]);
+  }, [visible]);
 
   const tasks = [
     { id: "slack", text: "Review Slack for client messages", client: "All Clients" },
@@ -361,7 +374,7 @@ function HeroDemo({ loaded }) {
   const taskVisible = phase >= 4 && phase < 98;
 
   return (
-    <div style={{ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(30px)", transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s", position: "relative" }}>
+    <div ref={demoRef} style={{ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(30px)", transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s", position: "relative" }}>
       {/* Suggested by Rai label */}
       <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 14, opacity: (phase >= 3 && phase < 99) ? 0 : 1, transition: cardsReturning ? "opacity 1.45s ease" : "opacity 0.8s ease" }}>
         <svg width={14} height={14} viewBox="0 0 24 24" fill="none"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" stroke={C.primary} strokeWidth="1.8" fill="none" strokeLinejoin="round"/></svg>
@@ -455,11 +468,11 @@ function HeroDemo({ loaded }) {
                     borderRadius: isHighlighted ? 8 : 0,
                     boxShadow: isHighlighted ? "0 4px 20px rgba(91,33,182,0.12), 0 0 0 1px rgba(91,33,182,0.15)" : "none",
                     zIndex: isHighlighted ? 10 : 1,
-                    transition: isHighlighted
-                      ? "transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease"
-                      : isFoxgloveMoving
-                        ? "transform 3.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background 0.3s ease"
-                        : "transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background 0.3s ease",
+                    transition: isFoxgloveMoving
+                      ? "transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease, background 0.15s ease"
+                      : isHighlighted
+                        ? "transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease"
+                        : "transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background 0.3s ease",
                   }}>
                     <div style={{ width: 16, height: 16, borderRadius: 4, border: "1.5px solid " + (isHighlighted ? C.btn + "50" : C.border), flexShrink: 0, transition: "border-color 0.2s" }} />
                     <div>
@@ -626,14 +639,14 @@ function Home({ setPage }) {
 
       <div className="r-home">
         {/* ══════════════ HERO ══════════════ */}
-        <div className="r-full-bleed" style={{
+        <div className="r-full-bleed r-hero-bg r-hero-section" style={{
           background: `radial-gradient(ellipse 120% 90% at 25% 35%, #D6E8DB 0%, #E4EDDF 35%, ${C.bg} 65%)`,
-          padding: "56px 20px 48px",
+          padding: "56px 20px 72px",
           position: "relative", overflow: "hidden",
         }}>
           {/* Subtle decorative elements */}
-          <div style={{ position: "absolute", top: "10%", right: "5%", width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, #D6E8DB 0%, transparent 70%)", opacity: 0.5, pointerEvents: "none" }} />
-          <div style={{ position: "absolute", bottom: "-5%", left: "15%", width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(51,84,62,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
+          <div className="r-hero-orb" style={{ position: "absolute", top: "10%", right: "5%", width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, #D6E8DB 0%, transparent 70%)", opacity: 0.5, pointerEvents: "none" }} />
+          <div className="r-hero-orb" style={{ position: "absolute", bottom: "-5%", left: "15%", width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(51,84,62,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 48, alignItems: "center", maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
             {/* Left — copy */}
@@ -700,7 +713,7 @@ function Home({ setPage }) {
         </div>
 
         {/* ══════════════ HOW IT WORKS ══════════════ */}
-        <section style={{ padding: "48px 20px 64px" }}>
+        <section className="r-how-it-works" style={{ padding: "48px 20px 64px" }}>
           <Reveal>
             <div className="r-section-head" style={{ textAlign: "center", marginBottom: 48 }}>
               <div style={{
@@ -749,14 +762,14 @@ function Home({ setPage }) {
         }}>
           <div className="r-grain" />
           {/* Decorative bar chart SVG */}
-          <svg style={{ position: "absolute", right: "8%", top: "50%", transform: "translateY(-50%)", width: 120, height: 80, opacity: 0.12 }} viewBox="0 0 120 80" fill="none">
+          <svg className="r-stat-graphic-right" style={{ position: "absolute", right: "8%", top: "50%", transform: "translateY(-50%)", width: 120, height: 80, opacity: 0.12 }} viewBox="0 0 120 80" fill="none">
             <rect x="0" y="55" width="16" height="25" rx="3" fill="white"/>
             <rect x="24" y="40" width="16" height="40" rx="3" fill="white"/>
             <rect x="48" y="25" width="16" height="55" rx="3" fill="white"/>
             <rect x="72" y="12" width="16" height="68" rx="3" fill="white"/>
             <rect x="96" y="0" width="16" height="80" rx="3" fill="white"/>
           </svg>
-          <svg style={{ position: "absolute", left: "8%", top: "50%", transform: "translateY(-50%)", width: 100, height: 80, opacity: 0.08 }} viewBox="0 0 100 80" fill="none">
+          <svg className="r-stat-graphic-left" style={{ position: "absolute", left: "8%", top: "50%", transform: "translateY(-50%)", width: 100, height: 80, opacity: 0.08 }} viewBox="0 0 100 80" fill="none">
             <circle cx="30" cy="20" r="14" fill="white"/>
             <path d="M30,34 C18,34 10,42 8,54 L8,80 L52,80 L52,54 C50,42 42,34 30,34Z" fill="white"/>
             <circle cx="68" cy="28" r="10" fill="white" opacity="0.7"/>
@@ -776,7 +789,7 @@ function Home({ setPage }) {
           <div style={{ width: 120, height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)", margin: "24px auto 0", position: "relative", zIndex: 2 }} />
 
           {/* Stats row */}
-          <div style={{ display: "flex", gap: 16, maxWidth: 1400, margin: "20px auto 0", position: "relative", zIndex: 2 }}>
+          <div className="r-stats-row" style={{ display: "flex", gap: 16, maxWidth: 1400, margin: "20px auto 0", position: "relative", zIndex: 2 }}>
             {[
               { num: "90", suffix: "%", label: "Of churn is predictable" },
               { num: "25", suffix: "x", label: "Cheaper to retain than acquire" },
@@ -796,7 +809,7 @@ function Home({ setPage }) {
         </div>
 
         {/* ══════════════ FEATURE TABS ══════════════ */}
-        <section style={{ padding: "64px 20px 40px" }}>
+        <section className="r-feat-section" style={{ padding: "64px 20px 64px" }}>
           <Reveal>
             <div className="r-section-head" style={{ textAlign: "center", marginBottom: 48 }}>
               <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 8 }}>
@@ -1087,9 +1100,16 @@ function Home({ setPage }) {
           </div>
         </section>
 
+        {/* ══════════════ CONFERENCE IMAGE ══════════════ */}
+        <div className="r-conf r-full-bleed r-no-pad" style={{ padding: "0", marginBottom: 40 }}>
+          <div className="r-conf-inner" style={{ maxWidth: "100%", margin: "0 auto" }}>
+            <img className="r-conf-img" src="/retayned-conference.jpg" alt="Retayned team at conference" style={{ width: "100%", display: "block", borderRadius: 0 }} />
+          </div>
+        </div>
+
         {/* ══════════════ FAQ + FINAL CTA ══════════════ */}
         <div className="r-full-bleed" style={{
-          background: `linear-gradient(180deg, ${C.bg} 0%, #E4EDDF 8%, #D6E8DB 22%, #C8DDD0 38%, #B5CFBE 48%, #8FB89E 58%, #4A7B5E 72%, #2A462F 86%, #1E261F 100%)`,
+          background: `linear-gradient(180deg, ${C.bg} 0%, #E4EDDF 8%, #D6E8DB 20%, #C8DDD0 34%, #B5CFBE 44%, #8FB89E 54%, #4A7B5E 66%, #2A462F 78%, #1E261F 90%)`,
           position: "relative", overflow: "hidden",
         }}>
           <div style={{ padding: "48px 20px 0" }}>
@@ -1100,7 +1120,7 @@ function Home({ setPage }) {
           </div>
 
           <div className="r-grain" style={{ opacity: 0.04 }} />
-          <div style={{ padding: "72px 20px 64px", textAlign: "center", position: "relative", zIndex: 2 }}>
+          <div style={{ padding: "72px 20px 96px", textAlign: "center", position: "relative", zIndex: 2 }}>
             <h2 style={{
               fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff",
             }}>
@@ -1120,6 +1140,29 @@ function Home({ setPage }) {
               14-day free trial. Cancel anytime.
             </p>
           </div>
+
+          {/* ── Inline Footer (inside gradient) ── */}
+          <div style={{ padding: "32px 20px 24px", position: "relative", zIndex: 2 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <div style={{ display: "flex", alignItems: "baseline", cursor: "pointer" }} onClick={() => setPage("home")}>
+                <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: "-0.04em", color: "rgba(255,255,255,0.7)" }}>Retayned</span>
+                <span style={{ fontSize: 16, fontWeight: 900, color: "rgba(255,255,255,0.7)", marginLeft: 1 }}>.</span>
+              </div>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.25)" }}>There's no "i" in Retayned.</div>
+            </div>
+            <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 12 }}>
+              {[["platform","Platform"],["pricing","Pricing"],["about","About"],["faq","FAQs"],["contact","Contact"],["privacy","Privacy"],["terms","Terms"]].map(([id, label]) => (
+                <span key={id} onClick={() => setPage(id)} role="button" tabIndex={0} onKeyDown={e => e.key === "Enter" && setPage(id)} style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", cursor: "pointer" }}>{label}</span>
+              ))}
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 8 }}>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", lineHeight: 1.5 }}>
+                <sup>1</sup> Reichheld, F. & Schefter, P. "The Economics of E-Loyalty." Harvard Business School / Bain & Company.
+              </div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}>© {new Date().getFullYear()} Maniac Digital, LLC</div>
+            </div>
+          </div>
+
         </div>
       </div>
     </>
@@ -1207,7 +1250,7 @@ function Pricing({ setPage }) {
 function About({ setPage }) {
   return (
     <>
-      <section style={{ padding: "56px 20px 40px" }}>
+      <section style={{ padding: "56px 20px 20px" }}>
         <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 16 }}>
           Built by a team that's kept clients for{" "}
           <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
@@ -1219,7 +1262,7 @@ function About({ setPage }) {
       </section>
 
       {/* Founder */}
-      <section style={{ padding: "0 20px 32px" }}>
+      <section style={{ padding: "0 20px 20px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <img src={HEADSHOT} alt="Adam Lawrence" style={{ width: 80, height: 80, borderRadius: 14, objectFit: "cover", objectPosition: "center 15%" }} />
           <div>
@@ -2735,13 +2778,20 @@ export default function RetaynedSite() {
         .r-feat-heading-mobile { display: block !important; }
         .r-feat-heading-desktop { display: none !important; }
         .r-ent-stamp { top: -30px !important; left: 50% !important; transform: translateX(-50%) rotate(-6deg) !important; font-size: 13px !important; padding: 8px 20px !important; }
+        .r-hero-bg { background: linear-gradient(180deg, #D6E8DB 0%, #E4EDDF 40%, #F7F7F4 75%) !important; }
+        .r-hero-orb { opacity: 0.4 !important; }
+        .r-hero-section { padding-bottom: 48px !important; }
+        .r-how-it-works { padding-top: 32px !important; }
+        .r-feat-section { padding-bottom: 64px !important; }
+        .r-stats-row { flex-direction: column !important; gap: 8px !important; align-items: center !important; }
+        .r-stats { font-size: 96px !important; }
         .r-tab-bar-wrap { scrollbar-width: none; -ms-overflow-style: none; }
         .r-tab-bar-wrap::-webkit-scrollbar { display: none; }
         .r-rai-step-1 { margin-left: 0; margin-right: auto; }
         .r-rai-step-2 { margin-left: auto; margin-right: auto; }
         .r-rai-step-3 { margin-left: auto; margin-right: 0; }
-        .r-stat-graphic-left { width: 60px !important; height: 45px !important; left: 12px !important; bottom: -8px !important; opacity: 0.12 !important; }
-        .r-stat-graphic-right { width: 60px !important; height: 45px !important; right: 12px !important; top: -10px !important; opacity: 0.12 !important; }
+        .r-stat-graphic-left { width: 80px !important; height: 60px !important; left: 12px !important; top: 20px !important; bottom: auto !important; opacity: 0.10 !important; transform: none !important; }
+        .r-stat-graphic-right { width: 80px !important; height: 60px !important; right: 12px !important; top: auto !important; bottom: 20px !important; opacity: 0.10 !important; transform: none !important; }
         .r-stat-accent-left, .r-stat-accent-right { display: none !important; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         @keyframes dimScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
@@ -2750,7 +2800,7 @@ export default function RetaynedSite() {
         .r-no-pad { padding-left: 0 !important; padding-right: 0 !important; }
         
         @media (min-width: 768px) {
-          section { padding-left: 40px !important; padding-right: 40px !important; padding-bottom: 64px !important; }
+          section { padding-left: 40px !important; padding-right: 40px !important; }
           .r-nav-inner { padding-left: 40px !important; padding-right: 40px !important; }
           .r-hero-section { padding-top: 72px !important; }
           .r-wrap { max-width: 100%; }
@@ -2765,6 +2815,9 @@ export default function RetaynedSite() {
           .r-feat-content { flex-direction: row !important; gap: 48px !important; }
           .r-feat-heading-mobile { display: none !important; }
           .r-feat-heading-desktop { display: block !important; }
+          .r-hero-bg { background: radial-gradient(ellipse 120% 90% at 25% 35%, #D6E8DB 0%, #E4EDDF 35%, #F7F7F4 65%) !important; }
+          .r-hero-orb { opacity: 0.5 !important; }
+          .r-stats-row { flex-direction: row !important; gap: 16px !important; }
 
           .r-conf-inner { max-width: 900px; border-radius: 14px; overflow: hidden; }
           .r-conf-img { border-radius: 14px; }
@@ -2810,7 +2863,7 @@ export default function RetaynedSite() {
         {page === "privacy" && <Privacy />}
         {page === "terms" && <Terms />}
       </div>
-      <Footer setPage={setPage} />
+      {page !== "home" && <Footer setPage={setPage} />}
       </div>
     </div>
   );
