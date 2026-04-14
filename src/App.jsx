@@ -627,13 +627,13 @@ function Home({ setPage }) {
       <div className="r-home">
         {/* ══════════════ HERO ══════════════ */}
         <div className="r-full-bleed" style={{
-          background: `radial-gradient(ellipse 100% 80% at 25% 35%, ${C.primarySoft} 0%, ${C.bg} 55%)`,
+          background: `radial-gradient(ellipse 120% 90% at 25% 35%, #D6E8DB 0%, #E4EDDF 35%, ${C.bg} 65%)`,
           padding: "56px 20px 48px",
           position: "relative", overflow: "hidden",
         }}>
           {/* Subtle decorative elements */}
-          <div style={{ position: "absolute", top: "10%", right: "5%", width: 320, height: 320, borderRadius: "50%", background: `radial-gradient(circle, ${C.primarySoft} 0%, transparent 70%)`, opacity: 0.5, pointerEvents: "none" }} />
-          <div style={{ position: "absolute", bottom: "-5%", left: "15%", width: 200, height: 200, borderRadius: "50%", background: `radial-gradient(circle, rgba(91,33,182,0.04) 0%, transparent 70%)`, pointerEvents: "none" }} />
+          <div style={{ position: "absolute", top: "10%", right: "5%", width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, #D6E8DB 0%, transparent 70%)", opacity: 0.5, pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: "-5%", left: "15%", width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(51,84,62,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 48, alignItems: "center", maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
             {/* Left — copy */}
@@ -1087,24 +1087,20 @@ function Home({ setPage }) {
           </div>
         </section>
 
-        {/* ══════════════ FAQ ══════════════ */}
+        {/* ══════════════ FAQ + FINAL CTA ══════════════ */}
         <div className="r-full-bleed" style={{
-          background: C.primarySoft, padding: "48px 20px 56px",
-        }}>
-          <div style={{ maxWidth: 1400, margin: "0 auto" }}>
-            <h2 style={{ fontSize: 30, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>FAQs</h2>
-            <FAQ fullBleed />
-          </div>
-        </div>
-
-        {/* ══════════════ FINAL CTA ══════════════ */}
-        <div className="r-full-bleed" style={{
-          background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 40%, #1E261F 100%)",
-          padding: "64px 20px", textAlign: "center",
+          background: `linear-gradient(180deg, ${C.bg} 0%, #E4EDDF 8%, #D6E8DB 22%, #C8DDD0 38%, #B5CFBE 48%, #8FB89E 58%, #4A7B5E 72%, #2A462F 86%, #1E261F 100%)`,
           position: "relative", overflow: "hidden",
         }}>
+          <div style={{ padding: "48px 20px 0" }}>
+            <div style={{ maxWidth: 1400, margin: "0 auto", paddingBottom: 56 }}>
+              <h2 style={{ fontSize: 30, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>FAQs</h2>
+              <FAQ fullBleed />
+            </div>
+          </div>
+
           <div className="r-grain" style={{ opacity: 0.04 }} />
-          <div style={{ position: "relative", zIndex: 2 }}>
+          <div style={{ padding: "72px 20px 64px", textAlign: "center", position: "relative", zIndex: 2 }}>
             <h2 style={{
               fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff",
             }}>
@@ -1974,8 +1970,8 @@ function FAQ({ fullBleed }) {
             return (
               <div key={key} onClick={() => setOpenQ(isOpen ? null : key)} style={{
                 background: isOpen ? (fullBleed ? C.card : C.primarySoft) : "transparent",
-                borderTop: "1px solid " + C.borderLight,
-                borderBottom: qi === group.questions.length - 1 ? "1px solid " + C.borderLight : "none",
+                borderTop: "1px solid rgba(51,84,62,0.12)",
+                borderBottom: qi === group.questions.length - 1 ? "1px solid rgba(51,84,62,0.12)" : "none",
                 cursor: "pointer",
                 transition: "background 0.2s ease",
                 marginLeft: "calc(-50vw + 50%)",
