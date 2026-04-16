@@ -175,7 +175,7 @@ function Nav({ page, setPage }) {
               </svg>
             </button>
             <div style={{ display: "flex", alignItems: "baseline", cursor: "pointer" }} onClick={() => { setPage("home"); setOpen(false); }}>
-              <span style={{ fontSize: 24, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
+              <span style={{ fontSize: 24, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary, fontFamily: "system-ui, -apple-system, sans-serif" }}>Retayned</span>
               <span style={{ fontSize: 24, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
             </div>
           </div>
@@ -205,7 +205,7 @@ function Nav({ page, setPage }) {
       <SwipeDrawer open={open} setOpen={setOpen}>
         <div style={{ padding: "24px 24px 24px 24px" }}>
           <div style={{ display: "flex", alignItems: "baseline", marginBottom: 32, cursor: "pointer" }} onClick={() => { setPage("home"); setOpen(false); }}>
-            <span style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
+            <span style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary, fontFamily: "system-ui, -apple-system, sans-serif" }}>Retayned</span>
             <span style={{ fontSize: 22, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
           </div>
           {links.map(l => (
@@ -252,7 +252,7 @@ function Footer({ setPage }) {
     <footer style={{ background: "#1E261F", borderTop: "none", padding: "32px 20px 24px", marginTop: -1 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
         <div style={{ display: "flex", alignItems: "baseline", cursor: "pointer" }} onClick={() => setPage("home")}>
-          <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: "-0.04em", color: "rgba(255,255,255,0.7)" }}>Retayned</span>
+          <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: "-0.04em", color: "rgba(255,255,255,0.7)", fontFamily: "system-ui, -apple-system, sans-serif" }}>Retayned</span>
           <span style={{ fontSize: 16, fontWeight: 900, color: "rgba(255,255,255,0.7)", marginLeft: 1 }}>.</span>
         </div>
         <div style={{ fontSize: 12, color: "rgba(255,255,255,0.25)" }}>There's no "i" in Retayned.</div>
@@ -1145,7 +1145,7 @@ function Home({ setPage }) {
           <div style={{ padding: "32px 20px 24px", position: "relative", zIndex: 2 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
               <div style={{ display: "flex", alignItems: "baseline", cursor: "pointer" }} onClick={() => setPage("home")}>
-                <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: "-0.04em", color: "rgba(255,255,255,0.7)" }}>Retayned</span>
+                <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: "-0.04em", color: "rgba(255,255,255,0.7)", fontFamily: "system-ui, -apple-system, sans-serif" }}>Retayned</span>
                 <span style={{ fontSize: 16, fontWeight: 900, color: "rgba(255,255,255,0.7)", marginLeft: 1 }}>.</span>
               </div>
               <div style={{ fontSize: 12, color: "rgba(255,255,255,0.25)" }}>There's no "i" in Retayned.</div>
@@ -1921,7 +1921,7 @@ function Login({ setPage }) {
   return (
     <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", marginBottom: 32 }}>
-        <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
+        <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary, fontFamily: "system-ui, -apple-system, sans-serif" }}>Retayned</span>
         <span style={{ fontSize: 32, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
       </div>
       <div style={{ background: C.card, borderRadius: 16, padding: "32px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
@@ -1948,7 +1948,7 @@ function Signup({ setPage }) {
   return (
     <section style={{ padding: "48px 20px 48px", maxWidth: 640, margin: "0 auto", minHeight: "calc(100vh - 160px)" }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", marginBottom: 32 }}>
-        <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary }}>Retayned</span>
+        <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary, fontFamily: "system-ui, -apple-system, sans-serif" }}>Retayned</span>
         <span style={{ fontSize: 32, fontWeight: 900, color: C.primary, marginLeft: 1 }}>.</span>
       </div>
       <div style={{ background: C.card, borderRadius: 16, padding: "32px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
