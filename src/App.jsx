@@ -2747,9 +2747,9 @@ export default function RetaynedSite() {
   useEffect(() => { window.scrollTo(0, 0); }, [page]);
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Outfit', system-ui, sans-serif", color: C.text }}>
+    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Manrope', system-ui, sans-serif", color: C.text }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Caveat:wght@500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Caveat:wght@500;600;700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         ::selection { background: #33543E; color: #fff; }
         .cta-btn { transition: all 0.2s ease; }
