@@ -1893,7 +1893,7 @@ function BlogPosts() {
 }
 
 // ═══ LEARN ═══
-function Blog() {
+function Blog({ setPage }) {
   const [activeModule, setActiveModule] = useState(null);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -4878,7 +4878,7 @@ export default function RetaynedSite() {
           .r-hero-orb { opacity: 0.5 !important; }
           .r-stats-row { flex-direction: row !important; gap: 16px !important; }
 
-          .r-conf-inner { max-width: 820px; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+          .r-conf-inner { max-width: 1200px; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
           .r-conf-img { border-radius: 14px; }
           .r-conf { padding: 0 40px !important; margin-bottom: 64px !important; }
           .r-conf-caption { display: block !important; }
@@ -4924,7 +4924,7 @@ export default function RetaynedSite() {
         {page === "pricing" && <Pricing setPage={setPage} />}
         {page === "about" && <About setPage={setPage} />}
         {page === "faq" && <FAQPage setPage={setPage} />}
-        {page === "blog" && <Blog />}
+        {page === "blog" && <Blog setPage={setPage} />}
         {page === "contact" && <Contact />}
         {page === "demo" && <Demo />}
         {page === "login" && <Login setPage={setPage} />}
