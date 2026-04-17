@@ -230,7 +230,7 @@ function Nav({ page, setPage }) {
                 }}
               >
                 Platform
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6, transform: platformOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6, transform: platformOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s", marginRight: -14 }}>
                   <polyline points="6 9 12 15 18 9"/>
                 </svg>
               </span>
@@ -471,6 +471,33 @@ function Footer({ setPage }) {
         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}>© {new Date().getFullYear()} Maniac Digital, LLC</div>
       </div>
     </footer>
+  );
+}
+
+// Inline footer for pages ending in the 4-stop gradient — renders inside the gradient wrapper
+// so the gradient flows seamlessly through it (no hard cut from gradient to solid).
+function InlineFooter({ setPage }) {
+  return (
+    <div style={{ padding: "32px 20px 24px", position: "relative", zIndex: 2 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+        <div style={{ display: "flex", alignItems: "baseline", cursor: "pointer" }} onClick={() => setPage("home")}>
+          <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: "-0.04em", color: "rgba(255,255,255,0.7)", fontFamily: "system-ui, -apple-system, sans-serif" }}>Retayned</span>
+          <span style={{ fontSize: 16, fontWeight: 900, color: "rgba(255,255,255,0.7)", marginLeft: 1, fontFamily: "system-ui, -apple-system, sans-serif" }}>.</span>
+        </div>
+        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.25)" }}>There's no "i" in Retayned.</div>
+      </div>
+      <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 12 }}>
+        {[["platform","Platform"],["pricing","Pricing"],["about","About"],["faq","FAQs"],["contact","Contact"],["privacy","Privacy"],["terms","Terms"]].map(([id, label]) => (
+          <span key={id} onClick={() => setPage(id)} role="button" tabIndex={0} onKeyDown={e => e.key === "Enter" && setPage(id)} style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", cursor: "pointer" }}>{label}</span>
+        ))}
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 8 }}>
+        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", lineHeight: 1.5 }}>
+          <sup>1</sup> Reichheld, F. & Schefter, P. "The Economics of E-Loyalty." Harvard Business School / Bain & Company.
+        </div>
+        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}>© {new Date().getFullYear()} Maniac Digital, LLC</div>
+      </div>
+    </div>
   );
 }
 
@@ -956,8 +983,8 @@ function Home({ setPage }) {
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20, maxWidth: 1100, margin: "0 auto" }}>
             {[
               { num: "01", title: "She sees it.", desc: "Cross-referencing tasks, health checks, score trends, 20+ combination signals — continuously, across your entire book.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> },
-              { num: "02", title: "She puts it in front of you.", desc: "Every morning, before your first coffee. You don't go looking for the problem. The problem finds you without any trouble.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> },
-              { num: "03", title: "She knows where it goes.", desc: "Using a proprietary scoring engine, Rai weighs all of the day's tasks by retention impact. Your highest-value move is next up.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> },
+              { num: "02", title: "She calls it out.", desc: "Every morning, before your first coffee. You don't go looking for the problem. The problem finds you without any trouble.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> },
+              { num: "03", title: "She ranks it.", desc: "Using a proprietary scoring engine, Rai weighs all of the day's tasks by retention impact. Your highest-value move is next up.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> },
             ].map((step, i) => (
               <Reveal key={i} delay={i * 0.15} style={{ flex: "1 1 300px", minWidth: 280 }}>
                 <div className="r-rai-alert-wrap" style={{ borderRadius: 16 }}>
@@ -1454,7 +1481,7 @@ function Home({ setPage }) {
 
         {/* ══════════════ CONFERENCE IMAGE ══════════════ */}
         <div className="r-conf r-full-bleed r-no-pad" style={{ padding: "0", marginBottom: 40 }}>
-          <div className="r-conf-inner" style={{ maxWidth: "100%", margin: "0 auto" }}>
+          <div className="r-conf-inner" style={{ margin: "0 auto" }}>
             <img className="r-conf-img" src="/retayned-conference.jpg" alt="Retayned team at conference" style={{ width: "100%", display: "block" }} />
             <p className="r-conf-caption" style={{
               textAlign: "center",
@@ -1535,50 +1562,59 @@ function Pricing({ setPage }) {
 
   return (
     <>
-      {/* ══════ Hero ══════ */}
-      <section style={{ padding: "64px 20px 24px", textAlign: "center" }}>
-        <h1 className="r-page-title" style={{ fontSize: 42, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08, marginBottom: 16, maxWidth: 720, margin: "0 auto 16px" }}>One client saved pays for{" "}
-          <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
-            <span style={{ color: C.textMuted }}>a year<span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} /></span>
-            <span style={{ position: "absolute", top: "-0.55em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.85em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>years</span>
-          </span>{" "}of Retayned.
-        </h1>
-        <p style={{ fontSize: 17, color: C.textSec, lineHeight: 1.6, maxWidth: 560, margin: "0 auto" }}>One plan. Every feature. The math works itself out.</p>
-      </section>
+      {/* ONE continuous gradient wraps the entire page, flowing cream → sage → deep green → footer black */}
+      <div className="r-full-bleed" style={{
+        background: `linear-gradient(180deg, ${C.bg} 0%, #E8F0E9 18%, #A8C4B0 38%, #4A7B5E 62%, ${C.primaryDeep} 85%)`,
+        position: "relative", overflow: "hidden",
+      }}>
+        <div className="r-grain" style={{ opacity: 0.05 }} />
 
-      {/* ══════ The price card ══════ */}
-      <section style={{ padding: "32px 20px 48px" }}>
-        <div style={{ maxWidth: 580, margin: "0 auto" }}>
-          <div style={{
-            background: `radial-gradient(ellipse 115% 60% at 50% 22%, #DCE9E0 0%, ${C.primarySoft} 35%, ${C.card} 78%)`,
-            borderRadius: 24,
-            border: "1.5px solid " + C.border,
-            padding: "48px 40px",
-            boxShadow: "0 12px 48px rgba(0,0,0,0.08)",
-            textAlign: "center",
-          }}>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".14em", color: C.primary, marginBottom: 24 }}>One plan. Every feature.</div>
+        {/* ══════ Hero ══════ */}
+        <section style={{ padding: "64px 20px 24px", textAlign: "center", position: "relative", zIndex: 2 }}>
+          <h1 className="r-page-title" style={{ fontSize: 42, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08, marginBottom: 16, maxWidth: 720, margin: "0 auto 16px", color: C.text }}>One client saved pays for{" "}
+            <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
+              <span style={{ color: C.textMuted }}>a year<span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} /></span>
+              <span style={{ position: "absolute", top: "-0.55em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.85em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>years</span>
+            </span>{" "}of Retayned.
+          </h1>
+          <p style={{ fontSize: 17, color: C.textSec, lineHeight: 1.6, maxWidth: 560, margin: "0 auto" }}>One plan. Every feature. The math works itself out.</p>
+        </section>
 
-            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6, marginBottom: 6 }}>
-              <span style={{ fontSize: 72, fontWeight: 900, letterSpacing: "-0.04em", color: C.text, lineHeight: 1 }}>$19.99</span>
-              <span style={{ fontSize: 18, color: C.textMuted, fontWeight: 600 }}>/mo</span>
+        {/* ══════ The price card — pure white floating ticket ══════ */}
+        <section style={{ padding: "32px 20px 48px", position: "relative", zIndex: 2 }}>
+          <div style={{ maxWidth: 580, margin: "0 auto" }}>
+            <div style={{
+              background: "#FFFFFF",
+              borderRadius: 24,
+              padding: "48px 40px",
+              boxShadow: "0 24px 64px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.04)",
+              textAlign: "center",
+            }}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".14em", color: C.primary, marginBottom: 24 }}>One plan. Every feature.</div>
+
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6, marginBottom: 6 }}>
+                <span style={{ fontSize: 72, fontWeight: 900, letterSpacing: "-0.04em", color: C.text, lineHeight: 1 }}>$19.99</span>
+                <span style={{ fontSize: 18, color: C.textMuted, fontWeight: 600 }}>/mo</span>
+              </div>
+              <div style={{ fontSize: 16, color: C.textSec, marginBottom: 12, lineHeight: 1.5 }}>+ <span style={{ fontWeight: 700, color: C.text }}>$1 per client</span></div>
+              <p style={{ fontSize: 14, color: C.textSec, marginBottom: 32, lineHeight: 1.55, maxWidth: 420, margin: "0 auto 32px" }}>Solve your business's most consequential problem for less than a Netflix subscription.</p>
+
+              <button className="cta-btn" onClick={() => setPage("signup")} style={{
+                width: "100%", padding: "16px 20px", borderRadius: 14,
+                fontSize: 16, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+                background: C.btn, color: "#fff", border: "none",
+                boxShadow: "0 6px 20px rgba(91,33,182,0.25)",
+              }}>Start Free Trial</button>
+              <p style={{ fontSize: 12.5, color: C.textMuted, marginTop: 14 }}>14-day free trial. Cancel anytime.</p>
             </div>
-            <div style={{ fontSize: 16, color: C.textSec, marginBottom: 12, lineHeight: 1.5 }}>+ <span style={{ fontWeight: 700, color: C.text }}>$1 per client</span></div>
-            <p style={{ fontSize: 14, color: C.textSec, marginBottom: 32, lineHeight: 1.55, maxWidth: 420, margin: "0 auto 32px" }}>Solve your business's most consequential problem for less than a Netflix subscription.</p>
-
-            <button className="cta-btn" onClick={() => setPage("signup")} style={{
-              width: "100%", padding: "16px 20px", borderRadius: 14,
-              fontSize: 16, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
-              background: C.btn, color: "#fff", border: "none",
-              boxShadow: "0 6px 20px rgba(91,33,182,0.25)",
-            }}>Start Free Trial</button>
-            <p style={{ fontSize: 12.5, color: C.textMuted, marginTop: 14 }}>14-day free trial. Cancel anytime.</p>
           </div>
+        </section>
 
-          {/* Features grid — under the card, looser, not competing with the price */}
-          <div style={{ marginTop: 40 }}>
+        {/* ══════ Features grid — sits on the gradient directly as translucent white chips ══════ */}
+        <section style={{ padding: "16px 20px 56px", position: "relative", zIndex: 2 }}>
+          <div style={{ maxWidth: 760, margin: "0 auto" }}>
             <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".14em", color: C.textMuted, marginBottom: 20, textAlign: "center" }}>Everything's included</div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 10, maxWidth: 760, margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 10 }}>
               {[
                 { label: "Retention Score (1–99)", desc: "12 dimensions, 20 combinations" },
                 { label: "Today", desc: "Prioritized tasks, ranked by impact" },
@@ -1589,8 +1625,10 @@ function Pricing({ setPage }) {
               ].map((f, i) => (
                 <div key={i} style={{
                   padding: "14px 16px",
-                  background: C.card,
-                  border: "1px solid " + C.borderLight,
+                  background: "rgba(255,255,255,0.85)",
+                  backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)",
+                  border: "1px solid rgba(255,255,255,0.6)",
                   borderRadius: 11,
                   display: "flex",
                   gap: 10,
@@ -1604,89 +1642,81 @@ function Pricing({ setPage }) {
                 </div>
               ))}
             </div>
-            <div style={{ fontSize: 12, color: C.textMuted, textAlign: "center", marginTop: 16, fontStyle: "italic" }}>Unlimited team members · No per-seat fees · No tiers</div>
+            <div style={{ fontSize: 12, color: C.textSec, textAlign: "center", marginTop: 16, fontStyle: "italic" }}>Unlimited team members · No per-seat fees · No tiers</div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ══════ The math moment ══════ */}
-      <section style={{ padding: "48px 20px 64px", background: C.bg }}>
-        <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
-          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".14em", color: C.primary, marginBottom: 12 }}>The math</div>
-          <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 20 }}>Let's run your actual numbers.</h2>
-          <div style={{
-            background: C.card,
-            border: "1px solid " + C.borderLight,
-            borderRadius: 16,
-            padding: "28px 24px",
-            maxWidth: 560,
-            margin: "0 auto",
-            textAlign: "left",
-          }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                <span style={{ fontSize: 13, color: C.textSec }}>You charge one client, say</span>
-                <span style={{ fontSize: 20, fontWeight: 800, color: C.text, fontFamily: "inherit" }}>$2,500<span style={{ fontSize: 13, color: C.textMuted, fontWeight: 500 }}>/mo</span></span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", paddingBottom: 14, borderBottom: "1px dashed " + C.borderLight }}>
-                <span style={{ fontSize: 13, color: C.textSec }}>Retayned costs you, monthly</span>
-                <span style={{ fontSize: 20, fontWeight: 800, color: C.text, fontFamily: "inherit" }}>$19.99<span style={{ fontSize: 13, color: C.textMuted, fontWeight: 500 }}> + $1/client</span></span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                <span style={{ fontSize: 14, fontWeight: 700, color: C.primary }}>One saved client covers you for</span>
-                <span style={{ fontSize: 26, fontWeight: 900, color: C.primary, letterSpacing: "-0.02em", fontFamily: "inherit" }}>125 months</span>
+        {/* ══════ The math moment — white card sits deeper in gradient ══════ */}
+        <section style={{ padding: "32px 20px 56px", position: "relative", zIndex: 2 }}>
+          <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".14em", color: "rgba(255,255,255,0.8)", marginBottom: 12 }}>The math</div>
+            <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 20, color: "#fff" }}>Let's run your actual numbers.</h2>
+            <div style={{
+              background: "#FFFFFF",
+              borderRadius: 16,
+              padding: "28px 24px",
+              maxWidth: 560,
+              margin: "0 auto",
+              textAlign: "left",
+              boxShadow: "0 20px 48px rgba(0,0,0,0.15)",
+            }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                  <span style={{ fontSize: 13, color: C.textSec }}>You charge one client, say</span>
+                  <span style={{ fontSize: 20, fontWeight: 800, color: C.text, fontFamily: "inherit" }}>$2,500<span style={{ fontSize: 13, color: C.textMuted, fontWeight: 500 }}>/mo</span></span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", paddingBottom: 14, borderBottom: "1px dashed " + C.borderLight }}>
+                  <span style={{ fontSize: 13, color: C.textSec }}>Retayned costs you, monthly</span>
+                  <span style={{ fontSize: 20, fontWeight: 800, color: C.text, fontFamily: "inherit" }}>$19.99<span style={{ fontSize: 13, color: C.textMuted, fontWeight: 500 }}> + $1/client</span></span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: C.primary }}>One saved client could cover</span>
+                  <span style={{ fontSize: 26, fontWeight: 900, color: C.primary, letterSpacing: "-0.02em", fontFamily: "inherit" }}>125 months</span>
+                </div>
               </div>
             </div>
+            <p style={{ fontSize: 16, color: "#fff", marginTop: 24, lineHeight: 1.55, maxWidth: 560, margin: "24px auto 0", fontWeight: 600, letterSpacing: "-0.01em" }}>Saving just <strong style={{ color: "#fff", fontWeight: 900 }}>ONE</strong> relationship for even just <strong style={{ color: "#fff", fontWeight: 900 }}>ONE</strong> month could pay for Retayned for a <strong style={{ color: "#fff", fontWeight: 900 }}>DECADE</strong>.</p>
           </div>
-          <p style={{ fontSize: 14, color: C.textMuted, marginTop: 18, lineHeight: 1.6, maxWidth: 480, margin: "18px auto 0" }}>That's over a decade of the platform paid for by saving <strong style={{ color: C.text }}>one</strong> relationship you would have lost.</p>
-        </div>
-      </section>
+        </section>
 
-      {/* ══════ Enterprise referral strip ══════ */}
-      <section style={{ padding: "32px 20px 72px" }}>
-        <div style={{
-          maxWidth: 720,
-          margin: "0 auto",
-          background: C.primaryDeep,
-          borderRadius: 16,
-          padding: "28px 32px",
-          position: "relative",
-          overflow: "hidden",
-          display: "flex",
-          gap: 20,
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}>
-          <div aria-hidden="true" style={{
-            position: "absolute", inset: 0,
-            background: "radial-gradient(ellipse 600px 400px at 80% 40%, rgba(85,139,104,0.18) 0%, transparent 65%)",
-            pointerEvents: "none",
-          }} />
-          <div style={{ flex: "1 1 320px", position: "relative", zIndex: 2, color: "#fff" }}>
-            <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: C.primaryLight, marginBottom: 6 }}>AMaaS · Early Access</div>
-            <div style={{ fontSize: 18, fontWeight: 800, color: "#fff", marginBottom: 4, letterSpacing: "-0.02em" }}>Running 1,000+ clients?</div>
-            <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.6)", lineHeight: 1.55 }}>Retayned Enterprise is custom-priced for retention teams and platforms building with AI.</div>
+        {/* ══════ Enterprise referral strip — darker inner rectangle, sits on dark gradient mid ══════ */}
+        <section style={{ padding: "16px 20px 48px", position: "relative", zIndex: 2 }}>
+          <div style={{
+            maxWidth: 720,
+            margin: "0 auto",
+            background: C.primaryDeep,
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: 16,
+            padding: "24px 28px",
+            display: "flex",
+            gap: 20,
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}>
+            <div style={{ flex: "1 1 320px", color: "#fff" }}>
+              <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: C.primaryLight, marginBottom: 6 }}>AMaaS · Early Access</div>
+              <div style={{ fontSize: 17, fontWeight: 800, color: "#fff", marginBottom: 4, letterSpacing: "-0.02em" }}>Running 1,000+ clients?</div>
+              <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>Retayned Enterprise is custom-priced for retention teams and platforms building with AI.</div>
+            </div>
+            <button onClick={() => setPage("enterprise")} className="cta-btn" style={{
+              padding: "11px 22px", background: "transparent",
+              color: "#fff", border: "1.5px solid rgba(255,255,255,0.35)",
+              borderRadius: 10, fontSize: 13.5, fontWeight: 600,
+              cursor: "pointer", fontFamily: "inherit",
+              whiteSpace: "nowrap",
+            }}>See Enterprise</button>
           </div>
-          <button onClick={() => setPage("enterprise")} className="cta-btn" style={{
-            position: "relative", zIndex: 2,
-            padding: "12px 22px", background: "rgba(255,255,255,0.1)",
-            color: "#fff", border: "1.5px solid rgba(255,255,255,0.25)",
-            borderRadius: 10, fontSize: 14, fontWeight: 600,
-            cursor: "pointer", fontFamily: "inherit",
-            whiteSpace: "nowrap",
-          }}>See Enterprise →</button>
-        </div>
-      </section>
+        </section>
 
-      {/* ══════ Final CTA + footer gradient ══════ */}
-      <div className="r-full-bleed" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`, padding: "72px 20px 88px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-        <div className="r-grain" />
-        <div style={{ position: "relative", zIndex: 2 }}>
+        {/* ══════ Final CTA — lives in deep bottom of same gradient ══════ */}
+        <section style={{ padding: "64px 20px 72px", textAlign: "center", position: "relative", zIndex: 2 }}>
           <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 14, color: "#fff" }}>You work too hard to get new clients.<br />Keep them Retayned.</h2>
-          <p style={{ fontSize: 17, color: "rgba(255,255,255,.5)", marginBottom: 28, lineHeight: 1.6 }}>See the signal. Get the script. Keep the client.</p>
+          <p style={{ fontSize: 17, color: "rgba(255,255,255,.7)", marginBottom: 28, lineHeight: 1.6 }}>See the signal. Get the script. Keep the client.</p>
           <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "16px 40px", background: "#fff", color: C.btn, border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Start Free Trial</button>
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 14 }}>14-day free trial. Cancel anytime.</p>
-        </div>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", marginTop: 14 }}>14-day free trial. Cancel anytime.</p>
+        </section>
+
+        <InlineFooter setPage={setPage} />
       </div>
     </>
   );
@@ -1735,15 +1765,16 @@ function About({ setPage }) {
           </div>
         </div>
       </section>
-      <div className="r-full-bleed" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`, padding: "72px 20px 88px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <div className="r-full-bleed" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 15%, #4A7B5E 40%, ${C.primaryDeep} 75%)`, padding: "140px 20px 0", textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div className="r-grain" />
-        <div style={{ position: "relative", zIndex: 2, maxWidth: 640, margin: "0 auto" }}>
-          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".14em", color: "rgba(255,255,255,.4)", marginBottom: 12 }}>Built in Washington, DC</div>
+        <div style={{ position: "relative", zIndex: 2, maxWidth: 640, margin: "0 auto", paddingBottom: 72 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".14em", color: "rgba(255,255,255,.65)", marginBottom: 14 }}>Built in Washington, DC</div>
           <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 14, color: "#fff" }}>Turn client relationships<br />into lifelong partnerships.</h2>
-          <p style={{ fontSize: 16, color: "rgba(255,255,255,.55)", marginBottom: 28, lineHeight: 1.6 }}>The tool we built for ourselves. Now yours.</p>
+          <p style={{ fontSize: 16, color: "rgba(255,255,255,.65)", marginBottom: 28, lineHeight: 1.6 }}>The tool we built for ourselves. Now yours.</p>
           <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "16px 40px", background: "#fff", color: C.btn, border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Start Free Trial</button>
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 14 }}>14-day free trial. Cancel anytime.</p>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginTop: 14 }}>14-day free trial. Cancel anytime.</p>
         </div>
+        <InlineFooter setPage={setPage} />
       </div>
     </>
   );
@@ -2309,13 +2340,16 @@ function Blog() {
       </section>
 
       {/* Subscribe */}
-      <div className="r-full-bleed" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`, padding: "72px 20px 88px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <div className="r-full-bleed" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 15%, #4A7B5E 40%, ${C.primaryDeep} 75%)`, padding: "140px 20px 0", textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div className="r-grain" />
-        <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 12, color: "#fff", position: "relative", zIndex: 2 }}>Get notified when we publish!</h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 320, margin: "0 auto", position: "relative", zIndex: 2 }}>
-          <input style={{ width: "100%", padding: "12px 14px", border: "2px solid rgba(255,255,255,0.2)", borderRadius: 10, fontSize: 14, fontFamily: "inherit", background: "rgba(255,255,255,0.08)", color: "#fff", outline: "none", boxSizing: "border-box" }} placeholder="you@agency.com" />
-          <button className="cta-btn" style={{ width: "100%", padding: "12px 20px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Subscribe</button>
+        <div style={{ position: "relative", zIndex: 2, paddingBottom: 72 }}>
+          <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 12, color: "#fff" }}>Get notified when we publish!</h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 320, margin: "0 auto" }}>
+            <input style={{ width: "100%", padding: "12px 14px", border: "2px solid rgba(255,255,255,0.25)", borderRadius: 10, fontSize: 14, fontFamily: "inherit", background: "rgba(255,255,255,0.08)", color: "#fff", outline: "none", boxSizing: "border-box" }} placeholder="you@agency.com" />
+            <button className="cta-btn" style={{ width: "100%", padding: "12px 20px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Subscribe</button>
+          </div>
         </div>
+        <InlineFooter setPage={setPage} />
       </div>
     </>
   );
@@ -2495,13 +2529,14 @@ function FAQPage({ setPage }) {
         <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32 }}>Everything you need to know about Retayned.</p>
         <FAQ />
       </section>
-      <div className="r-full-bleed" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`, padding: "72px 20px 88px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <div className="r-full-bleed" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 15%, #4A7B5E 40%, ${C.primaryDeep} 75%)`, padding: "140px 20px 0", textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div className="r-grain" />
-        <div style={{ position: "relative", zIndex: 2 }}>
+        <div style={{ position: "relative", zIndex: 2, paddingBottom: 72 }}>
           <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 14, color: "#fff" }}>Still have questions?</h2>
-          <p style={{ fontSize: 16, color: "rgba(255,255,255,.5)", marginBottom: 24 }}>We'd love to hear from you.</p>
+          <p style={{ fontSize: 16, color: "rgba(255,255,255,.65)", marginBottom: 24 }}>We'd love to hear from you.</p>
           <button onClick={() => setPage("contact")} className="cta-btn" style={{ padding: "14px 32px", background: "#fff", color: C.btn, border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Contact Us</button>
         </div>
+        <InlineFooter setPage={setPage} />
       </div>
     </>
   );
@@ -3298,7 +3333,7 @@ function Platform({ setPage }) {
 
         {/* ══════ FAQ + Final CTA (merged into one gradient, matching home) ══════ */}
         <div className="r-full-bleed" style={{
-          background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`,
+          background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 15%, #4A7B5E 40%, ${C.primaryDeep} 75%)`,
           position: "relative", overflow: "hidden",
         }}>
           <div style={{ padding: "48px 20px 0" }}>
@@ -3308,11 +3343,11 @@ function Platform({ setPage }) {
             </div>
           </div>
           <div className="r-grain" style={{ opacity: 0.04 }} />
-          <div style={{ padding: "56px 20px 88px", textAlign: "center", position: "relative", zIndex: 2 }}>
+          <div style={{ padding: "56px 20px 72px", textAlign: "center", position: "relative", zIndex: 2 }}>
             <h2 style={{ fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff" }}>
               You work too hard to get new clients.<br />Keep them Retayned.
             </h2>
-            <p style={{ fontSize: 17, color: "rgba(255,255,255,0.5)", marginBottom: 28, lineHeight: 1.6 }}>See the signal. Get the script. Keep the client.</p>
+            <p style={{ fontSize: 17, color: "rgba(255,255,255,0.65)", marginBottom: 28, lineHeight: 1.6 }}>See the signal. Get the script. Keep the client.</p>
             <button className="cta-btn" onClick={() => setPage("signup")} style={{
               padding: "16px 40px", background: "#fff", color: C.btn, border: "none",
               borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: "pointer",
@@ -3320,8 +3355,9 @@ function Platform({ setPage }) {
             }}>
               Start Free Trial
             </button>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 14 }}>14-day free trial. Cancel anytime.</p>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginTop: 14 }}>14-day free trial. Cancel anytime.</p>
           </div>
+          <InlineFooter setPage={setPage} />
         </div>
       </div>
     </>
@@ -3493,7 +3529,7 @@ function Freelancers({ setPage }) {
 
         {/* ══════ FAQ + Final CTA ══════ */}
         <div className="r-full-bleed" style={{
-          background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`,
+          background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 15%, #4A7B5E 40%, ${C.primaryDeep} 75%)`,
           position: "relative", overflow: "hidden",
         }}>
           <div style={{ padding: "48px 20px 0" }}>
@@ -3502,12 +3538,12 @@ function Freelancers({ setPage }) {
               <FAQ fullBleed />
             </div>
           </div>
-          <div style={{ padding: "56px 20px 88px", textAlign: "center", position: "relative", zIndex: 2 }}>
+          <div style={{ padding: "56px 20px 72px", textAlign: "center", position: "relative", zIndex: 2 }}>
             <h2 style={{ fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff" }}>
               The clients you lose are savable.<br />
               Start saving them.
             </h2>
-            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.5)", marginBottom: 24, lineHeight: 1.6 }}>See the signal. Get the script. Keep the client.</p>
+            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.65)", marginBottom: 24, lineHeight: 1.6 }}>See the signal. Get the script. Keep the client.</p>
             <button className="cta-btn" onClick={() => setPage("signup")} style={{
               padding: "16px 36px", background: "#fff", color: C.btn, border: "none",
               borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
@@ -3515,6 +3551,7 @@ function Freelancers({ setPage }) {
               Start Free Trial
             </button>
           </div>
+          <InlineFooter setPage={setPage} />
         </div>
       </div>
     </>
@@ -3698,7 +3735,7 @@ function Agencies({ setPage }) {
 
         {/* ══════ FAQ + Final CTA ══════ */}
         <div className="r-full-bleed" style={{
-          background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`,
+          background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 15%, #4A7B5E 40%, ${C.primaryDeep} 75%)`,
           position: "relative", overflow: "hidden",
         }}>
           <div style={{ padding: "48px 20px 0" }}>
@@ -3707,12 +3744,12 @@ function Agencies({ setPage }) {
               <FAQ fullBleed />
             </div>
           </div>
-          <div style={{ padding: "56px 20px 88px", textAlign: "center", position: "relative", zIndex: 2 }}>
+          <div style={{ padding: "56px 20px 72px", textAlign: "center", position: "relative", zIndex: 2 }}>
             <h2 style={{ fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff" }}>
               Your AMs are smart.<br />
               Give them a system worth their time.
             </h2>
-            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.5)", marginBottom: 24, lineHeight: 1.6 }}>Start free. Add your team. Scale with your book.</p>
+            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.65)", marginBottom: 24, lineHeight: 1.6 }}>Start free. Add your team. Scale with your book.</p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
               <button className="cta-btn" onClick={() => setPage("signup")} style={{
                 padding: "16px 36px", background: "#fff", color: C.btn, border: "none",
@@ -3724,10 +3761,11 @@ function Agencies({ setPage }) {
                 padding: "16px 36px", background: "transparent", color: "#fff", border: "1.5px solid rgba(255,255,255,0.3)",
                 borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
               }}>
-                Talk to us →
+                Talk to us
               </button>
             </div>
           </div>
+          <InlineFooter setPage={setPage} />
         </div>
       </div>
     </>
@@ -4018,15 +4056,15 @@ function Enterprise({ setPage }) {
 
         {/* ══════ Final CTA ══════ */}
         <div className="r-full-bleed" style={{
-          background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`,
-          padding: "72px 20px 96px", textAlign: "center",
+          background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 15%, #4A7B5E 40%, ${C.primaryDeep} 75%)`,
+          padding: "140px 20px 0", textAlign: "center",
           position: "relative", overflow: "hidden",
         }}>
-          <div style={{ position: "relative", zIndex: 2, maxWidth: 700, margin: "0 auto" }}>
+          <div style={{ position: "relative", zIndex: 2, maxWidth: 700, margin: "0 auto", paddingBottom: 72 }}>
             <h2 style={{ fontSize: 32, fontWeight: 900, lineHeight: 1.15, marginBottom: 16, letterSpacing: "-0.035em", color: "#fff" }}>
               Ready to see it running on your book?
             </h2>
-            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.55)", marginBottom: 28, lineHeight: 1.65 }}>
+            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.7)", marginBottom: 28, lineHeight: 1.65 }}>
               30-minute scoping call. We'll run a proof-of-concept against a subset of your portfolio within 10 business days.
             </p>
             <button className="cta-btn" onClick={() => setPage("contact")} style={{
@@ -4035,10 +4073,11 @@ function Enterprise({ setPage }) {
             }}>
               Request early access
             </button>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", marginTop: 14 }}>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", marginTop: 14 }}>
               Onboarding 3 partners per quarter · Custom pricing based on portfolio size
             </p>
           </div>
+          <InlineFooter setPage={setPage} />
         </div>
       </div>
     </>
@@ -4153,7 +4192,7 @@ function RelatedFeatures({ setPage, current }) {
 function FeatureFinalCTA({ setPage, h2, sub }) {
   return (
     <div className="r-full-bleed" style={{
-      background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`,
+      background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 15%, #4A7B5E 40%, ${C.primaryDeep} 75%)`,
       position: "relative", overflow: "hidden",
     }}>
       <div style={{ padding: "48px 20px 0" }}>
@@ -4162,9 +4201,9 @@ function FeatureFinalCTA({ setPage, h2, sub }) {
           <FAQ fullBleed />
         </div>
       </div>
-      <div style={{ padding: "56px 20px 88px", textAlign: "center", position: "relative", zIndex: 2 }}>
+      <div style={{ padding: "56px 20px 72px", textAlign: "center", position: "relative", zIndex: 2 }}>
         <h2 style={{ fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff" }}>{h2}</h2>
-        <p style={{ fontSize: 16, color: "rgba(255,255,255,0.5)", marginBottom: 24, lineHeight: 1.6 }}>{sub}</p>
+        <p style={{ fontSize: 16, color: "rgba(255,255,255,0.65)", marginBottom: 24, lineHeight: 1.6 }}>{sub}</p>
         <button className="cta-btn" onClick={() => setPage("signup")} style={{
           padding: "16px 36px", background: "#fff", color: C.btn, border: "none",
           borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
@@ -4172,6 +4211,7 @@ function FeatureFinalCTA({ setPage, h2, sub }) {
           Start Free Trial
         </button>
       </div>
+      <InlineFooter setPage={setPage} />
     </div>
   );
 }
@@ -4892,7 +4932,8 @@ export default function RetaynedSite() {
         {page === "privacy" && <Privacy />}
         {page === "terms" && <Terms />}
       </div>
-      {page !== "home" && <Footer setPage={setPage} />}
+      {/* External footer only on pages without the 4-stop gradient inline footer */}
+      {["demo","contact","login","signup","privacy","terms"].includes(page) && <Footer setPage={setPage} />}
       </div>
     </div>
   );
