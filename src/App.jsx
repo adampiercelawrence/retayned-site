@@ -605,6 +605,20 @@ function Home({ setPage }) {
           transform: translateY(-2px);
         }
 
+        @keyframes rEntBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .r-ent-blink {
+          display: inline-block;
+          animation: rEntBlink 2s ease-in-out infinite;
+          box-shadow: 0 0 6px rgba(126,194,154,0.6);
+        }
+        .r-ent-metric {
+          transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .r-ent-metric:hover {
+          background: rgba(255,255,255,0.05) !important;
+          border-color: rgba(255,255,255,0.1) !important;
+        }
+
         .r-testimonial-card {
           background: ${C.card}; border-radius: 16px; padding: 28px 24px;
           border: 1px solid ${C.border}; display: flex; flex-direction: column;
@@ -640,12 +654,12 @@ function Home({ setPage }) {
       <div className="r-home">
         {/* ══════════════ HERO ══════════════ */}
         <div className="r-full-bleed r-hero-bg r-hero-section" style={{
-          background: `radial-gradient(ellipse 120% 90% at 25% 35%, #D6E8DB 0%, #E4EDDF 35%, ${C.bg} 65%)`,
+          background: `radial-gradient(ellipse 120% 90% at 25% 35%, #E4EDDF 0%, #EFF4EC 35%, ${C.bg} 65%)`,
           padding: "56px 20px 72px",
           position: "relative", overflow: "hidden",
         }}>
           {/* Subtle decorative elements */}
-          <div className="r-hero-orb" style={{ position: "absolute", top: "10%", right: "5%", width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, #D6E8DB 0%, transparent 70%)", opacity: 0.5, pointerEvents: "none" }} />
+          <div className="r-hero-orb" style={{ position: "absolute", top: "10%", right: "5%", width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, #E4EDDF 0%, transparent 70%)", opacity: 0.4, pointerEvents: "none" }} />
           <div className="r-hero-orb" style={{ position: "absolute", bottom: "-5%", left: "15%", width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(51,84,62,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 48, alignItems: "center", maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
@@ -757,39 +771,25 @@ function Home({ setPage }) {
 
         {/* ══════════════ 5% STAT BAR ══════════════ */}
         <div className="r-full-bleed" style={{
-          background: C.raiGrad, padding: "56px 20px",
+          background: `linear-gradient(180deg, ${C.bg} 0%, #8FB89E 50%, ${C.bg} 100%)`,
+          padding: "72px 20px",
           position: "relative", overflow: "hidden",
         }}>
-          <div className="r-grain" />
-          {/* Decorative bar chart SVG */}
-          <svg className="r-stat-graphic-right" style={{ position: "absolute", right: "8%", top: "50%", transform: "translateY(-50%)", width: 120, height: 80, opacity: 0.12 }} viewBox="0 0 120 80" fill="none">
-            <rect x="0" y="55" width="16" height="25" rx="3" fill="white"/>
-            <rect x="24" y="40" width="16" height="40" rx="3" fill="white"/>
-            <rect x="48" y="25" width="16" height="55" rx="3" fill="white"/>
-            <rect x="72" y="12" width="16" height="68" rx="3" fill="white"/>
-            <rect x="96" y="0" width="16" height="80" rx="3" fill="white"/>
-          </svg>
-          <svg className="r-stat-graphic-left" style={{ position: "absolute", left: "8%", top: "50%", transform: "translateY(-50%)", width: 100, height: 80, opacity: 0.08 }} viewBox="0 0 100 80" fill="none">
-            <circle cx="30" cy="20" r="14" fill="white"/>
-            <path d="M30,34 C18,34 10,42 8,54 L8,80 L52,80 L52,54 C50,42 42,34 30,34Z" fill="white"/>
-            <circle cx="68" cy="28" r="10" fill="white" opacity="0.7"/>
-            <path d="M68,38 C60,38 54,44 52,52 L52,80 L84,80 L84,52 C82,44 76,38 68,38Z" fill="white" opacity="0.7"/>
-          </svg>
 
           <h2 style={{
             fontSize: 26, fontWeight: 800, lineHeight: 1.25, textAlign: "center",
-            margin: "0 auto", color: "#fff", letterSpacing: "-0.03em", position: "relative", zIndex: 2,
+            margin: "0 auto", color: C.text, letterSpacing: "-0.03em", position: "relative", zIndex: 2,
             maxWidth: 600,
           }}>
             A 5% increase in retention can boost profits by 95%.
-            <sup style={{ fontSize: "0.35em", color: "rgba(255,255,255,0.3)", verticalAlign: "super" }}>¹</sup>
+            <sup style={{ fontSize: "0.35em", color: C.textMuted, verticalAlign: "super" }}>¹</sup>
           </h2>
 
           {/* Fade separator */}
-          <div style={{ width: 120, height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)", margin: "24px auto 0", position: "relative", zIndex: 2 }} />
+          <div style={{ width: 120, height: 1, background: `linear-gradient(90deg, transparent, ${C.border}, transparent)`, margin: "28px auto 0", position: "relative", zIndex: 2 }} />
 
           {/* Stats row */}
-          <div className="r-stats-row" style={{ display: "flex", gap: 16, maxWidth: 1400, margin: "20px auto 0", position: "relative", zIndex: 2 }}>
+          <div className="r-stats-row" style={{ display: "flex", gap: 16, maxWidth: 1400, margin: "24px auto 0", position: "relative", zIndex: 2 }}>
             {[
               { num: "90", suffix: "%", label: "Of churn is predictable" },
               { num: "25", suffix: "x", label: "Cheaper to retain than acquire" },
@@ -798,11 +798,11 @@ function Home({ setPage }) {
               <div key={i} style={{ flex: 1, textAlign: "center", padding: "16px 0" }}>
                 <div className="r-stats" style={{
                   fontSize: 48, fontWeight: 900, letterSpacing: "-0.04em",
-                  color: "#fff", lineHeight: 1, marginBottom: 6,
+                  color: C.primary, lineHeight: 1, marginBottom: 6,
                 }}>
                   <AnimatedStat value={s.num} suffix={s.suffix} />
                 </div>
-                <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: ".04em" }}>{s.label}</div>
+                <div style={{ fontSize: 10, fontWeight: 600, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".04em" }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -1005,60 +1005,205 @@ function Home({ setPage }) {
           </div>
         </section>
 
-        {/* ══════════════ ENTERPRISE ══════════════ */}
-        <div className="r-full-bleed" style={{
-          background: C.heroGrad, padding: "64px 20px",
-          position: "relative", overflow: "hidden",
+        {/* ══════════════ TOP EDGE: three stacked circles (B) ══════════════ */}
+        <div className="r-full-bleed r-ent-top-edge" aria-hidden="true" style={{
+          position: "relative",
+          height: 140,
+          background: C.bg,
+          overflow: "hidden",
         }}>
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "240%", height: "240%", background: C.primarySoft, bottom: "-220%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "200%", height: "200%", background: "#A8C3B0", bottom: "-180%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "160%", height: "160%", background: C.primaryDeep, bottom: "-140%" }} />
+        </div>
+
+        {/* ══════════════ ENTERPRISE ══════════════ */}
+        <div className="r-full-bleed r-ent-section" style={{
+          background: C.primaryDeep,
+          padding: "72px 20px 96px",
+          position: "relative",
+          overflow: "hidden",
+          color: "#fff",
+          marginTop: -1,
+        }}>
+          {/* Interior depth: soft center glow + subtle purple corner */}
+          <div aria-hidden="true" style={{
+            position: "absolute",
+            inset: 0,
+            background: "radial-gradient(ellipse 800px 500px at 50% 40%, rgba(85,139,104,0.16) 0%, transparent 65%), radial-gradient(ellipse 400px 300px at 15% 100%, rgba(91,33,182,0.08) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }} />
           <div className="r-grain" />
-          {/* Decorative geometric pattern */}
-          <div style={{ position: "absolute", top: 40, right: 60, width: 200, height: 200, border: "1px solid rgba(255,255,255,0.04)", borderRadius: "50%", pointerEvents: "none" }} />
-          <div style={{ position: "absolute", top: 60, right: 80, width: 160, height: 160, border: "1px solid rgba(255,255,255,0.03)", borderRadius: "50%", pointerEvents: "none" }} />
 
-          <Reveal><div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 2 }}>
-            {/* Top Secret stamp */}
-            <div className="r-ent-stamp" style={{
-              position: "absolute", top: -10, left: "8%",
-              transform: "rotate(-6deg)",
-              padding: "10px 30px", borderRadius: 4,
-              border: "3px solid rgba(196,67,43,0.7)",
-              color: "rgba(196,67,43,0.85)",
-              fontSize: 18, fontWeight: 900, fontFamily: "'Courier New', Courier, monospace",
-              textTransform: "uppercase", letterSpacing: "0.25em",
-              pointerEvents: "none",
-              boxShadow: "inset 0 0 0 1.5px rgba(196,67,43,0.35)",
-            }}>Early Access</div>
-            <h2 style={{
-              fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff",
-            }}>Autonomous relationship intelligence.</h2>
-            <p style={{
-              fontSize: 16, color: "rgba(255,255,255,0.4)", maxWidth: 580,
-              margin: "0 auto 40px", lineHeight: 1.75,
-            }}>Connect your platforms. Retayned scores every client, detects churn patterns, and tells your team — or your agents — exactly what to address, every morning, automatically.</p>
-
-            <div className="r-ent-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 40, maxWidth: 560, margin: "0 auto 40px" }}>
-              {[
-                { label: "Portfolio Sweeps", desc: "Every client scored and ranked automatically, every morning." },
-                { label: "Churn Detection", desc: "Converging signals identified before they're cancellations." },
-                { label: "Prioritized Task Lists", desc: "Specific actions, tailored to each client's communication style." },
-                { label: "Useful Integrations", desc: "Slack, email, Zoom, CRM, billing — Retayned reads the data." },
-              ].map(item => (
-                <div key={item.label} className="r-ent-feature">
-                  <div style={{ fontWeight: 700, fontSize: 14, color: "#fff", marginBottom: 5 }}>{item.label}</div>
-                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.38)", lineHeight: 1.5 }}>{item.desc}</div>
-                </div>
-              ))}
+          <Reveal><div style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 2 }}>
+            {/* Tag row */}
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 7,
+                padding: "5px 12px 5px 10px", borderRadius: 100,
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.75)",
+                letterSpacing: "0.02em",
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.success, boxShadow: "0 0 8px rgba(45,134,89,0.6)" }} />
+                Account Management as a Service · AMaaS
+              </div>
+              <div style={{ height: 1, flex: 1, background: "linear-gradient(90deg, rgba(255,255,255,0.08), transparent)" }} />
             </div>
-            <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+
+            {/* Headline + body */}
+            <h2 className="r-ent-h2" style={{
+              fontSize: 42, fontWeight: 900, letterSpacing: "-0.04em",
+              lineHeight: 1.05, color: "#fff", margin: "0 0 16px",
+              maxWidth: 820,
+            }}>
+              Relationship intelligence,<br />
+              <span style={{ color: C.primaryLight }}>as a service.</span>
+            </h2>
+            <p style={{
+              fontSize: 16, color: "rgba(255,255,255,0.55)", lineHeight: 1.7,
+              margin: "0 0 48px", maxWidth: 620,
+            }}>
+              The scoring engine, churn detection, and task generation from the Retayned app — exposed to your enterprise retention team. Every client scored nightly. Every archetype flagged. Every task generated, tailored, and ready to send.
+            </p>
+
+            {/* Live Dashboard — product object */}
+            <div className="r-ent-dashboard" style={{
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 16,
+              padding: 28,
+              position: "relative",
+              overflow: "hidden",
+              marginBottom: 40,
+            }}>
+              {/* Top hairline */}
+              <div aria-hidden="true" style={{
+                position: "absolute", top: 0, left: 0, right: 0, height: 1,
+                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)",
+              }} />
+
+              {/* Dashboard header */}
+              <div style={{
+                display: "flex", justifyContent: "space-between", alignItems: "center",
+                marginBottom: 24, paddingBottom: 16,
+                borderBottom: "1px solid rgba(255,255,255,0.08)",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: 8,
+                    background: "rgba(85,139,104,0.2)",
+                    display: "inline-flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.primaryLight} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z"/></svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>RaiS · Live view</div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Portfolio: 1,247 clients · Last sweep: 08:04</div>
+                  </div>
+                </div>
+                <div style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  padding: "5px 11px", borderRadius: 100,
+                  background: "rgba(45,134,89,0.15)",
+                  fontSize: 11, fontWeight: 600, color: "#7EC29A",
+                }}>
+                  <span className="r-ent-blink" style={{ width: 5, height: 5, borderRadius: "50%", background: "#7EC29A" }} />
+                  Running
+                </div>
+              </div>
+
+              {/* Metrics grid — the 4 features embedded as live states */}
+              <div className="r-ent-metrics" style={{
+                display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12,
+                marginBottom: 16,
+              }}>
+                {[
+                  { label: "Scored today", val: "1,247", suffix: "/1,247", delta: "All current", deltaColor: "#7EC29A" },
+                  { label: "At-risk flagged", val: "38", delta: "+4 from yesterday", deltaColor: "#E89580" },
+                  { label: "Tasks generated", val: "92", delta: "28 emails ready to send", deltaColor: "#7EC29A" },
+                  { label: "Archetypes active", val: "9", delta: "Velocity decay trending", deltaColor: "rgba(255,255,255,0.5)" },
+                ].map(m => (
+                  <div key={m.label} className="r-ent-metric" style={{
+                    padding: "14px 14px",
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.05)",
+                    borderRadius: 10,
+                  }}>
+                    <div style={{
+                      fontSize: 10, fontWeight: 700, textTransform: "uppercase",
+                      letterSpacing: ".08em", color: "rgba(255,255,255,0.4)", marginBottom: 8,
+                    }}>{m.label}</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1 }}>
+                      {m.val}
+                      {m.suffix && <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.35)", marginLeft: 2 }}>{m.suffix}</span>}
+                    </div>
+                    <div style={{ fontSize: 11, color: m.deltaColor, fontWeight: 600, marginTop: 6 }}>{m.delta}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Log output */}
+              <div style={{
+                background: "rgba(0,0,0,0.25)",
+                borderRadius: 10,
+                padding: "14px 16px",
+                fontFamily: "'SF Mono', Menlo, Monaco, monospace",
+                fontSize: 11.5,
+                color: "rgba(255,255,255,0.55)",
+                lineHeight: 1.75,
+                overflow: "hidden",
+              }}>
+                {[
+                  { time: "08:04", lvl: "SWEEP", lvlColor: C.primaryLight, msg: "Scored 1,247 clients. Δ avg score: −0.4. Flagged 38 at-risk." },
+                  { time: "08:04", lvl: "ALERT", lvlColor: "#E89580", msg: "Foxglove Partners entered \"Velocity decay\" archetype. Confidence: 0.87." },
+                  { time: "08:05", lvl: "TASK ", lvlColor: "#7EC29A", msg: "Generated 92 tasks. 28 outreach emails drafted and queued for review." },
+                  { time: "08:05", lvl: "SYNC ", lvlColor: C.primaryLight, msg: "Dispatched to Slack (42), CRM (50). Next sweep: 08:04 tomorrow." },
+                ].map((line, i) => (
+                  <div key={i} style={{ display: "flex", gap: 12 }}>
+                    <span style={{ color: "rgba(255,255,255,0.3)", minWidth: 44 }}>{line.time}</span>
+                    <span style={{ color: line.lvlColor, fontWeight: 700, minWidth: 50 }}>{line.lvl}</span>
+                    <span style={{ flex: 1 }}>{line.msg}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA row */}
+            <div className="r-ent-cta-row" style={{
+              display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap",
+            }}>
               <button className="r-hero-cta" onClick={() => setPage("contact")} style={{
                 background: "#fff", color: C.btn,
-              }}>Let's Talk</button>
+                padding: "14px 28px", fontSize: 14,
+              }}>Request early access</button>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", lineHeight: 1.55 }}>
+                Onboarding 3 partners per quarter.<br />
+                Custom pricing based on portfolio size.
+              </div>
             </div>
           </div></Reveal>
         </div>
 
+        {/* ══════════════ BOTTOM EDGE: mirrored three circles ══════════════ */}
+        <div className="r-full-bleed r-ent-bottom-edge" aria-hidden="true" style={{
+          position: "relative",
+          height: 140,
+          background: C.bg,
+          overflow: "hidden",
+          marginTop: -1,
+        }}>
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "240%", height: "240%", background: C.primarySoft, top: "-220%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "200%", height: "200%", background: "#A8C3B0", top: "-180%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "160%", height: "160%", background: C.primaryDeep, top: "-140%" }} />
+        </div>
+
         {/* ══════════════ TESTIMONIALS ══════════════ */}
-        <section style={{ padding: "48px 20px 40px" }}>
+        <section style={{
+          padding: "48px 20px 40px",
+          boxShadow: "inset 0 1px 0 rgba(0,0,0,0.04)",
+        }}>
           <div style={{ textAlign: "center", marginBottom: 40 }}>
             <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 8 }}>What Folks Are Saying</h2>
             <p style={{ fontSize: 16, color: C.textSec }}>From our own Retayned business.</p>
@@ -1103,13 +1248,21 @@ function Home({ setPage }) {
         {/* ══════════════ CONFERENCE IMAGE ══════════════ */}
         <div className="r-conf r-full-bleed r-no-pad" style={{ padding: "0", marginBottom: 40 }}>
           <div className="r-conf-inner" style={{ maxWidth: "100%", margin: "0 auto" }}>
-            <img className="r-conf-img" src="/retayned-conference.jpg" alt="Retayned team at conference" style={{ width: "100%", display: "block", borderRadius: 0 }} />
+            <img className="r-conf-img" src="/retayned-conference.jpg" alt="Retayned team at conference" style={{ width: "100%", display: "block" }} />
+            <p className="r-conf-caption" style={{
+              textAlign: "center",
+              fontSize: 13,
+              color: C.textMuted,
+              fontStyle: "italic",
+              margin: "14px 0 0",
+              display: "none",
+            }}>The Retayned team.</p>
           </div>
         </div>
 
         {/* ══════════════ FAQ + FINAL CTA ══════════════ */}
         <div className="r-full-bleed" style={{
-          background: `linear-gradient(180deg, ${C.bg} 0%, #E4EDDF 8%, #D6E8DB 20%, #C8DDD0 34%, #B5CFBE 44%, #8FB89E 54%, #4A7B5E 66%, #2A462F 78%, #1E261F 90%)`,
+          background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, #1E261F 100%)`,
           position: "relative", overflow: "hidden",
         }}>
           <div style={{ padding: "48px 20px 0" }}>
@@ -2777,8 +2930,13 @@ export default function RetaynedSite() {
         .r-feat-content { flex-direction: column-reverse; gap: 24px !important; }
         .r-feat-heading-mobile { display: block !important; }
         .r-feat-heading-desktop { display: none !important; }
-        .r-ent-stamp { top: -30px !important; left: 50% !important; transform: translateX(-50%) rotate(-6deg) !important; font-size: 13px !important; padding: 8px 20px !important; }
-        .r-hero-bg { background: linear-gradient(180deg, #D6E8DB 0%, #E4EDDF 40%, #F7F7F4 75%) !important; }
+        .r-ent-h2 { font-size: 28px !important; }
+        .r-ent-metrics { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+        .r-ent-top-edge, .r-ent-bottom-edge { height: 100px !important; }
+        .r-ent-section { padding: 48px 20px 64px !important; }
+        .r-ent-dashboard { padding: 20px !important; }
+        .r-ent-cta-row { flex-direction: column !important; align-items: flex-start !important; gap: 14px !important; }
+        .r-hero-bg { background: linear-gradient(180deg, #E4EDDF 0%, #EFF4EC 40%, #F7F7F4 75%) !important; }
         .r-hero-orb { opacity: 0.4 !important; }
         .r-hero-section { padding-bottom: 48px !important; }
         .r-how-it-works { padding-top: 32px !important; }
@@ -2811,17 +2969,17 @@ export default function RetaynedSite() {
           .r-stat-graphic-right { width: 120px !important; height: 90px !important; right: 120px !important; top: -16px !important; opacity: 0.14 !important; }
           .r-stat-accent-left, .r-stat-accent-right { display: block !important; }
           .r-tab-btn { flex: 1 1 0 !important; }
-          .r-ent-grid { grid-template-columns: 1fr 1fr 1fr 1fr !important; max-width: 960px !important; }
           .r-feat-content { flex-direction: row !important; gap: 48px !important; }
           .r-feat-heading-mobile { display: none !important; }
           .r-feat-heading-desktop { display: block !important; }
-          .r-hero-bg { background: radial-gradient(ellipse 120% 90% at 25% 35%, #D6E8DB 0%, #E4EDDF 35%, #F7F7F4 65%) !important; }
+          .r-hero-bg { background: radial-gradient(ellipse 120% 90% at 25% 35%, #E4EDDF 0%, #EFF4EC 35%, #F7F7F4 65%) !important; }
           .r-hero-orb { opacity: 0.5 !important; }
           .r-stats-row { flex-direction: row !important; gap: 16px !important; }
 
-          .r-conf-inner { max-width: 900px; border-radius: 14px; overflow: hidden; }
+          .r-conf-inner { max-width: 900px; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
           .r-conf-img { border-radius: 14px; }
           .r-conf { padding: 0 40px !important; margin-bottom: 64px !important; }
+          .r-conf-caption { display: block !important; }
         }
         @media (min-width: 1024px) {
           section { padding-left: 60px !important; padding-right: 60px !important; }
