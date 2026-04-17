@@ -150,19 +150,44 @@ function SwipeDrawer({ open, setOpen, children }) {
 function Nav({ page, setPage }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [platformOpen, setPlatformOpen] = useState(false);
+  const [mobilePlatformExpanded, setMobilePlatformExpanded] = useState(false);
+  const closeTimer = useRef(null);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  const links = [
-    { id: "platform", label: "Platform" },
-    { id: "pricing", label: "Pricing" },
-    { id: "about", label: "About" },
-    { id: "blog", label: "Resources" },
-    { id: "contact", label: "Contact" },
-    { id: "login", label: "Log In" },
+
+  const openPlatform = () => {
+    if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
+    setPlatformOpen(true);
+  };
+  const closePlatform = () => {
+    closeTimer.current = setTimeout(() => setPlatformOpen(false), 150);
+  };
+
+  const features = [
+    { id: "feature-today", label: "Today", desc: "One page. Every priority.", icon: "◉" },
+    { id: "feature-scoring", label: "Retention Score", desc: "1–99, based on 12 dimensions.", icon: "◎" },
+    { id: "feature-health", label: "Health Checks", desc: "Five questions. Two minutes.", icon: "♡" },
+    { id: "feature-rai", label: "Talk to Rai", desc: "AI advisor for your book.", icon: "✦" },
+    { id: "feature-rolodex", label: "Rolodex", desc: "Forward-looking pipeline.", icon: "⟐" },
+    { id: "feature-referrals", label: "Referrals", desc: "Who's ready, with data.", icon: "⟡" },
   ];
+  const audiences = [
+    { id: "freelancers", label: "Freelancers", desc: "1–50 clients. Self-serve.", icon: "⟣" },
+    { id: "agencies", label: "Agencies", desc: "50+ clients. Team plans.", icon: "⟢" },
+  ];
+
+  const topLinks = [
+    { id: "pricing", label: "Pricing" },
+    { id: "blog", label: "Resources" },
+    { id: "about", label: "About" },
+  ];
+
+  const platformActive = ["platform", "freelancers", "agencies", "enterprise", "feature-today", "feature-scoring", "feature-health", "feature-rai", "feature-rolodex", "feature-referrals"].includes(page);
+
   return (
     <>
       <nav style={{ position: "sticky", top: 0, zIndex: 50, background: C.bg, borderBottom: scrolled ? "1px solid " + C.border : "1px solid transparent", boxShadow: scrolled ? "0 2px 8px rgba(0,0,0,0.06)" : "none", transition: "box-shadow 0.2s, border-color 0.2s" }}>
@@ -179,8 +204,125 @@ function Nav({ page, setPage }) {
               <span style={{ fontSize: 24, fontWeight: 900, color: C.primary, marginLeft: 1, fontFamily: "system-ui, -apple-system, sans-serif" }}>.</span>
             </div>
           </div>
-          <div className="r-desktop-nav" style={{ display: "none", alignItems: "baseline", gap: 28 }}>
-            {links.filter(l => l.id !== "login").map(l => (
+          <div className="r-desktop-nav" style={{ display: "none", alignItems: "baseline", gap: 28, position: "relative" }}>
+            {/* Platform mega-menu trigger */}
+            <div
+              onMouseEnter={openPlatform}
+              onMouseLeave={closePlatform}
+              style={{ position: "relative" }}
+            >
+              <span
+                onClick={() => setPage("platform")}
+                role="button"
+                tabIndex={0}
+                onKeyDown={e => e.key === "Enter" && setPage("platform")}
+                style={{
+                  fontSize: 15,
+                  fontWeight: platformActive ? 700 : 600,
+                  color: platformActive ? C.primary : C.text,
+                  cursor: "pointer",
+                  letterSpacing: "-0.01em",
+                  borderBottom: platformActive ? "2px solid " + C.btn : "2px solid transparent",
+                  paddingBottom: 2,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+                Platform
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6, transform: platformOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </span>
+
+              {/* Mega menu */}
+              {platformOpen && (
+                <div
+                  onMouseEnter={openPlatform}
+                  onMouseLeave={closePlatform}
+                  style={{
+                    position: "absolute",
+                    top: "calc(100% + 10px)",
+                    left: "-14px",
+                    background: C.card,
+                    border: "1px solid " + C.border,
+                    borderRadius: 16,
+                    boxShadow: "0 20px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.04)",
+                    padding: 24,
+                    minWidth: 720,
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 24,
+                    zIndex: 100,
+                    animation: "megaFadeIn 0.2s ease",
+                  }}
+                >
+                  {/* Features column */}
+                  <div>
+                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: C.textMuted, padding: "0 10px 10px", marginBottom: 4, borderBottom: "1px solid " + C.borderLight }}>Features</div>
+                    {features.map((f, i) => (
+                      <div
+                        key={i}
+                        onClick={() => { setPage(f.id); setPlatformOpen(false); }}
+                        className="r-mega-row"
+                        style={{
+                          display: "flex",
+                          gap: 12,
+                          alignItems: "flex-start",
+                          padding: 10,
+                          borderRadius: 8,
+                          cursor: "pointer",
+                        }}
+                      >
+                        <span style={{ width: 32, height: 32, borderRadius: 8, background: C.primarySoft, color: C.primary, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 16, fontWeight: 700 }}>{f.icon}</span>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                          <span style={{ fontSize: 13.5, fontWeight: 700, color: C.text }}>{f.label}</span>
+                          <span style={{ fontSize: 11.5, color: C.textSec, lineHeight: 1.4 }}>{f.desc}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* For who column */}
+                  <div>
+                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: C.textMuted, padding: "0 10px 10px", marginBottom: 4, borderBottom: "1px solid " + C.borderLight }}>For who</div>
+                    {audiences.map((a, i) => (
+                      <div
+                        key={i}
+                        onClick={() => { setPage(a.id); setPlatformOpen(false); }}
+                        className="r-mega-row"
+                        style={{
+                          display: "flex",
+                          gap: 12,
+                          alignItems: "flex-start",
+                          padding: 10,
+                          borderRadius: 8,
+                          cursor: "pointer",
+                        }}
+                      >
+                        <span style={{ width: 32, height: 32, borderRadius: 8, background: a.accent ? "rgba(91,33,182,0.12)" : C.primarySoft, color: a.accent ? C.btn : C.primary, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 16, fontWeight: 700 }}>{a.icon}</span>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                          <span style={{ fontSize: 13.5, fontWeight: 700, color: C.text }}>{a.label}</span>
+                          <span style={{ fontSize: 11.5, color: C.textSec, lineHeight: 1.4 }}>{a.desc}</span>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Enterprise CTA footer */}
+                    <div style={{ marginTop: 14, padding: "14px 14px", borderRadius: 10, background: `linear-gradient(135deg, ${C.primaryDeep} 0%, ${C.primary} 100%)`, color: "#fff", cursor: "pointer" }} onClick={() => { setPage("enterprise"); setPlatformOpen(false); }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: C.primaryLight, marginBottom: 3 }}>AMaaS · Early access</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>Relationship intelligence as a service</div>
+                      <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.6)", display: "flex", alignItems: "center", gap: 4 }}>
+                        Learn more <span style={{ opacity: 0.7 }}>→</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Other top-level links */}
+            {topLinks.map(l => (
               <span key={l.id} onClick={() => setPage(l.id)} role="button" tabIndex={0} onKeyDown={e => e.key === "Enter" && setPage(l.id)} style={{ fontSize: 15, fontWeight: page === l.id ? 700 : 600, color: page === l.id ? C.primary : C.text, cursor: "pointer", letterSpacing: "-0.01em", borderBottom: page === l.id ? "2px solid " + C.btn : "2px solid transparent", paddingBottom: 2, transition: "border-color 0.2s" }}>{l.label}</span>
             ))}
           </div>
@@ -201,14 +343,61 @@ function Nav({ page, setPage }) {
         </div>
       </div>
       </nav>
-      {/* Left drawer + swipe */}
+
+      {/* Mobile drawer with expandable Platform group */}
       <SwipeDrawer open={open} setOpen={setOpen}>
         <div style={{ padding: "24px 24px 24px 24px" }}>
           <div style={{ display: "flex", alignItems: "baseline", marginBottom: 32, cursor: "pointer" }} onClick={() => { setPage("home"); setOpen(false); }}>
             <span style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.04em", color: C.primary, fontFamily: "system-ui, -apple-system, sans-serif" }}>Retayned</span>
             <span style={{ fontSize: 22, fontWeight: 900, color: C.primary, marginLeft: 1, fontFamily: "system-ui, -apple-system, sans-serif" }}>.</span>
           </div>
-          {links.map(l => (
+
+          {/* Platform expandable group */}
+          <button
+            onClick={() => setMobilePlatformExpanded(!mobilePlatformExpanded)}
+            style={{
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+              width: "100%", textAlign: "left", padding: "14px 0",
+              background: "none", border: "none",
+              borderBottom: "1px solid " + C.borderLight,
+              fontSize: 17, fontWeight: platformActive ? 700 : 500,
+              color: platformActive ? C.primary : C.text,
+              cursor: "pointer", fontFamily: "inherit",
+            }}
+          >
+            Platform
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5, transform: mobilePlatformExpanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+
+          {mobilePlatformExpanded && (
+            <div style={{ paddingLeft: 8, paddingTop: 10, paddingBottom: 10 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: C.textMuted, marginBottom: 8, paddingTop: 6 }}>Features</div>
+              <button onClick={() => { setPage("platform"); setOpen(false); }} style={{ display: "block", width: "100%", textAlign: "left", padding: "10px 0", background: "none", border: "none", fontSize: 15, fontWeight: 500, color: C.text, cursor: "pointer", fontFamily: "inherit" }}>
+                All features →
+              </button>
+              <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: C.textMuted, marginTop: 14, marginBottom: 8 }}>For who</div>
+              {audiences.map(a => (
+                <button
+                  key={a.id}
+                  onClick={() => { setPage(a.id); setOpen(false); setMobilePlatformExpanded(false); }}
+                  style={{
+                    display: "block", width: "100%", textAlign: "left", padding: "10px 0",
+                    background: "none", border: "none",
+                    fontSize: 15, fontWeight: page === a.id ? 700 : 500,
+                    color: page === a.id ? C.primary : C.text,
+                    cursor: "pointer", fontFamily: "inherit",
+                  }}
+                >
+                  {a.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Other top-level links */}
+          {topLinks.map(l => (
             <button key={l.id} onClick={() => { setPage(l.id); setOpen(false); }} style={{
               display: "block", width: "100%", textAlign: "left", padding: "14px 0",
               background: "none", border: "none",
@@ -220,6 +409,19 @@ function Nav({ page, setPage }) {
               {l.label}
             </button>
           ))}
+
+          {/* Log In */}
+          <button onClick={() => { setPage("login"); setOpen(false); }} style={{
+            display: "block", width: "100%", textAlign: "left", padding: "14px 0",
+            background: "none", border: "none",
+            borderBottom: "1px solid " + C.borderLight,
+            fontSize: 17, fontWeight: page === "login" ? 700 : 500,
+            color: page === "login" ? C.primary : C.text,
+            cursor: "pointer", fontFamily: "inherit",
+          }}>
+            Log In
+          </button>
+
           <button onClick={() => { setPage("demo"); setOpen(false); }} style={{
             width: "100%", padding: "14px 20px", background: "transparent", color: C.text,
             border: "1.5px solid " + C.border, borderRadius: 10, fontSize: 15, fontWeight: 700,
@@ -273,9 +475,11 @@ function Footer({ setPage }) {
 }
 
 // ═══ Animated counter ═══
-function AnimatedStat({ value, suffix = "", duration = 1800 }) {
+function AnimatedStat({ value, suffix = "", prefix = "", from = 0, decimals = 0, duration = 1800 }) {
   const ref = useRef(null);
-  const [display, setDisplay] = useState("0");
+  const target = parseFloat(value);
+  const initial = isNaN(target) ? value : (decimals > 0 ? from.toFixed(decimals) : String(Math.round(from)));
+  const [display, setDisplay] = useState(initial);
   const [started, setStarted] = useState(false);
 
   useEffect(() => {
@@ -293,21 +497,24 @@ function AnimatedStat({ value, suffix = "", duration = 1800 }) {
 
   useEffect(() => {
     if (!started) return;
-    const num = parseInt(value);
-    if (isNaN(num)) { setDisplay(value); return; }
+    if (isNaN(target)) { setDisplay(value); return; }
     const steps = 40;
     let step = 0;
     const timer = setInterval(() => {
       step++;
       const t = step / steps;
       const ease = 1 - Math.pow(1 - t, 4);
-      setDisplay(String(Math.round(ease * num)));
-      if (step >= steps) { setDisplay(String(num)); clearInterval(timer); }
+      const current = from + ease * (target - from);
+      setDisplay(decimals > 0 ? current.toFixed(decimals) : String(Math.round(current)));
+      if (step >= steps) {
+        setDisplay(decimals > 0 ? target.toFixed(decimals) : String(Math.round(target)));
+        clearInterval(timer);
+      }
     }, duration / steps);
     return () => clearInterval(timer);
-  }, [started, value, duration]);
+  }, [started, value, duration, from, decimals, target]);
 
-  return <span ref={ref}>{display}{suffix}</span>;
+  return <span ref={ref}>{prefix}{display}{suffix}</span>;
 }
 
 // ═══ HERO INTERACTIVE DEMO ═══
@@ -677,7 +884,7 @@ function Home({ setPage }) {
                   fontSize: 12, fontWeight: 600, color: C.text,
                 }}>
                   <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.success, display: "inline-block" }} />
-                  Built for agencies, freelancers, consultants, and mobsters
+                  For freelancers, agencies, account reps, and mobsters
                 </div>
               </div>
 
@@ -1328,65 +1535,151 @@ function Pricing({ setPage }) {
 
   return (
     <>
-      <section style={{ padding: "56px 20px 40px", textAlign: "center" }}>
-        <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 14 }}>One client saved pays for{" "}
+      {/* ══════ Hero ══════ */}
+      <section style={{ padding: "64px 20px 24px", textAlign: "center" }}>
+        <h1 className="r-page-title" style={{ fontSize: 42, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08, marginBottom: 16, maxWidth: 720, margin: "0 auto 16px" }}>One client saved pays for{" "}
           <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
             <span style={{ color: C.textMuted }}>a year<span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} /></span>
             <span style={{ position: "absolute", top: "-0.55em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.85em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>years</span>
           </span>{" "}of Retayned.
         </h1>
-        <p style={{ fontSize: 16, color: C.textSec, marginBottom: 24 }}>The math works. Still not convinced? 14-day free trial. Cancel anytime.</p>
+        <p style={{ fontSize: 17, color: C.textSec, lineHeight: 1.6, maxWidth: 560, margin: "0 auto" }}>One plan. Every feature. The math works itself out.</p>
       </section>
-      <section style={{ padding: "0 20px 48px" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto" }}>
-          {/* Cards side by side */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 20, alignItems: "stretch" }}>
-            {/* Main pricing card */}
-            <div style={{ flex: "1 1 400px", display: "flex" }}>
-              <div style={{ background: `radial-gradient(ellipse 115% 60% at 50% 32%, #DCE9E0 0%, ${C.primarySoft} 35%, ${C.card} 78%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", width: "100%" }}>
-                <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: C.textMuted, marginBottom: 20, textAlign: "center" }}>One plan. Every feature. Impossibly easy.</div>
-                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4, marginBottom: 4 }}>
-                  <span style={{ fontSize: 52, fontWeight: 900, letterSpacing: "-0.03em" }}>$19.99</span>
-                  <span style={{ fontSize: 15, color: C.textMuted }}>/mo</span>
-                </div>
-                <div style={{ fontSize: 16, color: C.textSec, marginBottom: 28, lineHeight: 1.5, textAlign: "center" }}>+ <span style={{ fontWeight: 700 }}>$1 per Client</span></div>
-                <p style={{ fontSize: 14, color: C.textSec, textAlign: "center", marginBottom: 28 }}>Solve your business's most consequential problem for less than a Netflix subscription.</p>
 
-                <button className="cta-btn" onClick={() => setPage("signup")} style={{ width: "100%", padding: "15px 20px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", background: C.btn, color: "#fff", border: "none", marginBottom: 28 }}>Start Free Trial</button>
+      {/* ══════ The price card ══════ */}
+      <section style={{ padding: "32px 20px 48px" }}>
+        <div style={{ maxWidth: 580, margin: "0 auto" }}>
+          <div style={{
+            background: `radial-gradient(ellipse 115% 60% at 50% 22%, #DCE9E0 0%, ${C.primarySoft} 35%, ${C.card} 78%)`,
+            borderRadius: 24,
+            border: "1.5px solid " + C.border,
+            padding: "48px 40px",
+            boxShadow: "0 12px 48px rgba(0,0,0,0.08)",
+            textAlign: "center",
+          }}>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".14em", color: C.primary, marginBottom: 24 }}>One plan. Every feature.</div>
 
-                <div style={{ marginTop: "auto" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.primary, marginBottom: 16, textAlign: "center" }}>Everything's included</div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-                    {["Suggested tasks daily", "Priority retention alerts", "Dynamic client scoring", "Monthly health checks", "Dedicated, priority support", "Unlimited chats with Rai", "Unlimited Rolodex slots", "Unlimited team members"].map((f, j) => (
-                      <span key={j} style={{ fontSize: 13, color: C.text, padding: "8px 14px", borderRadius: 10, background: "rgba(51,84,62,0.06)", border: "1px solid " + C.borderLight, fontWeight: 500, textAlign: "center" }}>{f}</span>
-                    ))}
+            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6, marginBottom: 6 }}>
+              <span style={{ fontSize: 72, fontWeight: 900, letterSpacing: "-0.04em", color: C.text, lineHeight: 1 }}>$19.99</span>
+              <span style={{ fontSize: 18, color: C.textMuted, fontWeight: 600 }}>/mo</span>
+            </div>
+            <div style={{ fontSize: 16, color: C.textSec, marginBottom: 12, lineHeight: 1.5 }}>+ <span style={{ fontWeight: 700, color: C.text }}>$1 per client</span></div>
+            <p style={{ fontSize: 14, color: C.textSec, marginBottom: 32, lineHeight: 1.55, maxWidth: 420, margin: "0 auto 32px" }}>Solve your business's most consequential problem for less than a Netflix subscription.</p>
+
+            <button className="cta-btn" onClick={() => setPage("signup")} style={{
+              width: "100%", padding: "16px 20px", borderRadius: 14,
+              fontSize: 16, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+              background: C.btn, color: "#fff", border: "none",
+              boxShadow: "0 6px 20px rgba(91,33,182,0.25)",
+            }}>Start Free Trial</button>
+            <p style={{ fontSize: 12.5, color: C.textMuted, marginTop: 14 }}>14-day free trial. Cancel anytime.</p>
+          </div>
+
+          {/* Features grid — under the card, looser, not competing with the price */}
+          <div style={{ marginTop: 40 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".14em", color: C.textMuted, marginBottom: 20, textAlign: "center" }}>Everything's included</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 10, maxWidth: 760, margin: "0 auto" }}>
+              {[
+                { label: "Retention Score (1–99)", desc: "12 dimensions, 20 combinations" },
+                { label: "Today", desc: "Prioritized tasks, ranked by impact" },
+                { label: "Health Checks", desc: "Monthly cadence, scored drift" },
+                { label: "Talk to Rai", desc: "Unlimited chats, calibrated scripts" },
+                { label: "Rolodex", desc: "Former clients, ready to re-engage" },
+                { label: "Referrals", desc: "Readiness scoring, right-time asks" },
+              ].map((f, i) => (
+                <div key={i} style={{
+                  padding: "14px 16px",
+                  background: C.card,
+                  border: "1px solid " + C.borderLight,
+                  borderRadius: 11,
+                  display: "flex",
+                  gap: 10,
+                  alignItems: "flex-start",
+                }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 2 }}><polyline points="20 6 9 17 4 12"/></svg>
+                  <div>
+                    <div style={{ fontSize: 13.5, fontWeight: 700, color: C.text, marginBottom: 1 }}>{f.label}</div>
+                    <div style={{ fontSize: 12, color: C.textSec, lineHeight: 1.4 }}>{f.desc}</div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
-
-            {/* Enterprise card */}
-            <div style={{ flex: "1 1 400px", display: "flex" }}>
-              <div style={{ background: `radial-gradient(ellipse 115% 60% at 50% 32%, #DCE9E0 0%, ${C.primarySoft} 35%, ${C.card} 78%)`, borderRadius: 20, border: "1.5px solid " + C.border, padding: "40px 32px", position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", width: "100%" }}>
-                <div style={{ position: "absolute", top: 28, right: -32, background: C.danger, color: "#fff", fontSize: 9, fontWeight: 700, padding: "5px 40px", transform: "rotate(45deg)", letterSpacing: ".06em", textAlign: "center" }}>EARLY ACCESS</div>
-                <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.textMuted, marginBottom: 4 }}>Enterprise</div>
-                <div style={{ fontSize: 14, color: C.textSec, marginBottom: 16 }}>Autonomous relationship intelligence.</div>
-                <div style={{ fontSize: 40, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 20 }}>Let's Talk</div>
-                <button onClick={() => setPage("contact")} className="cta-btn" style={{ width: "100%", padding: "15px 20px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginBottom: 24, background: C.btn, color: "#fff", border: "none" }}>Contact Us</button>
-                <div style={{ marginTop: "auto" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: C.primary, marginBottom: 16, textAlign: "center" }}>Built for large orgs and AI agents</div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-                    {["Slack, email, Zoom, CRM integrations", "Automated daily portfolio sweeps", "Churn archetype detection", "Prioritized client rankings", "Multi-signal alerts", "Score history and drift tracking", "API + webhook delivery", "Dedicated onboarding"].map((f, j) => (
-                      <span key={j} style={{ fontSize: 13, color: C.text, padding: "6px 14px", borderRadius: 10, background: "rgba(51,84,62,0.06)", border: "1px solid " + C.borderLight, fontWeight: 500, textAlign: "center" }}>{f}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div style={{ fontSize: 12, color: C.textMuted, textAlign: "center", marginTop: 16, fontStyle: "italic" }}>Unlimited team members · No per-seat fees · No tiers</div>
           </div>
         </div>
       </section>
-      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 40%, #1E261F 100%)", padding: "64px 20px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+
+      {/* ══════ The math moment ══════ */}
+      <section style={{ padding: "48px 20px 64px", background: C.bg }}>
+        <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".14em", color: C.primary, marginBottom: 12 }}>The math</div>
+          <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 20 }}>Let's run your actual numbers.</h2>
+          <div style={{
+            background: C.card,
+            border: "1px solid " + C.borderLight,
+            borderRadius: 16,
+            padding: "28px 24px",
+            maxWidth: 560,
+            margin: "0 auto",
+            textAlign: "left",
+          }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                <span style={{ fontSize: 13, color: C.textSec }}>You charge one client, say</span>
+                <span style={{ fontSize: 20, fontWeight: 800, color: C.text, fontFamily: "inherit" }}>$2,500<span style={{ fontSize: 13, color: C.textMuted, fontWeight: 500 }}>/mo</span></span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", paddingBottom: 14, borderBottom: "1px dashed " + C.borderLight }}>
+                <span style={{ fontSize: 13, color: C.textSec }}>Retayned costs you, monthly</span>
+                <span style={{ fontSize: 20, fontWeight: 800, color: C.text, fontFamily: "inherit" }}>$19.99<span style={{ fontSize: 13, color: C.textMuted, fontWeight: 500 }}> + $1/client</span></span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                <span style={{ fontSize: 14, fontWeight: 700, color: C.primary }}>One saved client covers you for</span>
+                <span style={{ fontSize: 26, fontWeight: 900, color: C.primary, letterSpacing: "-0.02em", fontFamily: "inherit" }}>125 months</span>
+              </div>
+            </div>
+          </div>
+          <p style={{ fontSize: 14, color: C.textMuted, marginTop: 18, lineHeight: 1.6, maxWidth: 480, margin: "18px auto 0" }}>That's over a decade of the platform paid for by saving <strong style={{ color: C.text }}>one</strong> relationship you would have lost.</p>
+        </div>
+      </section>
+
+      {/* ══════ Enterprise referral strip ══════ */}
+      <section style={{ padding: "32px 20px 72px" }}>
+        <div style={{
+          maxWidth: 720,
+          margin: "0 auto",
+          background: C.primaryDeep,
+          borderRadius: 16,
+          padding: "28px 32px",
+          position: "relative",
+          overflow: "hidden",
+          display: "flex",
+          gap: 20,
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}>
+          <div aria-hidden="true" style={{
+            position: "absolute", inset: 0,
+            background: "radial-gradient(ellipse 600px 400px at 80% 40%, rgba(85,139,104,0.18) 0%, transparent 65%)",
+            pointerEvents: "none",
+          }} />
+          <div style={{ flex: "1 1 320px", position: "relative", zIndex: 2, color: "#fff" }}>
+            <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: C.primaryLight, marginBottom: 6 }}>AMaaS · Early Access</div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "#fff", marginBottom: 4, letterSpacing: "-0.02em" }}>Running 1,000+ clients?</div>
+            <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.6)", lineHeight: 1.55 }}>Retayned Enterprise is custom-priced for retention teams and platforms building with AI.</div>
+          </div>
+          <button onClick={() => setPage("enterprise")} className="cta-btn" style={{
+            position: "relative", zIndex: 2,
+            padding: "12px 22px", background: "rgba(255,255,255,0.1)",
+            color: "#fff", border: "1.5px solid rgba(255,255,255,0.25)",
+            borderRadius: 10, fontSize: 14, fontWeight: 600,
+            cursor: "pointer", fontFamily: "inherit",
+            whiteSpace: "nowrap",
+          }}>See Enterprise →</button>
+        </div>
+      </section>
+
+      {/* ══════ Final CTA + footer gradient ══════ */}
+      <div className="r-full-bleed" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`, padding: "72px 20px 88px", textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div className="r-grain" />
         <div style={{ position: "relative", zIndex: 2 }}>
           <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 14, color: "#fff" }}>You work too hard to get new clients.<br />Keep them Retayned.</h2>
@@ -1442,13 +1735,16 @@ function About({ setPage }) {
           </div>
         </div>
       </section>
-      <section style={{ padding: "0 20px 40px" }}>
-        <div style={{ background: C.heroGrad, borderRadius: 16, padding: "36px 28px", color: "#fff", position: "relative", overflow: "hidden" }}>
-          <div className="r-grain" />
-          <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: "rgba(255,255,255,.35)", marginBottom: 12 }}>Washington, DC</div>
-          <p style={{ fontSize: 16, lineHeight: 1.6, color: "rgba(255,255,255,.8)" }}>Based in the District, we're a small, focused team building a tool we want you to LOVE using. We want to help you turn client relationships into lifelong partnerships that matter and have real weight.</p>
+      <div className="r-full-bleed" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`, padding: "72px 20px 88px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div className="r-grain" />
+        <div style={{ position: "relative", zIndex: 2, maxWidth: 640, margin: "0 auto" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".14em", color: "rgba(255,255,255,.4)", marginBottom: 12 }}>Built in Washington, DC</div>
+          <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 14, color: "#fff" }}>Turn client relationships<br />into lifelong partnerships.</h2>
+          <p style={{ fontSize: 16, color: "rgba(255,255,255,.55)", marginBottom: 28, lineHeight: 1.6 }}>The tool we built for ourselves. Now yours.</p>
+          <button className="cta-btn" onClick={() => setPage("signup")} style={{ padding: "16px 40px", background: "#fff", color: C.btn, border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Start Free Trial</button>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 14 }}>14-day free trial. Cancel anytime.</p>
         </div>
-      </section>
+      </div>
     </>
   );
 }
@@ -2013,10 +2309,10 @@ function Blog() {
       </section>
 
       {/* Subscribe */}
-      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 40%, #1E261F 100%)", padding: "64px 20px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <div className="r-full-bleed" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`, padding: "72px 20px 88px", textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div className="r-grain" />
         <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 12, color: "#fff", position: "relative", zIndex: 2 }}>Get notified when we publish!</h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 320, margin: "0 auto" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 320, margin: "0 auto", position: "relative", zIndex: 2 }}>
           <input style={{ width: "100%", padding: "12px 14px", border: "2px solid rgba(255,255,255,0.2)", borderRadius: 10, fontSize: 14, fontFamily: "inherit", background: "rgba(255,255,255,0.08)", color: "#fff", outline: "none", boxSizing: "border-box" }} placeholder="you@agency.com" />
           <button className="cta-btn" style={{ width: "100%", padding: "12px 20px", background: "#fff", color: C.btn, border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>Subscribe</button>
         </div>
@@ -2106,7 +2402,7 @@ function Signup({ setPage }) {
       </div>
       <div style={{ background: C.card, borderRadius: 16, padding: "32px 24px", border: "1px solid " + C.border, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
         <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 4 }}>Start your free trial.</h1>
-        <p style={{ fontSize: 14, color: C.textMuted, marginBottom: 24 }}>14 days free. No credit card required.</p>
+        <p style={{ fontSize: 14, color: C.textMuted, marginBottom: 24 }}>14-day free trial. Cancel anytime.</p>
         <button style={{ width: "100%", padding: "13px 16px", borderRadius: 10, border: "1.5px solid " + C.border, background: C.card, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: C.text, marginBottom: 20 }}>
           <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
           Sign up with Google
@@ -2199,7 +2495,7 @@ function FAQPage({ setPage }) {
         <p style={{ fontSize: 16, color: C.textSec, marginBottom: 32 }}>Everything you need to know about Retayned.</p>
         <FAQ />
       </section>
-      <div className="r-full-bleed" style={{ background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 40%, #1E261F 100%)", padding: "56px 20px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <div className="r-full-bleed" style={{ background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`, padding: "72px 20px 88px", textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div className="r-grain" />
         <div style={{ position: "relative", zIndex: 2 }}>
           <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", marginBottom: 14, color: "#fff" }}>Still have questions?</h2>
@@ -2399,7 +2695,7 @@ function Platform({ setPage }) {
       <div className="r-platform">
         {/* ══════ Hero ══════ */}
         <div className="r-full-bleed" style={{
-          background: "radial-gradient(ellipse 70% 50% at 50% 60%, " + C.primarySoft + " 0%, " + C.bg + " 80%)",
+          background: "radial-gradient(ellipse 120% 90% at 25% 35%, #E4EDDF 0%, #EFF4EC 35%, " + C.bg + " 65%)",
           padding: "48px 20px 24px",
         }}>
           <div style={{ textAlign: "center", maxWidth: 680, margin: "0 auto" }}>
@@ -2594,12 +2890,26 @@ function Platform({ setPage }) {
 
 
 
+        {/* ══════ TOP EDGE: three circles ══════ */}
+        <div className="r-full-bleed r-ent-top-edge" aria-hidden="true" style={{
+          position: "relative",
+          height: 140,
+          background: C.bg,
+          overflow: "hidden",
+        }}>
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "240%", height: "240%", background: C.primarySoft, bottom: "-220%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "200%", height: "200%", background: "#A8C3B0", bottom: "-180%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "160%", height: "160%", background: C.primaryDeep, bottom: "-140%" }} />
+        </div>
+
         {/* ══════ Meet the Brains ══════ */}
-        <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "64px 20px 64px", position: "relative", overflow: "hidden" }}>
+        <div className="r-full-bleed r-ent-section" style={{ background: C.primaryDeep, padding: "72px 20px 96px", position: "relative", overflow: "hidden", marginTop: -1 }}>
+          <div aria-hidden="true" style={{
+            position: "absolute", inset: 0,
+            background: "radial-gradient(ellipse 800px 500px at 50% 40%, rgba(85,139,104,0.16) 0%, transparent 65%), radial-gradient(ellipse 400px 300px at 15% 100%, rgba(91,33,182,0.08) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }} />
           <div className="r-grain" style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.03, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
-          {/* Decorative circles */}
-          <div style={{ position: "absolute", top: "5%", right: "8%", width: 250, height: 250, border: "1px solid rgba(255,255,255,0.03)", borderRadius: "50%", pointerEvents: "none" }} />
-          <div style={{ position: "absolute", bottom: "10%", left: "5%", width: 180, height: 180, border: "1px solid rgba(255,255,255,0.02)", borderRadius: "50%", pointerEvents: "none" }} />
 
           <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
             <Reveal><div style={{ textAlign: "center", marginBottom: 56 }}>
@@ -2725,6 +3035,15 @@ function Platform({ setPage }) {
                 <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>Sorted. Highest-value move is first.</div>
               </div>
             </div></Reveal>
+
+            {/* ─── Philosophy quote (absorbed payoff) ─── */}
+            <Reveal>
+              <div style={{ maxWidth: 720, margin: "64px auto 0", textAlign: "center", position: "relative", zIndex: 2, paddingTop: 48, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.3)", marginBottom: 18 }}>As Rai sees it</div>
+                <blockquote style={{ fontSize: 22, fontWeight: 600, lineHeight: 1.45, letterSpacing: "-0.02em", margin: 0, color: "#fff", maxWidth: 620, marginLeft: "auto", marginRight: "auto" }}>"The conversation you're avoiding is the one that saves the account."</blockquote>
+                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginTop: 18, lineHeight: 1.6 }}>Rai doesn't help you avoid hard conversations. She helps you have them.</p>
+              </div>
+            </Reveal>
           </div>
         </div>
 
@@ -2813,67 +3132,183 @@ function Platform({ setPage }) {
           </div>
         </section>
 
-        {/* ══════ Philosophy Quote ══════ */}
-        <div className="r-full-bleed" style={{ background: C.heroGrad, padding: "64px 20px", position: "relative" }}>
+        {/* ══════ TOP EDGE: three circles (Enterprise) ══════ */}
+        <div className="r-full-bleed r-ent-top-edge" aria-hidden="true" style={{
+          position: "relative", height: 140, background: C.bg, overflow: "hidden",
+        }}>
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "240%", height: "240%", background: C.primarySoft, bottom: "-220%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "200%", height: "200%", background: "#A8C3B0", bottom: "-180%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "160%", height: "160%", background: C.primaryDeep, bottom: "-140%" }} />
+        </div>
+
+        {/* ══════ Enterprise (AMaaS, matches home) ══════ */}
+        <div className="r-full-bleed r-ent-section" style={{
+          background: C.primaryDeep, padding: "72px 20px 96px",
+          position: "relative", overflow: "hidden", color: "#fff", marginTop: -1,
+        }}>
+          <div aria-hidden="true" style={{
+            position: "absolute", inset: 0,
+            background: "radial-gradient(ellipse 800px 500px at 50% 40%, rgba(85,139,104,0.16) 0%, transparent 65%), radial-gradient(ellipse 400px 300px at 15% 100%, rgba(91,33,182,0.08) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }} />
           <div className="r-grain" style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.03, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
-          <Reveal><div style={{ margin: "0 auto", textAlign: "center", position: "relative", zIndex: 2 }}>
-            <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.25)", marginBottom: 18 }}>As Rai Sees It</div>
-            <blockquote style={{ fontSize: 21, fontWeight: 600, lineHeight: 1.45, letterSpacing: "-0.02em", margin: 0, color: "#fff", maxWidth: 600, marginLeft: "auto", marginRight: "auto" }}>"The conversation you're avoiding is the one that saves the account."</blockquote>
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.35)", marginTop: 18, lineHeight: 1.6 }}>Rai doesn't help you avoid hard conversations. She helps you have them.</p>
+
+          <Reveal><div style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 2 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 7,
+                padding: "5px 12px 5px 10px", borderRadius: 100,
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.75)",
+                letterSpacing: "0.02em",
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.success, boxShadow: "0 0 8px rgba(45,134,89,0.6)" }} />
+                Account Management as a Service · AMaaS
+              </div>
+              <div style={{ height: 1, flex: 1, background: "linear-gradient(90deg, rgba(255,255,255,0.08), transparent)" }} />
+            </div>
+
+            <h2 className="r-ent-h2" style={{
+              fontSize: 42, fontWeight: 900, letterSpacing: "-0.04em",
+              lineHeight: 1.05, color: "#fff", margin: "0 0 16px", maxWidth: 820,
+            }}>
+              Relationship intelligence,<br />
+              <span style={{ color: C.primaryLight }}>as a service.</span>
+            </h2>
+            <p style={{
+              fontSize: 16, color: "rgba(255,255,255,0.55)", lineHeight: 1.7,
+              margin: "0 0 48px", maxWidth: 620,
+            }}>
+              The scoring engine, churn detection, and task generation from the Retayned app — exposed to your enterprise retention team. Every client scored nightly. Every archetype flagged. Every task generated, tailored, and ready to send.
+            </p>
+
+            <div className="r-ent-dashboard" style={{
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 16, padding: 28,
+              position: "relative", overflow: "hidden", marginBottom: 40,
+            }}>
+              <div aria-hidden="true" style={{
+                position: "absolute", top: 0, left: 0, right: 0, height: 1,
+                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)",
+              }} />
+
+              <div style={{
+                display: "flex", justifyContent: "space-between", alignItems: "center",
+                marginBottom: 24, paddingBottom: 16, borderBottom: "1px solid rgba(255,255,255,0.08)",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: 8,
+                    background: "rgba(85,139,104,0.2)",
+                    display: "inline-flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.primaryLight} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z"/></svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>RaiS · Live view</div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Portfolio: 1,247 clients · Last sweep: 08:04</div>
+                  </div>
+                </div>
+                <div style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  padding: "5px 11px", borderRadius: 100,
+                  background: "rgba(45,134,89,0.15)",
+                  fontSize: 11, fontWeight: 600, color: "#7EC29A",
+                }}>
+                  <span className="r-ent-blink" style={{ width: 5, height: 5, borderRadius: "50%", background: "#7EC29A" }} />
+                  Running
+                </div>
+              </div>
+
+              <div className="r-ent-metrics" style={{
+                display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 16,
+              }}>
+                {[
+                  { label: "Scored today", val: "1,247", suffix: "/1,247", delta: "All current", deltaColor: "#7EC29A" },
+                  { label: "At-risk flagged", val: "38", delta: "+4 from yesterday", deltaColor: "#E89580" },
+                  { label: "Tasks generated", val: "92", delta: "28 emails ready to send", deltaColor: "#7EC29A" },
+                  { label: "Archetypes active", val: "9", delta: "Velocity decay trending", deltaColor: "rgba(255,255,255,0.5)" },
+                ].map(m => (
+                  <div key={m.label} className="r-ent-metric" style={{
+                    padding: "14px 14px",
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.05)",
+                    borderRadius: 10,
+                  }}>
+                    <div style={{
+                      fontSize: 10, fontWeight: 700, textTransform: "uppercase",
+                      letterSpacing: ".08em", color: "rgba(255,255,255,0.4)", marginBottom: 8,
+                    }}>{m.label}</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1 }}>
+                      {m.val}
+                      {m.suffix && <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.35)", marginLeft: 2 }}>{m.suffix}</span>}
+                    </div>
+                    <div style={{ fontSize: 11, color: m.deltaColor, fontWeight: 600, marginTop: 6 }}>{m.delta}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{
+                background: "rgba(0,0,0,0.25)",
+                borderRadius: 10, padding: "14px 16px",
+                fontFamily: "'SF Mono', Menlo, Monaco, monospace",
+                fontSize: 11.5, color: "rgba(255,255,255,0.55)",
+                lineHeight: 1.75, overflow: "hidden",
+              }}>
+                {[
+                  { time: "08:04", lvl: "SWEEP", lvlColor: C.primaryLight, msg: "Scored 1,247 clients. Δ avg score: −0.4. Flagged 38 at-risk." },
+                  { time: "08:04", lvl: "ALERT", lvlColor: "#E89580", msg: "Foxglove Partners entered \"Velocity decay\" archetype. Confidence: 0.87." },
+                  { time: "08:05", lvl: "TASK ", lvlColor: "#7EC29A", msg: "Generated 92 tasks. 28 outreach emails drafted and queued for review." },
+                  { time: "08:05", lvl: "SYNC ", lvlColor: C.primaryLight, msg: "Dispatched to Slack (42), CRM (50). Next sweep: 08:04 tomorrow." },
+                ].map((line, i) => (
+                  <div key={i} style={{ display: "flex", gap: 12 }}>
+                    <span style={{ color: "rgba(255,255,255,0.3)", minWidth: 44 }}>{line.time}</span>
+                    <span style={{ color: line.lvlColor, fontWeight: 700, minWidth: 50 }}>{line.lvl}</span>
+                    <span style={{ flex: 1 }}>{line.msg}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="r-ent-cta-row" style={{
+              display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap",
+            }}>
+              <button className="r-hero-cta" onClick={() => setPage("contact")} style={{
+                background: "#fff", color: C.btn,
+                padding: "14px 28px", fontSize: 14,
+              }}>Request early access</button>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", lineHeight: 1.55 }}>
+                Onboarding 3 partners per quarter.<br />
+                Custom pricing based on portfolio size.
+              </div>
+            </div>
           </div></Reveal>
         </div>
 
-        {/* ══════ Enterprise ══════ */}
-        <section style={{ padding: "64px 20px" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 48, alignItems: "center", maxWidth: 1000, margin: "0 auto" }}>
-            <Reveal direction="left"><div style={{ flex: "1 1 340px" }}>
-              <div style={{
-                display: "inline-block", fontSize: 10, fontWeight: 700,
-                textTransform: "uppercase", letterSpacing: ".14em",
-                color: C.btn, marginBottom: 14,
-                padding: "5px 14px", borderRadius: 6,
-                background: "rgba(91,33,182,0.06)",
-              }}>Early Access</div>
-              <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 16 }}>Autonomous relationship intelligence.</h2>
-              <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.75, marginBottom: 28 }}>
-                Connects to your communication and billing platforms, monitors every client relationship automatically, and delivers prioritized actions to your team or your AI agents every morning.
-              </p>
-              <button className="r-hero-cta cta-btn" onClick={() => setPage("contact")} style={{ padding: "13px 28px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-                Let's Talk 
-              </button>
-            </div></Reveal>
-            <Reveal direction="right" delay={0.2}><div style={{ flex: "1 1 360px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-              {[
-                { label: "Portfolio Sweeps", desc: "Every client scored and ranked automatically, every morning." },
-                { label: "Churn Detection", desc: "Converging signals identified before they're cancellations." },
-                { label: "Prioritized Task Lists", desc: "Specific actions, tailored to each client's communication style." },
-                { label: "Useful Integrations", desc: "Slack, email, Zoom, CRM, billing — Retayned reads the data." },
-              ].map(item => (
-                <div key={item.label} style={{ padding: 20, background: C.card, borderRadius: 14, border: "1px solid " + C.border, boxShadow: "0 4px 20px rgba(0,0,0,0.04)", transition: "all 0.25s ease" }}>
-                  <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 5 }}>{item.label}</div>
-                  <div style={{ fontSize: 13, color: C.textSec, lineHeight: 1.5 }}>{item.desc}</div>
-                </div>
-              ))}
-            </div></Reveal>
-          </div>
-        </section>
-
-        {/* ══════ FAQs ══════ */}
-        <div className="r-full-bleed" style={{ background: C.primarySoft, padding: "48px 20px 56px" }}>
-          <div style={{ maxWidth: 1400, margin: "0 auto" }}>
-            <h2 style={{ fontSize: 30, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>FAQs</h2>
-            <FAQ fullBleed />
-          </div>
+        {/* ══════ BOTTOM EDGE: three circles mirrored ══════ */}
+        <div className="r-full-bleed r-ent-bottom-edge" aria-hidden="true" style={{
+          position: "relative", height: 140, background: C.bg, overflow: "hidden", marginTop: -1,
+        }}>
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "240%", height: "240%", background: C.primarySoft, top: "-220%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "200%", height: "200%", background: "#A8C3B0", top: "-180%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "160%", height: "160%", background: C.primaryDeep, top: "-140%" }} />
         </div>
 
-        {/* ══════ Final CTA ══════ */}
+        {/* ══════ FAQ + Final CTA (merged into one gradient, matching home) ══════ */}
         <div className="r-full-bleed" style={{
-          background: "linear-gradient(135deg, #DAE8DF 0%, #4A7B5E 40%, #1E261F 100%)",
-          padding: "64px 20px", textAlign: "center",
+          background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`,
           position: "relative", overflow: "hidden",
         }}>
-          <div className="r-grain" style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.04, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
-          <div style={{ position: "relative", zIndex: 2 }}>
+          <div style={{ padding: "48px 20px 0" }}>
+            <div style={{ maxWidth: 1400, margin: "0 auto", paddingBottom: 56 }}>
+              <h2 style={{ fontSize: 30, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>FAQs</h2>
+              <FAQ fullBleed />
+            </div>
+          </div>
+          <div className="r-grain" style={{ opacity: 0.04 }} />
+          <div style={{ padding: "56px 20px 88px", textAlign: "center", position: "relative", zIndex: 2 }}>
             <h2 style={{ fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff" }}>
               You work too hard to get new clients.<br />Keep them Retayned.
             </h2>
@@ -2893,6 +3328,1430 @@ function Platform({ setPage }) {
   );
 }
 
+// ═══ AUDIENCE PAGES ═══
+
+function Freelancers({ setPage }) {
+  return (
+    <>
+      <style>{`
+        .r-aud-feat-card {
+          padding: 24px; background: ${C.card}; border-radius: 14px;
+          border: 1px solid ${C.borderLight}; transition: all 0.25s ease;
+        }
+        .r-aud-feat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+        .r-aud-pain-card {
+          background: ${C.card}; border: 1px solid ${C.borderLight};
+          border-radius: 14px; padding: 24px; position: relative;
+        }
+        .r-aud-pain-card::before {
+          content: ''; position: absolute; top: 0; left: 24px; width: 36px; height: 3px;
+          background: ${C.danger}; border-radius: 0 0 3px 3px;
+        }
+      `}</style>
+
+      <div>
+        {/* ══════ Hero ══════ */}
+        <div className="r-full-bleed r-hero-bg" style={{
+          background: `radial-gradient(ellipse 120% 90% at 25% 35%, #E4EDDF 0%, #EFF4EC 35%, ${C.bg} 65%)`,
+          padding: "64px 20px 72px",
+          position: "relative", overflow: "hidden",
+        }}>
+          <div className="r-hero-orb" style={{ position: "absolute", top: "10%", right: "5%", width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, #E4EDDF 0%, transparent 70%)", opacity: 0.4, pointerEvents: "none" }} />
+
+          <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", zIndex: 2, textAlign: "center" }}>
+            <Reveal>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "6px 14px", borderRadius: 100,
+                background: "rgba(255,255,255,0.9)",
+                border: "1px solid rgba(216,223,216,0.6)",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+                fontSize: 12, fontWeight: 600, color: C.text, marginBottom: 22,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.success, display: "inline-block" }} />
+                For freelancers & consultants · 1–50 clients
+              </div>
+              <h1 className="r-page-title" style={{
+                fontSize: 44, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08,
+                marginBottom: 18, color: C.text,
+              }}>
+                The CRM that catches{" "}
+                <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
+                  <span style={{ color: C.textMuted }}>what you miss</span>
+                  <span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} />
+                  <span style={{ position: "absolute", top: "-0.7em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.75em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>everything</span>
+                </span>.
+              </h1>
+              <p style={{ fontSize: 17, lineHeight: 1.7, color: C.textSec, marginBottom: 28, maxWidth: 620, margin: "0 auto 28px" }}>
+                You're a team of one. You can't be on every Slack thread, every email, every hint of drift. Retayned watches the whole book while you focus on the work.
+              </p>
+              <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 14 }}>
+                <button className="r-hero-cta cta-btn" onClick={() => setPage("signup")} style={{ padding: "14px 30px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                  Start Free Trial
+                </button>
+                <button onClick={() => setPage("platform")} style={{ padding: "14px 30px", background: "transparent", color: C.text, border: "1.5px solid " + C.border, borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                  See the platform
+                </button>
+              </div>
+              <p style={{ fontSize: 13, color: C.textMuted, letterSpacing: "0.01em" }}>
+                $19.99/mo + $1 per client · 14-day free trial · Cancel anytime
+              </p>
+            </Reveal>
+          </div>
+        </div>
+
+        {/* ══════ Pain points ══════ */}
+        <section style={{ padding: "64px 20px 48px" }}>
+          <Reveal>
+            <div style={{ textAlign: "center", marginBottom: 40, maxWidth: 640, margin: "0 auto 40px" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: C.btn, marginBottom: 12, padding: "5px 14px", borderRadius: 6, background: "rgba(91,33,182,0.06)", display: "inline-block" }}>
+                If you're flying solo
+              </div>
+              <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 10 }}>
+                You know the feeling.
+              </h2>
+              <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.7 }}>
+                A good client goes quiet. You tell yourself they're busy. Two weeks later, the email arrives.
+              </p>
+            </div>
+          </Reveal>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18, maxWidth: 1000, margin: "0 auto" }}>
+            {[
+              { q: "You can't remember the last time you talked to half your book.", a: "Retayned tracks velocity automatically. When a relationship cools, you'll know." },
+              { q: "The client you lost last month — you could have seen it coming.", a: "Retention Score weighs 12 dimensions plus 20 combination signals. You'll see drift before it's damage." },
+              { q: "You don't have time for a \"CRM system.\"", a: "Retayned isn't a system to feed. It tells you what to do. You do it." },
+              { q: "You know what to say — but not when, or how, or to who.", a: "Talk to Rai. She reads the relationship and writes the opening line." },
+            ].map((item, i) => (
+              <Reveal key={i} delay={i * 0.1}>
+                <div className="r-aud-pain-card">
+                  <div style={{ fontSize: 15, fontWeight: 700, color: C.text, marginBottom: 10, lineHeight: 1.4, paddingTop: 6 }}>{item.q}</div>
+                  <div style={{ fontSize: 13.5, color: C.textSec, lineHeight: 1.65 }}>{item.a}</div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════ What you get ══════ */}
+        <section style={{ padding: "48px 20px 72px" }}>
+          <Reveal>
+            <div style={{ textAlign: "center", marginBottom: 40, maxWidth: 640, margin: "0 auto 40px" }}>
+              <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 10 }}>
+                Built for a solo practice.
+              </h2>
+              <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.7 }}>
+                Everything Retayned does, minus the team stuff you don't need yet.
+              </p>
+            </div>
+          </Reveal>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, maxWidth: 1000, margin: "0 auto" }}>
+            {[
+              { icon: "◉", label: "Today", desc: "One screen tells you which client needs you most." },
+              { icon: "◎", label: "Retention Score", desc: "A number from 1–99 that tells you where every relationship stands." },
+              { icon: "♡", label: "Health Checks", desc: "Five questions, two minutes. Catch drift before it's a crisis." },
+              { icon: "✦", label: "Talk to Rai", desc: "AI advisor. The exact words to say, when you need them." },
+              { icon: "⟐", label: "Rolodex", desc: "Former clients aren't dead. They're re-engagement opportunities." },
+              { icon: "⟡", label: "Referrals", desc: "Know who's ready to refer before they know it themselves." },
+            ].map((f, i) => (
+              <Reveal key={i} delay={i * 0.06}>
+                <div className="r-aud-feat-card">
+                  <div style={{ fontSize: 22, marginBottom: 10, opacity: 0.7 }}>{f.icon}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: C.text, marginBottom: 4 }}>{f.label}</div>
+                  <div style={{ fontSize: 13, color: C.textSec, lineHeight: 1.55 }}>{f.desc}</div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════ Pricing callout ══════ */}
+        <div className="r-full-bleed" style={{
+          background: `linear-gradient(180deg, ${C.bg} 0%, #C5D8CB 50%, ${C.bg} 100%)`,
+          padding: "56px 20px",
+          position: "relative", overflow: "hidden",
+        }}>
+          <Reveal>
+            <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 2 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: C.primary, marginBottom: 12 }}>One plan. Every feature.</div>
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6, marginBottom: 8 }}>
+                <span style={{ fontSize: 56, fontWeight: 900, letterSpacing: "-0.04em", color: C.text }}>$19.99</span>
+                <span style={{ fontSize: 16, color: C.textMuted }}>/mo</span>
+              </div>
+              <div style={{ fontSize: 16, color: C.textSec, marginBottom: 28 }}>+ <span style={{ fontWeight: 700, color: C.text }}>$1 per client</span></div>
+              <p style={{ fontSize: 14, color: C.textSec, marginBottom: 24 }}>
+                Solve your business's most consequential problem for less than a Netflix subscription.
+              </p>
+              <button className="r-hero-cta cta-btn" onClick={() => setPage("signup")} style={{ padding: "14px 30px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                Start Free Trial
+              </button>
+              <p style={{ fontSize: 13, color: C.textMuted, marginTop: 12 }}>14-day free trial. Cancel anytime.</p>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* ══════ FAQ + Final CTA ══════ */}
+        <div className="r-full-bleed" style={{
+          background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`,
+          position: "relative", overflow: "hidden",
+        }}>
+          <div style={{ padding: "48px 20px 0" }}>
+            <div style={{ maxWidth: 1400, margin: "0 auto", paddingBottom: 56 }}>
+              <h2 style={{ fontSize: 30, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>FAQs</h2>
+              <FAQ fullBleed />
+            </div>
+          </div>
+          <div style={{ padding: "56px 20px 88px", textAlign: "center", position: "relative", zIndex: 2 }}>
+            <h2 style={{ fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff" }}>
+              The clients you lose are savable.<br />
+              Start saving them.
+            </h2>
+            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.5)", marginBottom: 24, lineHeight: 1.6 }}>See the signal. Get the script. Keep the client.</p>
+            <button className="cta-btn" onClick={() => setPage("signup")} style={{
+              padding: "16px 36px", background: "#fff", color: C.btn, border: "none",
+              borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+            }}>
+              Start Free Trial
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function Agencies({ setPage }) {
+  return (
+    <>
+      <style>{`
+        .r-aud-feat-card {
+          padding: 24px; background: ${C.card}; border-radius: 14px;
+          border: 1px solid ${C.borderLight}; transition: all 0.25s ease;
+        }
+        .r-aud-feat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
+      `}</style>
+
+      <div>
+        {/* ══════ Hero ══════ */}
+        <div className="r-full-bleed r-hero-bg" style={{
+          background: `radial-gradient(ellipse 120% 90% at 25% 35%, #E4EDDF 0%, #EFF4EC 35%, ${C.bg} 65%)`,
+          padding: "64px 20px 72px",
+          position: "relative", overflow: "hidden",
+        }}>
+          <div className="r-hero-orb" style={{ position: "absolute", top: "10%", right: "5%", width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, #E4EDDF 0%, transparent 70%)", opacity: 0.4, pointerEvents: "none" }} />
+
+          <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", zIndex: 2, textAlign: "center" }}>
+            <Reveal>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "6px 14px", borderRadius: 100,
+                background: "rgba(255,255,255,0.9)",
+                border: "1px solid rgba(216,223,216,0.6)",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+                fontSize: 12, fontWeight: 600, color: C.text, marginBottom: 22,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.success, display: "inline-block" }} />
+                For agencies · 50+ clients · Teams
+              </div>
+              <h1 className="r-page-title" style={{
+                fontSize: 44, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08,
+                marginBottom: 18, color: C.text,
+              }}>
+                Your team's memory,{" "}
+                <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
+                  <span style={{ color: C.textMuted }}>in their heads</span>
+                  <span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} />
+                  <span style={{ position: "absolute", top: "-0.7em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.75em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>on one system</span>
+                </span>.
+              </h1>
+              <p style={{ fontSize: 17, lineHeight: 1.7, color: C.textSec, marginBottom: 28, maxWidth: 620, margin: "0 auto 28px" }}>
+                When an account manager leaves, they take 40 client relationships with them. Retayned holds the institutional knowledge — so your team doesn't have to.
+              </p>
+              <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 14 }}>
+                <button className="r-hero-cta cta-btn" onClick={() => setPage("signup")} style={{ padding: "14px 30px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                  Start Free Trial
+                </button>
+                <button onClick={() => setPage("contact")} style={{ padding: "14px 30px", background: "transparent", color: C.text, border: "1.5px solid " + C.border, borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                  Talk to us about teams
+                </button>
+              </div>
+              <p style={{ fontSize: 13, color: C.textMuted, letterSpacing: "0.01em" }}>
+                $19.99/mo + $1 per client · Unlimited team members · No per-seat fees
+              </p>
+            </Reveal>
+          </div>
+        </div>
+
+        {/* ══════ The agency problem ══════ */}
+        <section style={{ padding: "64px 20px 48px" }}>
+          <Reveal>
+            <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center", marginBottom: 40 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: C.btn, marginBottom: 12, padding: "5px 14px", borderRadius: 6, background: "rgba(91,33,182,0.06)", display: "inline-block" }}>
+                The agency reality
+              </div>
+              <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 12 }}>
+                Your best account manager handles 20 clients.
+              </h2>
+              <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.7 }}>
+                She remembers which ones are going through a re-org. Which ones just had a new baby. Which ones hate Zoom. Which ones had a bad Q3 and are watching spend like a hawk. <br /><br />
+                Then she leaves.<br /><br />
+                <strong style={{ color: C.text }}>All of that goes with her.</strong>
+              </p>
+            </div>
+          </Reveal>
+        </section>
+
+        {/* ══════ Dark section — team continuity ══════ */}
+        <div className="r-full-bleed r-ent-top-edge" aria-hidden="true" style={{
+          position: "relative", height: 140, background: C.bg, overflow: "hidden",
+        }}>
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "240%", height: "240%", background: C.primarySoft, bottom: "-220%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "200%", height: "200%", background: "#A8C3B0", bottom: "-180%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "160%", height: "160%", background: C.primaryDeep, bottom: "-140%" }} />
+        </div>
+
+        <div className="r-full-bleed r-ent-section" style={{
+          background: C.primaryDeep, padding: "72px 20px 96px",
+          position: "relative", overflow: "hidden", color: "#fff", marginTop: -1,
+        }}>
+          <div aria-hidden="true" style={{
+            position: "absolute", inset: 0,
+            background: "radial-gradient(ellipse 800px 500px at 50% 40%, rgba(85,139,104,0.16) 0%, transparent 65%)",
+            pointerEvents: "none",
+          }} />
+          <div className="r-grain" />
+
+          <Reveal><div style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 2 }}>
+            <div style={{ textAlign: "center", marginBottom: 48 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: C.primaryLight, marginBottom: 14 }}>
+                Built for teams that share accounts
+              </div>
+              <h2 className="r-ent-h2" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.1, color: "#fff", margin: "0 auto 14px", maxWidth: 720 }}>
+                Institutional memory,<br />
+                <span style={{ color: C.primaryLight }}>not personal memory.</span>
+              </h2>
+              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.55)", lineHeight: 1.65, maxWidth: 580, margin: "0 auto" }}>
+                When accounts move between AMs — or someone leaves — Retayned holds everything that matters about every client. Voice preferences. Communication archetypes. History, drift, wins, losses. Live. Current. Ready to hand off in an afternoon.
+              </p>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, maxWidth: 960, margin: "0 auto" }}>
+              {[
+                { label: "Shared book", desc: "Every team member sees every client. Every score, every signal, every archetype. Always current." },
+                { label: "Handoff-ready", desc: "New AM takes over 30 accounts on Monday. They know every relationship by Wednesday." },
+                { label: "Communication style", desc: "Rai knows how each client prefers to be approached. Your team doesn't have to re-learn 40 relationships." },
+                { label: "No per-seat fees", desc: "Unlimited team members on the single plan. Add anyone in the agency — no IT approvals." },
+              ].map((f, i) => (
+                <div key={i} style={{
+                  padding: "20px 22px", background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12,
+                }}>
+                  <div style={{ fontWeight: 700, fontSize: 14, color: "#fff", marginBottom: 5 }}>{f.label}</div>
+                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.55 }}>{f.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div></Reveal>
+        </div>
+
+        <div className="r-full-bleed r-ent-bottom-edge" aria-hidden="true" style={{
+          position: "relative", height: 140, background: C.bg, overflow: "hidden", marginTop: -1,
+        }}>
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "240%", height: "240%", background: C.primarySoft, top: "-220%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "200%", height: "200%", background: "#A8C3B0", top: "-180%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "160%", height: "160%", background: C.primaryDeep, top: "-140%" }} />
+        </div>
+
+        {/* ══════ Features grid ══════ */}
+        <section style={{ padding: "48px 20px 72px" }}>
+          <Reveal>
+            <div style={{ textAlign: "center", marginBottom: 40, maxWidth: 640, margin: "0 auto 40px" }}>
+              <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 10 }}>
+                Everything scales with your book.
+              </h2>
+              <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.7 }}>
+                Same features as the self-serve plan. Priced per client — pay for what you cover.
+              </p>
+            </div>
+          </Reveal>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, maxWidth: 1000, margin: "0 auto" }}>
+            {[
+              { icon: "◉", label: "Today (team view)", desc: "Filter by AM, by vertical, by account tier. Everyone sees their own priorities." },
+              { icon: "◎", label: "Portfolio scoring", desc: "Every client scored nightly. Trend lines, drift alerts, archetype tracking." },
+              { icon: "♡", label: "Health Checks", desc: "Team-wide cadence. See which accounts are overdue across the whole book." },
+              { icon: "✦", label: "Talk to Rai", desc: "Your whole team shares Rai's knowledge of every client relationship." },
+              { icon: "⟐", label: "Shared Rolodex", desc: "Former clients aren't one AM's problem. Re-engagement becomes a team motion." },
+              { icon: "⟡", label: "Referrals", desc: "See referral readiness across the book. Know which clients to ask, and when." },
+            ].map((f, i) => (
+              <Reveal key={i} delay={i * 0.06}>
+                <div className="r-aud-feat-card">
+                  <div style={{ fontSize: 22, marginBottom: 10, opacity: 0.7 }}>{f.icon}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: C.text, marginBottom: 4 }}>{f.label}</div>
+                  <div style={{ fontSize: 13, color: C.textSec, lineHeight: 1.55 }}>{f.desc}</div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════ FAQ + Final CTA ══════ */}
+        <div className="r-full-bleed" style={{
+          background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`,
+          position: "relative", overflow: "hidden",
+        }}>
+          <div style={{ padding: "48px 20px 0" }}>
+            <div style={{ maxWidth: 1400, margin: "0 auto", paddingBottom: 56 }}>
+              <h2 style={{ fontSize: 30, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>FAQs</h2>
+              <FAQ fullBleed />
+            </div>
+          </div>
+          <div style={{ padding: "56px 20px 88px", textAlign: "center", position: "relative", zIndex: 2 }}>
+            <h2 style={{ fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff" }}>
+              Your AMs are smart.<br />
+              Give them a system worth their time.
+            </h2>
+            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.5)", marginBottom: 24, lineHeight: 1.6 }}>Start free. Add your team. Scale with your book.</p>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+              <button className="cta-btn" onClick={() => setPage("signup")} style={{
+                padding: "16px 36px", background: "#fff", color: C.btn, border: "none",
+                borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+              }}>
+                Start Free Trial
+              </button>
+              <button onClick={() => setPage("contact")} style={{
+                padding: "16px 36px", background: "transparent", color: "#fff", border: "1.5px solid rgba(255,255,255,0.3)",
+                borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+              }}>
+                Talk to us →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function Enterprise({ setPage }) {
+  return (
+    <>
+      <div>
+        {/* ══════ Hero ══════ */}
+        <div className="r-full-bleed r-hero-bg" style={{
+          background: `radial-gradient(ellipse 120% 90% at 25% 35%, #E4EDDF 0%, #EFF4EC 35%, ${C.bg} 65%)`,
+          padding: "64px 20px 64px",
+          position: "relative", overflow: "hidden",
+        }}>
+          <div className="r-hero-orb" style={{ position: "absolute", top: "10%", right: "5%", width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, #E4EDDF 0%, transparent 70%)", opacity: 0.4, pointerEvents: "none" }} />
+
+          <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", zIndex: 2, textAlign: "center" }}>
+            <Reveal>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "6px 14px", borderRadius: 100,
+                background: "rgba(91,33,182,0.08)",
+                border: "1px solid rgba(91,33,182,0.18)",
+                fontSize: 12, fontWeight: 600, color: C.btn, marginBottom: 22,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.btn, display: "inline-block" }} />
+                AMaaS · Early access · Enterprise
+              </div>
+              <h1 className="r-page-title" style={{
+                fontSize: 44, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08,
+                marginBottom: 18, color: C.text,
+              }}>
+                Relationship intelligence,<br />
+                <span style={{ color: C.primary }}>as a service.</span>
+              </h1>
+              <p style={{ fontSize: 17, lineHeight: 1.7, color: C.textSec, marginBottom: 28, maxWidth: 640, margin: "0 auto 28px" }}>
+                For companies with dedicated retention teams. The scoring engine, churn detection, and task generation from Retayned — exposed to your team, connected to your stack, running on your book.
+              </p>
+              <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+                <button className="r-hero-cta cta-btn" onClick={() => setPage("contact")} style={{ padding: "14px 30px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                  Request early access
+                </button>
+              </div>
+              <p style={{ fontSize: 13, color: C.textMuted, letterSpacing: "0.01em", marginTop: 14 }}>
+                Onboarding 3 partners per quarter · Custom pricing based on portfolio size
+              </p>
+            </Reveal>
+          </div>
+        </div>
+
+        {/* ══════ The buyer ══════ */}
+        <section style={{ padding: "72px 20px 48px" }}>
+          <Reveal>
+            <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center", marginBottom: 56 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: C.btn, marginBottom: 12, padding: "5px 14px", borderRadius: 6, background: "rgba(91,33,182,0.06)", display: "inline-block" }}>
+                Built for
+              </div>
+              <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 14 }}>
+                Companies with retention as a line item.
+              </h2>
+              <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.7 }}>
+                If you have a Customer Success team, an Account Management org, or a Retention function — and a book of 1,000+ clients where losing the wrong ones would show up on the P&L — Retayned Enterprise is built for you.
+              </p>
+            </div>
+          </Reveal>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, maxWidth: 1100, margin: "0 auto" }}>
+            {[
+              { title: "Customer Success orgs", desc: "Scale CS insight across thousands of accounts without scaling headcount." },
+              { title: "Account Management teams", desc: "Every AM sees what Rai sees. Handoffs go from painful to seamless." },
+              { title: "Retention / Churn teams", desc: "Archetype detection gives you vocabulary for patterns you've been fighting for years." },
+              { title: "Platforms building with AI", desc: "The same engine, exposed as an API. Embed retention intelligence into your own product." },
+            ].map((b, i) => (
+              <Reveal key={i} delay={i * 0.08}>
+                <div style={{
+                  padding: "22px 20px", background: C.card, border: "1px solid " + C.borderLight,
+                  borderRadius: 14, transition: "all 0.25s ease",
+                }}>
+                  <div style={{ fontSize: 14.5, fontWeight: 700, color: C.text, marginBottom: 6 }}>{b.title}</div>
+                  <div style={{ fontSize: 13, color: C.textSec, lineHeight: 1.55 }}>{b.desc}</div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════ Live dashboard section — dark ══════ */}
+        <div className="r-full-bleed r-ent-top-edge" aria-hidden="true" style={{
+          position: "relative", height: 140, background: C.bg, overflow: "hidden",
+        }}>
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "240%", height: "240%", background: C.primarySoft, bottom: "-220%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "200%", height: "200%", background: "#A8C3B0", bottom: "-180%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "160%", height: "160%", background: C.primaryDeep, bottom: "-140%" }} />
+        </div>
+
+        <div className="r-full-bleed r-ent-section" style={{
+          background: C.primaryDeep, padding: "72px 20px 96px",
+          position: "relative", overflow: "hidden", color: "#fff", marginTop: -1,
+        }}>
+          <div aria-hidden="true" style={{
+            position: "absolute", inset: 0,
+            background: "radial-gradient(ellipse 800px 500px at 50% 40%, rgba(85,139,104,0.16) 0%, transparent 65%), radial-gradient(ellipse 400px 300px at 15% 100%, rgba(91,33,182,0.08) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }} />
+          <div className="r-grain" />
+
+          <Reveal><div style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 2 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 7,
+                padding: "5px 12px 5px 10px", borderRadius: 100,
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.75)",
+                letterSpacing: "0.02em",
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.success, boxShadow: "0 0 8px rgba(45,134,89,0.6)" }} />
+                RaiS · Live view
+              </div>
+              <div style={{ height: 1, flex: 1, background: "linear-gradient(90deg, rgba(255,255,255,0.08), transparent)" }} />
+            </div>
+
+            <h2 className="r-ent-h2" style={{
+              fontSize: 36, fontWeight: 900, letterSpacing: "-0.035em",
+              lineHeight: 1.1, color: "#fff", margin: "0 0 14px", maxWidth: 820,
+            }}>
+              Every client. Scored, flagged,<br />and acted on — <span style={{ color: C.primaryLight }}>automatically.</span>
+            </h2>
+            <p style={{
+              fontSize: 16, color: "rgba(255,255,255,0.55)", lineHeight: 1.7,
+              margin: "0 0 48px", maxWidth: 620,
+            }}>
+              Retayned connects to your stack overnight, scores your entire portfolio by morning, and delivers prioritized tasks — including pre-drafted outreach — to your team or your agents.
+            </p>
+
+            <div className="r-ent-dashboard" style={{
+              background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 16, padding: 28, position: "relative", overflow: "hidden", marginBottom: 40,
+            }}>
+              <div aria-hidden="true" style={{
+                position: "absolute", top: 0, left: 0, right: 0, height: 1,
+                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)",
+              }} />
+
+              <div style={{
+                display: "flex", justifyContent: "space-between", alignItems: "center",
+                marginBottom: 24, paddingBottom: 16, borderBottom: "1px solid rgba(255,255,255,0.08)",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(85,139,104,0.2)", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.primaryLight} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z"/></svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>RaiS · Live view</div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Portfolio: 1,247 clients · Last sweep: 08:04</div>
+                  </div>
+                </div>
+                <div style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  padding: "5px 11px", borderRadius: 100, background: "rgba(45,134,89,0.15)",
+                  fontSize: 11, fontWeight: 600, color: "#7EC29A",
+                }}>
+                  <span className="r-ent-blink" style={{ width: 5, height: 5, borderRadius: "50%", background: "#7EC29A" }} />
+                  Running
+                </div>
+              </div>
+
+              <div className="r-ent-metrics" style={{
+                display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 16,
+              }}>
+                {[
+                  { label: "Scored today", val: "1,247", suffix: "/1,247", delta: "All current", deltaColor: "#7EC29A" },
+                  { label: "At-risk flagged", val: "38", delta: "+4 from yesterday", deltaColor: "#E89580" },
+                  { label: "Tasks generated", val: "92", delta: "28 emails ready to send", deltaColor: "#7EC29A" },
+                  { label: "Archetypes active", val: "9", delta: "Velocity decay trending", deltaColor: "rgba(255,255,255,0.5)" },
+                ].map(m => (
+                  <div key={m.label} className="r-ent-metric" style={{
+                    padding: "14px 14px", background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.05)", borderRadius: 10,
+                  }}>
+                    <div style={{
+                      fontSize: 10, fontWeight: 700, textTransform: "uppercase",
+                      letterSpacing: ".08em", color: "rgba(255,255,255,0.4)", marginBottom: 8,
+                    }}>{m.label}</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1 }}>
+                      {m.val}
+                      {m.suffix && <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.35)", marginLeft: 2 }}>{m.suffix}</span>}
+                    </div>
+                    <div style={{ fontSize: 11, color: m.deltaColor, fontWeight: 600, marginTop: 6 }}>{m.delta}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{
+                background: "rgba(0,0,0,0.25)", borderRadius: 10, padding: "14px 16px",
+                fontFamily: "'SF Mono', Menlo, Monaco, monospace", fontSize: 11.5,
+                color: "rgba(255,255,255,0.55)", lineHeight: 1.75, overflow: "hidden",
+              }}>
+                {[
+                  { time: "08:04", lvl: "SWEEP", lvlColor: C.primaryLight, msg: "Scored 1,247 clients. Δ avg score: −0.4. Flagged 38 at-risk." },
+                  { time: "08:04", lvl: "ALERT", lvlColor: "#E89580", msg: "Foxglove Partners entered \"Velocity decay\" archetype. Confidence: 0.87." },
+                  { time: "08:05", lvl: "TASK ", lvlColor: "#7EC29A", msg: "Generated 92 tasks. 28 outreach emails drafted and queued for review." },
+                  { time: "08:05", lvl: "SYNC ", lvlColor: C.primaryLight, msg: "Dispatched to Slack (42), CRM (50). Next sweep: 08:04 tomorrow." },
+                ].map((line, i) => (
+                  <div key={i} style={{ display: "flex", gap: 12 }}>
+                    <span style={{ color: "rgba(255,255,255,0.3)", minWidth: 44 }}>{line.time}</span>
+                    <span style={{ color: line.lvlColor, fontWeight: 700, minWidth: 50 }}>{line.lvl}</span>
+                    <span style={{ flex: 1 }}>{line.msg}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div></Reveal>
+        </div>
+
+        <div className="r-full-bleed r-ent-bottom-edge" aria-hidden="true" style={{
+          position: "relative", height: 140, background: C.bg, overflow: "hidden", marginTop: -1,
+        }}>
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "240%", height: "240%", background: C.primarySoft, top: "-220%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "200%", height: "200%", background: "#A8C3B0", top: "-180%" }} />
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", borderRadius: "50%", width: "160%", height: "160%", background: C.primaryDeep, top: "-140%" }} />
+        </div>
+
+        {/* ══════ How it works (high-level) ══════ */}
+        <section style={{ padding: "48px 20px 72px" }}>
+          <Reveal>
+            <div style={{ textAlign: "center", marginBottom: 48, maxWidth: 640, margin: "0 auto 48px" }}>
+              <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 10 }}>
+                How the engine works.
+              </h2>
+              <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.7 }}>
+                Four steps, every night. Same flow that powers the Retayned app — at your team's scale.
+              </p>
+            </div>
+          </Reveal>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, maxWidth: 1100, margin: "0 auto" }}>
+            {[
+              { num: "01", label: "Score", desc: "Every client scored on 12 weighted dimensions. 20 combination signals flagged." },
+              { num: "02", label: "Detect", desc: "Archetypes applied. Drift patterns identified before they cancel." },
+              { num: "03", label: "Generate", desc: "Tasks created, prioritized, pre-drafted. Outreach emails ready to send." },
+              { num: "04", label: "Deliver", desc: "Pushed to Slack, CRM, or email. Or consumed by your AI agents via API." },
+            ].map((s, i) => (
+              <Reveal key={i} delay={i * 0.08}>
+                <div style={{
+                  padding: "24px 22px", background: C.card, border: "1px solid " + C.borderLight,
+                  borderRadius: 14,
+                }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: C.primary, fontFamily: "'SF Mono', Menlo, monospace", letterSpacing: "0.1em", marginBottom: 10 }}>{s.num}</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: C.text, marginBottom: 6 }}>{s.label}</div>
+                  <div style={{ fontSize: 13, color: C.textSec, lineHeight: 1.55 }}>{s.desc}</div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════ Integrations / specs ══════ */}
+        <div className="r-full-bleed" style={{
+          background: `linear-gradient(180deg, ${C.bg} 0%, #C5D8CB 50%, ${C.bg} 100%)`,
+          padding: "64px 20px",
+        }}>
+          <Reveal>
+            <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center", marginBottom: 40 }}>
+              <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 10 }}>
+                Connects to what you already use.
+              </h2>
+              <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.7 }}>
+                Retayned reads metadata from your existing stack. No new workflows for your team.
+              </p>
+            </div>
+          </Reveal>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, maxWidth: 900, margin: "0 auto" }}>
+            {["Slack", "Gmail", "Outlook", "Zoom", "Salesforce", "HubSpot", "Intercom", "Webhooks", "REST API"].map(name => (
+              <div key={name} style={{
+                padding: "16px 12px", background: C.card, border: "1px solid " + C.borderLight,
+                borderRadius: 10, textAlign: "center",
+                fontSize: 13, fontWeight: 600, color: C.text,
+              }}>
+                {name}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ══════ Final CTA ══════ */}
+        <div className="r-full-bleed" style={{
+          background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`,
+          padding: "72px 20px 96px", textAlign: "center",
+          position: "relative", overflow: "hidden",
+        }}>
+          <div style={{ position: "relative", zIndex: 2, maxWidth: 700, margin: "0 auto" }}>
+            <h2 style={{ fontSize: 32, fontWeight: 900, lineHeight: 1.15, marginBottom: 16, letterSpacing: "-0.035em", color: "#fff" }}>
+              Ready to see it running on your book?
+            </h2>
+            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.55)", marginBottom: 28, lineHeight: 1.65 }}>
+              30-minute scoping call. We'll run a proof-of-concept against a subset of your portfolio within 10 business days.
+            </p>
+            <button className="cta-btn" onClick={() => setPage("contact")} style={{
+              padding: "16px 40px", background: "#fff", color: C.btn, border: "none",
+              borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+            }}>
+              Request early access
+            </button>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", marginTop: 14 }}>
+              Onboarding 3 partners per quarter · Custom pricing based on portfolio size
+            </p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ═══ FEATURE PAGES ═══
+
+function FeatureHero({ kicker, h1, sub, setPage, primaryCta = "Start Free Trial", primaryAction = "signup", secondaryCta = "See all features", secondaryAction = "platform", fine = "14-day free trial. Cancel anytime." }) {
+  return (
+    <div className="r-full-bleed r-hero-bg" style={{
+      background: `radial-gradient(ellipse 120% 90% at 25% 35%, #E4EDDF 0%, #EFF4EC 35%, ${C.bg} 65%)`,
+      padding: "64px 20px 56px",
+      position: "relative", overflow: "hidden",
+    }}>
+      <div className="r-hero-orb" style={{ position: "absolute", top: "10%", right: "5%", width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, #E4EDDF 0%, transparent 70%)", opacity: 0.4, pointerEvents: "none" }} />
+
+      <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", zIndex: 2, textAlign: "center" }}>
+        <Reveal>
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: 6,
+            padding: "5px 14px", borderRadius: 6,
+            background: C.primarySoft,
+            fontSize: 10, fontWeight: 700, color: C.primary,
+            textTransform: "uppercase", letterSpacing: "0.14em",
+            marginBottom: 18,
+          }}>{kicker}</div>
+          <h1 className="r-page-title" style={{
+            fontSize: 44, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08,
+            marginBottom: 18, color: C.text, maxWidth: 760, margin: "0 auto 18px",
+          }}>{h1}</h1>
+          <p style={{ fontSize: 17, lineHeight: 1.65, color: C.textSec, marginBottom: 26, maxWidth: 560, margin: "0 auto 26px" }}>{sub}</p>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 12 }}>
+            <button className="r-hero-cta cta-btn" onClick={() => setPage(primaryAction)} style={{ padding: "14px 30px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+              {primaryCta}
+            </button>
+            <button onClick={() => setPage(secondaryAction)} style={{ padding: "14px 30px", background: "transparent", color: C.text, border: "1.5px solid " + C.border, borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+              {secondaryCta}
+            </button>
+          </div>
+          <p style={{ fontSize: 13, color: C.textMuted, letterSpacing: "0.01em" }}>{fine}</p>
+        </Reveal>
+      </div>
+    </div>
+  );
+}
+
+function HowItWorks({ title, subtitle, steps }) {
+  return (
+    <section style={{ padding: "64px 20px 24px" }}>
+      <Reveal>
+        <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 48px" }}>
+          <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 10 }}>{title}</h2>
+          <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.65 }}>{subtitle}</p>
+        </div>
+      </Reveal>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, maxWidth: 1100, margin: "0 auto" }}>
+        {steps.map((step, i) => (
+          <Reveal key={i} delay={i * 0.08}>
+            <div style={{
+              padding: "24px 22px", background: C.card, border: "1px solid " + C.borderLight,
+              borderRadius: 14, height: "100%",
+            }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.primary, fontFamily: "'SF Mono', Menlo, monospace", letterSpacing: "0.1em", marginBottom: 10 }}>{String(i + 1).padStart(2, "0")}</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: C.text, marginBottom: 6 }}>{step.label}</div>
+              <div style={{ fontSize: 13.5, color: C.textSec, lineHeight: 1.6 }}>{step.desc}</div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function RelatedFeatures({ setPage, current }) {
+  const all = [
+    { id: "feature-today", label: "Today", desc: "One page. Every priority.", icon: "◉" },
+    { id: "feature-scoring", label: "Retention Score", desc: "1–99, based on 12 dimensions.", icon: "◎" },
+    { id: "feature-health", label: "Health Checks", desc: "Five questions. Two minutes.", icon: "♡" },
+    { id: "feature-rai", label: "Talk to Rai", desc: "AI advisor for your book.", icon: "✦" },
+    { id: "feature-rolodex", label: "Rolodex", desc: "Forward-looking pipeline.", icon: "⟐" },
+    { id: "feature-referrals", label: "Referrals", desc: "Who's ready, with data.", icon: "⟡" },
+  ].filter(f => f.id !== current);
+
+  return (
+    <section style={{ padding: "64px 20px 48px" }}>
+      <Reveal>
+        <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 36px" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", color: C.textMuted, marginBottom: 10 }}>The rest of the platform</div>
+          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 6 }}>Every feature, working together.</h2>
+        </div>
+      </Reveal>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, maxWidth: 1100, margin: "0 auto" }}>
+        {all.map(f => (
+          <div key={f.id} onClick={() => setPage(f.id)} className="r-mega-row" style={{
+            display: "flex", gap: 12, alignItems: "flex-start",
+            padding: "16px 14px", background: C.card, border: "1px solid " + C.borderLight,
+            borderRadius: 12, cursor: "pointer",
+          }}>
+            <span style={{ width: 32, height: 32, borderRadius: 8, background: C.primarySoft, color: C.primary, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 16, fontWeight: 700 }}>{f.icon}</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
+              <span style={{ fontSize: 13.5, fontWeight: 700, color: C.text }}>{f.label}</span>
+              <span style={{ fontSize: 11.5, color: C.textSec, lineHeight: 1.4 }}>{f.desc}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FeatureFinalCTA({ setPage, h2, sub }) {
+  return (
+    <div className="r-full-bleed" style={{
+      background: `linear-gradient(180deg, ${C.bg} 0%, #D6E8DB 20%, #4A7B5E 55%, ${C.primaryDeep} 100%)`,
+      position: "relative", overflow: "hidden",
+    }}>
+      <div style={{ padding: "48px 20px 0" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto", paddingBottom: 56 }}>
+          <h2 style={{ fontSize: 30, fontWeight: 800, textAlign: "center", marginBottom: 24 }}>FAQs</h2>
+          <FAQ fullBleed />
+        </div>
+      </div>
+      <div style={{ padding: "56px 20px 88px", textAlign: "center", position: "relative", zIndex: 2 }}>
+        <h2 style={{ fontSize: 28, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, letterSpacing: "-0.03em", color: "#fff" }}>{h2}</h2>
+        <p style={{ fontSize: 16, color: "rgba(255,255,255,0.5)", marginBottom: 24, lineHeight: 1.6 }}>{sub}</p>
+        <button className="cta-btn" onClick={() => setPage("signup")} style={{
+          padding: "16px 36px", background: "#fff", color: C.btn, border: "none",
+          borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+        }}>
+          Start Free Trial
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── TODAY ───
+function FeatureToday({ setPage }) {
+  return (
+    <div>
+      <FeatureHero
+        setPage={setPage}
+        kicker="Today"
+        h1="Your highest-value move is always first."
+        sub="Today tells you who needs you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value."
+      />
+
+      <HowItWorks
+        title="The priority engine, in three moves."
+        subtitle="Today isn't a to-do list. It's a ranked ladder of what to do next — calculated every night, updated every morning."
+        steps={[
+          { label: "Score the relationships", desc: "Every client's Retention Score updates overnight based on Health Checks, velocity, billing patterns, and 20 combination signals." },
+          { label: "Weigh by impact", desc: "A task for a $200/mo client at-risk doesn't outrank an $8,000/mo green client who's ready to refer. Priority factors in revenue, tenure, and upside." },
+          { label: "Surface the one action", desc: "You open Retayned in the morning and see the move that matters most. Not fifty tasks. The one task that will save or grow the most revenue today." },
+        ]}
+      />
+
+      {/* Mockup */}
+      <section style={{ padding: "24px 20px 48px" }}>
+        <Reveal>
+          <div style={{ maxWidth: 720, margin: "0 auto", background: C.card, borderRadius: 20, border: "1px solid " + C.border, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,0.08)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, paddingBottom: 14, borderBottom: "1px solid " + C.borderLight }}>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 2 }}>Tuesday · October 14</div>
+                <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: "-0.02em" }}>Your Today</div>
+              </div>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 11px", borderRadius: 100, background: C.primarySoft, fontSize: 11, fontWeight: 700, color: C.primary }}>
+                <span style={{ width: 5, height: 5, borderRadius: "50%", background: C.primary }} />5 priorities
+              </div>
+            </div>
+
+            {[
+              { rank: 1, text: "Call Rachel at Broadleaf", meta: "Score dropped 78 → 65 · 11 days since contact", score: 65, scoreColor: C.danger, highlight: true },
+              { rank: 2, text: "Complete Foxglove Health Check", meta: "12 days overdue · Last drift: moderate", score: 42, scoreColor: C.danger },
+              { rank: 3, text: "Review Slack for client messages", meta: "3 channels with unread · mixed priority", score: null },
+              { rank: 4, text: "Review Oakline Q1 numbers", meta: "Upcoming QBR in 6 days", score: 73, scoreColor: C.warning },
+              { rank: 5, text: "Plan Northvane anniversary", meta: "Referral-ready · loyalty score 91", score: 91, scoreColor: C.success },
+            ].map((t, i) => (
+              <div key={i} style={{
+                display: "flex", alignItems: "center", gap: 14, padding: "14px 14px",
+                borderBottom: i < 4 ? "1px solid " + C.borderLight : "none",
+                background: t.highlight ? C.primarySoft + "40" : "transparent",
+                borderRadius: t.highlight ? 10 : 0,
+                margin: t.highlight ? "0 -14px" : "0",
+                paddingLeft: t.highlight ? 14 : 14,
+              }}>
+                <div style={{ width: 22, height: 22, borderRadius: 5, border: "1.5px solid " + C.border, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: C.textMuted }}>{t.rank}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 14.5, fontWeight: 700, color: C.text, marginBottom: 3 }}>{t.text}</div>
+                  <div style={{ fontSize: 12, color: C.textMuted, lineHeight: 1.4 }}>{t.meta}</div>
+                </div>
+                {t.score !== null && (
+                  <div style={{ width: 38, height: 38, borderRadius: "50%", background: t.scoreColor + "18", border: "1.5px solid " + t.scoreColor + "40", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, color: t.scoreColor, flexShrink: 0 }}>{t.score}</div>
+                )}
+              </div>
+            ))}
+
+            <div style={{ marginTop: 16, padding: "12px 14px", background: C.primarySoft, borderRadius: 10, display: "flex", alignItems: "flex-start", gap: 10 }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2" style={{ flexShrink: 0, marginTop: 2 }}><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" strokeLinejoin="round" fill="none"/></svg>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 3 }}>Rai's note</div>
+                <div style={{ fontSize: 13, color: C.text, lineHeight: 1.55 }}>Broadleaf dropped into "No Room to Operate." Don't email. Call. Lead with the specific concern — her silence is the answer.</div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* Why it matters */}
+      <section style={{ padding: "48px 20px 72px", background: C.bg }}>
+        <Reveal>
+          <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+            <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 14 }}>Every other CRM makes you decide.</h2>
+            <p style={{ fontSize: 15.5, color: C.textSec, lineHeight: 1.75 }}>
+              Most systems show you tasks in the order they were created, or by due date, or alphabetically. That's not help. That's filing. <br /><br />
+              Today ranks by <strong style={{ color: C.text }}>what moves your book forward</strong>. The rules are invisible. The result is one screen that tells you exactly where to start.
+            </p>
+          </div>
+        </Reveal>
+      </section>
+
+      <RelatedFeatures setPage={setPage} current="feature-today" />
+
+      <FeatureFinalCTA
+        setPage={setPage}
+        h2={<>Know what to do first.<br />Every single day.</>}
+        sub="Start free. See your first prioritized Today in 60 seconds."
+      />
+    </div>
+  );
+}
+
+// ─── RETENTION SCORE ───
+function FeatureScoring({ setPage }) {
+  return (
+    <div>
+      <FeatureHero
+        setPage={setPage}
+        kicker="Retention Score"
+        h1="A number that means something."
+        sub="Every client gets a score from 1–99. It tells you exactly where the relationship stands — not where you hope it is."
+      />
+
+      <HowItWorks
+        title="How the score is built."
+        subtitle="The Retention Score isn't a gut feeling. It's the blended output of four weighted inputs, updated every time new information lands."
+        steps={[
+          { label: "12 weighted dimensions", desc: "Trust, loyalty, expectations, grace — and eight more. Each client is scored on all twelve. The four big ones carry 15% weight; the other eight carry 5%." },
+          { label: "20 combination signals", desc: "When specific pairs of low dimensions show up together — like low trust plus low grace — a combination fires. \"No Room to Operate.\" \"Ice Wall.\" \"Silent Exit.\" Patterns no single metric catches." },
+          { label: "Health Check modifier", desc: "Your regular check-ins blend in at 80/20. Bad news from a Health Check moves the score immediately." },
+          { label: "Profile context", desc: "Revenue concentration, LTV, and tenure act as a multiplier on the Today page's sort — so the score you see reflects business impact, not just relationship state." },
+        ]}
+      />
+
+      {/* Mockup */}
+      <section style={{ padding: "24px 20px 48px" }}>
+        <Reveal>
+          <div style={{ maxWidth: 720, margin: "0 auto", background: C.card, borderRadius: 20, border: "1px solid " + C.border, padding: 32, boxShadow: "0 20px 60px rgba(0,0,0,0.08)" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 32, alignItems: "center", marginBottom: 28 }}>
+              <div style={{ textAlign: "center", flex: "0 0 auto" }}>
+                <div style={{ width: 130, height: 130, borderRadius: "50%", background: "linear-gradient(135deg, #FEF3C7, #FDE68A)", border: "4px solid #92400E20", display: "inline-flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+                  <span style={{ fontSize: 48, fontWeight: 900, color: "#92400E", fontFamily: "inherit", lineHeight: 1 }}>67</span>
+                  <div style={{ position: "absolute", bottom: -10, background: "#fff", padding: "3px 10px", border: "1px solid #92400E30", borderRadius: 100, fontSize: 10, fontWeight: 700, color: "#92400E", textTransform: "uppercase", letterSpacing: ".08em" }}>At risk</div>
+                </div>
+              </div>
+              <div style={{ flex: "1 1 240px" }}>
+                <div style={{ fontSize: 19, fontWeight: 800, letterSpacing: "-0.02em" }}>Broadleaf Media</div>
+                <div style={{ fontSize: 13.5, color: C.textMuted, marginTop: 3 }}>Rachel Chen · Account Lead · 14 months</div>
+                <div style={{ marginTop: 14, display: "flex", alignItems: "center", gap: 8 }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.danger} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+                  <span style={{ fontSize: 12.5, color: C.danger, fontWeight: 700 }}>Dropped 11 points in 2 weeks</span>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ fontSize: 10.5, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 10 }}>Core dimensions</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 16 }}>
+              {[["Trust", 6, C.warning], ["Loyalty", 7, C.primaryLight], ["Expectations", 7, C.primaryLight], ["Grace", 5, C.warning]].map(([name, val, color]) => (
+                <div key={name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: C.bg, borderRadius: 8, fontSize: 13.5 }}>
+                  <span style={{ color: C.textSec, fontWeight: 600 }}>{name}</span>
+                  <span style={{ fontWeight: 800, color, fontFamily: "inherit" }}>{val}/10</span>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ fontSize: 10.5, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 10 }}>Active combinations</div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <div style={{ padding: "8px 14px", background: C.danger + "15", borderRadius: 8, fontSize: 12.5, color: C.danger, fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.danger }} />
+                No Room to Operate
+              </div>
+              <div style={{ padding: "8px 14px", background: C.warning + "15", borderRadius: 8, fontSize: 12.5, color: C.warning, fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.warning }} />
+                Ice Wall
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* Score bands */}
+      <section style={{ padding: "48px 20px 72px", background: C.bg }}>
+        <Reveal>
+          <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 32px" }}>
+            <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 10 }}>Five bands. One truth per client.</h2>
+            <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.65 }}>Scores aren't abstract. They map to action.</p>
+          </div>
+        </Reveal>
+        <div style={{ maxWidth: 820, margin: "0 auto", display: "flex", flexDirection: "column", gap: 10 }}>
+          {[
+            { band: "90–99", label: "Thriving", desc: "Don't upsell them. Don't ask for referrals. Leave the relationship alone and let it compound.", bg: C.success + "15", fg: C.success },
+            { band: "75–89", label: "Healthy", desc: "Stable. Maintain cadence. Watch for drift without over-correcting.", bg: C.primarySoft, fg: C.primary },
+            { band: "55–74", label: "At risk", desc: "The most actionable band. Still salvageable. Move fast.", bg: C.warning + "15", fg: C.warning },
+            { band: "30–54", label: "Critical", desc: "Something already broke. Call — don't email. Use Rai's scripts.", bg: C.danger + "12", fg: C.danger },
+            { band: "1–29", label: "Exiting", desc: "A \"pause\" is almost always an exit. Plan the offboard. Protect the referral.", bg: "#6B7280" + "15", fg: "#6B7280" },
+          ].map(b => (
+            <div key={b.band} style={{ display: "flex", gap: 18, alignItems: "center", padding: "16px 20px", background: b.bg, borderRadius: 12 }}>
+              <div style={{ flex: "0 0 64px" }}>
+                <div style={{ fontSize: 18, fontWeight: 900, color: b.fg, fontFamily: "inherit" }}>{b.band}</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: b.fg, textTransform: "uppercase", letterSpacing: ".08em" }}>{b.label}</div>
+              </div>
+              <div style={{ flex: 1, fontSize: 13.5, color: C.text, lineHeight: 1.55 }}>{b.desc}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <RelatedFeatures setPage={setPage} current="feature-scoring" />
+
+      <FeatureFinalCTA
+        setPage={setPage}
+        h2={<>Know exactly where<br />every relationship stands.</>}
+        sub="Start free. Your first client is scored in minutes."
+      />
+    </div>
+  );
+}
+
+// ─── HEALTH CHECKS ───
+function FeatureHealth({ setPage }) {
+  return (
+    <div>
+      <FeatureHero
+        setPage={setPage}
+        kicker="Health Checks"
+        h1="Five questions. Two minutes. The truth."
+        sub="Regular check-ins that detect drift before it becomes damage. Your answers blend into the Retention Score immediately — bad news moves the number on impact."
+      />
+
+      <HowItWorks
+        title="Why Health Checks work when surveys don't."
+        subtitle="Traditional NPS asks the client. Health Checks ask you — because you see things they'll never admit in a survey."
+        steps={[
+          { label: "Five questions, built for honesty", desc: "Not \"how is the relationship?\" — that's too abstract to answer honestly. We ask about specific observable changes: tone, cadence, signals of stress, things that have shifted since baseline." },
+          { label: "Cadence that matches reality", desc: "Monthly for your critical accounts. Quarterly for your stable ones. Yearly for your thriving. You don't get pinged on a schedule that makes you lie to clear the queue." },
+          { label: "Answers blend at 80/20", desc: "The Health Check score is 20% of the Retention Score. Not dominant — but enough that one bad check moves the number immediately. Drift shows up in real time." },
+        ]}
+      />
+
+      {/* Mockup */}
+      <section style={{ padding: "24px 20px 48px" }}>
+        <Reveal>
+          <div style={{ maxWidth: 520, margin: "0 auto", background: C.card, borderRadius: 20, border: "1px solid " + C.border, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,0.08)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+              <div>
+                <div style={{ fontSize: 10.5, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 2 }}>Health Check</div>
+                <div style={{ fontSize: 15, fontWeight: 800, letterSpacing: "-0.01em" }}>Broadleaf Media</div>
+              </div>
+              <div style={{ fontSize: 11.5, color: C.textMuted, fontWeight: 600 }}>2 of 5</div>
+            </div>
+
+            <div style={{ display: "flex", gap: 5, marginBottom: 20 }}>
+              {[1,2,3,4,5].map(i => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= 2 ? C.primary : C.borderLight }} />)}
+            </div>
+
+            <p style={{ fontSize: 16, fontWeight: 700, marginBottom: 14, lineHeight: 1.4 }}>Has anything changed with how they communicate with you?</p>
+            <div style={{ fontSize: 12.5, color: C.textMuted, marginBottom: 14, lineHeight: 1.5 }}>Think response times, channel preference, tone, who's in the thread. Compare against the last 2–3 months.</div>
+
+            {[
+              { text: "Nothing — same as always", selected: false },
+              { text: "Something minor, could be nothing", selected: false },
+              { text: "Noticeably different from before", selected: true },
+              { text: "Something has clearly changed", selected: false },
+            ].map((opt, i) => (
+              <div key={i} style={{
+                padding: "13px 16px", borderRadius: 10, marginBottom: 6,
+                background: opt.selected ? C.primarySoft : C.bg,
+                border: "1.5px solid " + (opt.selected ? C.primary : C.borderLight),
+                fontSize: 14, color: opt.selected ? C.primary : C.textSec,
+                fontWeight: opt.selected ? 600 : 400,
+                cursor: "pointer",
+              }}>
+                {opt.text}
+              </div>
+            ))}
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 18 }}>
+              <span style={{ fontSize: 12, color: C.textMuted }}>← Back</span>
+              <div style={{ padding: "10px 22px", background: C.primary, color: "#fff", borderRadius: 10, fontWeight: 700, fontSize: 13.5 }}>Next</div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* What happens after */}
+      <section style={{ padding: "48px 20px 72px", background: C.bg }}>
+        <Reveal>
+          <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+            <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 14 }}>When the answer is honest, the system works.</h2>
+            <p style={{ fontSize: 15.5, color: C.textSec, lineHeight: 1.75 }}>
+              A two-minute Health Check that moves the Retention Score tonight is worth more than a 20-question quarterly review you filled out to get it off your plate.<br /><br />
+              We designed the questions to be answerable in the elevator. <strong style={{ color: C.text }}>The honesty is the whole product.</strong>
+            </p>
+          </div>
+        </Reveal>
+      </section>
+
+      <RelatedFeatures setPage={setPage} current="feature-health" />
+
+      <FeatureFinalCTA
+        setPage={setPage}
+        h2={<>Catch drift before it's damage.<br />Two minutes at a time.</>}
+        sub="Start free. Your first Health Check goes live in minutes."
+      />
+    </div>
+  );
+}
+
+// ─── TALK TO RAI ───
+function FeatureRai({ setPage }) {
+  return (
+    <div>
+      <FeatureHero
+        setPage={setPage}
+        kicker="Talk to Rai"
+        h1="She writes the words you need when it matters most."
+        sub="Rai is an AI advisor calibrated to your specific relationships. When you don't know what to say — the opening line, the tone, whether to call or email — Rai gives you the script."
+      />
+
+      <HowItWorks
+        title="Rai isn't a chatbot. She's a practitioner."
+        subtitle="Built from hundreds of real client-retention scenarios, Rai reads the relationship before she writes a word."
+        steps={[
+          { label: "She reads the score first", desc: "Every time you Talk to Rai about a client, she pulls the current Retention Score, the active combinations, the last Health Check, the velocity trend — then writes." },
+          { label: "She writes like a senior advisor", desc: "Warm, steady tone. Specific, not vague. \"Call her — not email\" rather than \"consider reaching out.\" Rai tells you exactly what to do and exactly what to say." },
+          { label: "She adapts to the client", desc: "Your blunt client gets a blunt script. Your formal client gets a formal one. Rai knows each relationship's communication style from the Profile data — she doesn't talk to Rachel the way she talks to Jordan." },
+        ]}
+      />
+
+      {/* Mockup — chat conversation */}
+      <section style={{ padding: "24px 20px 48px" }}>
+        <Reveal>
+          <div style={{ maxWidth: 620, margin: "0 auto", background: C.card, borderRadius: 20, border: "1px solid " + C.border, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,0.08)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20, paddingBottom: 14, borderBottom: "1px solid " + C.borderLight }}>
+              <div style={{ width: 36, height: 36, borderRadius: "50%", background: "linear-gradient(135deg, " + C.primary + ", " + C.primaryLight + ")", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 16, fontWeight: 800 }}>✦</div>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 800 }}>Rai</div>
+                <div style={{ fontSize: 11.5, color: C.textMuted }}>Senior retention advisor</div>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div style={{ alignSelf: "flex-end", maxWidth: "80%", padding: "12px 16px", background: C.primary, color: "#fff", borderRadius: "16px 16px 4px 16px", fontSize: 13.5, lineHeight: 1.55 }}>
+                Rachel at Broadleaf has been different lately. What should I do?
+              </div>
+
+              <div style={{ alignSelf: "flex-start", maxWidth: "92%", padding: "14px 16px", background: C.bg, borderRadius: "16px 16px 16px 4px", fontSize: 13.5, lineHeight: 1.65, border: "1px solid " + C.borderLight }}>
+                <div style={{ fontWeight: 800, color: C.primary, marginBottom: 6, fontSize: 10.5, letterSpacing: "0.06em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 5 }}>
+                  <span>✦</span> Rai
+                </div>
+                Rachel's score dropped from 78 to 67 over two check-ins. "No Room to Operate" just triggered. This isn't performance — it's relationship.<br /><br />
+                <strong style={{ color: C.text }}>Call her. Not email.</strong> Open with something specific: <em>"I've noticed things have felt different the last few weeks. I wanted to check in before we did our next review — what's on your mind?"</em>
+              </div>
+
+              <div style={{ alignSelf: "flex-start", maxWidth: "82%", padding: "10px 14px", background: C.primarySoft, borderRadius: "14px 14px 14px 4px", fontSize: 12.5, color: C.primary, fontStyle: "italic", border: "1px solid " + C.primarySoft }}>
+                I've flagged a profile re-evaluation for Broadleaf. Want me to queue that up after the call?
+              </div>
+
+              <div style={{ alignSelf: "flex-end", maxWidth: "70%", padding: "10px 14px", background: C.primary + "15", color: C.primary, borderRadius: "14px 14px 4px 14px", fontSize: 12.5, fontWeight: 600 }}>
+                Yes, queue it.
+              </div>
+            </div>
+
+            <div style={{ marginTop: 20, padding: "11px 14px", background: C.surface, borderRadius: 10, display: "flex", alignItems: "center", gap: 10, fontSize: 12.5, color: C.textMuted }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.textMuted} strokeWidth="2" strokeLinecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Ask Rai anything about your book...
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* What to ask Rai */}
+      <section style={{ padding: "48px 20px 72px", background: C.bg }}>
+        <Reveal>
+          <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 32px" }}>
+            <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 10 }}>What you ask her.</h2>
+            <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.65 }}>Real questions, real situations.</p>
+          </div>
+        </Reveal>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14, maxWidth: 1000, margin: "0 auto" }}>
+          {[
+            "\"Should I bring up the rate increase with Maplewood now or wait?\"",
+            "\"Foxglove went quiet for three weeks. What do I say to re-open without being weird?\"",
+            "\"Is Northvane ready to ask for a referral? How do I ask?\"",
+            "\"Our point of contact at Oakline just got promoted. Do I congratulate her or pivot to the new AM?\"",
+          ].map((q, i) => (
+            <div key={i} style={{ padding: "18px 20px", background: C.card, border: "1px solid " + C.borderLight, borderRadius: 12, fontSize: 13.5, color: C.text, lineHeight: 1.55, fontStyle: "italic" }}>
+              {q}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <RelatedFeatures setPage={setPage} current="feature-rai" />
+
+      <FeatureFinalCTA
+        setPage={setPage}
+        h2={<>Stop drafting hard emails alone.<br />Rai is on the other side.</>}
+        sub="Start free. Talk to Rai about your first real client in minutes."
+      />
+    </div>
+  );
+}
+
+// ─── ROLODEX ───
+function FeatureRolodex({ setPage }) {
+  return (
+    <div>
+      <FeatureHero
+        setPage={setPage}
+        kicker="Rolodex"
+        h1="Former clients aren't dead. They're future revenue."
+        sub="The Rolodex tracks who left, how it ended, and whether they'd come back. One-off projects become re-engagement opportunities. Your pipeline is forward-looking."
+      />
+
+      <HowItWorks
+        title="Every CRM has a graveyard. Rolodex has a garden."
+        subtitle="Most tools archive old clients. We track them, score them for return-readiness, and surface them when the timing's right."
+        steps={[
+          { label: "Every exit gets recorded", desc: "When a client offboards, you note the context — budget cut, scope done, pivoted away, never replied. The Rolodex remembers why they left, not just that they did." },
+          { label: "Return-readiness is scored", desc: "Based on how the relationship ended, how much time has passed, and signals we pick up (LinkedIn moves, funding events, public news), each former client gets a readiness score for re-engagement." },
+          { label: "The right moment surfaces the right name", desc: "Someone leaves their old job and starts a new one? They pop up. You wrap a great win with Client A that could fit Client B's old pain? Rolodex flags it. You don't forget them — the system reminds you." },
+        ]}
+      />
+
+      {/* Mockup */}
+      <section style={{ padding: "24px 20px 48px" }}>
+        <Reveal>
+          <div style={{ maxWidth: 720, margin: "0 auto", background: C.card, borderRadius: 20, border: "1px solid " + C.border, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,0.08)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, paddingBottom: 14, borderBottom: "1px solid " + C.borderLight }}>
+              <div>
+                <div style={{ fontSize: 10.5, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 2 }}>Rolodex</div>
+                <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: "-0.02em" }}>12 former clients</div>
+              </div>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 11px", borderRadius: 100, background: C.primarySoft, fontSize: 11, fontWeight: 700, color: C.primary }}>
+                <span style={{ width: 5, height: 5, borderRadius: "50%", background: C.primary }} />3 ready now
+              </div>
+            </div>
+
+            {[
+              { name: "Maplewood Agency", type: "Former", months: "14 months together", reason: "Budget cut Q3 2024", tags: ["Would refer", "Would come back"], readiness: 88, priority: "high", signal: "Just raised Series A" },
+              { name: "Clearpoint Digital", type: "One-off", months: "Site audit, Feb 2024", reason: "Project-scoped", tags: ["Would refer"], readiness: 74, priority: "medium", signal: "Expanded team 3x" },
+              { name: "Harlow & Associates", type: "Former", months: "8 months together", reason: "Internal hire", tags: ["Would come back"], readiness: 82, priority: "high", signal: "Their hire just left" },
+            ].map((r, i) => (
+              <div key={i} style={{ padding: "16px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 3 }}>
+                      <span style={{ fontWeight: 700, fontSize: 14.5 }}>{r.name}</span>
+                      <span style={{ fontSize: 11.5, color: C.textMuted }}>{r.type} · {r.months}</span>
+                    </div>
+                    <div style={{ fontSize: 12.5, color: C.textMuted, marginBottom: 6 }}>Ended: {r.reason}</div>
+                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                      {r.tags.map(t => (
+                        <span key={t} style={{ fontSize: 10.5, fontWeight: 600, padding: "3px 9px", borderRadius: 5, background: C.primarySoft, color: C.primary }}>{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ textAlign: "center", flexShrink: 0 }}>
+                    <div style={{ width: 44, height: 44, borderRadius: "50%", background: C.success + "15", border: "1.5px solid " + C.success + "40", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800, color: C.success }}>{r.readiness}</div>
+                    <div style={{ fontSize: 9.5, color: C.textMuted, marginTop: 4, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".06em" }}>ready</div>
+                  </div>
+                </div>
+                <div style={{ padding: "8px 12px", background: C.primarySoft + "60", borderRadius: 8, fontSize: 12.5, color: C.primary, display: "flex", alignItems: "center", gap: 8 }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2.5" strokeLinecap="round"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" fill="none" strokeLinejoin="round"/></svg>
+                  <span><strong>Signal:</strong> {r.signal}</span>
+                </div>
+              </div>
+            ))}
+
+            <div style={{ marginTop: 16, fontSize: 13, color: C.btn, fontWeight: 700, textAlign: "center" }}>3 re-engagement opportunities this week</div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* Reframe */}
+      <section style={{ padding: "48px 20px 72px", background: C.bg }}>
+        <Reveal>
+          <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+            <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 14 }}>The easiest new client is an old one.</h2>
+            <p style={{ fontSize: 15.5, color: C.textSec, lineHeight: 1.75 }}>
+              Getting a new client costs 5–7x more than keeping one. Getting back an old one who liked you? Cheaper still.<br /><br />
+              Most consultants lose touch within 6 months of an engagement ending. By 12 months, the relationship is effectively cold. <strong style={{ color: C.text }}>Rolodex keeps them warm without making you a stalker.</strong>
+            </p>
+          </div>
+        </Reveal>
+      </section>
+
+      <RelatedFeatures setPage={setPage} current="feature-rolodex" />
+
+      <FeatureFinalCTA
+        setPage={setPage}
+        h2={<>Stop letting old wins die.<br />Turn them into next quarter.</>}
+        sub="Start free. Add your first former client to the Rolodex in 30 seconds."
+      />
+    </div>
+  );
+}
+
+// ─── REFERRALS ───
+function FeatureReferrals({ setPage }) {
+  return (
+    <div>
+      <FeatureHero
+        setPage={setPage}
+        kicker="Referrals"
+        h1="Your best clients send you their friends."
+        sub="Retayned tracks referral readiness based on loyalty, trust, and relationship depth. When a client is ready to refer, the system knows before you do."
+      />
+
+      <HowItWorks
+        title="Why asking for referrals backfires 80% of the time."
+        subtitle="Most consultants ask everyone, or no one. Both are wrong. Readiness is a state — and it's measurable."
+        steps={[
+          { label: "Readiness is a combination", desc: "High loyalty + high trust + deep relationship + recent positive moment = referral-ready. We score every client against this profile continuously." },
+          { label: "Timing is the entire game", desc: "Ask too early and you look needy. Ask too late and the moment's gone. Referrals has a narrow window after a clear win — and we flag it for you." },
+          { label: "The right client, the right ask", desc: "Rai doesn't just tell you who's ready — she tells you how to ask. The script for a formal client is different from the script for a casual one. You get both." },
+        ]}
+      />
+
+      {/* Mockup */}
+      <section style={{ padding: "24px 20px 48px" }}>
+        <Reveal>
+          <div style={{ maxWidth: 720, margin: "0 auto", background: C.card, borderRadius: 20, border: "1px solid " + C.border, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,0.08)" }}>
+            <div style={{ fontSize: 10.5, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 14 }}>Referral Intelligence · Last 90 days</div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 22 }}>
+              {[["Asked", "7"], ["Converted", "4"], ["Revenue added", "$18.4k"]].map(([label, val]) => (
+                <div key={label} style={{ background: C.bg, borderRadius: 11, padding: 14, textAlign: "center" }}>
+                  <div style={{ fontSize: 24, fontWeight: 900, color: C.primary, fontFamily: "inherit", lineHeight: 1 }}>{val}</div>
+                  <div style={{ fontSize: 10.5, color: C.textMuted, marginTop: 4, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".06em" }}>{label}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ fontSize: 13.5, fontWeight: 800, marginBottom: 12, color: C.text }}>Ready to refer this week</div>
+            {[
+              { name: "Northvane Studios", contact: "Sarah Chen", readiness: 94, note: "Just wrapped their anniversary retainer renewal." },
+              { name: "Oakline Outdoors", contact: "James Park", readiness: 86, note: "Loyalty score hit 95 after Q1 campaign success." },
+              { name: "Cedarwood Strategy", contact: "Alex Rivera", readiness: 79, note: "Asked twice about 'people like us.'" },
+            ].map((r, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+                    <span style={{ fontWeight: 700, fontSize: 14 }}>{r.name}</span>
+                    <span style={{ fontSize: 11.5, color: C.textMuted }}>· {r.contact}</span>
+                  </div>
+                  <div style={{ fontSize: 12.5, color: C.textSec, lineHeight: 1.45 }}>{r.note}</div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                  <div style={{ width: 62, height: 6, borderRadius: 3, background: C.borderLight, overflow: "hidden" }}>
+                    <div style={{ width: r.readiness + "%", height: "100%", background: "linear-gradient(90deg, " + C.primaryLight + ", " + C.success + ")" }} />
+                  </div>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: C.success, minWidth: 30 }}>{r.readiness}</span>
+                </div>
+              </div>
+            ))}
+
+            <div style={{ marginTop: 18, padding: "12px 14px", background: C.primarySoft, borderRadius: 10, display: "flex", alignItems: "flex-start", gap: 10 }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2" style={{ flexShrink: 0, marginTop: 2 }}><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z" strokeLinejoin="round" fill="none"/></svg>
+              <div style={{ fontSize: 13, color: C.text, lineHeight: 1.55 }}>
+                <strong style={{ color: C.primary }}>Rai says:</strong> Sarah at Northvane is textbook ready. Ask in-person at Thursday's sync — not by email. Frame it as \"people like you.\"
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* Don't ask thriving clients */}
+      <section style={{ padding: "48px 20px 72px", background: C.bg }}>
+        <Reveal>
+          <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+            <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 14 }}>One rule most consultants get wrong.</h2>
+            <p style={{ fontSize: 15.5, color: C.textSec, lineHeight: 1.75 }}>
+              Thriving clients (90+ score) — don't ask them for referrals unless they offer. The best clients will send you people organically. Asking disrupts the relationship.<br /><br />
+              <strong style={{ color: C.text }}>The sweet spot is healthy clients (75–89) coming off a clear win.</strong> They're invested enough to vouch, not so enmeshed that asking feels like transactional debt. Retayned flags them specifically.
+            </p>
+          </div>
+        </Reveal>
+      </section>
+
+      <RelatedFeatures setPage={setPage} current="feature-referrals" />
+
+      <FeatureFinalCTA
+        setPage={setPage}
+        h2={<>The right ask.<br />At the exact right moment.</>}
+        sub="Start free. See who's ready to refer in your book right now."
+      />
+    </div>
+  );
+}
+
 // ═══ MAIN APP ═══
 export default function RetaynedSite() {
   const [page, setPage] = useState("home");
@@ -2908,6 +4767,9 @@ export default function RetaynedSite() {
         .cta-btn { transition: all 0.2s ease; }
         .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(91,33,182,0.25); }
         .cta-btn:active { transform: translateY(0); }
+        @keyframes megaFadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        .r-mega-row { transition: background 0.15s ease; }
+        .r-mega-row:hover { background: ${C.primarySoft}; }
         .ch-pill { transition: all 0.15s ease; }
         .ch-pill:active { transform: scale(0.97); }
         input:focus, textarea:focus { border-color: #5B21B6 !important; outline: none; box-shadow: 0 0 0 3px rgba(91,33,182,0.1); }
@@ -2976,7 +4838,7 @@ export default function RetaynedSite() {
           .r-hero-orb { opacity: 0.5 !important; }
           .r-stats-row { flex-direction: row !important; gap: 16px !important; }
 
-          .r-conf-inner { max-width: 900px; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+          .r-conf-inner { max-width: 820px; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
           .r-conf-img { border-radius: 14px; }
           .r-conf { padding: 0 40px !important; margin-bottom: 64px !important; }
           .r-conf-caption { display: block !important; }
@@ -3010,6 +4872,15 @@ export default function RetaynedSite() {
       <div className="r-wrap">
         {page === "home" && <Home setPage={setPage} />}
         {page === "platform" && <Platform setPage={setPage} />}
+        {page === "freelancers" && <Freelancers setPage={setPage} />}
+        {page === "agencies" && <Agencies setPage={setPage} />}
+        {page === "enterprise" && <Enterprise setPage={setPage} />}
+        {page === "feature-today" && <FeatureToday setPage={setPage} />}
+        {page === "feature-scoring" && <FeatureScoring setPage={setPage} />}
+        {page === "feature-health" && <FeatureHealth setPage={setPage} />}
+        {page === "feature-rai" && <FeatureRai setPage={setPage} />}
+        {page === "feature-rolodex" && <FeatureRolodex setPage={setPage} />}
+        {page === "feature-referrals" && <FeatureReferrals setPage={setPage} />}
         {page === "pricing" && <Pricing setPage={setPage} />}
         {page === "about" && <About setPage={setPage} />}
         {page === "faq" && <FAQPage setPage={setPage} />}
