@@ -1011,23 +1011,39 @@ function Home({ setPage }) {
             </div>
           </Reveal>
 
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 20, maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "28px 24px", maxWidth: 1100, margin: "0 auto", justifyContent: "center" }}>
             {[
               { num: "01", title: "She sees it.", desc: "Cross-referencing tasks, health checks, score trends, 20+ combination signals — continuously, across your entire book.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> },
               { num: "02", title: "She calls it out.", desc: "Every morning, before your first coffee. You don't go looking for the problem. The problem finds you without any trouble.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> },
               { num: "03", title: "She ranks it.", desc: "Using a proprietary scoring engine, Rai weighs all of the day's tasks by retention impact. Your highest-value move is next up.", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> },
             ].map((step, i) => (
-              <Reveal key={i} delay={i * 0.15} style={{ flex: "1 1 300px", minWidth: 280 }}>
-                <div className="r-rai-alert-wrap" style={{ borderRadius: 16 }}>
-                <div style={{
-                  padding: "28px 24px", borderRadius: 16, border: "1.5px solid " + C.borderLight,
-                  background: C.card, cursor: "default",
-                  position: "relative", overflow: "hidden",
+              <Reveal key={i} delay={i * 0.15} style={{ flex: "1 1 300px", minWidth: 280, maxWidth: 360 }}>
+                <div className={"r-notebook-card r-notebook-card-" + (i+1)} style={{
+                  position: "relative",
+                  padding: "28px 26px 30px 46px",
+                  borderRadius: "0 4px 4px 0",
+                  minHeight: 220,
+                  background: "#FFFFFF",
+                  boxShadow: "0 6px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04)",
                 }}>
-                  <div style={{ marginBottom: 14, opacity: 0.7 }}>{step.icon}</div>
+                  <div aria-hidden="true" style={{
+                    position: "absolute", left: 0, top: 0, bottom: 0, width: 18,
+                    backgroundImage: "repeating-linear-gradient(to bottom, transparent 0 6px, rgba(0,0,0,0.45) 6px 9px, transparent 9px 18px)",
+                    opacity: 0.5, pointerEvents: "none",
+                  }} />
+                  <div aria-hidden="true" style={{
+                    position: "absolute", left: 7, top: 0, bottom: 0, width: 1,
+                    background: "rgba(0,0,0,0.15)", pointerEvents: "none",
+                  }} />
+                  <div style={{
+                    fontSize: 10, fontWeight: 700, color: C.text,
+                    textTransform: "uppercase", letterSpacing: ".14em",
+                    fontFamily: "'SF Mono', Menlo, monospace",
+                    marginBottom: 12, opacity: 0.55,
+                  }}>Step · {step.num}</div>
+                  <div style={{ marginBottom: 12, opacity: 0.7 }}>{step.icon}</div>
                   <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8, lineHeight: 1.25 }}>{step.title}</h3>
                   <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.7, margin: 0 }}>{step.desc}</p>
-                </div>
                 </div>
               </Reveal>
             ))}
@@ -1717,21 +1733,21 @@ function Pricing({ setPage }) {
   return (
     <>
       {/* ONE continuous gradient wraps the entire page, flowing cream → sage → deep green → footer black */}
-      <div className="r-full-bleed" style={{
+      <div className="r-full-bleed r-no-pad" style={{
         background: `linear-gradient(180deg, ${C.bg} 0%, #E8F0E9 18%, #A8C4B0 38%, #4A7B5E 62%, ${C.primaryDeep} 85%)`,
         position: "relative", overflow: "hidden",
       }}>
         <div className="r-grain" style={{ opacity: 0.05 }} />
 
         {/* ══════ Hero ══════ */}
-        <section style={{ padding: "64px 20px 24px", textAlign: "center", position: "relative", zIndex: 2 }}>
-          <h1 className="r-page-title" style={{ fontSize: 48, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 16, maxWidth: 760, margin: "0 auto 16px", color: C.text }}>One client saved pays for{" "}
+        <section style={{ padding: "56px 20px 24px", textAlign: "center", position: "relative", zIndex: 2 }}>
+          <h1 className="r-page-title" style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 16, color: C.text }}>One client saved pays for{" "}
             <span style={{ position: "relative", display: "inline-block" }}>
               <span style={{ color: C.textMuted }}>a year<span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} /></span>
-              <span style={{ position: "absolute", top: "-0.55em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.85em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>years</span>
+              <span style={{ position: "absolute", top: "-0.55em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>years</span>
             </span>{" "}of Retayned.
           </h1>
-          <p style={{ fontSize: 17, color: C.textSec, lineHeight: 1.6, maxWidth: 560, margin: "0 auto" }}>One plan. Every feature. The math works itself out.</p>
+          <p style={{ fontSize: 17, color: C.textSec, lineHeight: 1.65 }}>One plan. Every feature. The math works itself out.</p>
         </section>
 
         {/* ══════ The price card — pure white floating ticket ══════ */}
@@ -2881,22 +2897,22 @@ function Platform({ setPage }) {
 
       <div className="r-platform">
         {/* ══════ Hero ══════ */}
-        <div className="r-full-bleed" style={{
+        <div className="r-full-bleed r-hero-bg r-no-pad" style={{
           background: "radial-gradient(ellipse 120% 90% at 25% 35%, #E4EDDF 0%, #EFF4EC 35%, " + C.bg + " 65%)",
-          padding: "48px 20px 24px",
+          position: "relative", overflow: "hidden",
         }}>
-          <div style={{ textAlign: "center", maxWidth: 680, margin: "0 auto" }}>
-            <h1 style={{
+          <section style={{ padding: "48px 20px 24px", position: "relative", zIndex: 2 }}>
+            <h1 className="r-page-title" style={{
               fontSize: 36, fontWeight: 900, lineHeight: 1.1, marginBottom: 12,
               letterSpacing: "-0.04em",
             }}>
               Your clients won't know Retayned exists.<br />
               <span style={{ fontFamily: "'Caveat', cursive", fontWeight: 700, color: C.primary }}>They'll just stay.</span>
             </h1>
-            <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>
+            <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.65 }}>
               Relationship intelligence, health monitoring, and pipeline management in one system. Our AI isn't just smart — it's <strong style={{ color: C.text }}>emotionally intelligent</strong>.
             </p>
-          </div>
+          </section>
 
           {/* ══════ Feature Tabs ══════ */}
           <section style={{ padding: "36px 20px 64px" }}>
@@ -3641,14 +3657,13 @@ function Freelancers({ setPage }) {
 
       <div>
         {/* ══════ Hero ══════ */}
-        <div className="r-full-bleed r-hero-bg" style={{
+        <div className="r-full-bleed r-hero-bg r-no-pad" style={{
           background: `radial-gradient(ellipse 120% 90% at 25% 35%, #E4EDDF 0%, #EFF4EC 35%, ${C.bg} 65%)`,
-          padding: "64px 20px 72px",
           position: "relative", overflow: "hidden",
         }}>
           <div className="r-hero-orb" style={{ position: "absolute", top: "10%", right: "5%", width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, #E4EDDF 0%, transparent 70%)", opacity: 0.4, pointerEvents: "none" }} />
 
-          <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", zIndex: 2, textAlign: "center" }}>
+          <section style={{ padding: "64px 20px 72px", position: "relative", zIndex: 2 }}>
             <Reveal>
               <div style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
@@ -3662,20 +3677,20 @@ function Freelancers({ setPage }) {
                 For freelancers & consultants · 1–50 clients
               </div>
               <h1 className="r-page-title" style={{
-                fontSize: 44, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08,
-                marginBottom: 18, color: C.text,
+                fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1,
+                marginBottom: 16, color: C.text,
               }}>
                 The CRM that catches{" "}
                 <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
                   <span style={{ color: C.textMuted }}>what you miss</span>
                   <span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} />
-                  <span style={{ position: "absolute", top: "-0.7em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.75em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>everything</span>
+                  <span style={{ position: "absolute", top: "-0.7em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>everything</span>
                 </span>.
               </h1>
-              <p style={{ fontSize: 17, lineHeight: 1.7, color: C.textSec, marginBottom: 28, maxWidth: 620, margin: "0 auto 28px" }}>
+              <p style={{ fontSize: 17, lineHeight: 1.65, color: C.textSec, marginBottom: 28 }}>
                 You're a team of one. You can't be on every Slack thread, every email, every hint of drift. Retayned watches the whole book while you focus on the work.
               </p>
-              <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 14 }}>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
                 <button className="r-hero-cta cta-btn" onClick={() => setPage("signup")} style={{ padding: "14px 30px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
                   Start Free Trial
                 </button>
@@ -3687,7 +3702,7 @@ function Freelancers({ setPage }) {
                 $19.99/mo + $1 per client · 14-day free trial · Cancel anytime
               </p>
             </Reveal>
-          </div>
+          </section>
         </div>
 
         {/* ══════ The freelancer reality ══════ */}
@@ -3891,14 +3906,13 @@ function Agencies({ setPage }) {
 
       <div>
         {/* ══════ Hero ══════ */}
-        <div className="r-full-bleed r-hero-bg" style={{
+        <div className="r-full-bleed r-hero-bg r-no-pad" style={{
           background: `radial-gradient(ellipse 120% 90% at 25% 35%, #E4EDDF 0%, #EFF4EC 35%, ${C.bg} 65%)`,
-          padding: "64px 20px 72px",
           position: "relative", overflow: "hidden",
         }}>
           <div className="r-hero-orb" style={{ position: "absolute", top: "10%", right: "5%", width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, #E4EDDF 0%, transparent 70%)", opacity: 0.4, pointerEvents: "none" }} />
 
-          <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", zIndex: 2, textAlign: "center" }}>
+          <section style={{ padding: "64px 20px 72px", position: "relative", zIndex: 2 }}>
             <Reveal>
               <div style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
@@ -3912,20 +3926,20 @@ function Agencies({ setPage }) {
                 For agencies · 50+ clients · Teams
               </div>
               <h1 className="r-page-title" style={{
-                fontSize: 44, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08,
-                marginBottom: 18, color: C.text,
+                fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1,
+                marginBottom: 16, color: C.text,
               }}>
                 Your team's memory,{" "}
                 <span style={{ position: "relative", display: "inline-block", marginTop: "0.3em" }}>
                   <span style={{ color: C.textMuted }}>in their heads</span>
                   <span style={{ position: "absolute", left: "-4%", top: "50%", height: "0.07em", background: C.danger, width: "108%", borderRadius: 2, transform: "rotate(-1deg)" }} />
-                  <span style={{ position: "absolute", top: "-0.7em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.75em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>on one system</span>
+                  <span style={{ position: "absolute", top: "-0.7em", left: "50%", transform: "translateX(-50%) rotate(-2deg)", fontFamily: "'Caveat', cursive", fontSize: "0.7em", fontWeight: 700, color: C.primary, whiteSpace: "nowrap" }}>on one system</span>
                 </span>.
               </h1>
-              <p style={{ fontSize: 17, lineHeight: 1.7, color: C.textSec, marginBottom: 28, maxWidth: 620, margin: "0 auto 28px" }}>
+              <p style={{ fontSize: 17, lineHeight: 1.65, color: C.textSec, marginBottom: 28 }}>
                 When an account manager leaves, they take 40 client relationships with them. Retayned holds the institutional knowledge — so your team doesn't have to.
               </p>
-              <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 14 }}>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
                 <button className="r-hero-cta cta-btn" onClick={() => setPage("signup")} style={{ padding: "14px 30px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
                   Start Free Trial
                 </button>
@@ -3937,7 +3951,7 @@ function Agencies({ setPage }) {
                 $19.99/mo + $1 per client · Unlimited team members · No per-seat fees
               </p>
             </Reveal>
-          </div>
+          </section>
         </div>
 
         {/* ══════ The agency problem ══════ */}
@@ -4138,14 +4152,13 @@ function Enterprise({ setPage }) {
     <>
       <div>
         {/* ══════ Hero ══════ */}
-        <div className="r-full-bleed r-hero-bg" style={{
+        <div className="r-full-bleed r-hero-bg r-no-pad" style={{
           background: `radial-gradient(ellipse 120% 90% at 25% 35%, #E4EDDF 0%, #EFF4EC 35%, ${C.bg} 65%)`,
-          padding: "64px 20px 64px",
           position: "relative", overflow: "hidden",
         }}>
           <div className="r-hero-orb" style={{ position: "absolute", top: "10%", right: "5%", width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, #E4EDDF 0%, transparent 70%)", opacity: 0.4, pointerEvents: "none" }} />
 
-          <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", zIndex: 2, textAlign: "center" }}>
+          <section style={{ padding: "64px 20px 64px", position: "relative", zIndex: 2 }}>
             <Reveal>
               <div style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
@@ -4158,18 +4171,18 @@ function Enterprise({ setPage }) {
                 Retayned Enterprise · Early access
               </div>
               <h1 className="r-page-title" style={{
-                fontSize: 44, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08,
-                marginBottom: 18, color: C.text,
+                fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1,
+                marginBottom: 16, color: C.text,
               }}>
                 Retayned Enterprise
               </h1>
-              <p style={{ fontSize: 17, lineHeight: 1.7, color: C.textSec, marginBottom: 22, maxWidth: 640, margin: "0 auto 22px", fontWeight: 600 }}>
+              <p style={{ fontSize: 17, lineHeight: 1.65, color: C.textSec, marginBottom: 22, fontWeight: 600 }}>
                 Relationship intelligence for the teams and agents managing your book.
               </p>
-              <p style={{ fontSize: 16, lineHeight: 1.7, color: C.textSec, marginBottom: 28, maxWidth: 720, margin: "0 auto 28px" }}>
+              <p style={{ fontSize: 16, lineHeight: 1.65, color: C.textSec, marginBottom: 28 }}>
                 Your top 50 accounts get a human account manager who knows them by name. The other 950 get triaged by agents, reviewed by your team, and actioned through a single surface — with the same retention intelligence powering both.
               </p>
-              <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 <button className="r-hero-cta cta-btn" onClick={() => setPage("contact")} style={{ padding: "14px 30px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
                   Request Early Access
                 </button>
@@ -4178,7 +4191,7 @@ function Enterprise({ setPage }) {
                 Onboarding 3 partners per quarter · Custom pricing based on portfolio size
               </p>
             </Reveal>
-          </div>
+          </section>
         </div>
 
         {/* ══════ Two surfaces, one brain ══════ */}
@@ -4502,14 +4515,13 @@ function Enterprise({ setPage }) {
 
 function FeatureHero({ kicker, h1, sub, setPage, primaryCta = "Start Free Trial", primaryAction = "signup", secondaryCta = "See all features", secondaryAction = "platform", fine = "14-day free trial. Cancel anytime." }) {
   return (
-    <div className="r-full-bleed r-hero-bg" style={{
+    <div className="r-full-bleed r-hero-bg r-no-pad" style={{
       background: `radial-gradient(ellipse 120% 90% at 25% 35%, #E4EDDF 0%, #EFF4EC 35%, ${C.bg} 65%)`,
-      padding: "64px 20px 56px",
       position: "relative", overflow: "hidden",
     }}>
       <div className="r-hero-orb" style={{ position: "absolute", top: "10%", right: "5%", width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, #E4EDDF 0%, transparent 70%)", opacity: 0.4, pointerEvents: "none" }} />
 
-      <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", zIndex: 2, textAlign: "center" }}>
+      <section style={{ padding: "64px 20px 56px", position: "relative", zIndex: 2 }}>
         <Reveal>
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 6,
@@ -4520,11 +4532,11 @@ function FeatureHero({ kicker, h1, sub, setPage, primaryCta = "Start Free Trial"
             marginBottom: 18,
           }}>{kicker}</div>
           <h1 className="r-page-title" style={{
-            fontSize: 44, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08,
-            marginBottom: 18, color: C.text, maxWidth: 760, margin: "0 auto 18px",
+            fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1,
+            marginBottom: 16, color: C.text,
           }}>{h1}</h1>
-          <p style={{ fontSize: 17, lineHeight: 1.65, color: C.textSec, marginBottom: 26, maxWidth: 560, margin: "0 auto 26px" }}>{sub}</p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 12 }}>
+          <p style={{ fontSize: 17, lineHeight: 1.65, color: C.textSec, marginBottom: 26 }}>{sub}</p>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 12 }}>
             <button className="r-hero-cta cta-btn" onClick={() => setPage(primaryAction)} style={{ padding: "14px 30px", background: C.btn, color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
               {primaryCta}
             </button>
@@ -4534,7 +4546,7 @@ function FeatureHero({ kicker, h1, sub, setPage, primaryCta = "Start Free Trial"
           </div>
           <p style={{ fontSize: 13, color: C.textMuted, letterSpacing: "0.01em" }}>{fine}</p>
         </Reveal>
-      </div>
+      </section>
     </div>
   );
 }
@@ -5236,7 +5248,7 @@ export default function RetaynedSite() {
         .r-brain-layout { display: flex; flex-direction: column; }
         .r-brain-diagram { width: 100%; }
         .r-brain-card { margin-top: 12px; }
-        .r-page-title { }
+        .r-page-title { font-size: 30px !important; }
         input[type=range] { -webkit-appearance: none; width: 100%; height: 8px; border-radius: 4px; background: #E8ECE6; outline: none; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%; background: #5B21B6; cursor: pointer; box-shadow: 0 2px 8px rgba(91,33,182,0.3); }
         input[type=range]::-moz-range-thumb { width: 28px; height: 28px; border-radius: 50%; background: #5B21B6; cursor: pointer; border: none; }
@@ -5252,7 +5264,7 @@ export default function RetaynedSite() {
         .r-feat-heading-desktop { display: none !important; }
         .r-ent-h2 { font-size: 28px !important; }
         .r-ent-metrics { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
-        .r-ent-top-edge, .r-ent-bottom-edge { height: 100px !important; }
+        .r-ent-top-edge, .r-ent-bottom-edge { height: 60px !important; }
         .r-ent-section { padding: 48px 20px 64px !important; }
         .r-ent-dashboard { padding: 20px !important; }
         .r-ent-cta-row { flex-direction: column !important; align-items: flex-start !important; gap: 14px !important; }
@@ -5260,7 +5272,7 @@ export default function RetaynedSite() {
         .r-hero-orb { opacity: 0.4 !important; }
         .r-hero-section { padding-bottom: 48px !important; }
         .r-how-it-works { padding-top: 32px !important; }
-        .r-feat-section { padding-bottom: 64px !important; }
+        .r-feat-section { padding-bottom: 32px !important; }
         .r-stats-row { flex-direction: column !important; gap: 8px !important; align-items: center !important; }
         .r-stats { font-size: 96px !important; }
         .r-tab-bar-wrap { scrollbar-width: none; -ms-overflow-style: none; }
