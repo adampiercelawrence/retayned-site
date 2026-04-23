@@ -1112,26 +1112,46 @@ function HomeV2({ setPage }) {
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,20 Q 720,140 0,30 Z" fill={C.bg} /></svg>
       </div>
 
-      {/* ══════ STATS ══════ */}
-      <section className="v2-section-stats">
-        <div className="v2-stats-row">
-          <div className="v2-stat">
-            <div className="v2-stat-value">12</div>
-            <div className="v2-stat-label">scoring dimensions powering every Retention Score</div>
-          </div>
-          <div className="v2-stat">
-            <div className="v2-stat-value">20</div>
-            <div className="v2-stat-label">combination signals detecting what single metrics miss</div>
-          </div>
-          <div className="v2-stat">
-            <div className="v2-stat-value">1–99</div>
-            <div className="v2-stat-label">a score that tells you exactly where the relationship stands</div>
-          </div>
+      {/* ══════ STATS (live homepage version: 90% / 25x / 1+) ══════ */}
+      <div className="r-full-bleed" style={{
+        background: `linear-gradient(180deg, ${C.bg} 0%, #8FB89E 50%, ${C.bg} 100%)`,
+        padding: "72px 20px",
+        position: "relative", overflow: "hidden",
+      }}>
+        <h2 style={{
+          fontSize: 26, fontWeight: 800, lineHeight: 1.25, textAlign: "center",
+          margin: "0 auto", color: C.text, letterSpacing: "-0.03em", position: "relative", zIndex: 2,
+          maxWidth: 900,
+        }}>
+          A 5% increase in retention can boost profits by 95%.
+          <sup style={{ fontSize: "0.35em", color: C.textMuted, verticalAlign: "super" }}>¹</sup>
+        </h2>
+
+        {/* Fade separator */}
+        <div style={{ width: 120, height: 1, background: `linear-gradient(90deg, transparent, ${C.border}, transparent)`, margin: "28px auto 0", position: "relative", zIndex: 2 }} />
+
+        {/* Stats row */}
+        <div className="r-stats-row" style={{ display: "flex", gap: 16, maxWidth: 1400, margin: "24px auto 0", position: "relative", zIndex: 2 }}>
+          {[
+            { num: "90", suffix: "%", label: "Of churn is predictable" },
+            { num: "25", suffix: "x", label: "Cheaper to retain than acquire" },
+            { num: "1", suffix: "+", label: "Saved client pays for itself" },
+          ].map((s, i) => (
+            <div key={i} style={{ flex: 1, textAlign: "center", padding: "16px 0" }}>
+              <div className="r-stats" style={{
+                fontSize: 48, fontWeight: 900, letterSpacing: "-0.04em",
+                color: C.primary, lineHeight: 1, marginBottom: 6,
+              }}>
+                <AnimatedStat value={s.num} suffix={s.suffix} />
+              </div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".04em" }}>{s.label}</div>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
 
       {/* ══════ MEET RAI ══════ */}
-      <section className="v2-section-rai">
+      <section className="v2-section-rai r-full-bleed">
         <div className="v2-section-inner">
           <div className="v2-section-head">
             <div className="v2-eyebrow">How it works</div>
@@ -1173,7 +1193,7 @@ function HomeV2({ setPage }) {
       </div>
 
       {/* ══════ PLATFORM ══════ */}
-      <section className="v2-section-platform">
+      <section className="v2-section-platform r-full-bleed">
         <div className="v2-section-inner">
           <div className="v2-platform-grid">
             <div>
@@ -1221,7 +1241,7 @@ function HomeV2({ setPage }) {
       </div>
 
       {/* ══════ COMBOS — flowing wordmark tapestry ══════ */}
-      <section className="v2-section-combos">
+      <section className="v2-section-combos r-full-bleed">
         <div className="v2-combos-head">
           <div className="v2-eyebrow">More than AI</div>
           <h2 className="v2-combos-h2">Proprietary scoring combinations that predict and prevent churn.</h2>
@@ -1441,7 +1461,7 @@ function HomeV2({ setPage }) {
       </div>
 
       {/* ══════ AUDIENCE TABS ══════ */}
-      <section className="v2-section-audience">
+      <section className="v2-section-audience r-full-bleed">
         <div className="v2-section-inner">
           <div className="v2-section-head" style={{ textAlign: "center", margin: "0 auto 32px", maxWidth: 820 }}>
             <div className="v2-eyebrow">Built for the way you work</div>
@@ -1487,7 +1507,7 @@ function HomeV2({ setPage }) {
       </div>
 
       {/* ══════ ENTERPRISE ══════ */}
-      <section className="v2-section-enterprise">
+      <section className="v2-section-enterprise r-full-bleed">
         <div className="v2-section-inner">
           <div className="v2-section-head" style={{ textAlign: "center", margin: "0 auto 32px", maxWidth: 880 }}>
             <div className="v2-eyebrow v2-eyebrow-enterprise">Retayned Enterprise · Early access</div>
@@ -1548,37 +1568,6 @@ function HomeV2({ setPage }) {
               </div>
             </div>
 
-            {/* 3 stats (12 / 20 / 1–99) — homepage stats, styled for dark section */}
-            <div style={{
-              display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12,
-              marginBottom: 20,
-            }}>
-              {[
-                { val: "12", label: "scoring dimensions powering every Retention Score" },
-                { val: "20", label: "combination signals detecting what single metrics miss" },
-                { val: "1–99", label: "a score that tells you exactly where the relationship stands" },
-              ].map(s => (
-                <div key={s.val} style={{
-                  padding: "24px 20px",
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.05)",
-                  borderRadius: 10,
-                  textAlign: "center",
-                }}>
-                  <div style={{
-                    fontSize: 56, fontWeight: 900,
-                    color: C.primaryLight,
-                    letterSpacing: "-0.04em", lineHeight: 1, marginBottom: 10,
-                  }}>{s.val}</div>
-                  <div style={{
-                    fontSize: 12, fontWeight: 500,
-                    color: "rgba(255,255,255,0.65)",
-                    lineHeight: 1.4, maxWidth: 220, margin: "0 auto",
-                  }}>{s.label}</div>
-                </div>
-              ))}
-            </div>
-
             {/* Log output */}
             <div style={{
               background: "rgba(0,0,0,0.25)",
@@ -1633,7 +1622,7 @@ function HomeV2({ setPage }) {
       </div>
 
       {/* ══════ FINAL CTA ══════ */}
-      <section className="v2-section-final">
+      <section className="v2-section-final r-full-bleed">
         <h2 className="v2-final-h">
           One client saved pays for{" "}
           <span className="v2-caveat-final">years</span>{" "}of Retayned.
@@ -6274,7 +6263,7 @@ export default function RetaynedSite() {
           padding: 72px 48px 60px;
           overflow: hidden;
         }
-        .v2-hero-inner { max-width: 1600px; margin: 0 auto; }
+        .v2-hero-inner { max-width: 1320px; margin: 0 auto; }
         .v2-trust-pill {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 6px 14px; border-radius: 100px;
@@ -6341,7 +6330,7 @@ export default function RetaynedSite() {
           background: #F5ECD8;
           border-radius: 24px;
           padding: 32px 32px 0;
-          max-width: 1500px; margin: 56px auto 0;
+          max-width: 1200px; margin: 56px auto 0;
           position: relative;
           box-shadow: 0 24px 60px rgba(28, 50, 36, 0.08);
         }
@@ -6476,7 +6465,7 @@ export default function RetaynedSite() {
         }
 
         /* ═══ SECTION SHARED ═══ */
-        .v2-section-inner { max-width: 1600px; margin: 0 auto; }
+        .v2-section-inner { max-width: 1320px; margin: 0 auto; }
         .v2-section-head { max-width: 880px; margin-bottom: 56px; }
         .v2-eyebrow {
           display: inline-block;
@@ -6610,36 +6599,36 @@ export default function RetaynedSite() {
         }
 
         /* ═══ COMBOS ═══ */
-        .v2-section-combos { background: ${C.bg}; padding: 112px 48px; }
-        .v2-combos-head { max-width: 720px; margin: 0 auto 40px; text-align: center; }
+        .v2-section-combos { background: ${C.bg}; padding: 160px 48px; }
+        .v2-combos-head { max-width: 960px; margin: 0 auto 72px; text-align: center; }
         .v2-combos-h2 {
-          font-size: clamp(28px, 4vw, 48px);
-          font-weight: 900; letter-spacing: -0.035em;
-          line-height: 1.05; margin: 14px 0 12px;
+          font-size: clamp(40px, 5.5vw, 72px);
+          font-weight: 900; letter-spacing: -0.04em;
+          line-height: 1.02; margin: 14px 0 16px;
           color: ${C.text};
         }
         .v2-combos-p {
-          font-size: 15px; color: ${C.textSec}; line-height: 1.6;
+          font-size: 18px; color: ${C.textSec}; line-height: 1.6;
         }
         .v2-scroll-band {
-          overflow: hidden; padding: 16px 0; position: relative;
+          overflow: hidden; padding: 32px 0; position: relative;
           -webkit-mask-image: linear-gradient(90deg, transparent 0, black 10%, black 90%, transparent 100%);
           mask-image: linear-gradient(90deg, transparent 0, black 10%, black 90%, transparent 100%);
         }
         .v2-scroll-track {
-          display: flex; gap: 44px; align-items: baseline;
+          display: flex; gap: 72px; align-items: baseline;
           white-space: nowrap; width: max-content;
           padding: 8px 0;
           will-change: transform;
         }
         .v2-become {
           display: flex; align-items: center; justify-content: center;
-          gap: 14px; padding: 24px 0; max-width: 720px; margin: 0 auto;
+          gap: 18px; padding: 40px 0; max-width: 960px; margin: 0 auto;
         }
-        .v2-become-rule { flex: 1; height: 1px; background: ${C.border}; max-width: 260px; }
+        .v2-become-rule { flex: 1; height: 1px; background: ${C.border}; max-width: 360px; }
         .v2-become-word {
-          font-size: 10.5px; font-weight: 700;
-          text-transform: uppercase; letter-spacing: 0.14em;
+          font-size: 13px; font-weight: 700;
+          text-transform: uppercase; letter-spacing: 0.16em;
           color: ${C.textMuted}; white-space: nowrap;
         }
 
@@ -6647,38 +6636,38 @@ export default function RetaynedSite() {
         .v2-wm, .v2-dim { display: inline-block; line-height: 1; }
         .v2-wm-pos { color: rgba(45,134,89,0.9); }
         .v2-wm-neg { color: rgba(196,67,43,0.88); }
-        .v2-wm-bulletproof { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
-        .v2-wm-icewall { font-size: 21px; font-weight: 300; font-family: 'DM Serif Display', serif; font-style: italic; }
-        .v2-wm-lockedvault { font-size: 16px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; }
-        .v2-wm-ontheclock { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
-        .v2-wm-cornerstone { font-size: 22px; font-weight: 400; font-family: 'DM Serif Display', serif; }
-        .v2-wm-silentexit { font-size: 21px; font-weight: 400; font-family: 'DM Serif Display', serif; font-style: italic; }
-        .v2-wm-decisionexpress { font-size: 15px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; }
+        .v2-wm-bulletproof { font-size: 42px; font-weight: 800; letter-spacing: -0.02em; }
+        .v2-wm-icewall { font-size: 38px; font-weight: 300; font-family: 'DM Serif Display', serif; font-style: italic; }
+        .v2-wm-lockedvault { font-size: 28px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; }
+        .v2-wm-ontheclock { font-size: 36px; font-weight: 800; letter-spacing: -0.02em; }
+        .v2-wm-cornerstone { font-size: 40px; font-weight: 400; font-family: 'DM Serif Display', serif; }
+        .v2-wm-silentexit { font-size: 38px; font-weight: 400; font-family: 'DM Serif Display', serif; font-style: italic; }
+        .v2-wm-decisionexpress { font-size: 26px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; }
         .v2-wm-noroom {
-          font-size: 20px; font-weight: 900; letter-spacing: -0.04em;
+          font-size: 36px; font-weight: 900; letter-spacing: -0.04em;
           font-family: 'Arial Narrow', 'Helvetica Neue Condensed', Impact, sans-serif;
           transform: scaleX(0.78); transform-origin: center;
         }
-        .v2-wm-truepartner { font-size: 21px; font-weight: 700; font-family: 'DM Serif Display', serif; }
-        .v2-wm-tickingbomb { font-size: 16px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; }
-        .v2-wm-smoothop { font-size: 22px; font-weight: 300; font-family: 'DM Serif Display', serif; font-style: italic; }
-        .v2-wm-onefoot { font-size: 21px; font-weight: 700; }
-        .v2-wm-allinvestor { font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
-        .v2-wm-powderkeg { font-size: 16px; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
-        .v2-wm-openbook { font-size: 22px; font-weight: 400; font-family: 'DM Serif Display', serif; }
-        .v2-wm-nickeldime { font-size: 19px; font-weight: 400; font-family: 'DM Serif Display', serif; font-style: italic; }
-        .v2-wm-resilient { font-size: 15px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-        .v2-wm-noanchor { font-size: 20px; font-weight: 300; font-family: 'DM Serif Display', serif; font-style: italic; }
-        .v2-wm-lowmaint { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
-        .v2-wm-bottleneck { font-size: 16px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
+        .v2-wm-truepartner { font-size: 38px; font-weight: 700; font-family: 'DM Serif Display', serif; }
+        .v2-wm-tickingbomb { font-size: 28px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; }
+        .v2-wm-smoothop { font-size: 40px; font-weight: 300; font-family: 'DM Serif Display', serif; font-style: italic; }
+        .v2-wm-onefoot { font-size: 38px; font-weight: 700; }
+        .v2-wm-allinvestor { font-size: 34px; font-weight: 800; letter-spacing: -0.01em; }
+        .v2-wm-powderkeg { font-size: 28px; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
+        .v2-wm-openbook { font-size: 40px; font-weight: 400; font-family: 'DM Serif Display', serif; }
+        .v2-wm-nickeldime { font-size: 34px; font-weight: 400; font-family: 'DM Serif Display', serif; font-style: italic; }
+        .v2-wm-resilient { font-size: 26px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+        .v2-wm-noanchor { font-size: 36px; font-weight: 300; font-family: 'DM Serif Display', serif; font-style: italic; }
+        .v2-wm-lowmaint { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; }
+        .v2-wm-bottleneck { font-size: 28px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
 
         .v2-dim { color: rgba(51, 84, 62, 0.7); }
-        .v2-dim-serif { font-size: 26px; font-weight: 400; letter-spacing: -0.02em; font-family: 'DM Serif Display', serif; }
-        .v2-dim-serif-italic { font-size: 26px; font-weight: 400; font-style: italic; font-family: 'DM Serif Display', serif; }
-        .v2-dim-serif-italic-lg { font-size: 28px; font-weight: 400; font-style: italic; font-family: 'DM Serif Display', serif; }
-        .v2-dim-heavy-caps { font-size: 22px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
-        .v2-dim-spaced-lower { font-size: 14px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; }
-        .v2-dim-small-caps { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+        .v2-dim-serif { font-size: 46px; font-weight: 400; letter-spacing: -0.02em; font-family: 'DM Serif Display', serif; }
+        .v2-dim-serif-italic { font-size: 46px; font-weight: 400; font-style: italic; font-family: 'DM Serif Display', serif; }
+        .v2-dim-serif-italic-lg { font-size: 50px; font-weight: 400; font-style: italic; font-family: 'DM Serif Display', serif; }
+        .v2-dim-heavy-caps { font-size: 40px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
+        .v2-dim-spaced-lower { font-size: 24px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; }
+        .v2-dim-small-caps { font-size: 22px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
 
         /* ═══ AUDIENCE ═══ */
         .v2-section-audience { background: ${C.surfaceWarm}; padding: 112px 48px; }
@@ -6706,7 +6695,7 @@ export default function RetaynedSite() {
           padding: 56px 48px;
           display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
           align-items: center;
-          max-width: 1520px; margin: 0 auto;
+          max-width: 1280px; margin: 0 auto;
           box-shadow: 0 24px 48px rgba(28, 50, 36, 0.06);
         }
         .v2-audience-h {
@@ -6813,7 +6802,7 @@ export default function RetaynedSite() {
         /* ═══ FOOTER ═══ */
         .v2-footer { background: ${C.primaryDeep}; color: #fff; padding: 72px 48px 36px; }
         .v2-footer-inner {
-          max-width: 1600px; margin: 0 auto;
+          max-width: 1320px; margin: 0 auto;
           display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
           gap: 40px;
         }
@@ -6837,7 +6826,7 @@ export default function RetaynedSite() {
         }
         .v2-footer-col a:hover { color: #fff; }
         .v2-footer-bottom {
-          max-width: 1600px; margin: 40px auto 0;
+          max-width: 1320px; margin: 40px auto 0;
           padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08);
           font-size: 12px; color: rgba(255,255,255,0.4);
           display: flex; justify-content: space-between;
