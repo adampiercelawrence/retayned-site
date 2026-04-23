@@ -1144,7 +1144,6 @@ function HomeV2({ setPage }) {
               <div key={i} className="v2-rai-step">
                 <div className="v2-rai-step-illustration" style={{ backgroundImage: s.bg }} />
                 <div className="v2-rai-step-content">
-                  <div className="v2-rai-step-num">Step · {s.num}</div>
                   <h3 className="v2-rai-step-h">{s.h}</h3>
                   <p className="v2-rai-step-p">{s.p}</p>
                 </div>
@@ -1332,7 +1331,7 @@ function HomeV2({ setPage }) {
       {/* ══════ AUDIENCE TABS ══════ */}
       <section className="v2-section-audience r-full-bleed">
         <div className="v2-section-inner">
-          <div className="v2-section-head" style={{ textAlign: "center", margin: "0 auto 32px", maxWidth: 820 }}>
+          <div className="v2-section-head" style={{ textAlign: "center", margin: "0 auto 56px", maxWidth: 820 }}>
             <div className="v2-eyebrow">Built for the way you work</div>
             <h2 className="v2-section-h2">Retayned is shaped to your book.</h2>
           </div>
@@ -1585,10 +1584,10 @@ function HomeV2({ setPage }) {
 
       {/* ══════ FINAL CTA ══════ */}
       <section className="v2-section-final r-full-bleed">
-        <h2 className="v2-final-h">
+        <h3 className="v2-final-h v2-final-h-small">
           You work too hard to get new clients.<br />Keep them{" "}
           <span className="v2-caveat-final">Retayned</span>.
-        </h2>
+        </h3>
         <p className="v2-final-sub">See the signal. Get the script. Keep the client.</p>
         <div className="v2-hero-cta-row" style={{ justifyContent: "center" }}>
           <button className="v2-btn-primary-lg cta-btn" onClick={() => setPage("signup")}>Start Free Trial</button>
@@ -6213,6 +6212,7 @@ export default function RetaynedSite() {
         /* V2 — Slite-style homepage                           */
         /* ═══════════════════════════════════════════════════ */
         .v2-root { }
+        .v2-final-h-small { font-size: clamp(28px, 3.5vw, 48px) !important; line-height: 1.05 !important; letter-spacing: -0.03em !important; font-weight: 900 !important; }
 
         /* ═══ Platform portfolio dashboard (right column) ═══ */
         .v2-platform-portfolio {
@@ -6322,7 +6322,7 @@ export default function RetaynedSite() {
           align-items: center; justify-content: center;
           text-align: center;
           min-height: 220px;
-          background: #FFFFFF !important;
+          background: #FAF6EF !important;
         }
         .v2-mix-stat-num {
           font-size: clamp(56px, 7vw, 96px);
@@ -6436,7 +6436,7 @@ export default function RetaynedSite() {
         }
         .v2-hero-device-inner {
           background: #fff;
-          border-radius: 14px 14px 0 0;
+          border-radius: 14px;
           box-shadow: 0 8px 24px rgba(0,0,0,0.04);
           overflow: hidden;
         }
@@ -6609,7 +6609,7 @@ export default function RetaynedSite() {
           background-size: contain;
           background-position: center;
           background-repeat: no-repeat;
-          margin: 0 auto 24px;
+          margin: 0 auto 48px;
         }
         .v2-rai-step-content {
           padding: 0 8px;
@@ -6821,12 +6821,12 @@ export default function RetaynedSite() {
         }
         .v2-audience-tab:hover { color: ${C.text}; }
         .v2-audience-tab-active {
-          background: ${C.primaryLight};
-          color: #fff;
+          background: ${C.primarySoft};
+          color: ${C.primary};
           font-weight: 700;
-          box-shadow: 0 2px 8px rgba(28, 50, 36, 0.12);
+          box-shadow: 0 2px 8px rgba(28, 50, 36, 0.08);
         }
-        .v2-audience-tab-active:hover { color: #fff; }
+        .v2-audience-tab-active:hover { color: ${C.primary}; }
         .v2-audience-content {
           background: #F5ECD8;
           border-radius: 24px;
