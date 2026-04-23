@@ -481,7 +481,7 @@ function Nav({ page, setPage }) {
 // ═══ Footer ═══
 function Footer({ setPage }) {
   return (
-    <footer className="v2-footer">
+    <footer className="v2-footer r-full-bleed r-no-pad">
       <div className="v2-footer-inner">
         <div className="v2-footer-brand">
           <div className="v2-footer-wordmark" onClick={() => setPage("home")} role="button" tabIndex={0}>Retayned.</div>
@@ -1108,27 +1108,48 @@ function HomeV2({ setPage }) {
       </section>
 
       {/* curve: hero (beige) → stats (cream) */}
-      <div className="v2-curve" style={{ background: "#F2EEE8" }}>
+      <div className="v2-curve r-full-bleed r-no-pad" style={{ background: "#F2EEE8" }}>
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,20 Q 720,140 0,30 Z" fill={C.bg} /></svg>
       </div>
 
-      {/* ══════ STATS (90% / 25x / 1+) ══════ */}
-      <section className="v2-section-stats r-full-bleed">
-        <div className="v2-stats-row">
-          <div className="v2-stat">
-            <div className="v2-stat-value"><AnimatedStat value="90" suffix="%" /></div>
-            <div className="v2-stat-label">Of churn is predictable</div>
-          </div>
-          <div className="v2-stat">
-            <div className="v2-stat-value"><AnimatedStat value="25" suffix="x" /></div>
-            <div className="v2-stat-label">Cheaper to retain than acquire</div>
-          </div>
-          <div className="v2-stat">
-            <div className="v2-stat-value"><AnimatedStat value="1" suffix="+" /></div>
-            <div className="v2-stat-label">Saved client pays for itself</div>
-          </div>
+      {/* ══════ STATS (verbatim from live homepage — 90/25/1+) ══════ */}
+      <div className="r-full-bleed" style={{
+        background: `linear-gradient(180deg, ${C.bg} 0%, #8FB89E 50%, ${C.bg} 100%)`,
+        padding: "72px 20px",
+        position: "relative", overflow: "hidden",
+      }}>
+
+        <h2 style={{
+          fontSize: 26, fontWeight: 800, lineHeight: 1.25, textAlign: "center",
+          margin: "0 auto", color: C.text, letterSpacing: "-0.03em", position: "relative", zIndex: 2,
+          maxWidth: 900,
+        }}>
+          A 5% increase in retention can boost profits by 95%.
+          <sup style={{ fontSize: "0.35em", color: C.textMuted, verticalAlign: "super" }}>¹</sup>
+        </h2>
+
+        {/* Fade separator */}
+        <div style={{ width: 120, height: 1, background: `linear-gradient(90deg, transparent, ${C.border}, transparent)`, margin: "28px auto 0", position: "relative", zIndex: 2 }} />
+
+        {/* Stats row */}
+        <div className="r-stats-row" style={{ display: "flex", gap: 16, maxWidth: 1400, margin: "24px auto 0", position: "relative", zIndex: 2 }}>
+          {[
+            { num: "90", suffix: "%", label: "Of churn is predictable" },
+            { num: "25", suffix: "x", label: "Cheaper to retain than acquire" },
+            { num: "1", suffix: "+", label: "Saved client pays for itself" },
+          ].map((s, i) => (
+            <div key={i} style={{ flex: 1, textAlign: "center", padding: "16px 0" }}>
+              <div className="r-stats" style={{
+                fontSize: 48, fontWeight: 900, letterSpacing: "-0.04em",
+                color: C.primary, lineHeight: 1, marginBottom: 6,
+              }}>
+                <AnimatedStat value={s.num} suffix={s.suffix} />
+              </div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".04em" }}>{s.label}</div>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
 
       {/* ══════ MEET RAI ══════ */}
       <section className="v2-section-rai r-full-bleed">
@@ -1168,7 +1189,7 @@ function HomeV2({ setPage }) {
       </section>
 
       {/* curve: rai (cream) → platform (warm) */}
-      <div className="v2-curve" style={{ background: C.bg }}>
+      <div className="v2-curve r-full-bleed r-no-pad" style={{ background: C.bg }}>
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,30 C 1080,-20 360,140 0,25 Z" fill="#EAE4D6" /></svg>
       </div>
 
@@ -1216,7 +1237,7 @@ function HomeV2({ setPage }) {
       </section>
 
       {/* curve: platform (warm) → combos (cream) */}
-      <div className="v2-curve" style={{ background: "#EAE4D6" }}>
+      <div className="v2-curve r-full-bleed r-no-pad" style={{ background: "#EAE4D6" }}>
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,30 Q 720,-30 0,25 Z" fill={C.bg} /></svg>
       </div>
 
@@ -1436,7 +1457,7 @@ function HomeV2({ setPage }) {
 
 
       {/* curve: combos (cream) → audience (warm) */}
-      <div className="v2-curve" style={{ background: C.bg }}>
+      <div className="v2-curve r-full-bleed r-no-pad" style={{ background: C.bg }}>
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,30 C 1100,140 340,-30 0,35 Z" fill="#EAE4D6" /></svg>
       </div>
 
@@ -1482,7 +1503,7 @@ function HomeV2({ setPage }) {
       </section>
 
       {/* curve: audience (warm) → enterprise (deep green) */}
-      <div className="v2-curve" style={{ background: "#EAE4D6" }}>
+      <div className="v2-curve r-full-bleed r-no-pad" style={{ background: "#EAE4D6" }}>
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,25 Q 720,140 0,20 Z" fill={C.primaryDeep} /></svg>
       </div>
 
@@ -1597,7 +1618,7 @@ function HomeV2({ setPage }) {
 
 
       {/* curve: enterprise (deep green) → final (beige) */}
-      <div className="v2-curve" style={{ background: C.primaryDeep }}>
+      <div className="v2-curve r-full-bleed r-no-pad" style={{ background: C.primaryDeep }}>
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,25 C 1080,-30 360,140 0,20 Z" fill="#F2EEE8" /></svg>
       </div>
 
