@@ -963,6 +963,26 @@ function HomeV2({ setPage }) {
   const [activeTab, setActiveTab] = useState(1);
   const [expandedText, setExpandedText] = useState(false);
 
+  // Spaceship scroll-trigger: add .animate when Final CTA enters viewport
+  const finalCtaRef = useRef(null);
+  useEffect(() => {
+    const el = finalCtaRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            el.classList.add("v2-final-animate");
+            obs.disconnect();
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   const homeTabs = [
     { id: "today", label: "Today", icon: "◉", headline: "One page. Every priority.", sub: "Your Today tab knows which clients need you most — right now. Tasks are sorted by an invisible priority engine that weighs relationship health against business value. Green clients surface first. At-risk clients with high revenue jump the line." },
     { id: "scoring", label: "Retention Score", icon: "◎", headline: "A number that means something.", sub: "12 dimensions. 20 combination signals. Health check modifiers. Every client gets a Retention Score from 1–99 that tells you exactly where the relationship stands — not where you hope it is." },
@@ -1583,7 +1603,50 @@ function HomeV2({ setPage }) {
       </section>
 
       {/* ══════ FINAL CTA ══════ */}
-      <section className="v2-section-final r-full-bleed">
+      <section className="v2-section-final v2-final-animated r-full-bleed" ref={finalCtaRef}>
+        {/* Spaceship animation layer */}
+        <div className="v2-ship-wrapper" aria-hidden="true">
+          <svg className="v2-ship-svg" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMid meet">
+            {/* Dashed trail: bottom-left corner → upper right edge */}
+            <path className="v2-ship-trail"
+              d="M80 340 Q320 320 560 280 Q800 240 1040 180 Q1200 140 1340 100"
+              fill="none" stroke="#558B68" strokeWidth="3"
+              strokeLinecap="round" strokeLinejoin="round"
+              strokeDasharray="4 10" />
+            {/* Start dot */}
+            <circle cx="80" cy="340" r="4" fill="#558B68" stroke="#2F2F31" strokeWidth="1.4" />
+            {/* Spaceship — positioned at the right edge */}
+            <g className="v2-ship-body" transform="translate(1360 90) rotate(-14) scale(1.6)">
+              <path d="M-38 6 Q-54 0 -38 -6 Q-30 0 -38 6 Z" fill="#558B68" stroke="#2F2F31" strokeWidth="1.4" strokeLinejoin="round"/>
+              <path d="M-32 3 Q-44 0 -32 -3 Q-26 0 -32 3 Z" fill="#FCFCFE" stroke="#2F2F31" strokeWidth="1"/>
+              <ellipse cx="0" cy="6" rx="34" ry="10" fill="#FCFCFE" stroke="#2F2F31" strokeWidth="2" strokeLinejoin="round"/>
+              <path d="M-28 10 Q0 18 28 10" fill="none" stroke="#2F2F31" strokeWidth="1.4" strokeLinecap="round"/>
+              <circle cx="-18" cy="11" r="2" fill="#558B68" stroke="#2F2F31" strokeWidth="1"/>
+              <circle cx="0" cy="12" r="2" fill="#FCFCFE" stroke="#2F2F31" strokeWidth="1"/>
+              <circle cx="18" cy="11" r="2" fill="#558B68" stroke="#2F2F31" strokeWidth="1"/>
+              <path d="M-16 -2 Q-16 -18 0 -20 Q16 -18 16 -2 Z" fill="#558B68" stroke="#2F2F31" strokeWidth="2" strokeLinejoin="round"/>
+              <path d="M-10 -6 Q-12 -14 -2 -16" fill="none" stroke="#FCFCFE" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
+              <ellipse cx="0" cy="-2" rx="16" ry="3" fill="none" stroke="#2F2F31" strokeWidth="1.4"/>
+              <ellipse cx="0" cy="-9" rx="9" ry="8" fill="#FCFCFE" stroke="#2F2F31" strokeWidth="1.6"/>
+              <ellipse cx="0" cy="-9" rx="5" ry="5.6" fill="#2F2F31"/>
+              <circle cx="-1.6" cy="-11" r="1.4" fill="#FCFCFE"/>
+              <circle cx="1.8" cy="-7.6" r="0.7" fill="#FCFCFE"/>
+              <path d="M0 -17 Q-2 -21 1 -24" fill="none" stroke="#2F2F31" strokeWidth="1.4" strokeLinecap="round"/>
+              <circle cx="1.4" cy="-25" r="1.8" fill="#558B68" stroke="#2F2F31" strokeWidth="1.2"/>
+              <circle cx="6" cy="-7" r="0.8" fill="#2F2F31" opacity="0.5"/>
+              <path d="M4 -4 Q6 -2 8 -4" fill="none" stroke="#2F2F31" strokeWidth="1.2" strokeLinecap="round"/>
+              <g transform="translate(11 -6) rotate(20)">
+                <path d="M0 0 L0 -7" stroke="#2F2F31" strokeWidth="1.6" strokeLinecap="round"/>
+                <circle cx="0" cy="-8.5" r="2.2" fill="#FCFCFE" stroke="#2F2F31" strokeWidth="1.4"/>
+              </g>
+              <g stroke="#2F2F31" strokeWidth="1.4" strokeLinecap="round" fill="none" opacity="0.8">
+                <line x1="-40" y1="-10" x2="-48" y2="-14"/>
+                <line x1="-36" y1="-16" x2="-44" y2="-22"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+
         <h3 className="v2-final-h v2-final-h-small">
           You work too hard to get new clients.<br />Keep them{" "}
           <span className="v2-caveat-final">Retayned</span>.
@@ -6214,6 +6277,46 @@ export default function RetaynedSite() {
         .v2-root { }
         .v2-final-h-small { font-size: clamp(28px, 3.5vw, 48px) !important; line-height: 1.05 !important; letter-spacing: -0.03em !important; font-weight: 900 !important; }
 
+        /* ═══ Final CTA spaceship animation ═══ */
+        .v2-section-final { position: relative; overflow: hidden; }
+        .v2-section-final > *:not(.v2-ship-wrapper) { position: relative; z-index: 2; }
+        .v2-ship-wrapper {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 1;
+        }
+        .v2-ship-svg {
+          width: 100%;
+          height: 100%;
+          display: block;
+          overflow: visible;
+        }
+        /* Resting state: trail hidden, ship hidden and offset */
+        .v2-ship-trail {
+          stroke-dasharray: 1800;
+          stroke-dashoffset: 1800;
+        }
+        .v2-ship-body {
+          opacity: 0;
+          transform-box: fill-box;
+          transform-origin: center;
+        }
+        /* Animated state (added by IntersectionObserver) */
+        .v2-final-animate .v2-ship-trail {
+          animation: shipTrailDraw 2.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .v2-final-animate .v2-ship-body {
+          animation: shipBodyFadeIn 0.8s ease-out 1.8s forwards;
+        }
+        @keyframes shipTrailDraw {
+          to { stroke-dashoffset: 0; }
+        }
+        @keyframes shipBodyFadeIn {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+
         /* ═══ Platform portfolio dashboard (right column) ═══ */
         .v2-platform-portfolio {
           background: ${C.card};
@@ -7006,7 +7109,7 @@ export default function RetaynedSite() {
       <Nav page={page} setPage={setPage} />
       <div style={{ overflowX: "hidden" }}>
       <div className="r-wrap">
-        {page === "home" && ((typeof window !== "undefined" && new URLSearchParams(window.location.search).get("new") === "1") ? <HomeV2 setPage={setPage} /> : <Home setPage={setPage} />)}
+        {page === "home" && ((typeof window !== "undefined" && new URLSearchParams(window.location.search).get("old") === "1") ? <Home setPage={setPage} /> : <HomeV2 setPage={setPage} />)}
         {page === "platform" && <Platform setPage={setPage} />}
         {page === "freelancers" && <Freelancers setPage={setPage} />}
         {page === "agencies" && <Agencies setPage={setPage} />}
