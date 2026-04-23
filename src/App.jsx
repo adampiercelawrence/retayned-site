@@ -1132,7 +1132,7 @@ function HomeV2({ setPage }) {
         <div style={{ width: 120, height: 1, background: `linear-gradient(90deg, transparent, ${C.border}, transparent)`, margin: "40px auto 0", position: "relative", zIndex: 2 }} />
 
         {/* Stats row — hero-scale, wider separation */}
-        <div className="r-stats-row" style={{ display: "flex", gap: 80, maxWidth: 1600, margin: "56px auto 0", position: "relative", zIndex: 2 }}>
+        <div className="r-stats-row" style={{ display: "flex", gap: 48, maxWidth: 1600, margin: "56px auto 0", position: "relative", zIndex: 2 }}>
           {[
             { num: "90", suffix: "%", label: "Of churn is predictable" },
             { num: "25", suffix: "x", label: "Cheaper to retain than acquire" },
@@ -1208,126 +1208,35 @@ function HomeV2({ setPage }) {
                 <div className="v2-bullet"><div className="v2-check">✓</div><div><strong>Your Rolodex is future revenue</strong> — former clients become re-engagement opportunities, not dead weight.</div></div>
               </div>
             </div>
-            <div className="v2-device-frame">
-              <div className="v2-device-screen">
-                <h4 className="v2-score-label">Retention Score · Meridian Co.</h4>
-                <div className="v2-score-gauge">
-                  <div className="v2-score-number">78</div>
-                  <div className="v2-score-arch">
-                    <div className="v2-score-bar"><div className="v2-score-fill" /></div>
-                    <div className="v2-score-range"><span>At risk</span><span>Strong</span></div>
-                  </div>
-                </div>
-                <div style={{ marginTop: 20, paddingTop: 18, borderTop: "1px solid " + C.borderLight }}>
-                  <h4 className="v2-score-label" style={{ marginBottom: 10 }}>Signals detected</h4>
-                  <div className="v2-score-combos">
-                    <span className="v2-combo-pill">Bulletproof</span>
-                    <span className="v2-combo-pill">True Partner</span>
-                    <span className="v2-combo-pill">Cornerstone</span>
-                    <span className="v2-combo-pill v2-combo-pill-neg">One Foot Out</span>
-                  </div>
-                </div>
-                <div className="v2-score-rai">
-                  <strong>Rai:</strong> Strong fundamentals, but watch the recent drift on response latency.
-                </div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+              {/* Tab bar — warm cream bg, not gray */}
+              <div className="r-tab-bar-wrap" style={{
+                display: "flex", gap: 4, background: "#F5ECD8", borderRadius: 12,
+                padding: 5, overflowX: "auto", maxWidth: 620,
+                margin: "0 auto 28px", WebkitOverflowScrolling: "touch",
+                boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.04)",
+              }}>
+                {homeTabs.map((feat, i) => (
+                  <button
+                    key={feat.id}
+                    className="r-tab-pill r-tab-btn"
+                    data-active={i === activeTab}
+                    onClick={() => { setActiveTab(i); setExpandedText(false); }}
+                    style={{
+                      background: i === activeTab ? C.card : "transparent",
+                      color: i === activeTab ? C.primary : C.textMuted,
+                      fontWeight: i === activeTab ? 700 : 500,
+                      boxShadow: i === activeTab ? "0 2px 12px rgba(0,0,0,0.06)" : "none",
+                    }}
+                  >
+                    <span style={{ marginRight: 4, opacity: i === activeTab ? 1 : 0.5 }}>{feat.icon}</span>
+                    {feat.label}
+                  </button>
+                ))}
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* curve: platform (warm) → combos (cream) */}
-      <div className="v2-curve r-full-bleed r-no-pad" style={{ background: "#EAE4D6" }}>
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,30 Q 720,-30 0,25 Z" fill={C.bg} /></svg>
-      </div>
-
-      {/* ══════ COMBOS — flowing wordmark tapestry ══════ */}
-      <section className="v2-section-combos r-full-bleed">
-        <div className="v2-combos-head">
-          <div className="v2-eyebrow">More than AI</div>
-          <h2 className="v2-combos-h2">Proprietary scoring combinations that predict and prevent churn.</h2>
-          <p className="v2-combos-p">Twelve dimensions. Twenty combinations. Every client, every day.</p>
-        </div>
-        <V2ScrollBand items={dimensions} direction="left" speed={28} />
-        <div className="v2-become">
-          <span className="v2-become-rule" />
-          <span className="v2-become-word">Become</span>
-          <span className="v2-become-rule" />
-        </div>
-        <V2ScrollBand items={combinations} direction="right" speed={32} />
-      </section>
-
-      {/* ════ FEATURE TABS (preserved from old Home — to evaluate / decide) ════ */}
-        {/* ══════════════ FEATURE TABS ══════════════ */}
-        <section className="r-feat-section r-full-bleed" style={{ padding: "64px 20px 64px" }}>
-          <Reveal>
-            <div className="r-section-head" style={{ textAlign: "center", marginBottom: 56, maxWidth: 880, marginLeft: "auto", marginRight: "auto" }}>
-              <h2 style={{ fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.02, marginBottom: 20 }}>
-                The tools you need to keep clients.
-              </h2>
-              <p style={{ fontSize: 18, color: C.textSec, maxWidth: 640, margin: "0 auto", lineHeight: 1.6 }}>
-                A CRM you won't hate using built for client retention. Your clients won't know it exists. They just won't leave.
-              </p>
-            </div>
-          </Reveal>
-
-          {/* Tab bar */}
-          <div className="r-tab-bar-wrap" style={{
-            display: "flex", gap: 4, background: C.surface, borderRadius: 12,
-            padding: 5, overflowX: "auto", maxWidth: 740,
-            margin: "0 auto 40px", WebkitOverflowScrolling: "touch",
-          }}>
-            {homeTabs.map((feat, i) => (
-              <button
-                key={feat.id}
-                className="r-tab-pill r-tab-btn"
-                data-active={i === activeTab}
-                onClick={() => { setActiveTab(i); setExpandedText(false); }}
-                style={{
-                  background: i === activeTab ? C.card : "transparent",
-                  color: i === activeTab ? C.primary : C.textMuted,
-                  fontWeight: i === activeTab ? 700 : 500,
-                  boxShadow: i === activeTab ? "0 2px 12px rgba(0,0,0,0.06)" : "none",
-                }}
-              >
-                <span style={{ marginRight: 4, opacity: i === activeTab ? 1 : 0.5 }}>{feat.icon}</span>
-                {feat.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Feature content */}
-          {/* Mobile: headline → mockup → description + CTAs */}
-          {/* Desktop: left (headline + desc + CTAs) | right (mockup) */}
-          <div className="r-feat-heading-mobile" style={{ display: "none", maxWidth: 1000, margin: "0 auto 16px" }}>
-            <h3 style={{ fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.05 }}>{ht.headline}</h3>
-          </div>
-          <div className="r-feat-content" style={{
-            display: "flex", flexWrap: "wrap", gap: 48,
-            alignItems: "flex-start", maxWidth: 1000, margin: "0 auto",
-          }}>
-            {/* Left: copy */}
-            <div style={{ flex: "1 1 340px" }}>
-              <h3 className="r-feat-heading-desktop" style={{
-                fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.05,
-                marginBottom: 18,
-              }}>{ht.headline}</h3>
-              <p style={{
-                fontSize: 15, color: C.textSec, lineHeight: 1.75, marginBottom: 28,
-              }}>{ht.sub}</p>
-              <div style={{ display: "flex", gap: 12 }}>
-                <button className="r-hero-cta" onClick={() => setPage("signup")} style={{ padding: "13px 26px", fontSize: 14 }}>
-                  Try Free Now 
-                </button>
-                <button className="r-ghost-cta" onClick={() => setPage("platform")} style={{ padding: "13px 26px", fontSize: 14 }}>
-                  See All Features
-                </button>
-              </div>
-            </div>
-
-            {/* Right: visual mockup */}
-            <div style={{ flex: "1 1 360px" }}>
-              <div key={ht.id} style={{ animation: "fadeInScale 0.35s ease" }}>
+              {/* Mockup — centered, switches by active tab */}
+              <div key={ht.id} style={{ animation: "fadeInScale 0.35s ease", width: "100%", maxWidth: 560 }}>
                 {ht.id === "today" && <TodayDemo />}
                 {ht.id === "scoring" && (
                   <div className="r-mockup-card">
@@ -1451,9 +1360,40 @@ function HomeV2({ setPage }) {
                   </div>
                 )}
               </div>
+
+              {/* CTAs below mockup, centered */}
+              <div style={{ display: "flex", gap: 12, marginTop: 24, justifyContent: "center" }}>
+                <button className="r-hero-cta" onClick={() => setPage("signup")} style={{ padding: "13px 26px", fontSize: 14 }}>Try Free Now</button>
+                <button className="r-ghost-cta" onClick={() => setPage("platform")} style={{ padding: "13px 26px", fontSize: 14 }}>See All Features</button>
+              </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
+
+      {/* curve: platform (warm) → combos (cream) */}
+      <div className="v2-curve r-full-bleed r-no-pad" style={{ background: "#EAE4D6" }}>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,30 Q 720,-30 0,25 Z" fill={C.bg} /></svg>
+      </div>
+
+      {/* ══════ COMBOS — flowing wordmark tapestry ══════ */}
+      <section className="v2-section-combos r-full-bleed">
+        <div className="v2-combos-head">
+          <div className="v2-eyebrow">More than AI</div>
+          <h2 className="v2-combos-h2">Proprietary scoring combinations that predict and prevent churn.</h2>
+          <p className="v2-combos-p">Twelve dimensions. Twenty combinations. Every client, every day.</p>
+        </div>
+        <V2ScrollBand items={dimensions} direction="left" speed={28} />
+        <div className="v2-become">
+          <span className="v2-become-rule" />
+          <span className="v2-become-word">Become</span>
+          <span className="v2-become-rule" />
+        </div>
+        <V2ScrollBand items={combinations} direction="right" speed={32} />
+      </section>
+
+      {/* ════ FEATURE TABS (preserved from old Home — to evaluate / decide) ════ */}
+        {/* ══════════════ FEATURE TABS ══════════════ */}
 
 
       {/* curve: combos (cream) → audience (warm) */}
@@ -1621,6 +1561,61 @@ function HomeV2({ setPage }) {
       <div className="v2-curve r-full-bleed r-no-pad" style={{ background: C.primaryDeep }}>
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,25 C 1080,-30 360,140 0,20 Z" fill="#F2EEE8" /></svg>
       </div>
+
+      {/* ══════ TESTIMONIALS (ported from live homepage, warm cream bg) ══════ */}
+      <section className="r-full-bleed" style={{
+        background: C.surfaceWarm,
+        padding: "112px 48px",
+      }}>
+        <div style={{ maxWidth: 880, margin: "0 auto 56px", textAlign: "center" }}>
+          <h2 className="v2-section-h2" style={{ fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.02, marginBottom: 16 }}>
+            What folks are saying.
+          </h2>
+          <p style={{ fontSize: 18, color: C.textSec, lineHeight: 1.6 }}>
+            From our own Retayned business.
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, maxWidth: 1320, margin: "0 auto" }} className="v2-testimonials-grid">
+          {[
+            { quote: "I used to lose 2-3 clients a year and just accept it as cost of doing business. Retayned showed me an actual pattern. It was the same signs every time and we just ignored them. Not anymore!", name: "Agency Owner", role: "50+ Clients", initials: "MK", color: C.primaryLight },
+            { quote: "It gave me the exact words to say to a client I was about to lose. I had the conversation that afternoon. They're still with me 8 months later. I'm still with Retayned.", name: "Freelancer", role: "1-5 Clients", initials: "JR", color: C.btn },
+            { quote: "The health check questions are uncomfortable in the best way. They force you to admit what you already know but haven't said out loud. It's something we thought we'd use for crises and it's turned into our daily operations hub.", name: "Consultant", role: "10-50 Clients", initials: null, color: "#92A596", beta: true },
+          ].map((t, i) => (
+            <div key={i} className="r-testimonial-card" style={{
+              background: C.card,
+              border: "1px solid " + C.borderLight,
+              borderRadius: 16,
+              padding: 28,
+              display: "flex", flexDirection: "column",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.03)",
+            }}>
+              <div style={{ display: "flex", gap: 2, marginBottom: 18 }}>
+                {Array(5).fill(0).map((_, j) => (
+                  <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>
+                ))}
+              </div>
+              <p style={{ fontSize: 16, color: C.text, lineHeight: 1.65, marginBottom: 24, fontStyle: "italic", flex: 1 }}>"{t.quote}"</p>
+              <div style={{ borderTop: "1px solid " + C.borderLight, paddingTop: 16, display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 44, height: 44, borderRadius: "50%", background: t.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  {t.initials ? (
+                    <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>{t.initials}</span>
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  )}
+                </div>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ fontSize: 15, fontWeight: 700, color: C.text }}>{t.name}</span>
+                    {t.beta && <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 4, background: C.primarySoft, color: C.primary, textTransform: "uppercase", letterSpacing: ".04em" }}>From our beta</span>}
+                  </div>
+                  <div style={{ fontSize: 13, color: C.textMuted, marginTop: 2 }}>{t.role}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* ══════ FINAL CTA ══════ */}
       <section className="v2-section-final r-full-bleed">
@@ -6264,6 +6259,7 @@ export default function RetaynedSite() {
           overflow: hidden;
         }
         .v2-hero-inner { max-width: 1320px; margin: 0 auto; }
+        @keyframes subtleBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
         .v2-trust-pill {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 6px 14px; border-radius: 100px;
@@ -6273,6 +6269,7 @@ export default function RetaynedSite() {
           font-size: 13px; font-weight: 600;
           color: ${C.text};
           margin-bottom: 28px;
+          animation: subtleBob 4s ease-in-out infinite;
         }
         .v2-trust-dot { width: 6px; height: 6px; border-radius: 50%; background: ${C.success}; }
         .v2-hero-h1 {
