@@ -1132,14 +1132,14 @@ function HomeV2({ setPage }) {
         <div style={{ width: 120, height: 1, background: `linear-gradient(90deg, transparent, ${C.border}, transparent)`, margin: "40px auto 0", position: "relative", zIndex: 2 }} />
 
         {/* Stats row — hero-scale, wider separation */}
-        <div className="r-stats-row" style={{ display: "flex", gap: 48, maxWidth: 1600, margin: "56px auto 0", position: "relative", zIndex: 2 }}>
+        <div style={{ display: "flex", gap: 48, maxWidth: 1600, margin: "56px auto 0", position: "relative", zIndex: 2 }}>
           {[
             { num: "90", suffix: "%", label: "Of churn is predictable" },
             { num: "25", suffix: "x", label: "Cheaper to retain than acquire" },
             { num: "1", suffix: "+", label: "Saved client pays for itself" },
           ].map((s, i) => (
             <div key={i} style={{ flex: 1, textAlign: "center", padding: "16px 0" }}>
-              <div className="r-stats" style={{
+              <div style={{
                 fontSize: "clamp(56px, 7vw, 96px)", fontWeight: 900, letterSpacing: "-0.045em",
                 color: C.primary, lineHeight: 1, marginBottom: 14,
               }}>
@@ -1208,163 +1208,28 @@ function HomeV2({ setPage }) {
                 <div className="v2-bullet"><div className="v2-check">✓</div><div><strong>Your Rolodex is future revenue</strong> — former clients become re-engagement opportunities, not dead weight.</div></div>
               </div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-              {/* Tab bar — warm cream bg, not gray */}
-              <div className="r-tab-bar-wrap" style={{
-                display: "flex", gap: 4, background: "#F5ECD8", borderRadius: 12,
-                padding: 5, overflowX: "auto", maxWidth: 620,
-                margin: "0 auto 28px", WebkitOverflowScrolling: "touch",
-                boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.04)",
-              }}>
-                {homeTabs.map((feat, i) => (
-                  <button
-                    key={feat.id}
-                    className="r-tab-pill r-tab-btn"
-                    data-active={i === activeTab}
-                    onClick={() => { setActiveTab(i); setExpandedText(false); }}
-                    style={{
-                      background: i === activeTab ? C.card : "transparent",
-                      color: i === activeTab ? C.primary : C.textMuted,
-                      fontWeight: i === activeTab ? 700 : 500,
-                      boxShadow: i === activeTab ? "0 2px 12px rgba(0,0,0,0.06)" : "none",
-                    }}
-                  >
-                    <span style={{ marginRight: 4, opacity: i === activeTab ? 1 : 0.5 }}>{feat.icon}</span>
-                    {feat.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Mockup — centered, switches by active tab */}
-              <div key={ht.id} style={{ animation: "fadeInScale 0.35s ease", width: "100%", maxWidth: 560 }}>
-                {ht.id === "today" && <TodayDemo />}
-                {ht.id === "scoring" && (
-                  <div className="r-mockup-card">
-                    <div style={{ textAlign: "center", marginBottom: 20 }}>
-                      <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 10 }}>Retention Score</div>
-                      <div style={{ width: 88, height: 88, borderRadius: "50%", background: "linear-gradient(135deg, #FEF3C7, #FDE68A)", border: "3px solid #92400E20", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
-                        <span style={{ fontSize: 36, fontWeight: 900, color: "#92400E", fontFamily: "inherit" }}>67</span>
-                      </div>
-                      <div style={{ fontWeight: 700, fontSize: 14, marginTop: 8 }}>Broadleaf Media</div>
-                      <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>Rachel Chen · Account Lead</div>
-                    </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
-                      {[["Trust", 6, C.warning], ["Loyalty", 7, C.primaryLight], ["Expectations", 7, C.primaryLight], ["Grace", 5, C.warning]].map(([name, val, color]) => (
-                        <div key={name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 12px", background: C.bg, borderRadius: 8, fontSize: 13 }}>
-                          <span style={{ color: C.textMuted }}>{name}</span>
-                          <span style={{ fontWeight: 800, color, fontFamily: "inherit" }}>{val}/10</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div style={{ marginTop: 12, display: "flex", gap: 6 }}>
-                      <div style={{ flex: 1, padding: "6px 10px", background: "#FEE2E2", borderRadius: 8, fontSize: 11, color: "#991B1B", fontWeight: 700, textAlign: "center" }}>No room to operate</div>
-                      <div style={{ flex: 1, padding: "6px 10px", background: "#FEF3C7", borderRadius: 8, fontSize: 11, color: "#92400E", fontWeight: 700, textAlign: "center" }}>Ice wall</div>
-                    </div>
+            <div className="v2-device-frame">
+              <div className="v2-device-screen">
+                <h4 className="v2-score-label">Retention Score · Meridian Co.</h4>
+                <div className="v2-score-gauge">
+                  <div className="v2-score-number">78</div>
+                  <div className="v2-score-arch">
+                    <div className="v2-score-bar"><div className="v2-score-fill" /></div>
+                    <div className="v2-score-range"><span>At risk</span><span>Strong</span></div>
                   </div>
-                )}
-                {ht.id === "health" && (
-                  <div className="r-mockup-card">
-                    <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Health Check — Broadleaf Media</div>
-                    <div style={{ display: "flex", gap: 5, marginBottom: 16 }}>
-                      {[1,2,3,4,5].map(i => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= 2 ? C.primary : C.borderLight, transition: "background 0.3s" }} />)}
-                    </div>
-                    <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Has anything changed with this relationship?</p>
-                    {["Nothing — same as always", "Something minor, could be nothing", "Noticeably different from before", "Something has clearly changed"].map((opt, i) => (
-                      <div key={i} style={{
-                        padding: "12px 16px", borderRadius: 10, marginBottom: 5,
-                        background: i === 2 ? C.primarySoft : C.bg,
-                        border: "1.5px solid " + (i === 2 ? C.primary : C.borderLight),
-                        fontSize: 14, color: i === 2 ? C.primary : C.textSec,
-                        fontWeight: i === 2 ? 600 : 400,
-                        cursor: "pointer", transition: "all 0.15s",
-                      }}>{opt}</div>
-                    ))}
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
-                      <span style={{ fontSize: 12, color: C.textMuted }}>2 of 5</span>
-                      <div style={{ padding: "8px 20px", background: C.primary, color: "#fff", borderRadius: 8, fontWeight: 600, fontSize: 13 }}>Next</div>
-                    </div>
+                </div>
+                <div style={{ marginTop: 20, paddingTop: 18, borderTop: "1px solid " + C.borderLight }}>
+                  <h4 className="v2-score-label" style={{ marginBottom: 10 }}>Signals detected</h4>
+                  <div className="v2-score-combos">
+                    <span className="v2-combo-pill">Bulletproof</span>
+                    <span className="v2-combo-pill">True Partner</span>
+                    <span className="v2-combo-pill">Cornerstone</span>
+                    <span className="v2-combo-pill v2-combo-pill-neg">One Foot Out</span>
                   </div>
-                )}
-                {ht.id === "rai" && (
-                  <div className="r-mockup-card">
-                    <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Talk to Rai</div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                      <div style={{ alignSelf: "flex-end", maxWidth: "78%", padding: "12px 16px", background: C.primary, color: "#fff", borderRadius: "14px 14px 4px 14px", fontSize: 14, lineHeight: 1.55 }}>
-                        Rachel at Broadleaf has been different lately. What should I do?
-                      </div>
-                      <div style={{ alignSelf: "flex-start", maxWidth: "88%", padding: "14px 16px", background: C.bg, borderRadius: "14px 14px 14px 4px", fontSize: 14, lineHeight: 1.65, border: "1px solid " + C.borderLight }}>
-                        <div style={{ fontWeight: 800, color: C.primary, marginBottom: 6, fontSize: 11, letterSpacing: "0.04em", textTransform: "uppercase" }}>✦ Rai</div>
-                        Rachel's score dropped from 78 to 67 over two check-ins. The "No room to operate" combo just triggered — low trust combined with low grace. <strong>Call her. Not email.</strong> Ask directly: "I've noticed things feel different. What's on your mind?"
-                      </div>
-                      <div style={{ alignSelf: "flex-start", maxWidth: "80%", padding: "10px 14px", background: C.primarySoft, borderRadius: "14px 14px 14px 4px", fontSize: 13, color: C.primary, fontStyle: "italic", border: "1px solid " + C.primarySoft }}>
-                        I've flagged a profile re-evaluation for Broadleaf. Want me to queue that up?
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {ht.id === "rolodex" && (
-                  <div className="r-mockup-card">
-                    <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Rolodex</div>
-                    {[
-                      { name: "Maplewood Agency", type: "Former", months: "14mo together", tags: ["Would refer", "Would come back"], priority: "high" },
-                      { name: "Clearpoint Digital", type: "One-off", months: "Site audit", tags: ["Would refer"], priority: "medium" },
-                      { name: "Harlow & Associates", type: "Former", months: "8mo together", tags: ["Would come back"], priority: "high" },
-                    ].map((r, i) => (
-                      <div key={i} style={{ padding: "13px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                          <div>
-                            <span style={{ fontWeight: 700, fontSize: 14 }}>{r.name}</span>
-                            <span style={{ fontSize: 12, color: C.textMuted, marginLeft: 8 }}>{r.type} · {r.months}</span>
-                          </div>
-                          <div style={{ width: 8, height: 8, borderRadius: "50%", background: r.priority === "high" ? C.success : C.warning }} />
-                        </div>
-                        <div style={{ display: "flex", gap: 5 }}>
-                          {r.tags.map(t => (
-                            <span key={t} style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 6, background: C.primarySoft, color: C.primary }}>{t}</span>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                    <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>3 re-engagement opportunities</div>
-                  </div>
-                )}
-                {ht.id === "referrals" && (
-                  <div className="r-mockup-card">
-                    <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Referral Intelligence</div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 18 }}>
-                      {[["Total", "7"], ["Converted", "4"], ["Revenue", "$18.4k"]].map(([label, val]) => (
-                        <div key={label} style={{ background: C.bg, borderRadius: 10, padding: 12, textAlign: "center" }}>
-                          <div style={{ fontSize: 22, fontWeight: 900, color: C.primary, fontFamily: "inherit" }}>{val}</div>
-                          <div style={{ fontSize: 10, color: C.textMuted, marginTop: 3 }}>{label}</div>
-                        </div>
-                      ))}
-                    </div>
-                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10 }}>Ready to refer</div>
-                    {[
-                      { name: "Northvane Studios", readiness: 94, contact: "Sarah Chen" },
-                      { name: "Oakline Outdoors", readiness: 76, contact: "James Park" },
-                    ].map((r, i) => (
-                      <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 0", borderTop: "1px solid " + C.borderLight }}>
-                        <div>
-                          <span style={{ fontWeight: 600, fontSize: 14 }}>{r.name}</span>
-                          <span style={{ fontSize: 12, color: C.textMuted, marginLeft: 8 }}>{r.contact}</span>
-                        </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <div style={{ width: 52, height: 5, borderRadius: 3, background: C.borderLight, overflow: "hidden" }}>
-                            <div style={{ width: `${r.readiness}%`, height: "100%", background: `linear-gradient(90deg, ${C.primaryLight}, ${C.success})`, borderRadius: 3 }} />
-                          </div>
-                          <span style={{ fontSize: 12, fontWeight: 800, color: C.success }}>{r.readiness}%</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* CTAs below mockup, centered */}
-              <div style={{ display: "flex", gap: 12, marginTop: 24, justifyContent: "center" }}>
-                <button className="r-hero-cta" onClick={() => setPage("signup")} style={{ padding: "13px 26px", fontSize: 14 }}>Try Free Now</button>
-                <button className="r-ghost-cta" onClick={() => setPage("platform")} style={{ padding: "13px 26px", fontSize: 14 }}>See All Features</button>
+                </div>
+                <div className="v2-score-rai">
+                  <strong>Rai:</strong> Strong fundamentals, but watch the recent drift on response latency.
+                </div>
               </div>
             </div>
           </div>
@@ -1568,9 +1433,9 @@ function HomeV2({ setPage }) {
         padding: "112px 48px",
       }}>
         <div style={{ maxWidth: 880, margin: "0 auto 56px", textAlign: "center" }}>
-          <h2 className="v2-section-h2" style={{ fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.02, marginBottom: 16 }}>
+          <h3 style={{ fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.05, marginBottom: 16 }}>
             What folks are saying.
-          </h2>
+          </h3>
           <p style={{ fontSize: 18, color: C.textSec, lineHeight: 1.6 }}>
             From our own Retayned business.
           </p>
