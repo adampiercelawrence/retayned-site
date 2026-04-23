@@ -1112,23 +1112,44 @@ function HomeV2({ setPage }) {
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,20 Q 720,140 0,30 Z" fill={C.bg} /></svg>
       </div>
 
-      {/* ══════ STATS (90% / 25x / 1+) ══════ */}
-      <section className="v2-section-stats r-full-bleed">
-        <div className="v2-stats-row">
-          <div className="v2-stat">
-            <div className="v2-stat-value"><AnimatedStat value="90" suffix="%" /></div>
-            <div className="v2-stat-label">Of churn is predictable</div>
-          </div>
-          <div className="v2-stat">
-            <div className="v2-stat-value"><AnimatedStat value="25" suffix="x" /></div>
-            <div className="v2-stat-label">Cheaper to retain than acquire</div>
-          </div>
-          <div className="v2-stat">
-            <div className="v2-stat-value"><AnimatedStat value="1" suffix="+" /></div>
-            <div className="v2-stat-label">Saved client pays for itself</div>
-          </div>
+      {/* ══════ STATS (verbatim from live homepage — 90/25/1+, hero-scale) ══════ */}
+      <div className="r-full-bleed" style={{
+        background: `linear-gradient(180deg, ${C.bg} 0%, #8FB89E 50%, ${C.bg} 100%)`,
+        padding: "112px 20px",
+        position: "relative", overflow: "hidden",
+      }}>
+
+        <h2 style={{
+          fontSize: 28, fontWeight: 800, lineHeight: 1.25, textAlign: "center",
+          margin: "0 auto", color: C.text, letterSpacing: "-0.03em", position: "relative", zIndex: 2,
+          maxWidth: 900,
+        }}>
+          A 5% increase in retention can boost profits by 95%.
+          <sup style={{ fontSize: "0.35em", color: C.textMuted, verticalAlign: "super" }}>¹</sup>
+        </h2>
+
+        {/* Fade separator */}
+        <div style={{ width: 120, height: 1, background: `linear-gradient(90deg, transparent, ${C.border}, transparent)`, margin: "40px auto 0", position: "relative", zIndex: 2 }} />
+
+        {/* Stats row — hero-scale, wider separation */}
+        <div className="r-stats-row" style={{ display: "flex", gap: 64, maxWidth: 1600, margin: "56px auto 0", position: "relative", zIndex: 2 }}>
+          {[
+            { num: "90", suffix: "%", label: "Of churn is predictable" },
+            { num: "25", suffix: "x", label: "Cheaper to retain than acquire" },
+            { num: "1", suffix: "+", label: "Saved client pays for itself" },
+          ].map((s, i) => (
+            <div key={i} style={{ flex: 1, textAlign: "center", padding: "16px 0" }}>
+              <div className="r-stats" style={{
+                fontSize: "clamp(56px, 7vw, 96px)", fontWeight: 900, letterSpacing: "-0.045em",
+                color: C.primary, lineHeight: 1, marginBottom: 14,
+              }}>
+                <AnimatedStat value={s.num} suffix={s.suffix} />
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em" }}>{s.label}</div>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
 
       {/* ══════ MEET RAI ══════ */}
       <section className="v2-section-rai r-full-bleed">
@@ -6420,7 +6441,7 @@ export default function RetaynedSite() {
         }
 
         /* ═══ CURVES ═══ */
-        .v2-curve { display: block; width: 100%; height: 140px; margin-top: 0; margin-bottom: 0; padding: 0; line-height: 0; }
+        .v2-curve { display: block; width: 100vw; height: 140px; margin-top: 0; margin-bottom: 0; padding: 0; line-height: 0; }
         .v2-curve svg { display: block; width: 100%; height: 100%; }
 
         /* ═══ STATS BAND ═══ */
