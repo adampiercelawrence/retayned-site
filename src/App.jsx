@@ -1108,7 +1108,7 @@ function HomeV2({ setPage }) {
       </section>
 
       {/* curve: hero (beige) → stats (cream) */}
-      <div className="v2-curve" style={{ background: V2.bgWarmer }}>
+      <div className="v2-curve" style={{ background: "#F2EEE8" }}>
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,20 Q 720,140 0,30 Z" fill={C.bg} /></svg>
       </div>
 
@@ -1169,7 +1169,7 @@ function HomeV2({ setPage }) {
 
       {/* curve: rai (cream) → platform (warm) */}
       <div className="v2-curve" style={{ background: C.bg }}>
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,30 C 1080,-20 360,140 0,25 Z" fill={C.surfaceWarm} /></svg>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,30 C 1080,-20 360,140 0,25 Z" fill="#EAE4D6" /></svg>
       </div>
 
       {/* ══════ PLATFORM ══════ */}
@@ -1216,7 +1216,7 @@ function HomeV2({ setPage }) {
       </section>
 
       {/* curve: platform (warm) → combos (cream) */}
-      <div className="v2-curve" style={{ background: C.surfaceWarm }}>
+      <div className="v2-curve" style={{ background: "#EAE4D6" }}>
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,30 Q 720,-30 0,25 Z" fill={C.bg} /></svg>
       </div>
 
@@ -1437,7 +1437,7 @@ function HomeV2({ setPage }) {
 
       {/* curve: combos (cream) → audience (warm) */}
       <div className="v2-curve" style={{ background: C.bg }}>
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,30 C 1100,140 340,-30 0,35 Z" fill={C.surfaceWarm} /></svg>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,30 C 1100,140 340,-30 0,35 Z" fill="#EAE4D6" /></svg>
       </div>
 
       {/* ══════ AUDIENCE TABS ══════ */}
@@ -1482,7 +1482,7 @@ function HomeV2({ setPage }) {
       </section>
 
       {/* curve: audience (warm) → enterprise (deep green) */}
-      <div className="v2-curve" style={{ background: C.surfaceWarm }}>
+      <div className="v2-curve" style={{ background: "#EAE4D6" }}>
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,25 Q 720,140 0,20 Z" fill={C.primaryDeep} /></svg>
       </div>
 
@@ -1598,7 +1598,7 @@ function HomeV2({ setPage }) {
 
       {/* curve: enterprise (deep green) → final (beige) */}
       <div className="v2-curve" style={{ background: C.primaryDeep }}>
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,25 C 1080,-30 360,140 0,20 Z" fill={V2.bgWarmer} /></svg>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,25 C 1080,-30 360,140 0,20 Z" fill="#F2EEE8" /></svg>
       </div>
 
       {/* ══════ FINAL CTA ══════ */}
@@ -6231,14 +6231,14 @@ export default function RetaynedSite() {
         /* ═══════════════════════════════════════════════════ */
         /* V2 — Slite-style homepage                           */
         /* ═══════════════════════════════════════════════════ */
-        .v2-root { overflow-x: hidden; }
+        .v2-root { }
 
         /* Fonts: Caveat + DM Serif Display are loaded in hero via @import */
         @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=DM+Serif+Display:ital@0;1&display=swap');
 
         /* ═══ HERO ═══ */
         .v2-hero {
-          background: #EAE4D6;
+          background: #F2EEE8;
           position: relative;
           padding: 72px 48px 60px;
           overflow: hidden;
@@ -6505,7 +6505,7 @@ export default function RetaynedSite() {
         }
 
         /* ═══ PLATFORM ═══ */
-        .v2-section-platform { background: ${C.surfaceWarm}; padding: 112px 48px; }
+        .v2-section-platform { background: #EAE4D6; padding: 112px 48px; }
         .v2-platform-grid {
           display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px;
           align-items: center;
@@ -6650,7 +6650,7 @@ export default function RetaynedSite() {
         .v2-dim-small-caps { font-size: 22px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
 
         /* ═══ AUDIENCE ═══ */
-        .v2-section-audience { background: ${C.surfaceWarm}; padding: 112px 48px; }
+        .v2-section-audience { background: #EAE4D6; padding: 112px 48px; }
         .v2-audience-tabs {
           display: flex; gap: 8px; justify-content: center;
           margin-bottom: 48px; flex-wrap: wrap;
@@ -6758,7 +6758,7 @@ export default function RetaynedSite() {
 
         /* ═══ FINAL CTA ═══ */
         .v2-section-final {
-          background: #EAE4D6;
+          background: #F2EEE8;
           padding: 112px 48px 140px;
           text-align: center;
         }
