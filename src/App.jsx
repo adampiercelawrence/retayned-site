@@ -1035,6 +1035,44 @@ function HomeV2({ setPage }) {
 
   return (
     <div className="v2-root">
+      {/* Feature tabs CSS (preserved from old Home so tabs render correctly in HomeV2) */}
+      <style>{`
+        .r-hero-cta {
+          padding: 15px 32px; background: ${C.btn}; color: #fff;
+          border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+          cursor: pointer; font-family: inherit;
+          position: relative; overflow: hidden;
+          transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .r-hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(91,33,182,0.25); }
+        .r-hero-cta:active { transform: translateY(0); }
+        .r-ghost-cta {
+          padding: 15px 32px; background: transparent; color: ${C.btn};
+          border: 2px solid ${C.btn}; border-radius: 12px; font-size: 15px;
+          font-weight: 700; cursor: pointer; font-family: inherit;
+          transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+        .r-ghost-cta:hover { transform: translateY(-2px); background: ${C.btnSoft}; box-shadow: 0 8px 24px rgba(91,33,182,0.12); }
+        .r-ghost-cta:active { transform: translateY(0); }
+        .r-tab-pill {
+          padding: 10px 18px; border-radius: 10px; border: none; cursor: pointer;
+          font-family: inherit; font-size: 13px; font-weight: 500;
+          transition: all 0.25s ease; white-space: nowrap; flex: 0 0 auto;
+          position: relative;
+        }
+        .r-tab-pill:hover { background: rgba(255,255,255,0.6); }
+        .r-tab-pill[data-active="true"] {
+          background: ${C.card}; color: ${C.primary}; font-weight: 700;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .r-mockup-card {
+          background: ${C.card}; border-radius: 18px; border: 1px solid ${C.border};
+          padding: 22px; box-shadow: 0 12px 40px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .r-mockup-card:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(0,0,0,0.09), 0 4px 12px rgba(0,0,0,0.04); }
+      `}</style>
+
       {/* ══════ HERO ══════ */}
       <section className="v2-hero r-full-bleed r-no-pad">
         <div className="v2-hero-inner">
@@ -1071,7 +1109,7 @@ function HomeV2({ setPage }) {
 
       {/* curve: hero (beige) → stats (cream) */}
       <div className="v2-curve" style={{ background: V2.bgWarmer }}>
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,45 Q 720,85 0,55 Z" fill={C.bg} /></svg>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,20 Q 720,140 0,30 Z" fill={C.bg} /></svg>
       </div>
 
       {/* ══════ STATS ══════ */}
@@ -1131,7 +1169,7 @@ function HomeV2({ setPage }) {
 
       {/* curve: rai (cream) → platform (warm) */}
       <div className="v2-curve" style={{ background: C.bg }}>
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,50 C 1080,20 360,80 0,45 Z" fill={C.surfaceWarm} /></svg>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,30 C 1080,-20 360,140 0,25 Z" fill={C.surfaceWarm} /></svg>
       </div>
 
       {/* ══════ PLATFORM ══════ */}
@@ -1179,7 +1217,7 @@ function HomeV2({ setPage }) {
 
       {/* curve: platform (warm) → combos (cream) */}
       <div className="v2-curve" style={{ background: C.surfaceWarm }}>
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,55 Q 720,30 0,50 Z" fill={C.bg} /></svg>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,30 Q 720,-30 0,25 Z" fill={C.bg} /></svg>
       </div>
 
       {/* ══════ COMBOS — flowing wordmark tapestry ══════ */}
@@ -1399,7 +1437,7 @@ function HomeV2({ setPage }) {
 
       {/* curve: combos (cream) → audience (warm) */}
       <div className="v2-curve" style={{ background: C.bg }}>
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,55 C 1100,85 340,25 0,60 Z" fill={C.surfaceWarm} /></svg>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,30 C 1100,140 340,-30 0,35 Z" fill={C.surfaceWarm} /></svg>
       </div>
 
       {/* ══════ AUDIENCE TABS ══════ */}
@@ -1445,17 +1483,129 @@ function HomeV2({ setPage }) {
 
       {/* curve: audience (warm) → enterprise (deep green) */}
       <div className="v2-curve" style={{ background: C.surfaceWarm }}>
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,50 Q 720,85 0,45 Z" fill={C.primaryDeep} /></svg>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,25 Q 720,140 0,20 Z" fill={C.primaryDeep} /></svg>
       </div>
 
       {/* ══════ ENTERPRISE ══════ */}
       <section className="v2-section-enterprise">
         <div className="v2-section-inner">
-          <div className="v2-section-head" style={{ textAlign: "center", margin: "0 auto", maxWidth: 880 }}>
+          <div className="v2-section-head" style={{ textAlign: "center", margin: "0 auto 32px", maxWidth: 880 }}>
             <div className="v2-eyebrow v2-eyebrow-enterprise">Retayned Enterprise · Early access</div>
             <h2 className="v2-section-h2 v2-h2-enterprise">Two surfaces,<br /><span className="v2-accent-ent">one brain.</span></h2>
             <p className="v2-section-sub v2-sub-enterprise" style={{ margin: "0 auto" }}>Your top 50 accounts get a human account manager. The other 950 get triaged by agents, reviewed by your team, and actioned through a single surface — with the same retention intelligence powering both.</p>
           </div>
+
+          {/* CTA moved above the dashboard */}
+          <div className="v2-enterprise-cta-row" style={{ marginTop: 0, marginBottom: 48 }}>
+            <button className="v2-btn-enterprise cta-btn" onClick={() => setPage("contact")}>Let's talk</button>
+          </div>
+
+          {/* RaiS Live view dashboard — embedded visual */}
+          <div className="r-ent-dashboard" style={{
+            background: "rgba(255,255,255,0.02)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: 16,
+            padding: 28,
+            position: "relative",
+            overflow: "hidden",
+            marginBottom: 48,
+            maxWidth: 1400,
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}>
+            <div aria-hidden="true" style={{
+              position: "absolute", top: 0, left: 0, right: 0, height: 1,
+              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)",
+            }} />
+
+            {/* Dashboard header */}
+            <div style={{
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+              marginBottom: 24, paddingBottom: 16,
+              borderBottom: "1px solid rgba(255,255,255,0.08)",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{
+                  width: 32, height: 32, borderRadius: 8,
+                  background: "rgba(85,139,104,0.2)",
+                  display: "inline-flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.primaryLight} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z"/></svg>
+                </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>RaiS · Live view</div>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Portfolio: 1,247 clients · Last sweep: 08:04</div>
+                </div>
+              </div>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "5px 11px", borderRadius: 100,
+                background: "rgba(45,134,89,0.15)",
+                fontSize: 11, fontWeight: 600, color: "#7EC29A",
+              }}>
+                <span className="r-ent-blink" style={{ width: 5, height: 5, borderRadius: "50%", background: "#7EC29A" }} />
+                Running
+              </div>
+            </div>
+
+            {/* 3 stats (12 / 20 / 1–99) — homepage stats, styled for dark section */}
+            <div style={{
+              display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12,
+              marginBottom: 20,
+            }}>
+              {[
+                { val: "12", label: "scoring dimensions powering every Retention Score" },
+                { val: "20", label: "combination signals detecting what single metrics miss" },
+                { val: "1–99", label: "a score that tells you exactly where the relationship stands" },
+              ].map(s => (
+                <div key={s.val} style={{
+                  padding: "24px 20px",
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.05)",
+                  borderRadius: 10,
+                  textAlign: "center",
+                }}>
+                  <div style={{
+                    fontSize: 56, fontWeight: 900,
+                    color: C.primaryLight,
+                    letterSpacing: "-0.04em", lineHeight: 1, marginBottom: 10,
+                  }}>{s.val}</div>
+                  <div style={{
+                    fontSize: 12, fontWeight: 500,
+                    color: "rgba(255,255,255,0.65)",
+                    lineHeight: 1.4, maxWidth: 220, margin: "0 auto",
+                  }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Log output */}
+            <div style={{
+              background: "rgba(0,0,0,0.25)",
+              borderRadius: 10,
+              padding: "14px 16px",
+              fontFamily: "'SF Mono', Menlo, Monaco, monospace",
+              fontSize: 11.5,
+              color: "rgba(255,255,255,0.55)",
+              lineHeight: 1.75,
+              overflow: "hidden",
+            }}>
+              {[
+                { time: "08:04", lvl: "SWEEP", lvlColor: C.primaryLight, msg: "Scored 1,247 clients. Δ avg score: −0.4. Flagged 38 at-risk." },
+                { time: "08:04", lvl: "ALERT", lvlColor: "#E89580", msg: "Foxglove Partners entered \"Velocity decay\" archetype. Confidence: 0.87." },
+                { time: "08:05", lvl: "TASK ", lvlColor: "#7EC29A", msg: "Generated 92 tasks. 28 outreach emails drafted and queued for review." },
+                { time: "08:05", lvl: "SYNC ", lvlColor: C.primaryLight, msg: "Dispatched to Slack (42), CRM (50). Next sweep: 08:04 tomorrow." },
+              ].map((line, i) => (
+                <div key={i} style={{ display: "flex", gap: 12 }}>
+                  <span style={{ color: "rgba(255,255,255,0.3)", minWidth: 44 }}>{line.time}</span>
+                  <span style={{ color: line.lvlColor, fontWeight: 700, minWidth: 50 }}>{line.lvl}</span>
+                  <span style={{ flex: 1 }}>{line.msg}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 3 tiles below */}
           <div className="v2-enterprise-grid">
             <div className="v2-enterprise-card">
               <div className="v2-enterprise-label">Managed agent</div>
@@ -1473,185 +1623,13 @@ function HomeV2({ setPage }) {
               <p className="v2-enterprise-p">Give your internal agents the same retention intelligence. Connect to Salesforce, HubSpot, or your homegrown CRM.</p>
             </div>
           </div>
-          <div className="v2-enterprise-cta-row">
-            <button className="v2-btn-enterprise cta-btn" onClick={() => setPage("contact")}>Let's talk</button>
-          </div>
         </div>
       </section>
-
-      {/* ════ OLD ENTERPRISE SECTION (preserved — to evaluate vs. new 3-card) ════ */}
-        <div className="r-full-bleed r-ent-section" style={{
-          background: C.primaryDeep,
-          padding: "72px 20px 96px",
-          position: "relative",
-          overflow: "hidden",
-          color: "#fff",
-          marginTop: -1,
-        }}>
-          {/* Interior depth: soft center glow + subtle purple corner */}
-          <div aria-hidden="true" style={{
-            position: "absolute",
-            inset: 0,
-            background: "radial-gradient(ellipse 800px 500px at 50% 40%, rgba(85,139,104,0.16) 0%, transparent 65%), radial-gradient(ellipse 400px 300px at 15% 100%, rgba(91,33,182,0.08) 0%, transparent 70%)",
-            pointerEvents: "none",
-          }} />
-          <div className="r-grain" />
-
-          <Reveal><div style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 2 }}>
-            {/* Tag row */}
-            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 7,
-                padding: "5px 12px 5px 10px", borderRadius: 100,
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.75)",
-                letterSpacing: "0.02em",
-              }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.success, boxShadow: "0 0 8px rgba(45,134,89,0.6)" }} />
-                Retayned Enterprise · Early access
-              </div>
-              <div style={{ height: 1, flex: 1, background: "linear-gradient(90deg, rgba(255,255,255,0.08), transparent)" }} />
-            </div>
-
-            {/* Headline + body */}
-            <h2 className="r-ent-h2" style={{
-              fontSize: 42, fontWeight: 900, letterSpacing: "-0.04em",
-              lineHeight: 1.05, color: "#fff", margin: "0 0 16px",
-              maxWidth: 820,
-            }}>
-              Two surfaces,<br />
-              <span style={{ color: C.primaryLight }}>one brain.</span>
-            </h2>
-            <p style={{
-              fontSize: 17, color: "rgba(255,255,255,0.7)", lineHeight: 1.7,
-              margin: "0 0 48px", maxWidth: 640,
-            }}>
-              Your top 50 accounts get a human account manager. The other 950 get triaged by agents, reviewed by your team, and actioned through a single surface — with the same retention intelligence powering both.
-            </p>
-
-            {/* Live Dashboard — product object */}
-            <div className="r-ent-dashboard" style={{
-              background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 16,
-              padding: 28,
-              position: "relative",
-              overflow: "hidden",
-              marginBottom: 40,
-            }}>
-              {/* Top hairline */}
-              <div aria-hidden="true" style={{
-                position: "absolute", top: 0, left: 0, right: 0, height: 1,
-                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)",
-              }} />
-
-              {/* Dashboard header */}
-              <div style={{
-                display: "flex", justifyContent: "space-between", alignItems: "center",
-                marginBottom: 24, paddingBottom: 16,
-                borderBottom: "1px solid rgba(255,255,255,0.08)",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{
-                    width: 32, height: 32, borderRadius: 8,
-                    background: "rgba(85,139,104,0.2)",
-                    display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.primaryLight} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z"/></svg>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>RaiS · Live view</div>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Portfolio: 1,247 clients · Last sweep: 08:04</div>
-                  </div>
-                </div>
-                <div style={{
-                  display: "inline-flex", alignItems: "center", gap: 6,
-                  padding: "5px 11px", borderRadius: 100,
-                  background: "rgba(45,134,89,0.15)",
-                  fontSize: 11, fontWeight: 600, color: "#7EC29A",
-                }}>
-                  <span className="r-ent-blink" style={{ width: 5, height: 5, borderRadius: "50%", background: "#7EC29A" }} />
-                  Running
-                </div>
-              </div>
-
-              {/* Metrics grid — the 4 features embedded as live states */}
-              <div className="r-ent-metrics" style={{
-                display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12,
-                marginBottom: 16,
-              }}>
-                {[
-                  { label: "Scored today", val: "1,247", suffix: "/1,247", delta: "All current", deltaColor: "#7EC29A" },
-                  { label: "At-risk flagged", val: "38", delta: "+4 from yesterday", deltaColor: "#E89580" },
-                  { label: "Tasks generated", val: "92", delta: "28 emails ready to send", deltaColor: "#7EC29A" },
-                  { label: "Archetypes active", val: "9", delta: "Velocity decay trending", deltaColor: "rgba(255,255,255,0.5)" },
-                ].map(m => (
-                  <div key={m.label} className="r-ent-metric" style={{
-                    padding: "14px 14px",
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.05)",
-                    borderRadius: 10,
-                  }}>
-                    <div style={{
-                      fontSize: 10, fontWeight: 700, textTransform: "uppercase",
-                      letterSpacing: ".08em", color: "rgba(255,255,255,0.4)", marginBottom: 8,
-                    }}>{m.label}</div>
-                    <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1 }}>
-                      {m.val}
-                      {m.suffix && <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.35)", marginLeft: 2 }}>{m.suffix}</span>}
-                    </div>
-                    <div style={{ fontSize: 11, color: m.deltaColor, fontWeight: 600, marginTop: 6 }}>{m.delta}</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Log output */}
-              <div style={{
-                background: "rgba(0,0,0,0.25)",
-                borderRadius: 10,
-                padding: "14px 16px",
-                fontFamily: "'SF Mono', Menlo, Monaco, monospace",
-                fontSize: 11.5,
-                color: "rgba(255,255,255,0.55)",
-                lineHeight: 1.75,
-                overflow: "hidden",
-              }}>
-                {[
-                  { time: "08:04", lvl: "SWEEP", lvlColor: C.primaryLight, msg: "Scored 1,247 clients. Δ avg score: −0.4. Flagged 38 at-risk." },
-                  { time: "08:04", lvl: "ALERT", lvlColor: "#E89580", msg: "Foxglove Partners entered \"Velocity decay\" archetype. Confidence: 0.87." },
-                  { time: "08:05", lvl: "TASK ", lvlColor: "#7EC29A", msg: "Generated 92 tasks. 28 outreach emails drafted and queued for review." },
-                  { time: "08:05", lvl: "SYNC ", lvlColor: C.primaryLight, msg: "Dispatched to Slack (42), CRM (50). Next sweep: 08:04 tomorrow." },
-                ].map((line, i) => (
-                  <div key={i} style={{ display: "flex", gap: 12 }}>
-                    <span style={{ color: "rgba(255,255,255,0.3)", minWidth: 44 }}>{line.time}</span>
-                    <span style={{ color: line.lvlColor, fontWeight: 700, minWidth: 50 }}>{line.lvl}</span>
-                    <span style={{ flex: 1 }}>{line.msg}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* CTA row */}
-            <div className="r-ent-cta-row" style={{
-              display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap",
-            }}>
-              <button className="r-hero-cta" onClick={() => setPage("contact")} style={{
-                background: "#fff", color: C.btn,
-                padding: "14px 28px", fontSize: 14,
-              }}>Request Early Access</button>
-              <div style={{ fontSize: 15, color: "rgba(255,255,255,0.7)", lineHeight: 1.55 }}>
-                Onboarding 3 partners per quarter.<br />
-                Custom pricing based on portfolio size.
-              </div>
-            </div>
-          </div></Reveal>
-        </div>
 
 
       {/* curve: enterprise (deep green) → final (beige) */}
       <div className="v2-curve" style={{ background: C.primaryDeep }}>
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,55 C 1080,25 360,85 0,40 Z" fill={V2.bgWarmer} /></svg>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,25 C 1080,-30 360,140 0,20 Z" fill={V2.bgWarmer} /></svg>
       </div>
 
       {/* ══════ FINAL CTA ══════ */}
@@ -6296,7 +6274,7 @@ export default function RetaynedSite() {
           padding: 72px 48px 60px;
           overflow: hidden;
         }
-        .v2-hero-inner { max-width: 1320px; margin: 0 auto; }
+        .v2-hero-inner { max-width: 1600px; margin: 0 auto; }
         .v2-trust-pill {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 6px 14px; border-radius: 100px;
@@ -6349,13 +6327,13 @@ export default function RetaynedSite() {
         }
         .v2-btn-primary-lg:hover { background: ${C.btnHover}; }
         .v2-btn-secondary-lg {
-          background: transparent; color: ${C.text};
+          background: transparent; color: ${C.btn};
           padding: 14px 28px; border-radius: 12px;
-          border: 1.5px solid ${C.border};
-          font-size: 15px; font-weight: 600; cursor: pointer;
+          border: 2px solid ${C.btn};
+          font-size: 15px; font-weight: 700; cursor: pointer;
           font-family: inherit;
         }
-        .v2-btn-secondary-lg:hover { border-color: ${C.text}; background: rgba(255,255,255,0.4); }
+        .v2-btn-secondary-lg:hover { background: ${C.btnSoft}; }
         .v2-hero-fine { margin-top: 16px; font-size: 13px; color: ${C.textMuted}; }
 
         /* Hero device — beige on beige */
@@ -6363,7 +6341,7 @@ export default function RetaynedSite() {
           background: #F5ECD8;
           border-radius: 24px;
           padding: 32px 32px 0;
-          max-width: 1200px; margin: 56px auto 0;
+          max-width: 1500px; margin: 56px auto 0;
           position: relative;
           box-shadow: 0 24px 60px rgba(28, 50, 36, 0.08);
         }
@@ -6473,7 +6451,7 @@ export default function RetaynedSite() {
         }
 
         /* ═══ CURVES ═══ */
-        .v2-curve { display: block; width: 100%; height: 100px; margin: 0; padding: 0; line-height: 0; }
+        .v2-curve { display: block; width: 100%; height: 140px; margin: 0; padding: 0; line-height: 0; }
         .v2-curve svg { display: block; width: 100%; height: 100%; }
 
         /* ═══ STATS BAND ═══ */
@@ -6498,7 +6476,7 @@ export default function RetaynedSite() {
         }
 
         /* ═══ SECTION SHARED ═══ */
-        .v2-section-inner { max-width: 1320px; margin: 0 auto; }
+        .v2-section-inner { max-width: 1600px; margin: 0 auto; }
         .v2-section-head { max-width: 880px; margin-bottom: 56px; }
         .v2-eyebrow {
           display: inline-block;
@@ -6728,7 +6706,7 @@ export default function RetaynedSite() {
           padding: 56px 48px;
           display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
           align-items: center;
-          max-width: 1280px; margin: 0 auto;
+          max-width: 1520px; margin: 0 auto;
           box-shadow: 0 24px 48px rgba(28, 50, 36, 0.06);
         }
         .v2-audience-h {
@@ -6835,7 +6813,7 @@ export default function RetaynedSite() {
         /* ═══ FOOTER ═══ */
         .v2-footer { background: ${C.primaryDeep}; color: #fff; padding: 72px 48px 36px; }
         .v2-footer-inner {
-          max-width: 1320px; margin: 0 auto;
+          max-width: 1600px; margin: 0 auto;
           display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
           gap: 40px;
         }
@@ -6859,7 +6837,7 @@ export default function RetaynedSite() {
         }
         .v2-footer-col a:hover { color: #fff; }
         .v2-footer-bottom {
-          max-width: 1320px; margin: 40px auto 0;
+          max-width: 1600px; margin: 40px auto 0;
           padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08);
           font-size: 12px; color: rgba(255,255,255,0.4);
           display: flex; justify-content: space-between;
@@ -6894,7 +6872,7 @@ export default function RetaynedSite() {
           .v2-enterprise-card { padding: 22px; }
           .v2-footer { padding: 48px 20px 28px; }
           .v2-footer-inner { grid-template-columns: 1fr; gap: 28px; }
-          .v2-curve { height: 60px; }
+          .v2-curve { height: 80px; }
         }
       `}</style>
 
