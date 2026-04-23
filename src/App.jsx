@@ -481,7 +481,7 @@ function Nav({ page, setPage }) {
 // ═══ Footer ═══
 function Footer({ setPage }) {
   return (
-    <footer className="v2-footer r-full-bleed r-no-pad">
+    <footer className="v2-footer r-full-bleed">
       <div className="v2-footer-inner">
         <div className="v2-footer-brand">
           <div className="v2-footer-wordmark" onClick={() => setPage("home")} role="button" tabIndex={0}>Retayned.</div>
@@ -1094,7 +1094,7 @@ function HomeV2({ setPage }) {
       `}</style>
 
       {/* ══════ HERO ══════ */}
-      <section className="v2-hero r-full-bleed r-no-pad">
+      <section className="v2-hero r-full-bleed">
         <div className="v2-hero-inner">
           <div className="v2-trust-pill">
             <span className="v2-trust-dot" />
@@ -1128,7 +1128,7 @@ function HomeV2({ setPage }) {
       </section>
 
       {/* curve: hero (beige) → stats (cream) */}
-      <div className="v2-curve r-full-bleed r-no-pad" style={{ background: "#F2EEE8" }}>
+      <div className="v2-curve r-full-bleed r-no-pad" style={{ background: "#F9EFE4" }}>
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,20 Q 720,140 0,30 Z" fill={C.bg} /></svg>
       </div>
 
@@ -6459,7 +6459,7 @@ export default function RetaynedSite() {
 
         /* ═══ HERO ═══ */
         .v2-hero {
-          background: #F2EEE8;
+          background: #F9EFE4;
           position: relative;
           padding: 72px 48px 60px;
           overflow: hidden;
@@ -6535,7 +6535,6 @@ export default function RetaynedSite() {
           padding: 32px;
           max-width: 1200px; margin: 56px auto 0;
           position: relative;
-          box-shadow: 0 24px 60px rgba(28, 50, 36, 0.08);
         }
         .v2-hero-device-inner {
           background: #fff;
