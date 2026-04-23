@@ -16,7 +16,7 @@ const C = {
   success: "#2D8659", successBg: "#E2F3EB",
   btn: "#5B21B6", btnHover: "#4C1D95",
   btnSoft: "rgba(91,33,182,0.06)", btnLight: "#C4A5F0",
-  cardShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 16pax rgba(0,0,0,0.04)",
+  cardShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04)",
   raiGrad: "linear-gradient(145deg, #1E261F 0%, #33543E 55%, #558B68 100%)",
 };
 
@@ -1132,7 +1132,7 @@ function HomeV2({ setPage }) {
         <div style={{ width: 120, height: 1, background: `linear-gradient(90deg, transparent, ${C.border}, transparent)`, margin: "40px auto 0", position: "relative", zIndex: 2 }} />
 
         {/* Stats row — hero-scale, wider separation */}
-        <div className="r-stats-row" style={{ display: "flex", gap: 64, maxWidth: 1600, margin: "56px auto 0", position: "relative", zIndex: 2 }}>
+        <div className="r-stats-row" style={{ display: "flex", gap: 80, maxWidth: 1600, margin: "56px auto 0", position: "relative", zIndex: 2 }}>
           {[
             { num: "90", suffix: "%", label: "Of churn is predictable" },
             { num: "25", suffix: "x", label: "Cheaper to retain than acquire" },
@@ -1521,7 +1521,26 @@ function HomeV2({ setPage }) {
             <button className="v2-btn-enterprise cta-btn" onClick={() => setPage("contact")}>Let's talk</button>
           </div>
 
-          {/* RaiS Live view dashboard — embedded visual */}
+          {/* 3 tiles first */}
+          <div className="v2-enterprise-grid">
+            <div className="v2-enterprise-card">
+              <div className="v2-enterprise-label">Managed agent</div>
+              <h4 className="v2-enterprise-h">Rai as autonomous service</h4>
+              <p className="v2-enterprise-p">Daily sweeps across your entire book. Twelve-dimension scoring. Archetype detection. Prioritized task lists delivered to whoever owns the relationship.</p>
+            </div>
+            <div className="v2-enterprise-card">
+              <div className="v2-enterprise-label">Multi-seat app</div>
+              <h4 className="v2-enterprise-h">Your team, one view</h4>
+              <p className="v2-enterprise-p">Unlimited seats. Role-based permissions. Full handoff history per client. When an account manager leaves, their knowledge stays.</p>
+            </div>
+            <div className="v2-enterprise-card">
+              <div className="v2-enterprise-label">MCP + REST API</div>
+              <h4 className="v2-enterprise-h">Plug into your stack</h4>
+              <p className="v2-enterprise-p">Give your internal agents the same retention intelligence. Connect to Salesforce, HubSpot, or your homegrown CRM.</p>
+            </div>
+          </div>
+
+          {/* RaiS Live view dashboard below */}
           <div className="r-ent-dashboard" style={{
             background: "rgba(255,255,255,0.02)",
             border: "1px solid rgba(255,255,255,0.08)",
@@ -1529,7 +1548,7 @@ function HomeV2({ setPage }) {
             padding: 28,
             position: "relative",
             overflow: "hidden",
-            marginBottom: 48,
+            marginTop: 48,
             maxWidth: 1400,
             marginLeft: "auto",
             marginRight: "auto",
@@ -1594,25 +1613,6 @@ function HomeV2({ setPage }) {
               ))}
             </div>
           </div>
-
-          {/* 3 tiles below */}
-          <div className="v2-enterprise-grid">
-            <div className="v2-enterprise-card">
-              <div className="v2-enterprise-label">Managed agent</div>
-              <h4 className="v2-enterprise-h">Rai as autonomous service</h4>
-              <p className="v2-enterprise-p">Daily sweeps across your entire book. Twelve-dimension scoring. Archetype detection. Prioritized task lists delivered to whoever owns the relationship.</p>
-            </div>
-            <div className="v2-enterprise-card">
-              <div className="v2-enterprise-label">Multi-seat app</div>
-              <h4 className="v2-enterprise-h">Your team, one view</h4>
-              <p className="v2-enterprise-p">Unlimited seats. Role-based permissions. Full handoff history per client. When an account manager leaves, their knowledge stays.</p>
-            </div>
-            <div className="v2-enterprise-card">
-              <div className="v2-enterprise-label">MCP + REST API</div>
-              <h4 className="v2-enterprise-h">Plug into your stack</h4>
-              <p className="v2-enterprise-p">Give your internal agents the same retention intelligence. Connect to Salesforce, HubSpot, or your homegrown CRM.</p>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -1625,15 +1625,14 @@ function HomeV2({ setPage }) {
       {/* ══════ FINAL CTA ══════ */}
       <section className="v2-section-final r-full-bleed">
         <h2 className="v2-final-h">
-          One client saved pays for{" "}
-          <span className="v2-caveat-final">years</span>{" "}of Retayned.
+          You work too hard to get new clients.<br />Keep them{" "}
+          <span className="v2-caveat-final">Retayned</span>.
         </h2>
-        <p className="v2-final-sub">Solve your business's most consequential problem for less than a Netflix subscription. One plan. Every feature. The math works itself out.</p>
+        <p className="v2-final-sub">See the signal. Get the script. Keep the client.</p>
         <div className="v2-hero-cta-row" style={{ justifyContent: "center" }}>
           <button className="v2-btn-primary-lg cta-btn" onClick={() => setPage("signup")}>Start Free Trial</button>
-          <button className="v2-btn-secondary-lg" onClick={() => setPage("pricing")}>See pricing</button>
         </div>
-        <p className="v2-final-fine">$19.99/mo + $1 per client · 14-day free trial · Cancel anytime</p>
+        <p className="v2-final-fine">14-day free trial. Cancel anytime.</p>
       </section>
       <Footer setPage={setPage} />
     </div>
