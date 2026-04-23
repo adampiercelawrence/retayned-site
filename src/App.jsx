@@ -16,7 +16,7 @@ const C = {
   success: "#2D8659", successBg: "#E2F3EB",
   btn: "#5B21B6", btnHover: "#4C1D95",
   btnSoft: "rgba(91,33,182,0.06)", btnLight: "#C4A5F0",
-  cardShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04)",
+  cardShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 16pax rgba(0,0,0,0.04)",
   raiGrad: "linear-gradient(145deg, #1E261F 0%, #33543E 55%, #558B68 100%)",
 };
 
@@ -1112,21 +1112,21 @@ function HomeV2({ setPage }) {
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,20 Q 720,140 0,30 Z" fill={C.bg} /></svg>
       </div>
 
-      {/* ══════ STATS (verbatim from live homepage — 90/25/1+, hero-scale) ══════ */}
+      {/* ══════ STATS (90/25/1+, hero-scale, plain cream) ══════ */}
       <div className="r-full-bleed" style={{
-        background: `linear-gradient(180deg, ${C.bg} 0%, #8FB89E 50%, ${C.bg} 100%)`,
+        background: C.bg,
         padding: "112px 20px",
         position: "relative", overflow: "hidden",
       }}>
 
-        <h2 style={{
-          fontSize: 28, fontWeight: 800, lineHeight: 1.25, textAlign: "center",
+        <h3 style={{
+          fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 900, lineHeight: 1.05, textAlign: "center",
           margin: "0 auto", color: C.text, letterSpacing: "-0.03em", position: "relative", zIndex: 2,
           maxWidth: 900,
         }}>
           A 5% increase in retention can boost profits by 95%.
           <sup style={{ fontSize: "0.35em", color: C.textMuted, verticalAlign: "super" }}>¹</sup>
-        </h2>
+        </h3>
 
         {/* Fade separator */}
         <div style={{ width: 120, height: 1, background: `linear-gradient(90deg, transparent, ${C.border}, transparent)`, margin: "40px auto 0", position: "relative", zIndex: 2 }} />
@@ -1263,7 +1263,7 @@ function HomeV2({ setPage }) {
           <Reveal>
             <div className="r-section-head" style={{ textAlign: "center", marginBottom: 56, maxWidth: 880, marginLeft: "auto", marginRight: "auto" }}>
               <h2 style={{ fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.02, marginBottom: 20 }}>
-                Tools You Need To Keep Clients
+                The tools you need to keep clients.
               </h2>
               <p style={{ fontSize: 18, color: C.textSec, maxWidth: 640, margin: "0 auto", lineHeight: 1.6 }}>
                 A CRM you won't hate using built for client retention. Your clients won't know it exists. They just won't leave.
@@ -1300,7 +1300,7 @@ function HomeV2({ setPage }) {
           {/* Mobile: headline → mockup → description + CTAs */}
           {/* Desktop: left (headline + desc + CTAs) | right (mockup) */}
           <div className="r-feat-heading-mobile" style={{ display: "none", maxWidth: 1000, margin: "0 auto 16px" }}>
-            <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15 }}>{ht.headline}</h2>
+            <h3 style={{ fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.05 }}>{ht.headline}</h3>
           </div>
           <div className="r-feat-content" style={{
             display: "flex", flexWrap: "wrap", gap: 48,
@@ -1308,10 +1308,10 @@ function HomeV2({ setPage }) {
           }}>
             {/* Left: copy */}
             <div style={{ flex: "1 1 340px" }}>
-              <h2 className="r-feat-heading-desktop" style={{
-                fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15,
-                marginBottom: 12,
-              }}>{ht.headline}</h2>
+              <h3 className="r-feat-heading-desktop" style={{
+                fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.05,
+                marginBottom: 18,
+              }}>{ht.headline}</h3>
               <p style={{
                 fontSize: 15, color: C.textSec, lineHeight: 1.75, marginBottom: 28,
               }}>{ht.sub}</p>
