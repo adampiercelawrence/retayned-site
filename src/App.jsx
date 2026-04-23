@@ -1156,34 +1156,43 @@ function HomeV2({ setPage }) {
         <div className="v2-section-inner">
           <div className="v2-section-head">
             <div className="v2-eyebrow">How it works</div>
-            <h2 className="v2-section-h2">Meet Rai. <span className="v2-muted">She pays attention to every client, every day.</span></h2>
+            <h2 className="v2-section-h2">Meet <span style={{ color: C.btn }}>Rai</span>. <span className="v2-muted">She pays attention to every client, every day.</span></h2>
             <p className="v2-section-sub">When something shifts, she catches it — and tells you what to do about it.</p>
           </div>
           <div className="v2-rai-steps">
-            <div className="v2-rai-step">
-              <div className="v2-step-num">Step · 01</div>
-              <div className="v2-step-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            {[
+              {
+                num: "01",
+                h: <>She sees it.</>,
+                p: "Cross-referencing tasks, health checks, score trends, 20+ combination signals — continuously, across your entire book.",
+                bg: `url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20360%20300%22%3E%0A%20%20%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%2814%2022%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2236%22%20height%3D%2228%22%20rx%3D%223%22%20fill%3D%22%23558B68%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/rect%3E%0A%20%20%20%20%3Ccircle%20cx%3D%228%22%20cy%3D%2220%22%20r%3D%221.4%22%20fill%3D%22%23FCFCFE%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2214%22%20cy%3D%2214%22%20r%3D%221.4%22%20fill%3D%22%23FCFCFE%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2220%22%20cy%3D%2218%22%20r%3D%221.4%22%20fill%3D%22%23FCFCFE%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2226%22%20cy%3D%2210%22%20r%3D%221.4%22%20fill%3D%22%23FCFCFE%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2230%22%20cy%3D%228%22%20r%3D%221.4%22%20fill%3D%22%23FCFCFE%22%3E%3C/circle%3E%0A%20%20%20%20%3Cpolyline%20points%3D%224%2C22%2012%2C18%2020%2C14%2028%2C10%2032%2C6%22%20fill%3D%22none%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C/polyline%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%2856%2014%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2236%22%20height%3D%2228%22%20rx%3D%223%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.2%22%3E%3C/rect%3E%0A%20%20%20%20%0A%20%20%20%20%3Cpath%20d%3D%22M4%206%20Q4%204%206%204%20L18%204%20Q20%204%2020%206%20L20%2012%20Q20%2014%2018%2014%20L10%2014%20L6%2017%20L7%2014%20Q4%2014%204%2012%20Z%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221%22%3E%3C/path%3E%0A%20%20%20%20%3Cline%20x1%3D%227%22%20y1%3D%228%22%20x2%3D%2217%22%20y2%3D%228%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%220.9%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Cline%20x1%3D%227%22%20y1%3D%2211%22%20x2%3D%2214%22%20y2%3D%2211%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%220.9%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%0A%20%20%20%20%3Cpath%20d%3D%22M16%2017%20Q16%2015%2018%2015%20L30%2015%20Q32%2015%2032%2017%20L32%2023%20Q32%2025%2030%2025%20L22%2025%20L19%2028%20L20%2025%20Q16%2025%2016%2023%20Z%22%20fill%3D%22%232F2F31%22%3E%3C/path%3E%0A%20%20%20%20%3Cline%20x1%3D%2219%22%20y1%3D%2219%22%20x2%3D%2229%22%20y2%3D%2219%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%220.9%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Cline%20x1%3D%2219%22%20y1%3D%2222%22%20x2%3D%2227%22%20y2%3D%2222%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%220.9%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%2816%2058%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2236%22%20height%3D%2228%22%20rx%3D%223%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.2%22%3E%3C/rect%3E%0A%20%20%20%20%3Cg%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%226%22%20y1%3D%2222%22%20x2%3D%226%22%20y2%3D%2216%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2212%22%20y1%3D%2222%22%20x2%3D%2212%22%20y2%3D%2210%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2218%22%20y1%3D%2222%22%20x2%3D%2218%22%20y2%3D%2214%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2224%22%20y1%3D%2222%22%20x2%3D%2224%22%20y2%3D%228%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2230%22%20y1%3D%2222%22%20x2%3D%2230%22%20y2%3D%2212%22%3E%3C/line%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%28264%2010%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2236%22%20height%3D%2228%22%20rx%3D%223%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.2%22%3E%3C/rect%3E%0A%20%20%20%20%3Cpolyline%20points%3D%224%2C16%2010%2C18%2016%2C12%2022%2C14%2028%2C6%2032%2C10%22%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C/polyline%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%28308%2024%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2236%22%20height%3D%2228%22%20rx%3D%223%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.2%22%3E%3C/rect%3E%0A%20%20%20%20%3Cpath%20d%3D%22M4%205%20Q4%203%206%203%20L20%203%20Q22%203%2022%205%20L22%2011%20Q22%2013%2020%2013%20L10%2013%20L6%2016%20L7%2013%20Q4%2013%204%2011%20Z%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221%22%3E%3C/path%3E%0A%20%20%20%20%3Cline%20x1%3D%227%22%20y1%3D%227%22%20x2%3D%2219%22%20y2%3D%227%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%220.9%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Cline%20x1%3D%227%22%20y1%3D%2210%22%20x2%3D%2216%22%20y2%3D%2210%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%220.9%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Cpath%20d%3D%22M14%2016%20Q14%2014%2016%2014%20L30%2014%20Q32%2014%2032%2016%20L32%2022%20Q32%2024%2030%2024%20L20%2024%20L17%2027%20L18%2024%20Q14%2024%2014%2022%20Z%22%20fill%3D%22%232F2F31%22%3E%3C/path%3E%0A%20%20%20%20%3Cline%20x1%3D%2217%22%20y1%3D%2218%22%20x2%3D%2229%22%20y2%3D%2218%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%220.9%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Cline%20x1%3D%2217%22%20y1%3D%2221%22%20x2%3D%2225%22%20y2%3D%2221%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%220.9%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%28306%2062%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2236%22%20height%3D%2228%22%20rx%3D%223%22%20fill%3D%22%23558B68%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/rect%3E%0A%20%20%20%20%3Cpolyline%20points%3D%224%2C22%2010%2C18%2016%2C14%2022%2C16%2028%2C10%2032%2C6%22%20fill%3D%22none%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C/polyline%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%226%22%20r%3D%222%22%20fill%3D%22%23FCFCFE%22%3E%3C/circle%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%2812%20212%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2236%22%20height%3D%2228%22%20rx%3D%223%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.2%22%3E%3C/rect%3E%0A%20%20%20%20%3Cpolyline%20points%3D%224%2C12%2010%2C10%2016%2C16%2022%2C14%2028%2C22%2032%2C20%22%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C/polyline%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%2814%20250%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2236%22%20height%3D%2228%22%20rx%3D%223%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.2%22%3E%3C/rect%3E%0A%20%20%20%20%3Ccircle%20cx%3D%228%22%20cy%3D%2210%22%20r%3D%221.3%22%20fill%3D%22%232F2F31%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2214%22%20cy%3D%2218%22%20r%3D%221.3%22%20fill%3D%22%232F2F31%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2214%22%20r%3D%221.3%22%20fill%3D%22%232F2F31%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2228%22%20cy%3D%2220%22%20r%3D%221.3%22%20fill%3D%22%232F2F31%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%228%22%20r%3D%221.3%22%20fill%3D%22%232F2F31%22%3E%3C/circle%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%28304%20222%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2236%22%20height%3D%2228%22%20rx%3D%223%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.2%22%3E%3C/rect%3E%0A%20%20%20%20%3Cg%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%226%22%20y1%3D%2222%22%20x2%3D%226%22%20y2%3D%2210%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2212%22%20y1%3D%2222%22%20x2%3D%2212%22%20y2%3D%2216%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2218%22%20y1%3D%2222%22%20x2%3D%2218%22%20y2%3D%228%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2224%22%20y1%3D%2222%22%20x2%3D%2224%22%20y2%3D%2214%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2230%22%20y1%3D%2222%22%20x2%3D%2230%22%20y2%3D%226%22%3E%3C/line%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%28308%20260%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2236%22%20height%3D%2228%22%20rx%3D%223%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.2%22%3E%3C/rect%3E%0A%20%20%20%20%3Cpolyline%20points%3D%224%2C20%2010%2C14%2016%2C8%2022%2C12%2028%2C10%2032%2C4%22%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C/polyline%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20fill%3D%22%232F2F31%22%20opacity%3D%220.18%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2280%22%20cy%3D%22118%22%20r%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2296%22%20cy%3D%2296%22%20r%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22104%22%20cy%3D%22152%22%20r%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2272%22%20cy%3D%22172%22%20r%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22266%22%20cy%3D%22108%22%20r%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22284%22%20cy%3D%22146%22%20r%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22272%22%20cy%3D%22186%22%20r%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22252%22%20cy%3D%22130%22%20r%3D%221.4%22%3E%3C/circle%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%20opacity%3D%220.4%22%20stroke-dasharray%3D%222%203%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M50%2034%20L146%20118%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M56%2072%20L146%20128%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M52%2086%20L146%20160%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M300%2030%20L214%20118%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M324%2090%20L214%20128%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M48%20232%20L146%20180%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M48%20264%20L146%20190%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M322%20240%20L214%20180%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M326%20280%20L214%20184%22%3E%3C/path%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%28106%20102%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%22150%22%20height%3D%22110%22%20rx%3D%2210%22%20fill%3D%22%232F2F31%22%20opacity%3D%220.10%22%3E%3C/rect%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22150%22%20height%3D%22110%22%20rx%3D%2210%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222.2%22%20stroke-linejoin%3D%22round%22%3E%3C/rect%3E%0A%0A%20%20%20%20%3Cline%20x1%3D%2212%22%20y1%3D%2214%22%20x2%3D%2270%22%20y2%3D%2214%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222.2%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Cline%20x1%3D%2212%22%20y1%3D%2221%22%20x2%3D%2252%22%20y2%3D%2221%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.3%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.7%22%3E%3C/line%3E%0A%20%20%20%20%3Crect%20x%3D%22104%22%20y%3D%228%22%20width%3D%2234%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%23558B68%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.2%22%3E%3C/rect%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22112%22%20cy%3D%2215%22%20r%3D%222%22%20fill%3D%22%23FCFCFE%22%3E%3C/circle%3E%0A%20%20%20%20%3Cline%20x1%3D%22118%22%20y1%3D%2215%22%20x2%3D%22132%22%20y2%3D%2215%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%0A%20%20%20%20%3Crect%20x%3D%2212%22%20y%3D%2232%22%20width%3D%22126%22%20height%3D%2264%22%20rx%3D%224%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.2%22%3E%3C/rect%3E%0A%20%20%20%20%3Cg%20stroke%3D%22%232F2F31%22%20stroke-width%3D%220.8%22%20opacity%3D%220.25%22%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2212%22%20y1%3D%2248%22%20x2%3D%22138%22%20y2%3D%2248%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2212%22%20y1%3D%2264%22%20x2%3D%22138%22%20y2%3D%2264%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2212%22%20y1%3D%2280%22%20x2%3D%22138%22%20y2%3D%2280%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2240%22%20y1%3D%2232%22%20x2%3D%2240%22%20y2%3D%2296%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2272%22%20y1%3D%2232%22%20x2%3D%2272%22%20y2%3D%2296%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%22104%22%20y1%3D%2232%22%20x2%3D%22104%22%20y2%3D%2296%22%3E%3C/line%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%20%20%3Cg%20fill%3D%22%232F2F31%22%20opacity%3D%220.45%22%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2282%22%20r%3D%221.3%22%3E%3C/circle%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2274%22%20r%3D%221.3%22%3E%3C/circle%3E%3Ccircle%20cx%3D%2238%22%20cy%3D%2278%22%20r%3D%221.3%22%3E%3C/circle%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2246%22%20cy%3D%2270%22%20r%3D%221.3%22%3E%3C/circle%3E%3Ccircle%20cx%3D%2254%22%20cy%3D%2266%22%20r%3D%221.3%22%3E%3C/circle%3E%3Ccircle%20cx%3D%2262%22%20cy%3D%2272%22%20r%3D%221.3%22%3E%3C/circle%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2270%22%20cy%3D%2260%22%20r%3D%221.3%22%3E%3C/circle%3E%3Ccircle%20cx%3D%2278%22%20cy%3D%2258%22%20r%3D%221.3%22%3E%3C/circle%3E%3Ccircle%20cx%3D%2286%22%20cy%3D%2252%22%20r%3D%221.3%22%3E%3C/circle%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2294%22%20cy%3D%2254%22%20r%3D%221.3%22%3E%3C/circle%3E%3Ccircle%20cx%3D%22102%22%20cy%3D%2246%22%20r%3D%221.3%22%3E%3C/circle%3E%3Ccircle%20cx%3D%22110%22%20cy%3D%2248%22%20r%3D%221.3%22%3E%3C/circle%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%22118%22%20cy%3D%2242%22%20r%3D%221.3%22%3E%3C/circle%3E%3Ccircle%20cx%3D%22126%22%20cy%3D%2238%22%20r%3D%221.3%22%3E%3C/circle%3E%3Ccircle%20cx%3D%2234%22%20cy%3D%2288%22%20r%3D%221.3%22%3E%3C/circle%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2258%22%20cy%3D%2280%22%20r%3D%221.3%22%3E%3C/circle%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2266%22%20r%3D%221.3%22%3E%3C/circle%3E%3Ccircle%20cx%3D%22106%22%20cy%3D%2258%22%20r%3D%221.3%22%3E%3C/circle%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%22122%22%20cy%3D%2252%22%20r%3D%221.3%22%3E%3C/circle%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%20%20%3Cpolyline%20points%3D%2218%2C84%2034%2C78%2052%2C70%2070%2C62%2088%2C54%20106%2C46%20124%2C40%20134%2C36%22%20fill%3D%22none%22%20stroke%3D%22%23558B68%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C/polyline%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22124%22%20cy%3D%2240%22%20r%3D%224.8%22%20fill%3D%22%23558B68%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.6%22%3E%3C/circle%3E%0A%20%20%20%20%3Cline%20x1%3D%22124%22%20y1%3D%2240%22%20x2%3D%22124%22%20y2%3D%2228%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22124%22%20cy%3D%2226%22%20r%3D%222.2%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221%22%3E%3C/circle%3E%0A%0A%20%20%20%20%3Cline%20x1%3D%2212%22%20y1%3D%22102%22%20x2%3D%2290%22%20y2%3D%22102%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.3%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Cline%20x1%3D%2296%22%20y1%3D%22102%22%20x2%3D%22138%22%20y2%3D%22102%22%20stroke%3D%22%23558B68%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%28250%20160%29%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2214%22%20fill%3D%22%23558B68%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222%22%3E%3C/circle%3E%0A%20%20%20%20%3Cpath%20d%3D%22M-5%20-6%20L5%20-6%20L-5%200%20L5%206%20L-5%206%22%20fill%3D%22none%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C/path%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E")`,
+              },
+              {
+                num: "02",
+                h: <>She calls it out.</>,
+                p: "Every morning, before your first coffee. You don't go looking for the problem. The problem finds you without any trouble.",
+                bg: `url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20360%20300%22%3E%0A%20%20%0A%0A%20%20%0A%20%20%3Cg%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M150%2058%20Q144%2044%20154%2034%20Q162%2024%20154%2012%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M178%2054%20Q172%2038%20182%2028%20Q188%2020%20182%208%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M204%2060%20Q198%2046%20208%2036%20Q216%2026%20208%2014%22%3E%3C/path%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%28110%2070%29%22%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222%22%20stroke-linejoin%3D%22round%22%20d%3D%22M130%2050%20Q170%2050%20170%2090%20Q170%20130%20130%20130%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%20d%3D%22M130%2062%20Q158%2062%20158%2090%20Q158%20118%20130%20118%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222%22%20stroke-linejoin%3D%22round%22%20d%3D%22M6%2044%20Q4%2038%2012%2038%20L134%2038%20Q142%2038%20140%2044%20L132%20174%20Q130%20184%20120%20184%20L26%20184%20Q16%20184%2014%20174%20Z%22%3E%3C/path%3E%0A%20%20%20%20%3Cellipse%20cx%3D%2273%22%20cy%3D%2245%22%20rx%3D%2262%22%20ry%3D%229%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/ellipse%3E%0A%20%20%20%20%3Cellipse%20cx%3D%2273%22%20cy%3D%2245%22%20rx%3D%2254%22%20ry%3D%226%22%20fill%3D%22%233F434B%22%20opacity%3D%220.9%22%3E%3C/ellipse%3E%0A%20%20%20%20%3Cpath%20d%3D%22M40%2042%20Q52%2038%2070%2039%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.8%22%3E%3C/path%3E%0A%20%20%20%20%3Cg%20stroke%3D%22%232F2F31%22%20stroke-width%3D%220.9%22%20opacity%3D%220.35%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%22118%22%20y1%3D%2270%22%20x2%3D%22122%22%20y2%3D%22164%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%22124%22%20y1%3D%2270%22%20x2%3D%22127%22%20y2%3D%22160%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%22112%22%20y1%3D%2272%22%20x2%3D%22115%22%20y2%3D%22166%22%3E%3C/line%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%28220%20130%29%20rotate%2810%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2292%22%20height%3D%22140%22%20rx%3D%2212%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222%22%20stroke-linejoin%3D%22round%22%3E%3C/rect%3E%0A%20%20%20%20%3Crect%20x%3D%226%22%20y%3D%2214%22%20width%3D%2280%22%20height%3D%22118%22%20rx%3D%226%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/rect%3E%0A%20%20%20%20%3Crect%20x%3D%2236%22%20y%3D%226%22%20width%3D%2220%22%20height%3D%223%22%20rx%3D%221.5%22%20fill%3D%22%232F2F31%22%3E%3C/rect%3E%0A%0A%20%20%20%20%0A%20%20%20%20%3Cg%20transform%3D%22translate%2810%2022%29%22%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2272%22%20height%3D%2244%22%20rx%3D%226%22%20fill%3D%22%23558B68%22%3E%3C/rect%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2272%22%20height%3D%2244%22%20rx%3D%226%22%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.8%22%20stroke-linejoin%3D%22round%22%3E%3C/rect%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2210%22%20cy%3D%2210%22%20r%3D%224%22%20fill%3D%22%23FCFCFE%22%3E%3C/circle%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2210%22%20cy%3D%2210%22%20r%3D%224%22%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.2%22%3E%3C/circle%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2220%22%20y1%3D%228%22%20x2%3D%2258%22%20y2%3D%228%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2220%22%20y1%3D%2214%22%20x2%3D%2248%22%20y2%3D%2214%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.85%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%226%22%20y1%3D%2226%22%20x2%3D%2266%22%20y2%3D%2226%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%226%22%20y1%3D%2232%22%20x2%3D%2258%22%20y2%3D%2232%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%226%22%20y1%3D%2238%22%20x2%3D%2242%22%20y2%3D%2238%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3C/g%3E%0A%0A%20%20%20%20%3Cg%20transform%3D%22translate%2810%2074%29%22%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2272%22%20height%3D%2222%22%20rx%3D%225%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/rect%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%229%22%20cy%3D%2211%22%20r%3D%223%22%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2218%22%20y1%3D%229%22%20x2%3D%2258%22%20y2%3D%229%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2218%22%20y1%3D%2215%22%20x2%3D%2244%22%20y2%3D%2215%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%20%20%3Cg%20transform%3D%22translate%2810%20102%29%22%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2272%22%20height%3D%2222%22%20rx%3D%225%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/rect%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%229%22%20cy%3D%2211%22%20r%3D%223%22%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2218%22%20y1%3D%229%22%20x2%3D%2254%22%20y2%3D%229%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2218%22%20y1%3D%2215%22%20x2%3D%2240%22%20y2%3D%2215%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3C/g%3E%0A%0A%20%20%20%20%3Cline%20x1%3D%2292%22%20y1%3D%2230%22%20x2%3D%2292%22%20y2%3D%2248%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%3C/g%3E%0A%0A%20%20%3Cg%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M232%20108%20L228%20100%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M246%20102%20L244%2092%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M260%20100%20L262%2090%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M274%20104%20L280%2096%22%3E%3C/path%3E%0A%20%20%3C/g%3E%0A%0A%20%20%3Cg%20transform%3D%22translate%28300%20100%29%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2210%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222%22%3E%3C/circle%3E%0A%20%20%20%20%3Cline%20x1%3D%220%22%20y1%3D%22-4%22%20x2%3D%220%22%20y2%3D%222%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Ccircle%20cx%3D%220%22%20cy%3D%226%22%20r%3D%221.4%22%20fill%3D%22%232F2F31%22%3E%3C/circle%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E")`,
+              },
+              {
+                num: "03",
+                h: <>She ranks it.</>,
+                p: "Using a proprietary scoring engine, Rai weighs all of the day's tasks by retention impact. Your highest-value move is next up.",
+                bg: `url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20360%20300%22%3E%0A%20%20%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%2850%20220%29%20rotate%28-3%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22240%22%20height%3D%2244%22%20rx%3D%226%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222%22%20stroke-linejoin%3D%22round%22%3E%3C/rect%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%2212%22%20fill%3D%22%23FAF0E4%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%3Ctext%20x%3D%2222%22%20y%3D%2227%22%20font-family%3D%22Georgia%2C%20serif%22%20font-size%3D%2215%22%20font-weight%3D%22600%22%20fill%3D%22%232F2F31%22%20text-anchor%3D%22middle%22%3E4%3C/text%3E%0A%20%20%20%20%3Cline%20x1%3D%2244%22%20y1%3D%2216%22%20x2%3D%22160%22%20y2%3D%2216%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Cline%20x1%3D%2244%22%20y1%3D%2226%22%20x2%3D%22120%22%20y2%3D%2226%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Crect%20x%3D%22180%22%20y%3D%2216%22%20width%3D%2244%22%20height%3D%226%22%20rx%3D%223%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/rect%3E%0A%20%20%20%20%3Crect%20x%3D%22180%22%20y%3D%2216%22%20width%3D%2212%22%20height%3D%226%22%20rx%3D%223%22%20fill%3D%22%232F2F31%22%20opacity%3D%220.6%22%3E%3C/rect%3E%0A%20%20%20%20%3Cline%20x1%3D%22180%22%20y1%3D%2230%22%20x2%3D%22212%22%20y2%3D%2230%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%2856%20170%29%20rotate%28-1%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22240%22%20height%3D%2244%22%20rx%3D%226%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222%22%20stroke-linejoin%3D%22round%22%3E%3C/rect%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%2212%22%20fill%3D%22%23FAF0E4%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%3Ctext%20x%3D%2222%22%20y%3D%2227%22%20font-family%3D%22Georgia%2C%20serif%22%20font-size%3D%2215%22%20font-weight%3D%22600%22%20fill%3D%22%232F2F31%22%20text-anchor%3D%22middle%22%3E3%3C/text%3E%0A%20%20%20%20%3Cline%20x1%3D%2244%22%20y1%3D%2216%22%20x2%3D%22168%22%20y2%3D%2216%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Cline%20x1%3D%2244%22%20y1%3D%2226%22%20x2%3D%22132%22%20y2%3D%2226%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Crect%20x%3D%22180%22%20y%3D%2216%22%20width%3D%2244%22%20height%3D%226%22%20rx%3D%223%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/rect%3E%0A%20%20%20%20%3Crect%20x%3D%22180%22%20y%3D%2216%22%20width%3D%2222%22%20height%3D%226%22%20rx%3D%223%22%20fill%3D%22%232F2F31%22%20opacity%3D%220.6%22%3E%3C/rect%3E%0A%20%20%20%20%3Cline%20x1%3D%22180%22%20y1%3D%2230%22%20x2%3D%22212%22%20y2%3D%2230%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%2852%20120%29%20rotate%28-2%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22240%22%20height%3D%2244%22%20rx%3D%226%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222%22%20stroke-linejoin%3D%22round%22%3E%3C/rect%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%2212%22%20fill%3D%22%23FAF0E4%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%3Ctext%20x%3D%2222%22%20y%3D%2227%22%20font-family%3D%22Georgia%2C%20serif%22%20font-size%3D%2215%22%20font-weight%3D%22600%22%20fill%3D%22%232F2F31%22%20text-anchor%3D%22middle%22%3E1%3C/text%3E%0A%20%20%20%20%3Cline%20x1%3D%2244%22%20y1%3D%2216%22%20x2%3D%22172%22%20y2%3D%2216%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Cline%20x1%3D%2244%22%20y1%3D%2226%22%20x2%3D%22140%22%20y2%3D%2226%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Crect%20x%3D%22180%22%20y%3D%2216%22%20width%3D%2244%22%20height%3D%226%22%20rx%3D%223%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/rect%3E%0A%20%20%20%20%3Crect%20x%3D%22180%22%20y%3D%2216%22%20width%3D%2232%22%20height%3D%226%22%20rx%3D%223%22%20fill%3D%22%232F2F31%22%20opacity%3D%220.65%22%3E%3C/rect%3E%0A%20%20%20%20%3Cline%20x1%3D%22180%22%20y1%3D%2230%22%20x2%3D%22212%22%20y2%3D%2230%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%3C/g%3E%0A%0A%20%20%0A%20%20%3Cg%20transform%3D%22translate%2848%2038%29%20rotate%28-2%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%22264%22%20height%3D%2258%22%20rx%3D%228%22%20fill%3D%22%232F2F31%22%20opacity%3D%220.12%22%3E%3C/rect%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22264%22%20height%3D%2258%22%20rx%3D%228%22%20fill%3D%22%23558B68%22%3E%3C/rect%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22264%22%20height%3D%2258%22%20rx%3D%228%22%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222.4%22%20stroke-linejoin%3D%22round%22%3E%3C/rect%3E%0A%0A%20%20%20%20%3Ccircle%20cx%3D%2228%22%20cy%3D%2229%22%20r%3D%2216%22%20fill%3D%22%23FCFCFE%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2228%22%20cy%3D%2229%22%20r%3D%2216%22%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%222%22%3E%3C/circle%3E%0A%20%20%20%20%3Ctext%20x%3D%2228%22%20y%3D%2235%22%20font-family%3D%22Georgia%2C%20serif%22%20font-size%3D%2220%22%20font-weight%3D%22700%22%20fill%3D%22%232F2F31%22%20text-anchor%3D%22middle%22%3E2%3C/text%3E%0A%0A%20%20%20%20%3Cline%20x1%3D%2254%22%20y1%3D%2220%22%20x2%3D%22176%22%20y2%3D%2220%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3Cline%20x1%3D%2254%22%20y1%3D%2232%22%20x2%3D%22148%22%20y2%3D%2232%22%20stroke%3D%22%23FCFCFE%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.9%22%3E%3C/line%3E%0A%0A%20%20%20%20%3Crect%20x%3D%22190%22%20y%3D%2220%22%20width%3D%2260%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%23FCFCFE%22%20opacity%3D%220.55%22%3E%3C/rect%3E%0A%20%20%20%20%3Crect%20x%3D%22190%22%20y%3D%2220%22%20width%3D%2260%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.2%22%3E%3C/rect%3E%0A%20%20%20%20%3Crect%20x%3D%22192%22%20y%3D%2222%22%20width%3D%2250%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23FCFCFE%22%3E%3C/rect%3E%0A%0A%20%20%20%20%3Cg%20transform%3D%22translate%28190%2036%29%22%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2260%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23FCFCFE%22%3E%3C/rect%3E%0A%20%20%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2260%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/rect%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%228%22%20y1%3D%226%22%20x2%3D%2252%22%20y2%3D%226%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%3C/line%3E%0A%20%20%20%20%3C/g%3E%0A%0A%20%20%20%20%3Cg%20transform%3D%22translate%28252%20-6%29%20rotate%2815%29%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20-8%20L2.4%20-2.4%20L8%20-2%20L3.6%202%20L5%208%20L0%204.6%20L-5%208%20L-3.6%202%20L-8%20-2%20L-2.4%20-2.4%20Z%22%20fill%3D%22%23FCFCFE%22%3E%3C/path%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M0%20-8%20L2.4%20-2.4%20L8%20-2%20L3.6%202%20L5%208%20L0%204.6%20L-5%208%20L-3.6%202%20L-8%20-2%20L-2.4%20-2.4%20Z%22%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22%3E%3C/path%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%3C/g%3E%0A%0A%20%20%3Cg%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20fill%3D%22none%22%20opacity%3D%220.9%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M320%20180%20Q332%20140%20320%2096%22%3E%3C/path%3E%0A%20%20%20%20%3Cpath%20d%3D%22M316%20100%20L320%2092%20L326%2098%22%3E%3C/path%3E%0A%20%20%3C/g%3E%0A%0A%20%20%3Cg%20transform%3D%22translate%28322%20226%29%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2212%22%20fill%3D%22%23FCFCFE%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%224%22%20fill%3D%22none%22%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%3E%3C/circle%3E%0A%20%20%20%20%3Cg%20stroke%3D%22%232F2F31%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%220%22%20y1%3D%22-12%22%20x2%3D%220%22%20y2%3D%22-16%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%220%22%20y1%3D%2212%22%20x2%3D%220%22%20y2%3D%2216%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%22-12%22%20y1%3D%220%22%20x2%3D%22-16%22%20y2%3D%220%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%2212%22%20y1%3D%220%22%20x2%3D%2216%22%20y2%3D%220%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%22-8.5%22%20y1%3D%22-8.5%22%20x2%3D%22-11.3%22%20y2%3D%22-11.3%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%228.5%22%20y1%3D%228.5%22%20x2%3D%2211.3%22%20y2%3D%2211.3%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%22-8.5%22%20y1%3D%228.5%22%20x2%3D%22-11.3%22%20y2%3D%2211.3%22%3E%3C/line%3E%0A%20%20%20%20%20%20%3Cline%20x1%3D%228.5%22%20y1%3D%22-8.5%22%20x2%3D%2211.3%22%20y2%3D%22-11.3%22%3E%3C/line%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E")`,
+              },
+            ].map((s, i) => (
+              <div key={i} className="v2-rai-step" style={{
+                backgroundImage: s.bg,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}>
+                <div className="v2-rai-step-content">
+                  <div className="v2-rai-step-num">Step · {s.num}</div>
+                  <h3 className="v2-rai-step-h">{s.h}</h3>
+                  <p className="v2-rai-step-p">{s.p}</p>
+                </div>
               </div>
-              <h3 className="v2-step-h">She sees it.</h3>
-              <p className="v2-step-p">Cross-referencing tasks, health checks, score trends, 20+ combination signals — continuously, across your entire book.</p>
-            </div>
-            <div className="v2-rai-step">
-              <div className="v2-step-num">Step · 02</div>
-              <div className="v2-step-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-              </div>
-              <h3 className="v2-step-h">She calls it out.</h3>
-              <p className="v2-step-p">Every morning, before your first coffee. You don't go looking for the problem. The problem finds you without any trouble.</p>
-            </div>
-            <div className="v2-rai-step">
-              <div className="v2-step-num">Step · 03</div>
-              <div className="v2-step-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-              </div>
-              <h3 className="v2-step-h">She ranks it.</h3>
-              <p className="v2-step-p">Using a proprietary scoring engine, Rai weighs all of the day's tasks by retention impact. Your highest-value move is next up.</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -1208,28 +1217,125 @@ function HomeV2({ setPage }) {
                 <div className="v2-bullet"><div className="v2-check">✓</div><div><strong>Your Rolodex is future revenue</strong> — former clients become re-engagement opportunities, not dead weight.</div></div>
               </div>
             </div>
-            <div className="v2-device-frame">
-              <div className="v2-device-screen">
-                <h4 className="v2-score-label">Retention Score · Meridian Co.</h4>
-                <div className="v2-score-gauge">
-                  <div className="v2-score-number">78</div>
-                  <div className="v2-score-arch">
-                    <div className="v2-score-bar"><div className="v2-score-fill" /></div>
-                    <div className="v2-score-range"><span>At risk</span><span>Strong</span></div>
+            <div className="v2-platform-portfolio">
+              {/* Header */}
+              <div style={{ marginBottom: 18 }}>
+                <div style={{ fontSize: 11, color: C.textMuted, marginBottom: 3, letterSpacing: "0.03em" }}>Your portfolio</div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 4 }}>
+                  <span style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em" }}>Clients</span>
+                </div>
+                <div style={{ fontSize: 11, color: C.textMuted }}>
+                  <span style={{ color: C.text, fontWeight: 600 }}>14 active</span> · <span style={{ color: C.primary, fontWeight: 700 }}>$58.2k</span>/mo · <span style={{ color: C.primary, fontWeight: 700 }}>71</span> avg
+                </div>
+              </div>
+
+              {/* Two-column layout: left sidebar + main table */}
+              <div className="v2-platform-portfolio-grid">
+
+                {/* Left sidebar — portfolio summary + recent movement */}
+                <div className="v2-port-sidebar">
+                  <div className="v2-port-card">
+                    <div className="v2-port-card-label">PORTFOLIO</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                      <div style={{
+                        width: 42, height: 42, borderRadius: "50%",
+                        border: "3px solid " + C.primary,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: 14, fontWeight: 900, color: C.primary,
+                      }}>71</div>
+                      <div style={{ fontSize: 11, lineHeight: 1.55, flex: 1 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: C.textMuted }}>Clients</span><span style={{ fontWeight: 700 }}>14</span></div>
+                        <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: C.textMuted }}>MRR</span><span style={{ fontWeight: 700 }}>$58.2k</span></div>
+                        <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: C.textMuted }}>Avg</span><span style={{ fontWeight: 700 }}>71</span></div>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", height: 3, borderRadius: 2, overflow: "hidden", marginBottom: 10 }}>
+                      <div style={{ flex: 5, background: C.success }} />
+                      <div style={{ flex: 4, background: C.primaryLight }} />
+                      <div style={{ flex: 4, background: "#B88B15" }} />
+                      <div style={{ flex: 1, background: C.danger }} />
+                    </div>
+                    <div style={{ fontSize: 10.5, lineHeight: 1.7 }}>
+                      <div><span style={{ color: C.success, marginRight: 4 }}>●</span><strong>5</strong> <span style={{ color: C.textMuted }}>Thriving</span></div>
+                      <div><span style={{ color: C.primaryLight, marginRight: 4 }}>●</span><strong>4</strong> <span style={{ color: C.textMuted }}>Healthy</span></div>
+                      <div><span style={{ color: "#B88B15", marginRight: 4 }}>●</span><strong>4</strong> <span style={{ color: C.textMuted }}>Watch</span></div>
+                      <div><span style={{ color: C.danger, marginRight: 4 }}>●</span><strong>1</strong> <span style={{ color: C.textMuted }}>At risk</span></div>
+                    </div>
+                  </div>
+
+                  <div className="v2-port-card">
+                    <div className="v2-port-card-label" style={{ display: "flex", justifyContent: "space-between" }}>
+                      <span>RECENT MOVEMENT</span><span style={{ color: C.textMuted }}>7d</span>
+                    </div>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: C.success, marginBottom: 6, letterSpacing: "0.06em" }}>CLIMBING</div>
+                    <div className="v2-port-movement-item"><span className="v2-port-avatar" style={{ background: C.primaryLight }}>NR</span><span style={{ flex: 1, fontSize: 11 }}>Northvane Retail</span><span style={{ fontSize: 10, color: C.success, fontWeight: 700 }}>+5</span></div>
+                    <div className="v2-port-movement-item"><span className="v2-port-avatar" style={{ background: C.primary }}>HP</span><span style={{ flex: 1, fontSize: 11 }}>Harbor Pines</span><span style={{ fontSize: 10, color: C.success, fontWeight: 700 }}>+3</span></div>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: C.danger, marginTop: 10, marginBottom: 6, letterSpacing: "0.06em" }}>SLIPPING</div>
+                    <div className="v2-port-movement-item"><span className="v2-port-avatar" style={{ background: "#B88B15" }}>EC</span><span style={{ flex: 1, fontSize: 11 }}>Ellis & Co.</span><span style={{ fontSize: 10, color: C.danger, fontWeight: 700 }}>−4</span></div>
+                    <div className="v2-port-movement-item"><span className="v2-port-avatar" style={{ background: "#92A596" }}>BQ</span><span style={{ flex: 1, fontSize: 11 }}>Birchwood Quarry</span><span style={{ fontSize: 10, color: C.danger, fontWeight: 700 }}>−3</span></div>
                   </div>
                 </div>
-                <div style={{ marginTop: 20, paddingTop: 18, borderTop: "1px solid " + C.borderLight }}>
-                  <h4 className="v2-score-label" style={{ marginBottom: 10 }}>Signals detected</h4>
-                  <div className="v2-score-combos">
-                    <span className="v2-combo-pill">Bulletproof</span>
-                    <span className="v2-combo-pill">True Partner</span>
-                    <span className="v2-combo-pill">Cornerstone</span>
-                    <span className="v2-combo-pill v2-combo-pill-neg">One Foot Out</span>
+
+                {/* Main table */}
+                <div className="v2-port-table-wrap">
+                  <div className="v2-port-controls">
+                    <div style={{ display: "flex", gap: 4, fontSize: 10 }}>
+                      <span style={{ color: C.textMuted }}>SORT</span>
+                      <span className="v2-port-pill v2-port-pill-active">Priority</span>
+                      <span className="v2-port-pill">Revenue</span>
+                      <span className="v2-port-pill">Trend</span>
+                      <span className="v2-port-pill">Renewal</span>
+                    </div>
                   </div>
+                  <div style={{ padding: "8px 14px", fontSize: 10, color: C.textMuted, borderBottom: "1px solid " + C.borderLight, display: "flex", justifyContent: "space-between" }}>
+                    <span>14 clients</span><span>Sort: <strong style={{ color: C.text }}>Priority</strong></span>
+                  </div>
+
+                  {/* Column headers */}
+                  <div className="v2-port-row v2-port-row-header">
+                    <div style={{ flex: "2 1 0", minWidth: 0 }}>CLIENT</div>
+                    <div className="v2-port-col-num">HEALTH</div>
+                    <div className="v2-port-col-num">REVENUE</div>
+                    <div className="v2-port-col-num">12-WK</div>
+                    <div className="v2-port-col-num">CADENCE</div>
+                    <div className="v2-port-col-num">RENEWS</div>
+                  </div>
+
+                  {/* Client rows */}
+                  {[
+                    { i: "HM", name: "Harlow Media", industry: "Financial Services", score: 88, scoreColor: C.success, delta: "−3", revenue: "$5.8k", trend: "down", trendPct: "−6%", trendColor: C.danger, cadence: "12d silent", cadenceColor: "o", renews: "4mo" },
+                    { i: "VC", name: "Vantage Collective", industry: "Ecommerce", score: 87, scoreColor: C.success, delta: "−2", revenue: "$9.2k", trend: "down", trendPct: "−6%", trendColor: C.danger, cadence: "18d cadence", cadenceColor: "●", renews: "5mo" },
+                    { i: "OR", name: "Orchard Ridge", industry: "Ecommerce", score: 79, scoreColor: C.primaryLight, delta: "−2", revenue: "$8.7k", trend: "down", trendPct: "−7%", trendColor: C.danger, cadence: "10d cadence", cadenceColor: "●", renews: "6mo" },
+                    { i: "NR", name: "Northvane Retail", industry: "Ecommerce", score: 92, scoreColor: C.success, delta: "+2", revenue: "$4.3k", trend: "up", trendPct: "+8%", trendColor: C.success, cadence: "10d cadence", cadenceColor: "●", renews: "1mo" },
+                    { i: "LG", name: "Lantern Group", industry: "Legal Services", score: 72, scoreColor: "#B88B15", delta: "+4", revenue: "$5.5k", trend: "up", trendPct: "+10%", trendColor: C.success, cadence: "19d cadence", cadenceColor: "●", renews: "2mo" },
+                    { i: "EC", name: "Ellis & Co.", industry: "Ecommerce", score: 78, scoreColor: C.primaryLight, delta: "−4", revenue: "$4.1k", trend: "down", trendPct: "−6%", trendColor: C.danger, cadence: "On rhythm", cadenceColor: "●●", renews: "3mo" },
+                    { i: "SG", name: "Sidegate", industry: "Ecommerce", score: 84, scoreColor: C.success, delta: "+3", revenue: "$1.2k", trend: "up", trendPct: "+9%", trendColor: C.success, cadence: "17d cadence", cadenceColor: "●", renews: "5mo" },
+                  ].map((r, idx) => (
+                    <div key={idx} className="v2-port-row">
+                      <div style={{ flex: "2 1 0", display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+                        <span className="v2-port-avatar" style={{ background: r.scoreColor }}>{r.i}</span>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <div style={{ fontSize: 12, fontWeight: 600, color: C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.name}</div>
+                          <div style={{ fontSize: 10, color: C.textMuted }}>{r.industry}</div>
+                        </div>
+                      </div>
+                      <div className="v2-port-col-num">
+                        <span style={{ fontSize: 13, fontWeight: 900, color: r.scoreColor }}>{r.score}</span>
+                        <span style={{ fontSize: 9, color: C.textMuted, marginLeft: 4 }}>{r.delta}</span>
+                      </div>
+                      <div className="v2-port-col-num"><span style={{ fontSize: 11, fontWeight: 600 }}>{r.revenue}</span><span style={{ fontSize: 9, color: C.textMuted, display: "block" }}>/mo</span></div>
+                      <div className="v2-port-col-num">
+                        <svg width="34" height="12" viewBox="0 0 34 12" style={{ display: "block", margin: "0 auto" }}>
+                          <polyline points={r.trend === "up" ? "0,10 8,7 16,6 24,4 34,2" : "0,2 8,4 16,6 24,8 34,10"} fill="none" stroke={r.trendColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        <span style={{ fontSize: 9, color: r.trendColor, fontWeight: 700 }}>{r.trendPct}</span>
+                      </div>
+                      <div className="v2-port-col-num"><span style={{ fontSize: 10, color: r.cadenceColor === "o" ? "#B88B15" : C.primaryLight, marginRight: 3 }}>{r.cadenceColor}</span><span style={{ fontSize: 10 }}>{r.cadence}</span></div>
+                      <div className="v2-port-col-num" style={{ fontSize: 10 }}>{r.renews}</div>
+                    </div>
+                  ))}
                 </div>
-                <div className="v2-score-rai">
-                  <strong>Rai:</strong> Strong fundamentals, but watch the recent drift on response latency.
-                </div>
+
               </div>
             </div>
           </div>
@@ -1273,20 +1379,22 @@ function HomeV2({ setPage }) {
             <div className="v2-eyebrow">Built for the way you work</div>
             <h2 className="v2-section-h2">Retayned is shaped <span className="v2-muted">to your book.</span></h2>
           </div>
-          <div className="v2-audience-tabs">
-            {[
-              { k: "freelancers", l: "Freelancers" },
-              { k: "agencies", l: "Agencies" },
-              { k: "enterprise", l: "Enterprise" },
-            ].map((t) => (
-              <button
-                key={t.k}
-                className={"v2-audience-tab" + (audienceTab === t.k ? " v2-audience-tab-active" : "")}
-                onClick={() => setAudienceTab(t.k)}
-              >
-                {t.l}
-              </button>
-            ))}
+          <div className="v2-audience-tabs-wrap">
+            <div className="v2-audience-tabs">
+              {[
+                { k: "freelancers", l: "Freelancers" },
+                { k: "agencies", l: "Agencies" },
+                { k: "enterprise", l: "Enterprise" },
+              ].map((t) => (
+                <button
+                  key={t.k}
+                  className={"v2-audience-tab" + (audienceTab === t.k ? " v2-audience-tab-active" : "")}
+                  onClick={() => setAudienceTab(t.k)}
+                >
+                  {t.l}
+                </button>
+              ))}
+            </div>
           </div>
           <div className="v2-audience-content">
             <div>
@@ -1427,58 +1535,94 @@ function HomeV2({ setPage }) {
         <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,25 C 1080,-30 360,140 0,20 Z" fill="#F2EEE8" /></svg>
       </div>
 
-      {/* ══════ TESTIMONIALS (ported from live homepage, warm cream bg) ══════ */}
+      {/* ══════ TESTIMONIALS + STATS (7-cell mixed grid) ══════ */}
       <section className="r-full-bleed" style={{
         background: C.surfaceWarm,
         padding: "112px 48px",
       }}>
         <div style={{ maxWidth: 880, margin: "0 auto 56px", textAlign: "center" }}>
-          <h3 style={{ fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.05, marginBottom: 16 }}>
+          <h3 style={{ fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.05 }}>
             What folks are saying.
           </h3>
-          <p style={{ fontSize: 18, color: C.textSec, lineHeight: 1.6 }}>
-            From our own Retayned business.
-          </p>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, maxWidth: 1320, margin: "0 auto" }} className="v2-testimonials-grid">
-          {[
-            { quote: "I used to lose 2-3 clients a year and just accept it as cost of doing business. Retayned showed me an actual pattern. It was the same signs every time and we just ignored them. Not anymore!", name: "Agency Owner", role: "50+ Clients", initials: "MK", color: C.primaryLight },
-            { quote: "It gave me the exact words to say to a client I was about to lose. I had the conversation that afternoon. They're still with me 8 months later. I'm still with Retayned.", name: "Freelancer", role: "1-5 Clients", initials: "JR", color: C.btn },
-            { quote: "The health check questions are uncomfortable in the best way. They force you to admit what you already know but haven't said out loud. It's something we thought we'd use for crises and it's turned into our daily operations hub.", name: "Consultant", role: "10-50 Clients", initials: null, color: "#92A596", beta: true },
-          ].map((t, i) => (
-            <div key={i} className="r-testimonial-card" style={{
-              background: C.card,
-              border: "1px solid " + C.borderLight,
-              borderRadius: 16,
-              padding: 28,
-              display: "flex", flexDirection: "column",
-              boxShadow: "0 4px 16px rgba(0,0,0,0.03)",
-            }}>
-              <div style={{ display: "flex", gap: 2, marginBottom: 18 }}>
-                {Array(5).fill(0).map((_, j) => (
-                  <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>
-                ))}
-              </div>
-              <p style={{ fontSize: 16, color: C.text, lineHeight: 1.65, marginBottom: 24, fontStyle: "italic", flex: 1 }}>"{t.quote}"</p>
-              <div style={{ borderTop: "1px solid " + C.borderLight, paddingTop: 16, display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ width: 44, height: 44, borderRadius: "50%", background: t.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  {t.initials ? (
-                    <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>{t.initials}</span>
-                  ) : (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  )}
-                </div>
-                <div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontSize: 15, fontWeight: 700, color: C.text }}>{t.name}</span>
-                    {t.beta && <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 4, background: C.primarySoft, color: C.primary, textTransform: "uppercase", letterSpacing: ".04em" }}>From our beta</span>}
-                  </div>
-                  <div style={{ fontSize: 13, color: C.textMuted, marginTop: 2 }}>{t.role}</div>
-                </div>
+
+          {/* Cell 1 — stat: 90% */}
+          <div className="v2-mix-cell v2-mix-stat">
+            <div className="v2-mix-stat-num">90%</div>
+            <div className="v2-mix-stat-label">Of churn is predictable</div>
+          </div>
+
+          {/* Cell 2 — testimonial */}
+          <div className="v2-mix-cell v2-mix-testimonial">
+            <div style={{ display: "flex", gap: 2, marginBottom: 18 }}>
+              {Array(5).fill(0).map((_, j) => <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>)}
+            </div>
+            <p className="v2-mix-quote">"I used to lose 2-3 clients a year and just accept it as cost of doing business. Retayned showed me an actual pattern. It was the same signs every time and we just ignored them. Not anymore!"</p>
+            <div className="v2-mix-footer">
+              <div style={{ width: 44, height: 44, borderRadius: "50%", background: C.primaryLight, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 14, fontWeight: 700, color: "#fff" }}>MK</div>
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: C.text }}>Agency Owner</div>
+                <div style={{ fontSize: 13, color: C.textMuted, marginTop: 2 }}>50+ Clients</div>
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Cell 3 — stat: 25x */}
+          <div className="v2-mix-cell v2-mix-stat">
+            <div className="v2-mix-stat-num">25x</div>
+            <div className="v2-mix-stat-label">Cheaper to retain than acquire</div>
+          </div>
+
+          {/* Cell 4 — testimonial */}
+          <div className="v2-mix-cell v2-mix-testimonial">
+            <div style={{ display: "flex", gap: 2, marginBottom: 18 }}>
+              {Array(5).fill(0).map((_, j) => <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>)}
+            </div>
+            <p className="v2-mix-quote">"It gave me the exact words to say to a client I was about to lose. I had the conversation that afternoon. They're still with me 8 months later. I'm still with Retayned."</p>
+            <div className="v2-mix-footer">
+              <div style={{ width: 44, height: 44, borderRadius: "50%", background: C.btn, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 14, fontWeight: 700, color: "#fff" }}>JR</div>
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: C.text }}>Freelancer</div>
+                <div style={{ fontSize: 13, color: C.textMuted, marginTop: 2 }}>1-5 Clients</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Cell 5 — stat: 1+ */}
+          <div className="v2-mix-cell v2-mix-stat">
+            <div className="v2-mix-stat-num">1+</div>
+            <div className="v2-mix-stat-label">Saved client pays for itself</div>
+          </div>
+
+          {/* Cell 6 — testimonial */}
+          <div className="v2-mix-cell v2-mix-testimonial">
+            <div style={{ display: "flex", gap: 2, marginBottom: 18 }}>
+              {Array(5).fill(0).map((_, j) => <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>)}
+            </div>
+            <p className="v2-mix-quote">"The health check questions are uncomfortable in the best way. They force you to admit what you already know but haven't said out loud. It's something we thought we'd use for crises and it's turned into our daily operations hub."</p>
+            <div className="v2-mix-footer">
+              <div style={{ width: 44, height: 44, borderRadius: "50%", background: "#92A596", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: C.text }}>Consultant</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 4, background: C.primarySoft, color: C.primary, textTransform: "uppercase", letterSpacing: ".04em" }}>From our beta</span>
+                </div>
+                <div style={{ fontSize: 13, color: C.textMuted, marginTop: 2 }}>10-50 Clients</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Cell 7 — stat: 5% increase (large headline style) */}
+          <div className="v2-mix-cell v2-mix-stat v2-mix-stat-wide" style={{ gridColumn: "span 3" }}>
+            <div className="v2-mix-stat-headline">
+              A 5% increase in retention can boost profits by 95%.<sup style={{ fontSize: "0.4em", color: C.textMuted, verticalAlign: "super" }}>¹</sup>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -6113,6 +6257,142 @@ export default function RetaynedSite() {
         /* ═══════════════════════════════════════════════════ */
         .v2-root { }
 
+        /* ═══ Platform portfolio dashboard (right column) ═══ */
+        .v2-platform-portfolio {
+          background: ${C.card};
+          border: 1px solid ${C.borderLight};
+          border-radius: 16px;
+          padding: 20px;
+          box-shadow: 0 12px 40px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04);
+          font-size: 12px;
+        }
+        .v2-platform-portfolio-grid {
+          display: grid;
+          grid-template-columns: 180px 1fr;
+          gap: 12px;
+          align-items: start;
+        }
+        .v2-port-sidebar {
+          display: flex; flex-direction: column; gap: 10px;
+        }
+        .v2-port-card {
+          background: ${C.bg};
+          border: 1px solid ${C.borderLight};
+          border-radius: 10px;
+          padding: 12px;
+        }
+        .v2-port-card-label {
+          font-size: 9px; font-weight: 700;
+          color: ${C.textMuted};
+          letter-spacing: 0.1em;
+          margin-bottom: 10px;
+        }
+        .v2-port-movement-item {
+          display: flex; align-items: center; gap: 8px;
+          padding: 3px 0;
+        }
+        .v2-port-avatar {
+          width: 22px; height: 22px; border-radius: 50%;
+          display: inline-flex; align-items: center; justify-content: center;
+          font-size: 8.5px; font-weight: 700; color: #fff;
+          flex-shrink: 0;
+        }
+        .v2-port-table-wrap {
+          background: #fff;
+          border: 1px solid ${C.borderLight};
+          border-radius: 10px;
+          overflow: hidden;
+          min-width: 0;
+        }
+        .v2-port-controls {
+          display: flex; justify-content: space-between; align-items: center;
+          padding: 10px 14px;
+          border-bottom: 1px solid ${C.borderLight};
+        }
+        .v2-port-pill {
+          padding: 3px 9px; border-radius: 5px;
+          font-size: 10px; color: ${C.textSec};
+        }
+        .v2-port-pill-active {
+          background: ${C.text}; color: #fff; font-weight: 700;
+        }
+        .v2-port-row {
+          display: flex; align-items: center; gap: 8px;
+          padding: 9px 14px;
+          border-bottom: 1px solid ${C.borderLight};
+        }
+        .v2-port-row:last-child { border-bottom: none; }
+        .v2-port-row-header {
+          background: ${C.bg};
+          font-size: 9px; font-weight: 700;
+          color: ${C.textMuted};
+          letter-spacing: 0.08em;
+        }
+        .v2-port-col-num {
+          flex: 1 1 0;
+          text-align: right;
+          min-width: 0;
+        }
+        @media (max-width: 1200px) {
+          .v2-platform-portfolio-grid { grid-template-columns: 1fr; }
+          .v2-port-sidebar { flex-direction: row; }
+          .v2-port-sidebar > * { flex: 1; }
+        }
+
+        /* ═══ 7-cell mixed testimonials/stats grid ═══ */
+        .v2-mix-cell {
+          background: ${C.card};
+          border: 1px solid ${C.borderLight};
+          border-radius: 16px;
+          padding: 32px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+        }
+        .v2-mix-testimonial {
+          display: flex; flex-direction: column;
+        }
+        .v2-mix-quote {
+          font-size: 16px; color: ${C.text};
+          line-height: 1.65; margin-bottom: 24;
+          font-style: italic; flex: 1; margin-bottom: 24px;
+        }
+        .v2-mix-footer {
+          border-top: 1px solid ${C.borderLight};
+          padding-top: 16px;
+          display: flex; align-items: center; gap: 12px;
+        }
+        .v2-mix-stat {
+          display: flex; flex-direction: column;
+          align-items: center; justify-content: center;
+          text-align: center;
+          min-height: 220px;
+        }
+        .v2-mix-stat-num {
+          font-size: clamp(56px, 7vw, 96px);
+          font-weight: 900; color: ${C.primary};
+          letter-spacing: -0.045em; line-height: 1;
+          margin-bottom: 14px;
+        }
+        .v2-mix-stat-label {
+          font-size: 13px; font-weight: 600;
+          color: ${C.textMuted};
+          text-transform: uppercase; letter-spacing: 0.06em;
+          max-width: 220px;
+        }
+        .v2-mix-stat-wide {
+          min-height: 160px;
+          padding: 48px 32px;
+        }
+        .v2-mix-stat-headline {
+          font-size: clamp(28px, 3.5vw, 48px);
+          font-weight: 900; letter-spacing: -0.03em;
+          line-height: 1.05; color: ${C.text};
+          max-width: 1000px; margin: 0 auto;
+        }
+        @media (max-width: 1024px) {
+          .v2-testimonials-grid { grid-template-columns: 1fr !important; }
+          .v2-mix-stat-wide { grid-column: span 1 !important; }
+        }
+
         /* Fonts: Caveat + DM Serif Display are loaded in hero via @import */
         @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=DM+Serif+Display:ital@0;1&display=swap');
 
@@ -6358,11 +6638,39 @@ export default function RetaynedSite() {
           display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
         }
         .v2-rai-step {
-          background: #fff; border-radius: 20px;
-          padding: 28px 24px 32px;
+          background: #fff;
+          border-radius: 20px;
+          padding: 0;
           box-shadow: 0 6px 16px rgba(0,0,0,0.04);
           border: 1px solid ${C.borderLight};
+          position: relative;
+          overflow: hidden;
+          aspect-ratio: 360 / 420;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
         }
+        .v2-rai-step-content {
+          position: relative;
+          padding: 28px 24px 32px;
+          background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.95) 42%, rgba(255,255,255,1) 100%);
+        }
+        .v2-rai-step-num {
+          font-family: 'SF Mono', Menlo, monospace;
+          font-size: 11px; font-weight: 700;
+          color: ${C.primary}; opacity: 0.7;
+          text-transform: uppercase; letter-spacing: 0.14em;
+          margin-bottom: 12px;
+        }
+        .v2-rai-step-h {
+          font-size: 22px; font-weight: 800;
+          letter-spacing: -0.02em; margin-bottom: 10px;
+          color: ${C.text};
+        }
+        .v2-rai-step-p {
+          font-size: 14px; color: ${C.textSec}; line-height: 1.65;
+        }
+        /* Legacy step classes (kept in case anything else uses them) */
         .v2-step-num {
           font-family: 'SF Mono', Menlo, monospace;
           font-size: 11px; font-weight: 700;
@@ -6534,23 +6842,32 @@ export default function RetaynedSite() {
         /* ═══ AUDIENCE ═══ */
         .v2-section-audience { background: #EAE4D6; padding: 112px 48px; }
         .v2-audience-tabs {
-          display: flex; gap: 8px; justify-content: center;
-          margin-bottom: 48px; flex-wrap: wrap;
+          display: inline-flex; gap: 4px; justify-content: center;
+          margin: 0 auto 48px;
+          padding: 6px;
+          background: #F5ECD8;
+          border-radius: 100px;
+          box-shadow: inset 0 0 0 1px rgba(28, 50, 36, 0.04);
+        }
+        .v2-audience-tabs-wrap {
+          display: flex; justify-content: center; width: 100%;
         }
         .v2-audience-tab {
-          padding: 10px 22px; border-radius: 100px;
+          padding: 11px 28px; border-radius: 100px;
           font-size: 14px; font-weight: 600;
           color: ${C.textSec};
-          border: 1.5px solid transparent;
+          border: none;
           background: transparent; cursor: pointer; font-family: inherit;
           transition: all 0.2s ease;
         }
         .v2-audience-tab:hover { color: ${C.text}; }
         .v2-audience-tab-active {
-          background: #fff; color: ${C.text};
-          border-color: ${C.border};
-          box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+          background: ${C.primary};
+          color: #fff;
+          font-weight: 700;
+          box-shadow: 0 2px 8px rgba(28, 50, 36, 0.12);
         }
+        .v2-audience-tab-active:hover { color: #fff; }
         .v2-audience-content {
           background: #F5ECD8;
           border-radius: 24px;
