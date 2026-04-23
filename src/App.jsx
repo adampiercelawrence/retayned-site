@@ -481,24 +481,44 @@ function Nav({ page, setPage }) {
 // ═══ Footer ═══
 function Footer({ setPage }) {
   return (
-    <footer style={{ background: "#1E261F", borderTop: "none", padding: "32px 20px 24px", marginTop: -1 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-        <div style={{ display: "flex", alignItems: "baseline", cursor: "pointer" }} onClick={() => setPage("home")}>
-          <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: "-0.04em", color: "rgba(255,255,255,0.7)", fontFamily: "system-ui, -apple-system, sans-serif" }}>Retayned</span>
-          <span style={{ fontSize: 16, fontWeight: 900, color: "rgba(255,255,255,0.7)", marginLeft: 1, fontFamily: "system-ui, -apple-system, sans-serif" }}>.</span>
+    <footer className="v2-footer">
+      <div className="v2-footer-inner">
+        <div className="v2-footer-brand">
+          <div className="v2-footer-wordmark" onClick={() => setPage("home")} role="button" tabIndex={0}>Retayned.</div>
+          <p className="v2-footer-tag">The CRM that prevents churn. Built for the freelancers, agencies, and teams who take client relationships personally.</p>
         </div>
-        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>There's no "i" in Retayned.</div>
-      </div>
-      <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 12 }}>
-        {[["platform","Platform"],["pricing","Pricing"],["faq","FAQs"],["contact","Contact"],["privacy","Privacy"],["terms","Terms"]].map(([id, label]) => (
-          <span key={id} onClick={() => setPage(id)} role="button" tabIndex={0} onKeyDown={e => e.key === "Enter" && setPage(id)} style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", cursor: "pointer" }}>{label}</span>
-        ))}
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 8 }}>
-        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", lineHeight: 1.5 }}>
-          <sup>1</sup> Reichheld, F. & Schefter, P. "The Economics of E-Loyalty." Harvard Business School / Bain & Company.
+        <div className="v2-footer-col">
+          <h5>Product</h5>
+          <a onClick={() => setPage("platform")}>Platform</a>
+          <a onClick={() => setPage("feature-today")}>Today</a>
+          <a onClick={() => setPage("feature-scoring")}>Retention Score</a>
+          <a onClick={() => setPage("feature-health")}>Health Checks</a>
+          <a onClick={() => setPage("feature-rai")}>Talk to Rai</a>
+          <a onClick={() => setPage("feature-rolodex")}>Rolodex</a>
         </div>
-        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}>© {new Date().getFullYear()} Maniac Digital, LLC</div>
+        <div className="v2-footer-col">
+          <h5>Who it's for</h5>
+          <a onClick={() => setPage("freelancers")}>Freelancers</a>
+          <a onClick={() => setPage("agencies")}>Agencies</a>
+          <a onClick={() => setPage("enterprise")}>Enterprise</a>
+          <a onClick={() => setPage("pricing")}>Pricing</a>
+        </div>
+        <div className="v2-footer-col">
+          <h5>Company</h5>
+          <a onClick={() => setPage("about")}>About</a>
+          <a onClick={() => setPage("blog")}>Blog</a>
+          <a onClick={() => setPage("contact")}>Contact</a>
+          <a onClick={() => setPage("faq")}>FAQ</a>
+        </div>
+        <div className="v2-footer-col">
+          <h5>Legal</h5>
+          <a onClick={() => setPage("privacy")}>Privacy</a>
+          <a onClick={() => setPage("terms")}>Terms</a>
+        </div>
+      </div>
+      <div className="v2-footer-bottom">
+        <div>© {new Date().getFullYear()} Maniac Digital, LLC · Retayned</div>
+        <div>Washington, DC · There's no "i" in Retayned.</div>
       </div>
     </footer>
   );
@@ -776,6 +796,866 @@ function TodayDemo() {
         </div>
       ))}
       <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>Sorted. Highest-value move is first.</div>
+    </div>
+  );
+}
+
+
+// ═══════════════════════════════════════════════════════════════════
+// HOMEV2 — Slite-style redesign. Activated via ?new=1 URL flag.
+// Uses cream/beige dominant palette. Green reserved for small accents
+// (eyebrow pills, step icons, score accents, Rai bubbles). Dark green
+// crescendo in Enterprise section only. Purple for primary CTAs only.
+// ═══════════════════════════════════════════════════════════════════
+
+// Extra color tokens for v2
+const V2 = {
+  bgWarmer: "#EAE4D6",     // strongest beige — hero bg + final CTA bg
+  bgDeviceWarm: "#F5ECD8", // device frame beige
+  bgWarmerEdge: "#D9D1BE",
+};
+
+// ─── Today feed with state-driven reorder animation ───
+function V2TodayFeed() {
+  // 4 tasks — Rai periodically re-ranks priority order
+  const initialTasks = [
+    { id: "meridian", tag: "Fire", tagClass: "urgent", title: "Meridian Co. hasn't opened emails in 14 days", meta: "Revenue at risk: $96k/yr · Last touch: 18 days ago", score: 42, scoreClass: "red" },
+    { id: "hollis", tag: "Deepen", tagClass: "deepen", title: "Hollis & Lee just hit one year — send handwritten note", meta: "Tenure: 12 mo · LTV: $144k · Health: 91", score: 91, scoreClass: "green" },
+    { id: "otsego", tag: "Proactive", tagClass: "proactive", title: "Otsego mentioned Q3 hiring — ask about it", meta: "Touchpoint from Mar 12 · Opportunity signal", score: 64, scoreClass: "yellow" },
+    { id: "baxter", tag: "Save", tagClass: "savings", title: "Baxter Firm renewal in 21 days — confirm scope", meta: "LTV: $50k · Renewal probability: 94%", score: 87, scoreClass: "green" },
+  ];
+
+  // Sequence of re-rankings (array of id orders) Rai cycles through.
+  // Each order represents a different prioritization the engine surfaces.
+  const orders = [
+    ["meridian", "hollis", "otsego", "baxter"],
+    ["meridian", "baxter", "hollis", "otsego"],
+    ["hollis", "meridian", "baxter", "otsego"],
+    ["meridian", "otsego", "baxter", "hollis"],
+  ];
+
+  const [orderIdx, setOrderIdx] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setOrderIdx((i) => (i + 1) % orders.length);
+    }, 3800);
+    return () => clearInterval(t);
+  }, []);
+
+  const currentOrder = orders[orderIdx];
+  const ROW_HEIGHT = 76; // approx height of each task row including margin
+
+  return (
+    <div className="v2-today-feed">
+      <div className="v2-feed-head">
+        <div>
+          <h3 style={{ fontSize: 18, fontWeight: 800, margin: 0 }}>Today</h3>
+          <div style={{ fontSize: 11, color: C.textMuted, fontWeight: 500, marginTop: 2 }}>4 tasks · sorted by Rai</div>
+        </div>
+        <div className="v2-rai-badge"><span className="v2-rai-pulse" />Rai is ranking</div>
+      </div>
+      <div className="v2-task-list" style={{ position: "relative", height: initialTasks.length * ROW_HEIGHT }}>
+        {initialTasks.map((task) => {
+          const pos = currentOrder.indexOf(task.id);
+          return (
+            <div
+              key={task.id}
+              className="v2-task"
+              style={{
+                position: "absolute",
+                top: pos * ROW_HEIGHT,
+                left: 0,
+                right: 0,
+                transition: "top 0.9s cubic-bezier(0.65, 0, 0.35, 1)",
+              }}
+            >
+              <div className={"v2-tag v2-tag-" + task.tagClass}>{task.tag}</div>
+              <div className="v2-task-body">
+                <div className="v2-task-title">{task.title}</div>
+                <div className="v2-task-meta">{task.meta}</div>
+              </div>
+              <div className={"v2-score-mini v2-score-" + task.scoreClass}>{task.score}</div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="v2-rai-whisper">
+        <div className="v2-rai-avatar">R</div>
+        <div className="v2-rai-text"><strong style={{ color: C.text }}>Rai:</strong> Meridian just moved to the top — their score dropped from 68 to 42 in three weeks. Want the outreach script?</div>
+      </div>
+    </div>
+  );
+}
+
+// ─── JS-smooth-scroll wordmark tapestry ───
+function V2ScrollBand({ items, direction = "left", speed = 35 }) {
+  // items: array of { className, label, colorClass }
+  // direction: "left" means content moves left (so track translates to negative X)
+  // speed: pixels per second
+  const trackRef = useRef(null);
+  const rafRef = useRef(null);
+  const lastTimeRef = useRef(null);
+  const offsetRef = useRef(0);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    // Wait for layout, then capture width of one copy (half of total since we duplicate)
+    const measure = () => track.scrollWidth / 2;
+    let halfWidth = measure();
+
+    const tick = (ts) => {
+      if (lastTimeRef.current == null) lastTimeRef.current = ts;
+      const dt = (ts - lastTimeRef.current) / 1000; // seconds
+      lastTimeRef.current = ts;
+      const delta = speed * dt * (direction === "left" ? -1 : 1);
+      offsetRef.current += delta;
+      // Wrap — keep offset in [-halfWidth, 0] for left, or [0, halfWidth] for right
+      if (direction === "left") {
+        if (offsetRef.current <= -halfWidth) offsetRef.current += halfWidth;
+      } else {
+        if (offsetRef.current >= 0) offsetRef.current -= halfWidth;
+      }
+      track.style.transform = `translate3d(${offsetRef.current}px, 0, 0)`;
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    // Initial offset for right direction — start at -halfWidth so content is "ahead"
+    if (direction === "right") {
+      offsetRef.current = -halfWidth;
+      track.style.transform = `translate3d(${offsetRef.current}px, 0, 0)`;
+    }
+
+    // Start animation
+    rafRef.current = requestAnimationFrame(tick);
+
+    // Re-measure on window resize
+    const onResize = () => {
+      halfWidth = measure();
+    };
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [direction, speed]);
+
+  return (
+    <div className="v2-scroll-band">
+      <div className="v2-scroll-track" ref={trackRef}>
+        {items.map((it, i) => (
+          <span key={"a" + i} className={it.className}>{it.label}</span>
+        ))}
+        {items.map((it, i) => (
+          <span key={"b" + i} className={it.className}>{it.label}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Main HomeV2 component ───
+function HomeV2({ setPage }) {
+  const [audienceTab, setAudienceTab] = useState("freelancers");
+
+  const dimensions = [
+    { className: "v2-dim v2-dim-serif-italic", label: "Grace" },
+    { className: "v2-dim v2-dim-heavy-caps", label: "TRUST" },
+    { className: "v2-dim v2-dim-spaced-lower", label: "communication" },
+    { className: "v2-dim v2-dim-serif", label: "Loyalty" },
+    { className: "v2-dim v2-dim-small-caps", label: "BUDGET RISK" },
+    { className: "v2-dim v2-dim-serif-italic-lg", label: "Depth" },
+    { className: "v2-dim v2-dim-small-caps", label: "STRESS" },
+    { className: "v2-dim v2-dim-serif-italic", label: "Expectations" },
+    { className: "v2-dim v2-dim-spaced-lower", label: "FUNGIBILITY" },
+    { className: "v2-dim v2-dim-serif-italic-lg", label: "tone" },
+    { className: "v2-dim v2-dim-heavy-caps", label: "AUTHORITY" },
+    { className: "v2-dim v2-dim-small-caps", label: "REPORTING" },
+  ];
+
+  const combinations = [
+    { className: "v2-wm v2-wm-pos v2-wm-bulletproof", label: "Bulletproof" },
+    { className: "v2-wm v2-wm-neg v2-wm-icewall", label: "Ice Wall" },
+    { className: "v2-wm v2-wm-pos v2-wm-lockedvault", label: "LOCKED VAULT" },
+    { className: "v2-wm v2-wm-neg v2-wm-ontheclock", label: "On the Clock" },
+    { className: "v2-wm v2-wm-pos v2-wm-cornerstone", label: "Cornerstone" },
+    { className: "v2-wm v2-wm-neg v2-wm-silentexit", label: "Silent Exit" },
+    { className: "v2-wm v2-wm-pos v2-wm-decisionexpress", label: "DECISION EXPRESS" },
+    { className: "v2-wm v2-wm-neg v2-wm-noroom", label: "NO ROOM TO OPERATE" },
+    { className: "v2-wm v2-wm-pos v2-wm-truepartner", label: "True Partner" },
+    { className: "v2-wm v2-wm-neg v2-wm-tickingbomb", label: "TICKING TIME BOMB" },
+    { className: "v2-wm v2-wm-pos v2-wm-smoothop", label: "Smooth Operator" },
+    { className: "v2-wm v2-wm-neg v2-wm-onefoot", label: "One Foot Out" },
+    { className: "v2-wm v2-wm-pos v2-wm-allinvestor", label: "All-in Investor" },
+    { className: "v2-wm v2-wm-neg v2-wm-powderkeg", label: "POWDER KEG" },
+    { className: "v2-wm v2-wm-pos v2-wm-openbook", label: "Open Book" },
+    { className: "v2-wm v2-wm-neg v2-wm-nickeldime", label: "Nickel and Dime" },
+    { className: "v2-wm v2-wm-pos v2-wm-resilient", label: "RESILIENT UNDER FIRE" },
+    { className: "v2-wm v2-wm-neg v2-wm-noanchor", label: "No Anchor" },
+    { className: "v2-wm v2-wm-pos v2-wm-lowmaint", label: "Low Maintenance Loyalty" },
+    { className: "v2-wm v2-wm-neg v2-wm-bottleneck", label: "BOTTLENECK DOOM" },
+  ];
+
+  const audiencePanels = {
+    freelancers: {
+      h: "The CRM that catches what you miss.",
+      p: "You're a team of one. You can't be on every Slack thread, every email, every hint of drift. Retayned watches the whole book while you focus on the work.",
+      cta: "See the platform",
+      ctaTarget: "freelancers",
+    },
+    agencies: {
+      h: "Your team's memory, on one system.",
+      p: "When an account manager leaves, they take 40 client relationships with them. Retayned holds the institutional knowledge — so your team doesn't have to.",
+      cta: "See for agencies",
+      ctaTarget: "agencies",
+    },
+    enterprise: {
+      h: "Two surfaces, one brain.",
+      p: "Your top 50 accounts get a human account manager. The other 950 get triaged by agents, reviewed by your team, and actioned through a single surface.",
+      cta: "See Enterprise",
+      ctaTarget: "enterprise",
+    },
+  };
+  const panel = audiencePanels[audienceTab];
+
+  return (
+    <div className="v2-root">
+      {/* ══════ HERO ══════ */}
+      <section className="v2-hero r-full-bleed r-no-pad">
+        <div className="v2-hero-inner">
+          <div className="v2-trust-pill">
+            <span className="v2-trust-dot" />
+            For freelancers, agencies, account reps, and mobsters
+          </div>
+          <h1 className="v2-hero-h1">
+            The CRM that{" "}
+            <span className="v2-strike-wrap">
+              <span className="v2-strike">predicts</span>
+              <span className="v2-caveat">prevents</span>
+            </span>{" "}churn.
+          </h1>
+          <p className="v2-hero-sub">Stop losing clients you should have kept.</p>
+          <p className="v2-hero-desc">Traditional CRMs track deals. Retayned tracks the health of relationships — giving you client-specific solutions to keep and grow the business you've earned.</p>
+          <div className="v2-hero-cta-row">
+            <button className="v2-btn-primary-lg cta-btn" onClick={() => setPage("signup")}>Start Free Trial</button>
+            <button className="v2-btn-secondary-lg" onClick={() => setPage("platform")}>See the platform</button>
+          </div>
+          <p className="v2-hero-fine">14-day free trial. Cancel anytime.</p>
+
+          <div className="v2-hero-device">
+            <div className="v2-hero-device-inner">
+              <div className="v2-device-topbar">
+                <div className="v2-device-dots"><span /><span /><span /></div>
+                <div className="v2-device-url">app.retayned.com / today</div>
+              </div>
+              <V2TodayFeed />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* curve: hero (beige) → stats (cream) */}
+      <div className="v2-curve" style={{ background: V2.bgWarmer }}>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,45 Q 720,85 0,55 Z" fill={C.bg} /></svg>
+      </div>
+
+      {/* ══════ STATS ══════ */}
+      <section className="v2-section-stats">
+        <div className="v2-stats-row">
+          <div className="v2-stat">
+            <div className="v2-stat-value">12</div>
+            <div className="v2-stat-label">scoring dimensions powering every Retention Score</div>
+          </div>
+          <div className="v2-stat">
+            <div className="v2-stat-value">20</div>
+            <div className="v2-stat-label">combination signals detecting what single metrics miss</div>
+          </div>
+          <div className="v2-stat">
+            <div className="v2-stat-value">1–99</div>
+            <div className="v2-stat-label">a score that tells you exactly where the relationship stands</div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════ MEET RAI ══════ */}
+      <section className="v2-section-rai">
+        <div className="v2-section-inner">
+          <div className="v2-section-head">
+            <div className="v2-eyebrow">How it works</div>
+            <h2 className="v2-section-h2">Meet Rai. <span className="v2-muted">She pays attention to every client, every day.</span></h2>
+            <p className="v2-section-sub">When something shifts, she catches it — and tells you what to do about it.</p>
+          </div>
+          <div className="v2-rai-steps">
+            <div className="v2-rai-step">
+              <div className="v2-step-num">Step · 01</div>
+              <div className="v2-step-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+              <h3 className="v2-step-h">She sees it.</h3>
+              <p className="v2-step-p">Cross-referencing tasks, health checks, score trends, 20+ combination signals — continuously, across your entire book.</p>
+            </div>
+            <div className="v2-rai-step">
+              <div className="v2-step-num">Step · 02</div>
+              <div className="v2-step-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+              </div>
+              <h3 className="v2-step-h">She calls it out.</h3>
+              <p className="v2-step-p">Every morning, before your first coffee. You don't go looking for the problem. The problem finds you without any trouble.</p>
+            </div>
+            <div className="v2-rai-step">
+              <div className="v2-step-num">Step · 03</div>
+              <div className="v2-step-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              </div>
+              <h3 className="v2-step-h">She ranks it.</h3>
+              <p className="v2-step-p">Using a proprietary scoring engine, Rai weighs all of the day's tasks by retention impact. Your highest-value move is next up.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* curve: rai (cream) → platform (warm) */}
+      <div className="v2-curve" style={{ background: C.bg }}>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,50 C 1080,20 360,80 0,45 Z" fill={C.surfaceWarm} /></svg>
+      </div>
+
+      {/* ══════ PLATFORM ══════ */}
+      <section className="v2-section-platform">
+        <div className="v2-section-inner">
+          <div className="v2-platform-grid">
+            <div>
+              <div className="v2-eyebrow">The platform</div>
+              <h2 className="v2-section-h2">CRMs track deals. <span className="v2-muted">Retayned tracks relationships.</span></h2>
+              <p className="v2-section-sub">Your pipeline is forward-looking. Your clients aren't in it. They're the business you've already earned — and most CRMs treat them like they're already safe.</p>
+              <div className="v2-bullets">
+                <div className="v2-bullet"><div className="v2-check">✓</div><div><strong>12-dimension retention scoring</strong> that measures relationship health, not transaction volume.</div></div>
+                <div className="v2-bullet"><div className="v2-check">✓</div><div><strong>Health checks that blend into the score</strong> — five questions, two minutes, and the truth moves the number immediately.</div></div>
+                <div className="v2-bullet"><div className="v2-check">✓</div><div><strong>Rai writes the words you need</strong> when it matters most — calibrated to your specific relationships.</div></div>
+                <div className="v2-bullet"><div className="v2-check">✓</div><div><strong>Your Rolodex is future revenue</strong> — former clients become re-engagement opportunities, not dead weight.</div></div>
+              </div>
+            </div>
+            <div className="v2-device-frame">
+              <div className="v2-device-screen">
+                <h4 className="v2-score-label">Retention Score · Meridian Co.</h4>
+                <div className="v2-score-gauge">
+                  <div className="v2-score-number">78</div>
+                  <div className="v2-score-arch">
+                    <div className="v2-score-bar"><div className="v2-score-fill" /></div>
+                    <div className="v2-score-range"><span>At risk</span><span>Strong</span></div>
+                  </div>
+                </div>
+                <div style={{ marginTop: 20, paddingTop: 18, borderTop: "1px solid " + C.borderLight }}>
+                  <h4 className="v2-score-label" style={{ marginBottom: 10 }}>Signals detected</h4>
+                  <div className="v2-score-combos">
+                    <span className="v2-combo-pill">Bulletproof</span>
+                    <span className="v2-combo-pill">True Partner</span>
+                    <span className="v2-combo-pill">Cornerstone</span>
+                    <span className="v2-combo-pill v2-combo-pill-neg">One Foot Out</span>
+                  </div>
+                </div>
+                <div className="v2-score-rai">
+                  <strong>Rai:</strong> Strong fundamentals, but watch the recent drift on response latency.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* curve: platform (warm) → combos (cream) */}
+      <div className="v2-curve" style={{ background: C.surfaceWarm }}>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,55 Q 720,30 0,50 Z" fill={C.bg} /></svg>
+      </div>
+
+      {/* ══════ COMBOS — flowing wordmark tapestry ══════ */}
+      <section className="v2-section-combos">
+        <div className="v2-combos-head">
+          <div className="v2-eyebrow">More than AI</div>
+          <h2 className="v2-combos-h2">Proprietary scoring combinations that predict and prevent churn.</h2>
+          <p className="v2-combos-p">Twelve dimensions. Twenty combinations. Every client, every day.</p>
+        </div>
+        <V2ScrollBand items={dimensions} direction="left" speed={28} />
+        <div className="v2-become">
+          <span className="v2-become-rule" />
+          <span className="v2-become-word">Become</span>
+          <span className="v2-become-rule" />
+        </div>
+        <V2ScrollBand items={combinations} direction="right" speed={32} />
+      </section>
+
+      {/* ════ FEATURE TABS (preserved from old Home — to evaluate / decide) ════ */}
+        {/* ══════════════ FEATURE TABS ══════════════ */}
+        <section className="r-feat-section" style={{ padding: "64px 20px 64px" }}>
+          <Reveal>
+            <div className="r-section-head" style={{ textAlign: "center", marginBottom: 48 }}>
+              <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 8 }}>
+                Tools You Need To Keep Clients
+              </h2>
+              <p style={{ fontSize: 16, color: C.textSec, maxWidth: 580, margin: "0 auto", lineHeight: 1.7 }}>
+                A CRM you won't hate using built for client retention. Your clients won't know it exists. They just won't leave.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Tab bar */}
+          <div className="r-tab-bar-wrap" style={{
+            display: "flex", gap: 4, background: C.surface, borderRadius: 12,
+            padding: 5, overflowX: "auto", maxWidth: 740,
+            margin: "0 auto 40px", WebkitOverflowScrolling: "touch",
+          }}>
+            {homeTabs.map((feat, i) => (
+              <button
+                key={feat.id}
+                className="r-tab-pill r-tab-btn"
+                data-active={i === activeTab}
+                onClick={() => { setActiveTab(i); setExpandedText(false); }}
+                style={{
+                  background: i === activeTab ? C.card : "transparent",
+                  color: i === activeTab ? C.primary : C.textMuted,
+                  fontWeight: i === activeTab ? 700 : 500,
+                  boxShadow: i === activeTab ? "0 2px 12px rgba(0,0,0,0.06)" : "none",
+                }}
+              >
+                <span style={{ marginRight: 4, opacity: i === activeTab ? 1 : 0.5 }}>{feat.icon}</span>
+                {feat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Feature content */}
+          {/* Mobile: headline → mockup → description + CTAs */}
+          {/* Desktop: left (headline + desc + CTAs) | right (mockup) */}
+          <div className="r-feat-heading-mobile" style={{ display: "none", maxWidth: 1000, margin: "0 auto 16px" }}>
+            <h2 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15 }}>{ht.headline}</h2>
+          </div>
+          <div className="r-feat-content" style={{
+            display: "flex", flexWrap: "wrap", gap: 48,
+            alignItems: "flex-start", maxWidth: 1000, margin: "0 auto",
+          }}>
+            {/* Left: copy */}
+            <div style={{ flex: "1 1 340px" }}>
+              <h2 className="r-feat-heading-desktop" style={{
+                fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15,
+                marginBottom: 12,
+              }}>{ht.headline}</h2>
+              <p style={{
+                fontSize: 15, color: C.textSec, lineHeight: 1.75, marginBottom: 28,
+              }}>{ht.sub}</p>
+              <div style={{ display: "flex", gap: 12 }}>
+                <button className="r-hero-cta" onClick={() => setPage("signup")} style={{ padding: "13px 26px", fontSize: 14 }}>
+                  Try Free Now 
+                </button>
+                <button className="r-ghost-cta" onClick={() => setPage("platform")} style={{ padding: "13px 26px", fontSize: 14 }}>
+                  See All Features
+                </button>
+              </div>
+            </div>
+
+            {/* Right: visual mockup */}
+            <div style={{ flex: "1 1 360px" }}>
+              <div key={ht.id} style={{ animation: "fadeInScale 0.35s ease" }}>
+                {ht.id === "today" && <TodayDemo />}
+                {ht.id === "scoring" && (
+                  <div className="r-mockup-card">
+                    <div style={{ textAlign: "center", marginBottom: 20 }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 10 }}>Retention Score</div>
+                      <div style={{ width: 88, height: 88, borderRadius: "50%", background: "linear-gradient(135deg, #FEF3C7, #FDE68A)", border: "3px solid #92400E20", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                        <span style={{ fontSize: 36, fontWeight: 900, color: "#92400E", fontFamily: "inherit" }}>67</span>
+                      </div>
+                      <div style={{ fontWeight: 700, fontSize: 14, marginTop: 8 }}>Broadleaf Media</div>
+                      <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>Rachel Chen · Account Lead</div>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                      {[["Trust", 6, C.warning], ["Loyalty", 7, C.primaryLight], ["Expectations", 7, C.primaryLight], ["Grace", 5, C.warning]].map(([name, val, color]) => (
+                        <div key={name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 12px", background: C.bg, borderRadius: 8, fontSize: 13 }}>
+                          <span style={{ color: C.textMuted }}>{name}</span>
+                          <span style={{ fontWeight: 800, color, fontFamily: "inherit" }}>{val}/10</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ marginTop: 12, display: "flex", gap: 6 }}>
+                      <div style={{ flex: 1, padding: "6px 10px", background: "#FEE2E2", borderRadius: 8, fontSize: 11, color: "#991B1B", fontWeight: 700, textAlign: "center" }}>No room to operate</div>
+                      <div style={{ flex: 1, padding: "6px 10px", background: "#FEF3C7", borderRadius: 8, fontSize: 11, color: "#92400E", fontWeight: 700, textAlign: "center" }}>Ice wall</div>
+                    </div>
+                  </div>
+                )}
+                {ht.id === "health" && (
+                  <div className="r-mockup-card">
+                    <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Health Check — Broadleaf Media</div>
+                    <div style={{ display: "flex", gap: 5, marginBottom: 16 }}>
+                      {[1,2,3,4,5].map(i => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= 2 ? C.primary : C.borderLight, transition: "background 0.3s" }} />)}
+                    </div>
+                    <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Has anything changed with this relationship?</p>
+                    {["Nothing — same as always", "Something minor, could be nothing", "Noticeably different from before", "Something has clearly changed"].map((opt, i) => (
+                      <div key={i} style={{
+                        padding: "12px 16px", borderRadius: 10, marginBottom: 5,
+                        background: i === 2 ? C.primarySoft : C.bg,
+                        border: "1.5px solid " + (i === 2 ? C.primary : C.borderLight),
+                        fontSize: 14, color: i === 2 ? C.primary : C.textSec,
+                        fontWeight: i === 2 ? 600 : 400,
+                        cursor: "pointer", transition: "all 0.15s",
+                      }}>{opt}</div>
+                    ))}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                      <span style={{ fontSize: 12, color: C.textMuted }}>2 of 5</span>
+                      <div style={{ padding: "8px 20px", background: C.primary, color: "#fff", borderRadius: 8, fontWeight: 600, fontSize: 13 }}>Next</div>
+                    </div>
+                  </div>
+                )}
+                {ht.id === "rai" && (
+                  <div className="r-mockup-card">
+                    <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Talk to Rai</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                      <div style={{ alignSelf: "flex-end", maxWidth: "78%", padding: "12px 16px", background: C.primary, color: "#fff", borderRadius: "14px 14px 4px 14px", fontSize: 14, lineHeight: 1.55 }}>
+                        Rachel at Broadleaf has been different lately. What should I do?
+                      </div>
+                      <div style={{ alignSelf: "flex-start", maxWidth: "88%", padding: "14px 16px", background: C.bg, borderRadius: "14px 14px 14px 4px", fontSize: 14, lineHeight: 1.65, border: "1px solid " + C.borderLight }}>
+                        <div style={{ fontWeight: 800, color: C.primary, marginBottom: 6, fontSize: 11, letterSpacing: "0.04em", textTransform: "uppercase" }}>✦ Rai</div>
+                        Rachel's score dropped from 78 to 67 over two check-ins. The "No room to operate" combo just triggered — low trust combined with low grace. <strong>Call her. Not email.</strong> Ask directly: "I've noticed things feel different. What's on your mind?"
+                      </div>
+                      <div style={{ alignSelf: "flex-start", maxWidth: "80%", padding: "10px 14px", background: C.primarySoft, borderRadius: "14px 14px 14px 4px", fontSize: 13, color: C.primary, fontStyle: "italic", border: "1px solid " + C.primarySoft }}>
+                        I've flagged a profile re-evaluation for Broadleaf. Want me to queue that up?
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {ht.id === "rolodex" && (
+                  <div className="r-mockup-card">
+                    <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Rolodex</div>
+                    {[
+                      { name: "Maplewood Agency", type: "Former", months: "14mo together", tags: ["Would refer", "Would come back"], priority: "high" },
+                      { name: "Clearpoint Digital", type: "One-off", months: "Site audit", tags: ["Would refer"], priority: "medium" },
+                      { name: "Harlow & Associates", type: "Former", months: "8mo together", tags: ["Would come back"], priority: "high" },
+                    ].map((r, i) => (
+                      <div key={i} style={{ padding: "13px 0", borderTop: i > 0 ? "1px solid " + C.borderLight : "none" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                          <div>
+                            <span style={{ fontWeight: 700, fontSize: 14 }}>{r.name}</span>
+                            <span style={{ fontSize: 12, color: C.textMuted, marginLeft: 8 }}>{r.type} · {r.months}</span>
+                          </div>
+                          <div style={{ width: 8, height: 8, borderRadius: "50%", background: r.priority === "high" ? C.success : C.warning }} />
+                        </div>
+                        <div style={{ display: "flex", gap: 5 }}>
+                          {r.tags.map(t => (
+                            <span key={t} style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 6, background: C.primarySoft, color: C.primary }}>{t}</span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                    <div style={{ marginTop: 12, fontSize: 13, color: C.btn, fontWeight: 700 }}>3 re-engagement opportunities</div>
+                  </div>
+                )}
+                {ht.id === "referrals" && (
+                  <div className="r-mockup-card">
+                    <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 16 }}>Referral Intelligence</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 18 }}>
+                      {[["Total", "7"], ["Converted", "4"], ["Revenue", "$18.4k"]].map(([label, val]) => (
+                        <div key={label} style={{ background: C.bg, borderRadius: 10, padding: 12, textAlign: "center" }}>
+                          <div style={{ fontSize: 22, fontWeight: 900, color: C.primary, fontFamily: "inherit" }}>{val}</div>
+                          <div style={{ fontSize: 10, color: C.textMuted, marginTop: 3 }}>{label}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10 }}>Ready to refer</div>
+                    {[
+                      { name: "Northvane Studios", readiness: 94, contact: "Sarah Chen" },
+                      { name: "Oakline Outdoors", readiness: 76, contact: "James Park" },
+                    ].map((r, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 0", borderTop: "1px solid " + C.borderLight }}>
+                        <div>
+                          <span style={{ fontWeight: 600, fontSize: 14 }}>{r.name}</span>
+                          <span style={{ fontSize: 12, color: C.textMuted, marginLeft: 8 }}>{r.contact}</span>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <div style={{ width: 52, height: 5, borderRadius: 3, background: C.borderLight, overflow: "hidden" }}>
+                            <div style={{ width: `${r.readiness}%`, height: "100%", background: `linear-gradient(90deg, ${C.primaryLight}, ${C.success})`, borderRadius: 3 }} />
+                          </div>
+                          <span style={{ fontSize: 12, fontWeight: 800, color: C.success }}>{r.readiness}%</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+      {/* curve: combos (cream) → audience (warm) */}
+      <div className="v2-curve" style={{ background: C.bg }}>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,55 C 1100,85 340,25 0,60 Z" fill={C.surfaceWarm} /></svg>
+      </div>
+
+      {/* ══════ AUDIENCE TABS ══════ */}
+      <section className="v2-section-audience">
+        <div className="v2-section-inner">
+          <div className="v2-section-head" style={{ textAlign: "center", margin: "0 auto 32px", maxWidth: 820 }}>
+            <div className="v2-eyebrow">Built for the way you work</div>
+            <h2 className="v2-section-h2">Retayned is shaped <span className="v2-muted">to your book.</span></h2>
+          </div>
+          <div className="v2-audience-tabs">
+            {[
+              { k: "freelancers", l: "Freelancers" },
+              { k: "agencies", l: "Agencies" },
+              { k: "enterprise", l: "Enterprise" },
+            ].map((t) => (
+              <button
+                key={t.k}
+                className={"v2-audience-tab" + (audienceTab === t.k ? " v2-audience-tab-active" : "")}
+                onClick={() => setAudienceTab(t.k)}
+              >
+                {t.l}
+              </button>
+            ))}
+          </div>
+          <div className="v2-audience-content">
+            <div>
+              <h3 className="v2-audience-h">{panel.h}</h3>
+              <p className="v2-audience-p">{panel.p}</p>
+              <div className="v2-hero-cta-row">
+                <button className="v2-btn-primary-lg cta-btn" onClick={() => setPage("signup")}>Start Free Trial</button>
+                <button className="v2-btn-secondary-lg" onClick={() => setPage(panel.ctaTarget)}>{panel.cta}</button>
+              </div>
+            </div>
+            <div className="v2-audience-demo">
+              <div className="v2-demo-row"><div className="v2-demo-av" style={{ background: C.primaryLight }}>MK</div><div className="v2-demo-body"><div className="v2-demo-name">Meridian Co.</div><div className="v2-demo-meta">Last touch: 18 days ago</div></div><div className="v2-demo-sig" style={{ color: C.danger }}>↓ 26</div></div>
+              <div className="v2-demo-row"><div className="v2-demo-av" style={{ background: C.primary }}>BF</div><div className="v2-demo-body"><div className="v2-demo-name">Baxter Firm</div><div className="v2-demo-meta">Score: 87 · strong</div></div><div className="v2-demo-sig" style={{ color: C.success }}>↑ 4</div></div>
+              <div className="v2-demo-row"><div className="v2-demo-av" style={{ background: "#D4A017" }}>OP</div><div className="v2-demo-body"><div className="v2-demo-name">Otsego Partners</div><div className="v2-demo-meta">Q3 hiring mentioned</div></div><div className="v2-demo-sig" style={{ color: "#D4A017" }}>•</div></div>
+              <div className="v2-demo-row"><div className="v2-demo-av" style={{ background: "#8A5136" }}>HL</div><div className="v2-demo-body"><div className="v2-demo-name">Hollis & Lee</div><div className="v2-demo-meta">1yr anniversary</div></div><div className="v2-demo-sig" style={{ color: C.primary }}>✦</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* curve: audience (warm) → enterprise (deep green) */}
+      <div className="v2-curve" style={{ background: C.surfaceWarm }}>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,50 Q 720,85 0,45 Z" fill={C.primaryDeep} /></svg>
+      </div>
+
+      {/* ══════ ENTERPRISE ══════ */}
+      <section className="v2-section-enterprise">
+        <div className="v2-section-inner">
+          <div className="v2-section-head" style={{ textAlign: "center", margin: "0 auto", maxWidth: 880 }}>
+            <div className="v2-eyebrow v2-eyebrow-enterprise">Retayned Enterprise · Early access</div>
+            <h2 className="v2-section-h2 v2-h2-enterprise">Two surfaces,<br /><span className="v2-accent-ent">one brain.</span></h2>
+            <p className="v2-section-sub v2-sub-enterprise" style={{ margin: "0 auto" }}>Your top 50 accounts get a human account manager. The other 950 get triaged by agents, reviewed by your team, and actioned through a single surface — with the same retention intelligence powering both.</p>
+          </div>
+          <div className="v2-enterprise-grid">
+            <div className="v2-enterprise-card">
+              <div className="v2-enterprise-label">Managed agent</div>
+              <h4 className="v2-enterprise-h">Rai as autonomous service</h4>
+              <p className="v2-enterprise-p">Daily sweeps across your entire book. Twelve-dimension scoring. Archetype detection. Prioritized task lists delivered to whoever owns the relationship.</p>
+            </div>
+            <div className="v2-enterprise-card">
+              <div className="v2-enterprise-label">Multi-seat app</div>
+              <h4 className="v2-enterprise-h">Your team, one view</h4>
+              <p className="v2-enterprise-p">Unlimited seats. Role-based permissions. Full handoff history per client. When an account manager leaves, their knowledge stays.</p>
+            </div>
+            <div className="v2-enterprise-card">
+              <div className="v2-enterprise-label">MCP + REST API</div>
+              <h4 className="v2-enterprise-h">Plug into your stack</h4>
+              <p className="v2-enterprise-p">Give your internal agents the same retention intelligence. Connect to Salesforce, HubSpot, or your homegrown CRM.</p>
+            </div>
+          </div>
+          <div className="v2-enterprise-cta-row">
+            <button className="v2-btn-enterprise cta-btn" onClick={() => setPage("contact")}>Let's talk</button>
+          </div>
+        </div>
+      </section>
+
+      {/* ════ OLD ENTERPRISE SECTION (preserved — to evaluate vs. new 3-card) ════ */}
+        <div className="r-full-bleed r-ent-section" style={{
+          background: C.primaryDeep,
+          padding: "72px 20px 96px",
+          position: "relative",
+          overflow: "hidden",
+          color: "#fff",
+          marginTop: -1,
+        }}>
+          {/* Interior depth: soft center glow + subtle purple corner */}
+          <div aria-hidden="true" style={{
+            position: "absolute",
+            inset: 0,
+            background: "radial-gradient(ellipse 800px 500px at 50% 40%, rgba(85,139,104,0.16) 0%, transparent 65%), radial-gradient(ellipse 400px 300px at 15% 100%, rgba(91,33,182,0.08) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }} />
+          <div className="r-grain" />
+
+          <Reveal><div style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 2 }}>
+            {/* Tag row */}
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 7,
+                padding: "5px 12px 5px 10px", borderRadius: 100,
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.75)",
+                letterSpacing: "0.02em",
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.success, boxShadow: "0 0 8px rgba(45,134,89,0.6)" }} />
+                Retayned Enterprise · Early access
+              </div>
+              <div style={{ height: 1, flex: 1, background: "linear-gradient(90deg, rgba(255,255,255,0.08), transparent)" }} />
+            </div>
+
+            {/* Headline + body */}
+            <h2 className="r-ent-h2" style={{
+              fontSize: 42, fontWeight: 900, letterSpacing: "-0.04em",
+              lineHeight: 1.05, color: "#fff", margin: "0 0 16px",
+              maxWidth: 820,
+            }}>
+              Two surfaces,<br />
+              <span style={{ color: C.primaryLight }}>one brain.</span>
+            </h2>
+            <p style={{
+              fontSize: 17, color: "rgba(255,255,255,0.7)", lineHeight: 1.7,
+              margin: "0 0 48px", maxWidth: 640,
+            }}>
+              Your top 50 accounts get a human account manager. The other 950 get triaged by agents, reviewed by your team, and actioned through a single surface — with the same retention intelligence powering both.
+            </p>
+
+            {/* Live Dashboard — product object */}
+            <div className="r-ent-dashboard" style={{
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 16,
+              padding: 28,
+              position: "relative",
+              overflow: "hidden",
+              marginBottom: 40,
+            }}>
+              {/* Top hairline */}
+              <div aria-hidden="true" style={{
+                position: "absolute", top: 0, left: 0, right: 0, height: 1,
+                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)",
+              }} />
+
+              {/* Dashboard header */}
+              <div style={{
+                display: "flex", justifyContent: "space-between", alignItems: "center",
+                marginBottom: 24, paddingBottom: 16,
+                borderBottom: "1px solid rgba(255,255,255,0.08)",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: 8,
+                    background: "rgba(85,139,104,0.2)",
+                    display: "inline-flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.primaryLight} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z"/></svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>RaiS · Live view</div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Portfolio: 1,247 clients · Last sweep: 08:04</div>
+                  </div>
+                </div>
+                <div style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  padding: "5px 11px", borderRadius: 100,
+                  background: "rgba(45,134,89,0.15)",
+                  fontSize: 11, fontWeight: 600, color: "#7EC29A",
+                }}>
+                  <span className="r-ent-blink" style={{ width: 5, height: 5, borderRadius: "50%", background: "#7EC29A" }} />
+                  Running
+                </div>
+              </div>
+
+              {/* Metrics grid — the 4 features embedded as live states */}
+              <div className="r-ent-metrics" style={{
+                display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12,
+                marginBottom: 16,
+              }}>
+                {[
+                  { label: "Scored today", val: "1,247", suffix: "/1,247", delta: "All current", deltaColor: "#7EC29A" },
+                  { label: "At-risk flagged", val: "38", delta: "+4 from yesterday", deltaColor: "#E89580" },
+                  { label: "Tasks generated", val: "92", delta: "28 emails ready to send", deltaColor: "#7EC29A" },
+                  { label: "Archetypes active", val: "9", delta: "Velocity decay trending", deltaColor: "rgba(255,255,255,0.5)" },
+                ].map(m => (
+                  <div key={m.label} className="r-ent-metric" style={{
+                    padding: "14px 14px",
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.05)",
+                    borderRadius: 10,
+                  }}>
+                    <div style={{
+                      fontSize: 10, fontWeight: 700, textTransform: "uppercase",
+                      letterSpacing: ".08em", color: "rgba(255,255,255,0.4)", marginBottom: 8,
+                    }}>{m.label}</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1 }}>
+                      {m.val}
+                      {m.suffix && <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.35)", marginLeft: 2 }}>{m.suffix}</span>}
+                    </div>
+                    <div style={{ fontSize: 11, color: m.deltaColor, fontWeight: 600, marginTop: 6 }}>{m.delta}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Log output */}
+              <div style={{
+                background: "rgba(0,0,0,0.25)",
+                borderRadius: 10,
+                padding: "14px 16px",
+                fontFamily: "'SF Mono', Menlo, Monaco, monospace",
+                fontSize: 11.5,
+                color: "rgba(255,255,255,0.55)",
+                lineHeight: 1.75,
+                overflow: "hidden",
+              }}>
+                {[
+                  { time: "08:04", lvl: "SWEEP", lvlColor: C.primaryLight, msg: "Scored 1,247 clients. Δ avg score: −0.4. Flagged 38 at-risk." },
+                  { time: "08:04", lvl: "ALERT", lvlColor: "#E89580", msg: "Foxglove Partners entered \"Velocity decay\" archetype. Confidence: 0.87." },
+                  { time: "08:05", lvl: "TASK ", lvlColor: "#7EC29A", msg: "Generated 92 tasks. 28 outreach emails drafted and queued for review." },
+                  { time: "08:05", lvl: "SYNC ", lvlColor: C.primaryLight, msg: "Dispatched to Slack (42), CRM (50). Next sweep: 08:04 tomorrow." },
+                ].map((line, i) => (
+                  <div key={i} style={{ display: "flex", gap: 12 }}>
+                    <span style={{ color: "rgba(255,255,255,0.3)", minWidth: 44 }}>{line.time}</span>
+                    <span style={{ color: line.lvlColor, fontWeight: 700, minWidth: 50 }}>{line.lvl}</span>
+                    <span style={{ flex: 1 }}>{line.msg}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA row */}
+            <div className="r-ent-cta-row" style={{
+              display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap",
+            }}>
+              <button className="r-hero-cta" onClick={() => setPage("contact")} style={{
+                background: "#fff", color: C.btn,
+                padding: "14px 28px", fontSize: 14,
+              }}>Request Early Access</button>
+              <div style={{ fontSize: 15, color: "rgba(255,255,255,0.7)", lineHeight: 1.55 }}>
+                Onboarding 3 partners per quarter.<br />
+                Custom pricing based on portfolio size.
+              </div>
+            </div>
+          </div></Reveal>
+        </div>
+
+
+      {/* curve: enterprise (deep green) → final (beige) */}
+      <div className="v2-curve" style={{ background: C.primaryDeep }}>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,55 C 1080,25 360,85 0,40 Z" fill={V2.bgWarmer} /></svg>
+      </div>
+
+      {/* ══════ FINAL CTA ══════ */}
+      <section className="v2-section-final">
+        <h2 className="v2-final-h">
+          One client saved pays for{" "}
+          <span className="v2-caveat-final">years</span>{" "}of Retayned.
+        </h2>
+        <p className="v2-final-sub">Solve your business's most consequential problem for less than a Netflix subscription. One plan. Every feature. The math works itself out.</p>
+        <div className="v2-hero-cta-row" style={{ justifyContent: "center" }}>
+          <button className="v2-btn-primary-lg cta-btn" onClick={() => setPage("signup")}>Start Free Trial</button>
+          <button className="v2-btn-secondary-lg" onClick={() => setPage("pricing")}>See pricing</button>
+        </div>
+        <p className="v2-final-fine">$19.99/mo + $1 per client · 14-day free trial · Cancel anytime</p>
+      </section>
+      <Footer setPage={setPage} />
     </div>
   );
 }
@@ -5388,12 +6268,628 @@ export default function RetaynedSite() {
           .r-stats { font-size: 96px !important; }
           .r-full-bleed { padding-left: 80px; padding-right: 80px; }
         }
+
+        /* ═══════════════════════════════════════════════════ */
+        /* V2 — Slite-style homepage                           */
+        /* ═══════════════════════════════════════════════════ */
+        .v2-root { overflow-x: hidden; }
+
+        /* Fonts: Caveat + DM Serif Display are loaded in hero via @import */
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=DM+Serif+Display:ital@0;1&display=swap');
+
+        /* ═══ HERO ═══ */
+        .v2-hero {
+          background: #EAE4D6;
+          position: relative;
+          padding: 72px 48px 60px;
+          overflow: hidden;
+        }
+        .v2-hero-inner { max-width: 1320px; margin: 0 auto; }
+        .v2-trust-pill {
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 6px 14px; border-radius: 100px;
+          background: rgba(255,255,255,0.9);
+          border: 1px solid rgba(216,223,216,0.8);
+          box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+          font-size: 13px; font-weight: 600;
+          color: ${C.text};
+          margin-bottom: 28px;
+        }
+        .v2-trust-dot { width: 6px; height: 6px; border-radius: 50%; background: ${C.success}; }
+        .v2-hero-h1 {
+          font-size: clamp(40px, 7.5vw, 104px);
+          font-weight: 900; letter-spacing: -0.045em;
+          line-height: 0.98;
+          margin-bottom: 24px;
+          color: ${C.text};
+        }
+        .v2-strike-wrap { position: relative; display: inline-block; }
+        .v2-strike { color: ${C.textMuted}; position: relative; }
+        .v2-strike::after {
+          content: ''; position: absolute;
+          left: -3%; top: 53%; height: 0.07em; width: 106%;
+          background: ${C.danger}; border-radius: 2px;
+          transform: rotate(-1deg);
+        }
+        .v2-caveat {
+          font-family: 'Caveat', cursive;
+          font-weight: 700; color: ${C.primary};
+          position: absolute; top: -0.65em; left: 50%;
+          transform: translateX(-50%) rotate(-2deg);
+          font-size: 0.7em; white-space: nowrap;
+        }
+        .v2-hero-sub {
+          font-size: clamp(17px, 2vw, 22px);
+          font-weight: 600; color: ${C.text};
+          max-width: 760px; margin-bottom: 14px; line-height: 1.35;
+        }
+        .v2-hero-desc {
+          font-size: clamp(15px, 1.5vw, 17px);
+          color: ${C.textSec};
+          max-width: 620px; line-height: 1.6; margin-bottom: 32px;
+        }
+        .v2-hero-cta-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .v2-btn-primary-lg {
+          background: ${C.btn}; color: #fff;
+          padding: 14px 28px; border-radius: 12px;
+          font-size: 15px; font-weight: 700; cursor: pointer;
+          border: none; font-family: inherit;
+        }
+        .v2-btn-primary-lg:hover { background: ${C.btnHover}; }
+        .v2-btn-secondary-lg {
+          background: transparent; color: ${C.text};
+          padding: 14px 28px; border-radius: 12px;
+          border: 1.5px solid ${C.border};
+          font-size: 15px; font-weight: 600; cursor: pointer;
+          font-family: inherit;
+        }
+        .v2-btn-secondary-lg:hover { border-color: ${C.text}; background: rgba(255,255,255,0.4); }
+        .v2-hero-fine { margin-top: 16px; font-size: 13px; color: ${C.textMuted}; }
+
+        /* Hero device — beige on beige */
+        .v2-hero-device {
+          background: #F5ECD8;
+          border-radius: 24px;
+          padding: 32px 32px 0;
+          max-width: 1200px; margin: 56px auto 0;
+          position: relative;
+          box-shadow: 0 24px 60px rgba(28, 50, 36, 0.08);
+        }
+        .v2-hero-device-inner {
+          background: #fff;
+          border-radius: 14px 14px 0 0;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+          overflow: hidden;
+        }
+        .v2-device-topbar {
+          padding: 12px 18px;
+          border-bottom: 1px solid ${C.borderLight};
+          display: flex; align-items: center; gap: 12px;
+          background: #FCFCFA;
+        }
+        .v2-device-dots { display: flex; gap: 6px; }
+        .v2-device-dots span {
+          width: 9px; height: 9px; border-radius: 50%; background: #E0DACB;
+        }
+        .v2-device-url {
+          flex: 1; padding: 4px 12px;
+          background: ${C.surfaceWarm}; border-radius: 6px;
+          font-family: 'SF Mono', Menlo, monospace;
+          font-size: 12px; color: ${C.textMuted};
+          text-align: center;
+        }
+
+        /* Today feed */
+        .v2-today-feed { padding: 20px 20px 24px; }
+        .v2-feed-head {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 0 4px 14px;
+          border-bottom: 1px solid ${C.borderLight};
+          margin-bottom: 16px;
+        }
+        .v2-rai-badge {
+          display: inline-flex; align-items: center; gap: 6px;
+          font-size: 11px; font-weight: 600;
+          color: ${C.btn};
+          padding: 4px 10px;
+          background: ${C.btnSoft};
+          border-radius: 100px;
+        }
+        .v2-rai-pulse {
+          width: 6px; height: 6px; border-radius: 50%;
+          background: ${C.btn};
+          animation: v2-pulse 1.4s ease-in-out infinite;
+        }
+        @keyframes v2-pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.35; }
+        }
+        .v2-task {
+          display: flex; align-items: flex-start; gap: 12px;
+          padding: 14px 16px;
+          background: #fff;
+          border: 1px solid ${C.borderLight};
+          border-radius: 12px;
+          margin-bottom: 10px;
+          box-sizing: border-box;
+        }
+        .v2-tag {
+          font-size: 9px; font-weight: 700;
+          padding: 3px 7px; border-radius: 4px;
+          text-transform: uppercase; letter-spacing: 0.1em;
+          flex-shrink: 0; margin-top: 2px;
+        }
+        .v2-tag-urgent { background: ${C.dangerBg}; color: ${C.danger}; }
+        .v2-tag-deepen { background: ${C.primarySoft}; color: ${C.primary}; }
+        .v2-tag-proactive { background: ${C.btnSoft}; color: ${C.btn}; }
+        .v2-tag-savings { background: ${C.warningBg}; color: ${C.warning}; }
+        .v2-task-body { flex: 1; min-width: 0; }
+        .v2-task-title {
+          font-size: 13.5px; font-weight: 700; margin-bottom: 3px;
+          color: ${C.text};
+        }
+        .v2-task-meta {
+          font-size: 11.5px; color: ${C.textMuted}; line-height: 1.4;
+        }
+        .v2-score-mini {
+          flex-shrink: 0;
+          font-size: 12px; font-weight: 800;
+          padding: 3px 9px; border-radius: 6px;
+          align-self: center;
+        }
+        .v2-score-red { background: ${C.dangerBg}; color: ${C.danger}; }
+        .v2-score-yellow { background: ${C.warningBg}; color: ${C.warning}; }
+        .v2-score-green { background: ${C.primarySoft}; color: ${C.primary}; }
+
+        .v2-rai-whisper {
+          margin-top: 18px;
+          padding: 14px 16px;
+          background: ${C.primarySoft};
+          border-radius: 12px;
+          display: flex; align-items: flex-start; gap: 12px;
+        }
+        .v2-rai-avatar {
+          width: 28px; height: 28px; border-radius: 50%;
+          background: ${C.btn}; color: #fff;
+          display: flex; align-items: center; justify-content: center;
+          font-weight: 800; font-size: 13px;
+          flex-shrink: 0;
+        }
+        .v2-rai-text {
+          font-size: 12.5px; color: ${C.primary};
+          line-height: 1.55;
+        }
+
+        /* ═══ CURVES ═══ */
+        .v2-curve { display: block; width: 100%; height: 100px; margin: 0; padding: 0; line-height: 0; }
+        .v2-curve svg { display: block; width: 100%; height: 100%; }
+
+        /* ═══ STATS BAND ═══ */
+        .v2-section-stats {
+          background: ${C.bg};
+          padding: 56px 48px 32px;
+          text-align: center;
+        }
+        .v2-stats-row {
+          display: flex; gap: 64px; justify-content: center; flex-wrap: wrap;
+          max-width: 1200px; margin: 0 auto;
+        }
+        .v2-stat { text-align: center; min-width: 180px; }
+        .v2-stat-value {
+          font-size: clamp(56px, 7vw, 80px);
+          font-weight: 900; color: ${C.primary};
+          letter-spacing: -0.04em; line-height: 1; margin-bottom: 8px;
+        }
+        .v2-stat-label {
+          font-size: 13px; font-weight: 500; color: ${C.textSec};
+          max-width: 220px; margin: 0 auto; line-height: 1.4;
+        }
+
+        /* ═══ SECTION SHARED ═══ */
+        .v2-section-inner { max-width: 1320px; margin: 0 auto; }
+        .v2-section-head { max-width: 880px; margin-bottom: 56px; }
+        .v2-eyebrow {
+          display: inline-block;
+          font-size: 12px; font-weight: 700;
+          color: ${C.primary};
+          text-transform: uppercase; letter-spacing: 0.14em;
+          margin-bottom: 20px;
+          padding: 6px 14px;
+          background: ${C.primarySoft};
+          border-radius: 6px;
+        }
+        .v2-section-h2 {
+          font-size: clamp(32px, 5vw, 72px);
+          font-weight: 900; letter-spacing: -0.04em;
+          line-height: 1.02; margin-bottom: 20px;
+          color: ${C.text};
+        }
+        .v2-muted { color: ${C.textMuted}; }
+        .v2-section-sub {
+          font-size: clamp(16px, 1.8vw, 18px);
+          color: ${C.textSec};
+          line-height: 1.6; max-width: 640px;
+        }
+
+        /* ═══ MEET RAI ═══ */
+        .v2-section-rai { background: ${C.bg}; padding: 96px 48px; }
+        .v2-rai-steps {
+          display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+        }
+        .v2-rai-step {
+          background: #fff; border-radius: 20px;
+          padding: 28px 24px 32px;
+          box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+          border: 1px solid ${C.borderLight};
+        }
+        .v2-step-num {
+          font-family: 'SF Mono', Menlo, monospace;
+          font-size: 11px; font-weight: 700;
+          color: ${C.primary}; opacity: 0.7;
+          text-transform: uppercase; letter-spacing: 0.14em;
+          margin-bottom: 18px;
+        }
+        .v2-step-icon {
+          width: 44px; height: 44px;
+          background: ${C.primarySoft};
+          border-radius: 12px;
+          display: flex; align-items: center; justify-content: center;
+          margin-bottom: 18px; color: ${C.primary};
+        }
+        .v2-step-h {
+          font-size: 22px; font-weight: 800;
+          letter-spacing: -0.02em; margin-bottom: 10px;
+          color: ${C.text};
+        }
+        .v2-step-p {
+          font-size: 14px; color: ${C.textSec}; line-height: 1.65;
+        }
+
+        /* ═══ PLATFORM ═══ */
+        .v2-section-platform { background: ${C.surfaceWarm}; padding: 112px 48px; }
+        .v2-platform-grid {
+          display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px;
+          align-items: center;
+        }
+        .v2-bullets { margin-top: 28px; }
+        .v2-bullet {
+          display: flex; align-items: flex-start; gap: 14px;
+          padding: 18px 0;
+          border-top: 1px solid rgba(216, 223, 216, 0.6);
+          font-size: 15px; line-height: 1.5;
+          color: ${C.text};
+        }
+        .v2-bullet:last-child { border-bottom: 1px solid rgba(216, 223, 216, 0.6); }
+        .v2-check {
+          flex-shrink: 0; width: 22px; height: 22px;
+          background: ${C.primary}; color: #fff;
+          border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 12px; font-weight: 900; margin-top: 2px;
+        }
+        .v2-device-frame {
+          border-radius: 24px; padding: 32px 32px 0;
+          box-shadow: 0 24px 48px rgba(28, 50, 36, 0.08);
+          background: #F5ECD8;
+        }
+        .v2-device-screen {
+          background: #fff;
+          border-radius: 12px 12px 0 0;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+          overflow: hidden;
+          padding: 20px 24px 24px;
+          min-height: 260px;
+        }
+        .v2-score-label {
+          font-size: 10px; font-weight: 700;
+          text-transform: uppercase; letter-spacing: 0.14em;
+          color: ${C.textMuted}; margin: 0 0 14px;
+        }
+        .v2-score-gauge { display: flex; align-items: center; gap: 20px; margin-bottom: 6px; }
+        .v2-score-number {
+          font-size: 64px; font-weight: 900; color: ${C.primary};
+          letter-spacing: -0.04em; line-height: 1;
+        }
+        .v2-score-arch { flex: 1; }
+        .v2-score-bar {
+          height: 10px; border-radius: 6px;
+          background: ${C.borderLight};
+          overflow: hidden; margin-bottom: 6px;
+        }
+        .v2-score-fill {
+          height: 100%; border-radius: 6px;
+          background: linear-gradient(90deg, ${C.primary}, ${C.primaryLight});
+          width: 78%;
+        }
+        .v2-score-range {
+          font-size: 11px; color: ${C.textMuted};
+          display: flex; justify-content: space-between;
+        }
+        .v2-score-combos { display: flex; gap: 8px; flex-wrap: wrap; }
+        .v2-combo-pill {
+          font-size: 11px; font-weight: 600;
+          padding: 4px 10px; border-radius: 4px;
+          background: ${C.primarySoft}; color: ${C.primary};
+        }
+        .v2-combo-pill-neg { background: ${C.dangerBg}; color: ${C.danger}; }
+        .v2-score-rai {
+          margin-top: 16px; padding: 12px 14px;
+          background: ${C.primarySoft};
+          border-radius: 10px;
+          font-size: 12px; color: ${C.primary};
+        }
+
+        /* ═══ COMBOS ═══ */
+        .v2-section-combos { background: ${C.bg}; padding: 112px 48px; }
+        .v2-combos-head { max-width: 720px; margin: 0 auto 40px; text-align: center; }
+        .v2-combos-h2 {
+          font-size: clamp(28px, 4vw, 48px);
+          font-weight: 900; letter-spacing: -0.035em;
+          line-height: 1.05; margin: 14px 0 12px;
+          color: ${C.text};
+        }
+        .v2-combos-p {
+          font-size: 15px; color: ${C.textSec}; line-height: 1.6;
+        }
+        .v2-scroll-band {
+          overflow: hidden; padding: 16px 0; position: relative;
+          -webkit-mask-image: linear-gradient(90deg, transparent 0, black 10%, black 90%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, black 10%, black 90%, transparent 100%);
+        }
+        .v2-scroll-track {
+          display: flex; gap: 44px; align-items: baseline;
+          white-space: nowrap; width: max-content;
+          padding: 8px 0;
+          will-change: transform;
+        }
+        .v2-become {
+          display: flex; align-items: center; justify-content: center;
+          gap: 14px; padding: 24px 0; max-width: 720px; margin: 0 auto;
+        }
+        .v2-become-rule { flex: 1; height: 1px; background: ${C.border}; max-width: 260px; }
+        .v2-become-word {
+          font-size: 10.5px; font-weight: 700;
+          text-transform: uppercase; letter-spacing: 0.14em;
+          color: ${C.textMuted}; white-space: nowrap;
+        }
+
+        /* Wordmark typography */
+        .v2-wm, .v2-dim { display: inline-block; line-height: 1; }
+        .v2-wm-pos { color: rgba(45,134,89,0.9); }
+        .v2-wm-neg { color: rgba(196,67,43,0.88); }
+        .v2-wm-bulletproof { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+        .v2-wm-icewall { font-size: 21px; font-weight: 300; font-family: 'DM Serif Display', serif; font-style: italic; }
+        .v2-wm-lockedvault { font-size: 16px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; }
+        .v2-wm-ontheclock { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+        .v2-wm-cornerstone { font-size: 22px; font-weight: 400; font-family: 'DM Serif Display', serif; }
+        .v2-wm-silentexit { font-size: 21px; font-weight: 400; font-family: 'DM Serif Display', serif; font-style: italic; }
+        .v2-wm-decisionexpress { font-size: 15px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; }
+        .v2-wm-noroom {
+          font-size: 20px; font-weight: 900; letter-spacing: -0.04em;
+          font-family: 'Arial Narrow', 'Helvetica Neue Condensed', Impact, sans-serif;
+          transform: scaleX(0.78); transform-origin: center;
+        }
+        .v2-wm-truepartner { font-size: 21px; font-weight: 700; font-family: 'DM Serif Display', serif; }
+        .v2-wm-tickingbomb { font-size: 16px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; }
+        .v2-wm-smoothop { font-size: 22px; font-weight: 300; font-family: 'DM Serif Display', serif; font-style: italic; }
+        .v2-wm-onefoot { font-size: 21px; font-weight: 700; }
+        .v2-wm-allinvestor { font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
+        .v2-wm-powderkeg { font-size: 16px; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
+        .v2-wm-openbook { font-size: 22px; font-weight: 400; font-family: 'DM Serif Display', serif; }
+        .v2-wm-nickeldime { font-size: 19px; font-weight: 400; font-family: 'DM Serif Display', serif; font-style: italic; }
+        .v2-wm-resilient { font-size: 15px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+        .v2-wm-noanchor { font-size: 20px; font-weight: 300; font-family: 'DM Serif Display', serif; font-style: italic; }
+        .v2-wm-lowmaint { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
+        .v2-wm-bottleneck { font-size: 16px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
+
+        .v2-dim { color: rgba(51, 84, 62, 0.7); }
+        .v2-dim-serif { font-size: 26px; font-weight: 400; letter-spacing: -0.02em; font-family: 'DM Serif Display', serif; }
+        .v2-dim-serif-italic { font-size: 26px; font-weight: 400; font-style: italic; font-family: 'DM Serif Display', serif; }
+        .v2-dim-serif-italic-lg { font-size: 28px; font-weight: 400; font-style: italic; font-family: 'DM Serif Display', serif; }
+        .v2-dim-heavy-caps { font-size: 22px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
+        .v2-dim-spaced-lower { font-size: 14px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; }
+        .v2-dim-small-caps { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+
+        /* ═══ AUDIENCE ═══ */
+        .v2-section-audience { background: ${C.surfaceWarm}; padding: 112px 48px; }
+        .v2-audience-tabs {
+          display: flex; gap: 8px; justify-content: center;
+          margin-bottom: 48px; flex-wrap: wrap;
+        }
+        .v2-audience-tab {
+          padding: 10px 22px; border-radius: 100px;
+          font-size: 14px; font-weight: 600;
+          color: ${C.textSec};
+          border: 1.5px solid transparent;
+          background: transparent; cursor: pointer; font-family: inherit;
+          transition: all 0.2s ease;
+        }
+        .v2-audience-tab:hover { color: ${C.text}; }
+        .v2-audience-tab-active {
+          background: #fff; color: ${C.text};
+          border-color: ${C.border};
+          box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+        }
+        .v2-audience-content {
+          background: #F5ECD8;
+          border-radius: 24px;
+          padding: 56px 48px;
+          display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+          align-items: center;
+          max-width: 1280px; margin: 0 auto;
+          box-shadow: 0 24px 48px rgba(28, 50, 36, 0.06);
+        }
+        .v2-audience-h {
+          font-size: clamp(28px, 3.5vw, 48px);
+          font-weight: 900; letter-spacing: -0.03em;
+          line-height: 1.05; margin-bottom: 18px;
+          color: ${C.text};
+        }
+        .v2-audience-p {
+          font-size: 16px; color: ${C.textSec}; line-height: 1.6;
+          margin-bottom: 24px;
+        }
+        .v2-audience-demo {
+          background: #fff; border-radius: 14px; padding: 20px;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+        }
+        .v2-demo-row {
+          display: flex; align-items: center; gap: 12px;
+          padding: 10px 0;
+          border-bottom: 1px solid ${C.borderLight};
+          font-size: 13px;
+        }
+        .v2-demo-row:last-child { border-bottom: none; }
+        .v2-demo-av {
+          width: 32px; height: 32px; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          color: #fff; font-weight: 700; font-size: 12px;
+        }
+        .v2-demo-body { flex: 1; }
+        .v2-demo-name { font-weight: 600; color: ${C.text}; }
+        .v2-demo-meta { font-size: 11px; color: ${C.textMuted}; }
+        .v2-demo-sig { font-size: 11px; font-weight: 600; }
+
+        /* ═══ ENTERPRISE ═══ */
+        .v2-section-enterprise {
+          background: ${C.primaryDeep};
+          color: #fff;
+          padding: 112px 48px;
+        }
+        .v2-eyebrow-enterprise {
+          background: rgba(255,255,255,0.08) !important;
+          color: rgba(255,255,255,0.75) !important;
+        }
+        .v2-h2-enterprise { color: #fff !important; }
+        .v2-accent-ent { color: ${C.primaryLight}; }
+        .v2-sub-enterprise { color: rgba(255,255,255,0.7) !important; }
+        .v2-enterprise-grid {
+          display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+          margin-top: 48px;
+        }
+        .v2-enterprise-card {
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 16px; padding: 28px;
+        }
+        .v2-enterprise-label {
+          font-size: 10px; font-weight: 700;
+          color: ${C.primaryLight};
+          text-transform: uppercase; letter-spacing: 0.14em;
+          margin-bottom: 16px;
+        }
+        .v2-enterprise-h {
+          font-size: 20px; font-weight: 800;
+          margin-bottom: 8px; letter-spacing: -0.02em;
+          color: #fff;
+        }
+        .v2-enterprise-p {
+          font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.6;
+        }
+        .v2-enterprise-cta-row {
+          display: flex; gap: 14px; justify-content: center; margin-top: 48px;
+        }
+        .v2-btn-enterprise {
+          background: #fff; color: ${C.primaryDeep};
+          padding: 14px 32px; border-radius: 12px;
+          font-size: 15px; font-weight: 700; cursor: pointer;
+          border: none; font-family: inherit;
+        }
+        .v2-btn-enterprise:hover { background: ${C.primarySoft}; }
+
+        /* ═══ FINAL CTA ═══ */
+        .v2-section-final {
+          background: #EAE4D6;
+          padding: 112px 48px 140px;
+          text-align: center;
+        }
+        .v2-final-h {
+          font-size: clamp(36px, 6vw, 80px);
+          font-weight: 900; letter-spacing: -0.04em;
+          line-height: 1.02; max-width: 1000px; margin: 0 auto 20px;
+          color: ${C.text};
+        }
+        .v2-caveat-final {
+          font-family: 'Caveat', cursive;
+          font-weight: 700; color: ${C.primary};
+          transform: rotate(-2deg); display: inline-block;
+        }
+        .v2-final-sub {
+          font-size: 17px; color: ${C.textSec}; line-height: 1.6;
+          max-width: 620px; margin: 0 auto 32px;
+        }
+        .v2-final-fine { font-size: 13px; color: ${C.textMuted}; margin-top: 18px; }
+
+        /* ═══ FOOTER ═══ */
+        .v2-footer { background: ${C.primaryDeep}; color: #fff; padding: 72px 48px 36px; }
+        .v2-footer-inner {
+          max-width: 1320px; margin: 0 auto;
+          display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+          gap: 40px;
+        }
+        .v2-footer-wordmark {
+          font-size: 26px; font-weight: 900;
+          letter-spacing: -0.04em; color: #fff;
+          margin-bottom: 14px; cursor: pointer;
+        }
+        .v2-footer-tag {
+          font-size: 13px; color: rgba(255,255,255,0.5);
+          line-height: 1.6; max-width: 280px;
+        }
+        .v2-footer-col h5 {
+          font-size: 11px; font-weight: 700;
+          text-transform: uppercase; letter-spacing: 0.14em;
+          color: rgba(255,255,255,0.5); margin: 0 0 14px;
+        }
+        .v2-footer-col a {
+          display: block; font-size: 13px; color: rgba(255,255,255,0.85);
+          margin-bottom: 9px; cursor: pointer; text-decoration: none;
+        }
+        .v2-footer-col a:hover { color: #fff; }
+        .v2-footer-bottom {
+          max-width: 1320px; margin: 40px auto 0;
+          padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08);
+          font-size: 12px; color: rgba(255,255,255,0.4);
+          display: flex; justify-content: space-between;
+          flex-wrap: wrap; gap: 8px;
+        }
+
+        /* ═══ V2 RESPONSIVE ═══ */
+        @media (max-width: 1024px) {
+          .v2-hero { padding: 56px 24px 48px; }
+          .v2-hero-device { padding: 20px 16px 0; margin-top: 40px; }
+          .v2-section-stats { padding: 48px 24px 32px; }
+          .v2-stats-row { gap: 40px; }
+          .v2-section-rai, .v2-section-platform, .v2-section-audience, .v2-section-combos { padding: 72px 24px; }
+          .v2-section-enterprise, .v2-section-final { padding: 72px 24px; }
+          .v2-platform-grid { grid-template-columns: 1fr; gap: 40px; }
+          .v2-rai-steps { grid-template-columns: 1fr; gap: 16px; }
+          .v2-audience-content { grid-template-columns: 1fr; padding: 40px 32px; gap: 32px; }
+          .v2-enterprise-grid { grid-template-columns: 1fr; gap: 14px; }
+          .v2-footer { padding: 56px 24px 32px; }
+          .v2-footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
+        }
+        @media (max-width: 640px) {
+          .v2-hero { padding: 40px 20px 40px; }
+          .v2-hero-device { padding: 16px 12px 0; margin-top: 32px; border-radius: 18px; }
+          .v2-today-feed { padding: 16px 14px 20px; }
+          .v2-section-stats { padding: 40px 20px 24px; }
+          .v2-stats-row { flex-direction: column; gap: 32px; }
+          .v2-section-rai, .v2-section-platform, .v2-section-audience, .v2-section-combos { padding: 64px 20px; }
+          .v2-section-enterprise, .v2-section-final { padding: 64px 20px; }
+          .v2-section-head { margin-bottom: 40px; }
+          .v2-audience-content { padding: 32px 24px; gap: 24px; border-radius: 18px; }
+          .v2-enterprise-card { padding: 22px; }
+          .v2-footer { padding: 48px 20px 28px; }
+          .v2-footer-inner { grid-template-columns: 1fr; gap: 28px; }
+          .v2-curve { height: 60px; }
+        }
       `}</style>
 
       <Nav page={page} setPage={setPage} />
       <div style={{ overflowX: "hidden" }}>
       <div className="r-wrap">
-        {page === "home" && <Home setPage={setPage} />}
+        {page === "home" && ((typeof window !== "undefined" && new URLSearchParams(window.location.search).get("new") === "1") ? <HomeV2 setPage={setPage} /> : <Home setPage={setPage} />)}
         {page === "platform" && <Platform setPage={setPage} />}
         {page === "freelancers" && <Freelancers setPage={setPage} />}
         {page === "agencies" && <Agencies setPage={setPage} />}
