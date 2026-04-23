@@ -1117,7 +1117,7 @@ function HomeV2({ setPage }) {
         <div className="v2-section-inner">
           <div className="v2-section-head">
             <div className="v2-eyebrow">How it works</div>
-            <h2 className="v2-section-h2">Meet <span style={{ color: C.btn }}>Rai</span>. <span className="v2-muted">She pays attention to every client, every day.</span></h2>
+            <h2 className="v2-section-h2">Meet <span style={{ color: C.btn }}>Rai</span>. She pays attention to every client, every day.</h2>
             <p className="v2-section-sub">When something shifts, she catches it — and tells you what to do about it.</p>
           </div>
           <div className="v2-rai-steps">
@@ -1165,7 +1165,7 @@ function HomeV2({ setPage }) {
           <div className="v2-platform-grid">
             <div>
               <div className="v2-eyebrow">The platform</div>
-              <h2 className="v2-section-h2">CRMs track deals. <span className="v2-muted">Retayned tracks relationships.</span></h2>
+              <h2 className="v2-section-h2">CRMs track deals. Retayned tracks relationships.</h2>
               <p className="v2-section-sub">Your pipeline is forward-looking. Your clients aren't in it. They're the business you've already earned — and most CRMs treat them like they're already safe.</p>
               <div className="v2-bullets">
                 <div className="v2-bullet"><div className="v2-check">✓</div><div><strong>12-dimension retention scoring</strong> that measures relationship health, not transaction volume.</div></div>
@@ -1334,7 +1334,7 @@ function HomeV2({ setPage }) {
         <div className="v2-section-inner">
           <div className="v2-section-head" style={{ textAlign: "center", margin: "0 auto 32px", maxWidth: 820 }}>
             <div className="v2-eyebrow">Built for the way you work</div>
-            <h2 className="v2-section-h2">Retayned is shaped <span className="v2-muted">to your book.</span></h2>
+            <h2 className="v2-section-h2">Retayned is shaped to your book.</h2>
           </div>
           <div className="v2-audience-tabs-wrap">
             <div className="v2-audience-tabs">
@@ -1585,10 +1585,10 @@ function HomeV2({ setPage }) {
 
       {/* ══════ FINAL CTA ══════ */}
       <section className="v2-section-final r-full-bleed">
-        <h3 className="v2-final-h">
+        <h2 className="v2-final-h">
           You work too hard to get new clients.<br />Keep them{" "}
           <span className="v2-caveat-final">Retayned</span>.
-        </h3>
+        </h2>
         <p className="v2-final-sub">See the signal. Get the script. Keep the client.</p>
         <div className="v2-hero-cta-row" style={{ justifyContent: "center" }}>
           <button className="v2-btn-primary-lg cta-btn" onClick={() => setPage("signup")}>Start Free Trial</button>
@@ -6322,6 +6322,7 @@ export default function RetaynedSite() {
           align-items: center; justify-content: center;
           text-align: center;
           min-height: 220px;
+          background: #FFFFFF !important;
         }
         .v2-mix-stat-num {
           font-size: clamp(56px, 7vw, 96px);
@@ -6428,7 +6429,7 @@ export default function RetaynedSite() {
         .v2-hero-device {
           background: #F5ECD8;
           border-radius: 24px;
-          padding: 32px 32px 0;
+          padding: 32px;
           max-width: 1200px; margin: 56px auto 0;
           position: relative;
           box-shadow: 0 24px 60px rgba(28, 50, 36, 0.08);
@@ -6603,12 +6604,12 @@ export default function RetaynedSite() {
           flex-direction: column;
         }
         .v2-rai-step-illustration {
-          width: 100%;
+          width: 50%;
           aspect-ratio: 360 / 300;
           background-size: contain;
           background-position: center;
           background-repeat: no-repeat;
-          margin-bottom: 24px;
+          margin: 0 auto 24px;
         }
         .v2-rai-step-content {
           padding: 0 8px;
@@ -6820,7 +6821,7 @@ export default function RetaynedSite() {
         }
         .v2-audience-tab:hover { color: ${C.text}; }
         .v2-audience-tab-active {
-          background: ${C.primary};
+          background: ${C.primaryLight};
           color: #fff;
           font-weight: 700;
           box-shadow: 0 2px 8px rgba(28, 50, 36, 0.12);
