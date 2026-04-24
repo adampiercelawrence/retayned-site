@@ -7213,7 +7213,7 @@ export default function RetaynedSite() {
         }
 
         /* ═══ COMBOS ═══ */
-        .v2-section-combos { background: ${C.bg}; padding: 160px 48px; }
+        .v2-section-combos { background: ${C.bg}; padding: 112px 48px; }
         .v2-combos-head { max-width: 960px; margin: 0 auto 72px; text-align: center; }
         .v2-combos-h2 {
           font-size: clamp(40px, 5.5vw, 72px);
