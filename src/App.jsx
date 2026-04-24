@@ -193,7 +193,7 @@ function Nav({ page, setPage }) {
 
   return (
     <>
-      <nav style={{ position: "sticky", top: 0, zIndex: 50, background: C.bg, borderBottom: scrolled ? "1px solid " + C.border : "1px solid transparent", boxShadow: scrolled ? "0 2px 8px rgba(0,0,0,0.06)" : "none", transition: "box-shadow 0.2s, border-color 0.2s" }}>
+      <nav style={{ position: "sticky", top: 0, zIndex: 50, background: "#EAE4D6", borderBottom: scrolled ? "1px solid " + C.border : "1px solid transparent", boxShadow: scrolled ? "0 2px 8px rgba(0,0,0,0.06)" : "none", transition: "box-shadow 0.2s, border-color 0.2s" }}>
         <div className="r-nav-inner" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", maxWidth: 1600, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -1330,13 +1330,13 @@ function HomeV2({ setPage }) {
           <h2 className="v2-combos-h2">Proprietary scoring combinations that predict and prevent churn.</h2>
           <p className="v2-combos-p">Twelve dimensions. Twenty combinations. Every client, every day.</p>
         </div>
-        <V2ScrollBand items={dimensions} direction="left" speed={28} />
+        <V2ScrollBand items={dimensions} direction="left" speed={35} />
         <div className="v2-become">
           <span className="v2-become-rule" />
           <span className="v2-become-word">Become</span>
           <span className="v2-become-rule" />
         </div>
-        <V2ScrollBand items={combinations} direction="right" speed={32} />
+        <V2ScrollBand items={combinations} direction="right" speed={40} />
       </section>
 
       {/* ════ FEATURE TABS (preserved from old Home — to evaluate / decide) ════ */}
@@ -1517,9 +1517,9 @@ function HomeV2({ setPage }) {
         padding: "112px 48px",
       }}>
         <div style={{ maxWidth: 880, margin: "0 auto 56px", textAlign: "center" }}>
-          <h3 style={{ fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.05 }}>
+          <h2 style={{ fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.02 }}>
             What folks are saying.
-          </h3>
+          </h2>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, maxWidth: 1320, margin: "0 auto" }} className="v2-testimonials-grid">
@@ -1551,7 +1551,14 @@ function HomeV2({ setPage }) {
             <div className="v2-mix-stat-label">Cheaper to retain than acquire</div>
           </div>
 
-          {/* Cell 4 — testimonial */}
+
+
+          {/* stat: 5% increase (moved between rows) */}
+          <div className="v2-mix-cell v2-mix-stat v2-mix-stat-wide" style={{ gridColumn: "span 3" }}>
+            <div className="v2-mix-stat-headline">
+              A 5% increase in retention can boost profits by 95%.<sup style={{ fontSize: "0.4em", color: C.textMuted, verticalAlign: "super" }}>¹</sup>
+            </div>
+                    {/* Cell 4 — testimonial */}
           <div className="v2-mix-cell v2-mix-testimonial">
             <div style={{ display: "flex", gap: 2, marginBottom: 18 }}>
               {Array(5).fill(0).map((_, j) => <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>)}
@@ -1590,14 +1597,7 @@ function HomeV2({ setPage }) {
                 <div style={{ fontSize: 13, color: C.textMuted, marginTop: 2 }}>10-50 Clients</div>
               </div>
             </div>
-          </div>
-
-          {/* Cell 7 — stat: 5% increase (large headline style) */}
-          <div className="v2-mix-cell v2-mix-stat v2-mix-stat-wide" style={{ gridColumn: "span 3" }}>
-            <div className="v2-mix-stat-headline">
-              A 5% increase in retention can boost profits by 95%.<sup style={{ fontSize: "0.4em", color: C.textMuted, verticalAlign: "super" }}>¹</sup>
-            </div>
-          </div>
+          </div></div>
 
         </div>
       </section>
@@ -1648,8 +1648,7 @@ function HomeV2({ setPage }) {
         </div>
 
         <h3 className="v2-final-h v2-final-h-small">
-          You work too hard to get new clients.<br />Keep them{" "}
-          <span className="v2-caveat-final">Retayned</span>.
+          You work too hard to get new clients.<br />Keep them Retayned.
         </h3>
         <p className="v2-final-sub">See the signal. Get the script. Keep the client.</p>
         <div className="v2-hero-cta-row" style={{ justifyContent: "center" }}>
@@ -6425,7 +6424,7 @@ export default function RetaynedSite() {
           align-items: center; justify-content: center;
           text-align: center;
           min-height: 220px;
-          background: #FAF6EF !important;
+          background: #FAFAF7 !important;
         }
         .v2-mix-stat-num {
           font-size: clamp(56px, 7vw, 96px);
@@ -6923,12 +6922,12 @@ export default function RetaynedSite() {
         }
         .v2-audience-tab:hover { color: ${C.text}; }
         .v2-audience-tab-active {
-          background: ${C.primarySoft};
+          background: #FAFAF7;
           color: ${C.primary};
           font-weight: 700;
           box-shadow: 0 2px 8px rgba(28, 50, 36, 0.08);
         }
-        .v2-audience-tab-active:hover { color: ${C.primary}; }
+        .v2-audience-tab-active:hover { color: ${C.primary}; background: #FAFAF7; }
         .v2-audience-content {
           background: #F5ECD8;
           border-radius: 24px;
