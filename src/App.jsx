@@ -1330,13 +1330,13 @@ function HomeV2({ setPage }) {
           <h2 className="v2-combos-h2">Proprietary scoring combinations that predict and prevent churn.</h2>
           <p className="v2-combos-p">Twelve dimensions. Twenty combinations. Every client, every day.</p>
         </div>
-        <V2ScrollBand items={dimensions} direction="left" speed={35} />
+        <V2ScrollBand items={dimensions} direction="left" speed={48} />
         <div className="v2-become">
           <span className="v2-become-rule" />
           <span className="v2-become-word">Become</span>
           <span className="v2-become-rule" />
         </div>
-        <V2ScrollBand items={combinations} direction="right" speed={40} />
+        <V2ScrollBand items={combinations} direction="right" speed={56} />
       </section>
 
       {/* ════ FEATURE TABS (preserved from old Home — to evaluate / decide) ════ */}
@@ -1553,12 +1553,14 @@ function HomeV2({ setPage }) {
 
 
 
-          {/* stat: 5% increase (moved between rows) */}
+          {/* Row 2 (spans 3) — 5% increase headline */}
           <div className="v2-mix-cell v2-mix-stat v2-mix-stat-wide" style={{ gridColumn: "span 3" }}>
             <div className="v2-mix-stat-headline">
               A 5% increase in retention can boost profits by 95%.<sup style={{ fontSize: "0.4em", color: C.textMuted, verticalAlign: "super" }}>¹</sup>
             </div>
-                    {/* Cell 4 — testimonial */}
+          </div>
+
+          {/* Cell 4 — testimonial */}
           <div className="v2-mix-cell v2-mix-testimonial">
             <div style={{ display: "flex", gap: 2, marginBottom: 18 }}>
               {Array(5).fill(0).map((_, j) => <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>)}
@@ -1597,7 +1599,7 @@ function HomeV2({ setPage }) {
                 <div style={{ fontSize: 13, color: C.textMuted, marginTop: 2 }}>10-50 Clients</div>
               </div>
             </div>
-          </div></div>
+          </div>
 
         </div>
       </section>
@@ -6441,6 +6443,8 @@ export default function RetaynedSite() {
         .v2-mix-stat-wide {
           min-height: 160px;
           padding: 48px 32px;
+          background: linear-gradient(135deg, #D7E6D9 0%, ${C.primarySoft} 60%, #FAFAF7 100%) !important;
+          border: 1px solid rgba(51, 84, 62, 0.08) !important;
         }
         .v2-mix-stat-headline {
           font-size: clamp(28px, 3.5vw, 48px);
