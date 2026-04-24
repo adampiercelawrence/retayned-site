@@ -193,7 +193,7 @@ function Nav({ page, setPage }) {
 
   return (
     <>
-      <nav style={{ position: "sticky", top: 0, zIndex: 50, background: "#F9EFE4", borderBottom: scrolled ? "1px solid " + C.border : "1px solid transparent", boxShadow: scrolled ? "0 2px 8px rgba(0,0,0,0.06)" : "none", transition: "box-shadow 0.2s, border-color 0.2s" }}>
+      <nav style={{ position: "sticky", top: 0, zIndex: 50, background: "#F9EFE4", borderBottom: "1px solid transparent", boxShadow: "none", transition: "box-shadow 0.2s, border-color 0.2s" }}>
         <div className="r-nav-inner" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", maxWidth: 1600, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -1098,7 +1098,7 @@ function HomeV2({ setPage }) {
         <div className="v2-hero-inner">
           <div className="v2-trust-pill">
             <span className="v2-trust-dot" />
-            For freelancers, agencies, account reps, and mobsters
+            For freelancers, agencies, and mobsters
           </div>
           <h1 className="v2-hero-h1">
             The CRM that{" "}
@@ -1330,13 +1330,13 @@ function HomeV2({ setPage }) {
           <h2 className="v2-combos-h2">Proprietary scoring combinations that predict and prevent churn.</h2>
           <p className="v2-combos-p">Twelve dimensions. Twenty combinations. Every client, every day.</p>
         </div>
-        <V2ScrollBand items={dimensions} direction="left" speed={48} />
+        <V2ScrollBand items={dimensions} direction="left" speed={64} />
         <div className="v2-become">
           <span className="v2-become-rule" />
           <span className="v2-become-word">Become</span>
           <span className="v2-become-rule" />
         </div>
-        <V2ScrollBand items={combinations} direction="right" speed={56} />
+        <V2ScrollBand items={combinations} direction="right" speed={72} />
       </section>
 
       {/* ════ FEATURE TABS (preserved from old Home — to evaluate / decide) ════ */}
@@ -1824,7 +1824,7 @@ function Home({ setPage }) {
                   fontSize: 12, fontWeight: 600, color: C.text,
                 }}>
                   <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.success, display: "inline-block" }} />
-                  For freelancers, agencies, account reps, and mobsters
+                  For freelancers, agencies, and mobsters
                 </div>
               </div>
 
@@ -6488,7 +6488,7 @@ export default function RetaynedSite() {
           margin-bottom: 24px;
           color: ${C.text};
         }
-        .v2-strike-wrap { position: relative; display: inline-block; }
+        .v2-strike-wrap { position: relative; display: inline-block; margin: 0 0.15em; padding-top: 0.5em; }
         .v2-strike { color: ${C.textMuted}; position: relative; }
         .v2-strike::after {
           content: ''; position: absolute;
@@ -6499,7 +6499,7 @@ export default function RetaynedSite() {
         .v2-caveat {
           font-family: 'Caveat', cursive;
           font-weight: 700; color: ${C.primary};
-          position: absolute; top: -0.65em; left: 50%;
+          position: absolute; top: -0.85em; left: 50%;
           transform: translateX(-50%) rotate(-2deg);
           font-size: 0.7em; white-space: nowrap;
         }
@@ -6927,11 +6927,11 @@ export default function RetaynedSite() {
         .v2-audience-tab:hover { color: ${C.text}; }
         .v2-audience-tab-active {
           background: #FAFAF7;
-          color: ${C.primary};
+          color: ${C.text};
           font-weight: 700;
           box-shadow: 0 2px 8px rgba(28, 50, 36, 0.08);
         }
-        .v2-audience-tab-active:hover { color: ${C.primary}; background: #FAFAF7; }
+        .v2-audience-tab-active:hover { color: ${C.text}; background: #FAFAF7; }
         .v2-audience-content {
           background: #F5ECD8;
           border-radius: 24px;
@@ -7105,6 +7105,8 @@ export default function RetaynedSite() {
           .v2-footer { padding: 48px 20px 28px; }
           .v2-footer-inner { grid-template-columns: 1fr; gap: 28px; }
           .v2-curve { height: 80px; }
+          .v2-port-row-header > div:nth-child(5),
+          .v2-port-row:not(.v2-port-row-header) > div:nth-child(5) { display: none !important; }
         }
       `}</style>
 
