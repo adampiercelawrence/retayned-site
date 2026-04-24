@@ -193,7 +193,7 @@ function Nav({ page, setPage }) {
 
   return (
     <>
-      <nav style={{ position: "sticky", top: 0, zIndex: 50, background: "#F9EFE4", borderBottom: "1px solid transparent", boxShadow: "none", transition: "box-shadow 0.2s, border-color 0.2s" }}>
+      <nav style={{ position: "sticky", top: 0, zIndex: 50, background: "#F9EFE4", borderBottom: scrolled ? "1px solid rgba(0,0,0,0.06)" : "1px solid transparent", boxShadow: scrolled ? "0 4px 12px rgba(0,0,0,0.04)" : "none", transition: "box-shadow 0.2s, border-color 0.2s" }}>
         <div className="r-nav-inner" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", maxWidth: 1600, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -815,74 +815,263 @@ const V2 = {
   bgWarmerEdge: "#D9D1BE",
 };
 
-// ─── Today feed with state-driven reorder animation ───
+// ─── Today feed: pool of 8, randomized re-rank, typewriter Rai messages ───
+// Behavior ported from Retayned_Animated_v3.html — adapted to React state/refs.
 function V2TodayFeed() {
-  // 4 tasks — Rai periodically re-ranks priority order
-  const initialTasks = [
-    { id: "meridian", tag: "Fire", tagClass: "urgent", title: "Meridian Co. hasn't opened emails in 14 days", meta: "Revenue at risk: $96k/yr · Last touch: 18 days ago", score: 42, scoreClass: "red" },
-    { id: "hollis", tag: "Deepen", tagClass: "deepen", title: "Hollis & Lee just hit one year — send handwritten note", meta: "Tenure: 12 mo · LTV: $144k · Health: 91", score: 91, scoreClass: "green" },
-    { id: "otsego", tag: "Proactive", tagClass: "proactive", title: "Otsego mentioned Q3 hiring — ask about it", meta: "Touchpoint from Mar 12 · Opportunity signal", score: 64, scoreClass: "yellow" },
-    { id: "baxter", tag: "Save", tagClass: "savings", title: "Baxter Firm renewal in 21 days — confirm scope", meta: "LTV: $50k · Renewal probability: 94%", score: 87, scoreClass: "green" },
+  const ROW_H = 74;   // card height
+  const GAP = 12;     // vertical gap
+  const STEP = ROW_H + GAP;
+
+  // Master pool. Each item carries its own raiLine — the typewriter speaks
+  // the line belonging to whichever task is currently at the top of the list.
+  const pool = [
+    { id: "hollis", kind: "deepen",
+      title: "Hollis & Lee just hit one year — send handwritten note",
+      meta: "Tenure: 12 mo · LTV: $144k · Health: 91", score: 91,
+      raiLine: "Hollis & Lee are trending up. One-year milestone is a perfect moment — I queued a note." },
+    { id: "meridian", kind: "urgent",
+      title: "Meridian Co. hasn't opened emails in 14 days",
+      meta: "Revenue at risk: $96k/yr · Last touch: 18 days ago", score: 42,
+      raiLine: "Meridian just moved to the top — their score dropped from 68 to 42 in three weeks. Want the outreach script?" },
+    { id: "baxter", kind: "nurture",
+      title: "Baxter Firm renewal in 21 days — confirm scope",
+      meta: "LTV: $50k · Renewal probability: 94%", score: 87,
+      raiLine: "Baxter is holding steady at 87 — scope doc is ready when you want to confirm." },
+    { id: "otsego", kind: "proactive",
+      title: "Otsego mentioned Q3 hiring — ask about it",
+      meta: "Touchpoint from Mar 12 · Opportunity signal", score: 64,
+      raiLine: "Otsego dropped a hiring hint on their last call. I flagged it as an expansion signal." },
+    { id: "cardinal", kind: "urgent",
+      title: "Cardinal Group flagged churn risk — call exec sponsor",
+      meta: "Revenue at risk: $62k/yr · Last touch: 9 days ago", score: 38,
+      raiLine: "Cardinal Group just flagged churn risk — their sentiment swung hard this week. Drafting a call agenda now." },
+    { id: "juniper", kind: "deepen",
+      title: "Juniper Labs referred two leads — thank founder",
+      meta: "Tenure: 8 mo · LTV: $72k · Health: 88", score: 88,
+      raiLine: "Juniper sent two referrals this week. Worth a personal thank-you before Friday." },
+    { id: "pinebrook", kind: "nurture",
+      title: "Pinebrook contract expires in 10 days — align pricing",
+      meta: "LTV: $38k · Renewal probability: 71%", score: 76,
+      raiLine: "Pinebrook renewal just slipped under 80% probability. Moving it up so you catch it early." },
+    { id: "atlas", kind: "proactive",
+      title: "Atlas posted a new VP of Ops — intro Rai?",
+      meta: "Touchpoint from Apr 2 · Expansion signal", score: 58,
+      raiLine: "Atlas posted a new VP of Ops. Good excuse for a warm intro — I pulled their LinkedIn." },
   ];
 
-  // Sequence of re-rankings (array of id orders) Rai cycles through.
-  // Each order represents a different prioritization the engine surfaces.
-  const orders = [
-    ["meridian", "hollis", "otsego", "baxter"],
-    ["meridian", "baxter", "hollis", "otsego"],
-    ["hollis", "meridian", "baxter", "otsego"],
-    ["meridian", "otsego", "baxter", "hollis"],
-  ];
+  const byId = Object.fromEntries(pool.map(p => [p.id, p]));
 
-  const [orderIdx, setOrderIdx] = useState(0);
+  // Ranking state
+  const [order, setOrder] = useState(["hollis", "meridian", "baxter", "otsego"]);
+  const [leaving, setLeaving] = useState([]);     // ids currently fading out
+  const [topId, setTopId] = useState("hollis");   // gets the "lifted" treatment briefly
+  const [thinking, setThinking] = useState(false);
 
+  // Rai typewriter state
+  const [raiText, setRaiText] = useState("");
+  const [raiCaret, setRaiCaret] = useState(true);
+  const [raiVisible, setRaiVisible] = useState(false);
+
+  const cancelledRef = useRef(false);
+  const timeoutsRef = useRef([]);
+
+  // Helpers: promise-based sleep that is cancel-aware
+  const sleep = (ms) => new Promise((resolve) => {
+    const t = setTimeout(() => {
+      timeoutsRef.current = timeoutsRef.current.filter(x => x !== t);
+      resolve();
+    }, ms);
+    timeoutsRef.current.push(t);
+  });
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const cancelled = () => cancelledRef.current;
+
+  // Compute a next order: sometimes swap in an off-screen task, otherwise shuffle a position.
+  function nextOrder(prev) {
+    const all = pool.map(p => p.id);
+    const offscreen = all.filter(id => !prev.includes(id));
+    const next = [...prev];
+    if (Math.random() < 0.45 && offscreen.length) {
+      const removeIdx = Math.floor(Math.random() * next.length);
+      next.splice(removeIdx, 1);
+      const incoming = offscreen[Math.floor(Math.random() * offscreen.length)];
+      const insertAt = Math.floor(Math.random() * (next.length + 1));
+      next.splice(insertAt, 0, incoming);
+    } else {
+      const swaps = 1 + Math.floor(Math.random() * 2);
+      for (let s = 0; s < swaps; s++) {
+        const i = Math.floor(Math.random() * next.length);
+        let j = Math.floor(Math.random() * next.length);
+        if (i === j) j = (j + 1) % next.length;
+        [next[i], next[j]] = [next[j], next[i]];
+      }
+    }
+    return next;
+  }
+
+  // Typewriter for a single line: fade in, type chars with jitter, settle, then fade out on next call.
+  async function typeLine(text) {
+    if (cancelled()) return;
+    // fade old line out first
+    setRaiVisible(false);
+    await sleep(280);
+    if (cancelled()) return;
+    setRaiText("");
+    setRaiCaret(true);
+    setRaiVisible(true);
+    // type
+    for (let i = 0; i < text.length; i++) {
+      if (cancelled()) return;
+      setRaiText(text.slice(0, i + 1));
+      await sleep(text[i] === " " ? 14 : (16 + Math.random() * 22));
+    }
+    // settle
+    await sleep(1800);
+    if (cancelled()) return;
+    setRaiCaret(false);
+  }
+
+  // Main loops — kicked off once on mount
   useEffect(() => {
-    const t = setInterval(() => {
-      setOrderIdx((i) => (i + 1) % orders.length);
-    }, 3800);
-    return () => clearInterval(t);
+    cancelledRef.current = false;
+
+    // Rai loop: always speaks the line for whatever task is currently at position 0.
+    let lastSpoken = null;
+    async function raiLoop() {
+      // Prime with the initial top item's line immediately.
+      const first = byId[order[0]];
+      lastSpoken = first.id;
+      await typeLine(first.raiLine);
+      while (!cancelled()) {
+        await sleep(rand(2600, 4200));
+        if (cancelled()) return;
+        // Read the *current* top (it may have changed since last spoken).
+        // We use a ref-like dance: grab from latest state via the closure of the interval.
+        // Since state updates are async, we capture order via a ref below in the reorder loop.
+        const currentTopId = topRef.current;
+        const next = byId[currentTopId];
+        if (!next) continue;
+        if (next.id === lastSpoken) {
+          // Top unchanged — speak a different line by walking the pool. Keeps the feed alive.
+          const others = pool.filter(p => p.id !== lastSpoken);
+          const pick = others[Math.floor(Math.random() * others.length)];
+          lastSpoken = pick.id; // track to avoid immediate repeat
+          await typeLine(pick.raiLine);
+        } else {
+          lastSpoken = next.id;
+          await typeLine(next.raiLine);
+        }
+      }
+    }
+
+    async function rerankOnce() {
+      setThinking(true);
+      await sleep(900);
+      if (cancelled()) return;
+
+      // Compute next order from current (read from ref for latest-in-closure safety)
+      const prev = orderRef.current;
+      const next = nextOrder(prev);
+      const leavingIds = prev.filter(id => !next.includes(id));
+
+      // Fade leavers first
+      setLeaving(leavingIds);
+      await sleep(50); // ensure class applies before swapping order
+      if (cancelled()) return;
+
+      // Commit new order (existing cards slide to new positions; entrants appear in place)
+      setOrder(next);
+
+      // After slide transition, clear the leavers from "leaving" list so the nodes unmount.
+      await sleep(750);
+      if (cancelled()) return;
+      setLeaving([]);
+
+      // Briefly lift the new #1
+      setTopId(next[0]);
+
+      // Stop thinking pulse
+      await sleep(400);
+      if (cancelled()) return;
+      setThinking(false);
+    }
+
+    async function reorderLoop() {
+      await sleep(1400);
+      while (!cancelled()) {
+        await rerankOnce();
+        await sleep(rand(2600, 4200));
+      }
+    }
+
+    reorderLoop();
+    raiLoop();
+
+    return () => {
+      cancelledRef.current = true;
+      timeoutsRef.current.forEach(clearTimeout);
+      timeoutsRef.current = [];
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const currentOrder = orders[orderIdx];
-  const ROW_HEIGHT = 76; // approx height of each task row including margin
+  // Keep refs of latest state so loops running in effect closure see fresh values
+  const orderRef = useRef(order);
+  const topRef = useRef(order[0]);
+  useEffect(() => { orderRef.current = order; topRef.current = order[0]; }, [order]);
+
+  // Layout: combine current order + any leavers being faded out, so we render both.
+  // Leavers keep their old position (we approximate by putting them at the end, opacity 0).
+  const visibleIds = [...order];
+  leaving.forEach(id => { if (!visibleIds.includes(id)) visibleIds.push(id); });
 
   return (
-    <div className="v2-today-feed">
-      <div className="v2-feed-head">
+    <div className="v2tf-root">
+      <div className="v2tf-head">
         <div>
-          <h3 style={{ fontSize: 18, fontWeight: 800, margin: 0 }}>Today</h3>
-          <div style={{ fontSize: 11, color: C.textMuted, fontWeight: 500, marginTop: 2 }}>4 tasks · sorted by Rai</div>
+          <h3 className="v2tf-title">Today</h3>
+          <div className="v2tf-sub">{order.length} tasks · sorted by Rai</div>
         </div>
-        <div className="v2-rai-badge"><span className="v2-rai-pulse" />Rai is ranking</div>
+        <div className={"v2tf-ranking" + (thinking ? " thinking" : "")}>Rai is ranking</div>
       </div>
-      <div className="v2-task-list" style={{ position: "relative", height: initialTasks.length * ROW_HEIGHT }}>
-        {initialTasks.map((task) => {
-          const pos = currentOrder.indexOf(task.id);
-          return (
-            <div
-              key={task.id}
-              className="v2-task"
-              style={{
-                position: "absolute",
-                top: pos * ROW_HEIGHT,
-                left: 0,
-                right: 0,
-                transition: "top 0.9s cubic-bezier(0.65, 0, 0.35, 1)",
-              }}
-            >
-              <div className={"v2-tag v2-tag-" + task.tagClass}>{task.tag}</div>
-              <div className="v2-task-body">
-                <div className="v2-task-title">{task.title}</div>
-                <div className="v2-task-meta">{task.meta}</div>
+
+      <div className="v2tf-list-wrap">
+        <div
+          className="v2tf-list"
+          style={{ "--count": order.length }}
+        >
+          {visibleIds.map((id) => {
+            const t = byId[id];
+            if (!t) return null;
+            const pos = order.indexOf(id);
+            const isLeaving = leaving.includes(id);
+            const isLifted = !isLeaving && id === topId;
+            return (
+              <div
+                key={id}
+                className={"v2tf-task" + (isLifted ? " lifted" : "") + (isLeaving ? " leaving" : "")}
+                style={{ "--pos": Math.max(pos, 0) }}
+              >
+                <div className={"v2tf-label " + t.kind}>{t.kind}</div>
+                <div className="v2tf-main">
+                  <div className="v2tf-task-title">{t.title}</div>
+                  <div className="v2tf-meta">{t.meta}</div>
+                </div>
+                <div className={"v2tf-score " + t.kind}>{t.score}</div>
               </div>
-              <div className={"v2-score-mini v2-score-" + task.scoreClass}>{task.score}</div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-      <div className="v2-rai-whisper">
-        <div className="v2-rai-avatar">R</div>
-        <div className="v2-rai-text"><strong style={{ color: C.text }}>Rai:</strong> Meridian just moved to the top — their score dropped from 68 to 42 in three weeks. Want the outreach script?</div>
+
+      <div className="v2tf-rai">
+        <div className="v2tf-avatar">R</div>
+        <div className="v2tf-msg">
+          <span className={"v2tf-msg-line" + (raiVisible ? " show" : "")}>
+            <b>Rai:</b> <span className="v2tf-msg-body">{raiText}</span>
+            {raiCaret && <span className="v2tf-caret" />}
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -1117,10 +1306,6 @@ function HomeV2({ setPage }) {
 
           <div className="v2-hero-device">
             <div className="v2-hero-device-inner">
-              <div className="v2-device-topbar">
-                <div className="v2-device-dots"><span /><span /><span /></div>
-                <div className="v2-device-url">app.retayned.com / today</div>
-              </div>
               <V2TodayFeed />
             </div>
           </div>
@@ -1508,12 +1693,12 @@ function HomeV2({ setPage }) {
 
       {/* curve: enterprise (deep green) → final (beige) */}
       <div className="v2-curve r-full-bleed r-no-pad" style={{ background: C.primaryDeep }}>
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,25 C 1080,-30 360,140 0,20 Z" fill="#F2EEE8" /></svg>
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none"><path d="M 0,100 L 1440,100 L 1440,25 C 1080,-30 360,140 0,20 Z" fill="#F9EFE4" /></svg>
       </div>
 
       {/* ══════ TESTIMONIALS + STATS (7-cell mixed grid) ══════ */}
       <section className="r-full-bleed" style={{
-        background: C.surfaceWarm,
+        background: "#F9EFE4",
         padding: "112px 48px",
       }}>
         <div style={{ maxWidth: 880, margin: "0 auto 56px", textAlign: "center" }}>
@@ -1560,7 +1745,13 @@ function HomeV2({ setPage }) {
             </div>
           </div>
 
-          {/* Cell 4 — testimonial */}
+          {/* Cell 4 — stat: 1+ */}
+          <div className="v2-mix-cell v2-mix-stat">
+            <div className="v2-mix-stat-num">1+</div>
+            <div className="v2-mix-stat-label">Saved client pays for itself</div>
+          </div>
+
+          {/* Cell 5 — testimonial (Freelancer JR) */}
           <div className="v2-mix-cell v2-mix-testimonial">
             <div style={{ display: "flex", gap: 2, marginBottom: 18 }}>
               {Array(5).fill(0).map((_, j) => <span key={j} style={{ fontSize: 16, color: "#E6A817" }}>★</span>)}
@@ -1573,12 +1764,6 @@ function HomeV2({ setPage }) {
                 <div style={{ fontSize: 13, color: C.textMuted, marginTop: 2 }}>1-5 Clients</div>
               </div>
             </div>
-          </div>
-
-          {/* Cell 5 — stat: 1+ */}
-          <div className="v2-mix-cell v2-mix-stat">
-            <div className="v2-mix-stat-num">1+</div>
-            <div className="v2-mix-stat-label">Saved client pays for itself</div>
           </div>
 
           {/* Cell 6 — testimonial */}
@@ -6467,9 +6652,10 @@ export default function RetaynedSite() {
           padding: 72px 48px 60px;
           overflow: hidden;
         }
-        .v2-hero-inner { max-width: 1320px; margin: 0 auto; }
+        .v2-hero-inner { max-width: 1320px; margin: 0 auto; padding-top: 72px; position: relative; }
         @keyframes subtleBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
         .v2-trust-pill {
+          position: absolute; top: 48px; left: 0;
           display: inline-flex; align-items: center; gap: 8px;
           padding: 6px 14px; border-radius: 100px;
           background: rgba(255,255,255,0.9);
@@ -6477,8 +6663,8 @@ export default function RetaynedSite() {
           box-shadow: 0 4px 16px rgba(0,0,0,0.04);
           font-size: 13px; font-weight: 600;
           color: ${C.text};
-          margin-bottom: 28px;
           animation: subtleBob 4s ease-in-out infinite;
+          z-index: 2;
         }
         .v2-trust-dot { width: 6px; height: 6px; border-radius: 50%; background: ${C.success}; }
         .v2-hero-h1 {
@@ -6499,9 +6685,9 @@ export default function RetaynedSite() {
         .v2-caveat {
           font-family: 'Caveat', cursive;
           font-weight: 700; color: ${C.primary};
-          position: absolute; top: -0.85em; left: 50%;
+          position: absolute; top: -0.1em; left: 50%;
           transform: translateX(-50%) rotate(-2deg);
-          font-size: 0.7em; white-space: nowrap;
+          font-size: 0.65em; white-space: nowrap;
         }
         .v2-hero-sub {
           font-size: clamp(17px, 2vw, 22px);
@@ -6643,6 +6829,183 @@ export default function RetaynedSite() {
           font-size: 12.5px; color: ${C.primary};
           line-height: 1.55;
         }
+
+        /* ═══ Today feed v3 (v2tf-*) — hero animated task list ═══ */
+        .v2tf-root {
+          padding: 28px 32px 30px;
+          background: #fff;
+          font-family: inherit;
+          color: ${C.text};
+        }
+        .v2tf-head {
+          display: flex; align-items: flex-start; justify-content: space-between;
+          padding-bottom: 18px;
+          border-bottom: 1px solid ${C.borderLight};
+          margin-bottom: 18px;
+        }
+        .v2tf-title {
+          margin: 0 0 4px;
+          font-size: 28px; font-weight: 700;
+          letter-spacing: -0.02em;
+          color: ${C.text};
+        }
+        .v2tf-sub {
+          font-size: 13px;
+          color: ${C.textMuted};
+        }
+        .v2tf-ranking {
+          display: inline-flex; align-items: center; gap: 8px;
+          background: #EDE4F8;
+          color: ${C.btn};
+          padding: 8px 14px;
+          border-radius: 999px;
+          font-size: 13px; font-weight: 500;
+          white-space: nowrap;
+        }
+        .v2tf-ranking::before {
+          content: '';
+          width: 7px; height: 7px;
+          border-radius: 50%;
+          background: ${C.btn};
+          box-shadow: 0 0 0 0 rgba(91,33,182,0.5);
+          animation: v2tf-pulse 1.8s ease-out infinite;
+        }
+        @keyframes v2tf-pulse {
+          0%   { box-shadow: 0 0 0 0 rgba(91,33,182,0.55); }
+          70%  { box-shadow: 0 0 0 8px rgba(91,33,182,0); }
+          100% { box-shadow: 0 0 0 0 rgba(91,33,182,0); }
+        }
+        .v2tf-ranking.thinking::before { animation: v2tf-pulse 0.8s ease-out infinite; }
+
+        .v2tf-list-wrap { position: relative; }
+        .v2tf-list {
+          --row-h: 74px;
+          --gap: 12px;
+          --step: calc(var(--row-h) + var(--gap));
+          position: relative; display: block;
+          height: calc(var(--count, 4) * var(--row-h) + (var(--count, 4) - 1) * var(--gap));
+          transition: height 500ms cubic-bezier(.6,.05,.2,1);
+        }
+
+        .v2tf-task {
+          position: absolute;
+          left: 0; right: 0;
+          background: #fff;
+          border: 1px solid ${C.borderLight};
+          border-radius: 12px;
+          padding: 16px 20px;
+          display: flex; align-items: center; gap: 18px;
+          transform: translateY(calc(var(--pos, 0) * var(--step)));
+          transition:
+            transform 700ms cubic-bezier(.6,.05,.2,1),
+            opacity 420ms ease,
+            box-shadow 400ms ease,
+            border-color 400ms ease,
+            background 400ms ease;
+          will-change: transform, opacity;
+        }
+        .v2tf-task.lifted {
+          box-shadow:
+            0 0 0 1px rgba(0,0,0,0.03),
+            0 16px 34px -14px rgba(60,40,10,0.25),
+            0 4px 12px -2px rgba(60,40,10,0.08);
+          border-color: #E0DACB;
+          background: #FFFDF7;
+        }
+        .v2tf-task.leaving {
+          opacity: 0;
+          transform: translateY(calc(var(--pos, 0) * var(--step) - 14px)) scale(0.985);
+          pointer-events: none;
+        }
+
+        .v2tf-label {
+          flex: 0 0 auto;
+          display: inline-flex; align-items: center; justify-content: center;
+          font-size: 10.5px; font-weight: 600;
+          letter-spacing: 0.08em;
+          padding: 5px 9px;
+          border-radius: 5px;
+          min-width: 64px;
+          text-align: center;
+          text-transform: uppercase;
+        }
+        .v2tf-label.urgent    { background: ${C.dangerBg};  color: ${C.danger}; }
+        .v2tf-label.deepen    { background: ${C.primarySoft}; color: ${C.primary}; }
+        .v2tf-label.nurture   { background: ${C.warningBg}; color: ${C.warning}; }
+        .v2tf-label.proactive { background: #EDE4F8;        color: ${C.btn}; }
+
+        .v2tf-main { flex: 1; min-width: 0; }
+        .v2tf-task-title {
+          font-size: 15.5px; font-weight: 600;
+          color: ${C.text};
+          letter-spacing: -0.005em;
+          margin-bottom: 3px;
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .v2tf-meta {
+          font-size: 12.5px;
+          color: ${C.textMuted};
+        }
+
+        .v2tf-score {
+          flex: 0 0 auto;
+          display: inline-flex; align-items: center; justify-content: center;
+          min-width: 44px;
+          padding: 6px 10px;
+          border-radius: 7px;
+          font-weight: 600; font-size: 13px;
+          font-variant-numeric: tabular-nums;
+          transition: background 400ms ease, color 400ms ease, transform 400ms ease;
+        }
+        .v2tf-score.urgent    { background: #F5CDC4; color: ${C.danger}; }
+        .v2tf-score.deepen    { background: #D3E1D7; color: ${C.primary}; }
+        .v2tf-score.nurture   { background: #F3E3B0; color: ${C.warning}; }
+        .v2tf-score.proactive { background: #E4D7F5; color: ${C.btn}; }
+
+        /* Rai banner */
+        .v2tf-rai {
+          margin-top: 22px;
+          background: ${C.primarySoft};
+          color: ${C.primary};
+          border-radius: 12px;
+          padding: 14px 18px;
+          display: flex; align-items: center; gap: 14px;
+          font-size: 14px;
+          min-height: 56px;
+          overflow: hidden;
+        }
+        .v2tf-avatar {
+          flex: 0 0 auto;
+          width: 36px; height: 36px;
+          border-radius: 50%;
+          background: ${C.btn};
+          color: #fff;
+          display: inline-flex; align-items: center; justify-content: center;
+          font-weight: 600; font-size: 14px;
+          letter-spacing: 0.02em;
+        }
+        .v2tf-msg {
+          flex: 1;
+          position: relative;
+          min-height: 20px;
+        }
+        .v2tf-msg b { font-weight: 600; color: ${C.primary}; }
+        .v2tf-msg-line {
+          display: block;
+          opacity: 0;
+          transform: translateY(8px);
+          transition: opacity 450ms ease, transform 450ms ease;
+        }
+        .v2tf-msg-line.show { opacity: 1; transform: translateY(0); }
+        .v2tf-caret {
+          display: inline-block;
+          width: 2px; height: 14px;
+          background: ${C.primary};
+          vertical-align: middle;
+          margin-left: 2px;
+          animation: v2tf-blink 1s steps(2) infinite;
+        }
+        @keyframes v2tf-blink { 50% { opacity: 0; } }
 
         /* ═══ CURVES ═══ */
         .v2-curve { display: block; width: 100vw; height: 140px; margin-top: 0; margin-bottom: 0; padding: 0; line-height: 0; }
@@ -7021,7 +7384,7 @@ export default function RetaynedSite() {
 
         /* ═══ FINAL CTA ═══ */
         .v2-section-final {
-          background: #F2EEE8;
+          background: #F9EFE4;
           padding: 112px 48px 140px;
           text-align: center;
         }
@@ -7107,6 +7470,34 @@ export default function RetaynedSite() {
           .v2-curve { height: 80px; }
           .v2-port-row-header > div:nth-child(5),
           .v2-port-row:not(.v2-port-row-header) > div:nth-child(5) { display: none !important; }
+
+          /* Today feed v3 mobile: compact horizontal cards (label | content | score) */
+          .v2tf-root { padding: 20px 18px 22px; }
+          .v2tf-head { flex-direction: column; align-items: flex-start; gap: 10px; padding-bottom: 14px; margin-bottom: 14px; }
+          .v2tf-title { font-size: 24px; }
+          .v2tf-sub { font-size: 12px; }
+          .v2tf-ranking { font-size: 12px; padding: 7px 12px; }
+          .v2tf-list { --row-h: 78px; --gap: 10px; }
+          .v2tf-task { padding: 12px 14px; gap: 12px; align-items: center; }
+          .v2tf-label { font-size: 9px; min-width: 58px; padding: 4px 6px; letter-spacing: 0.06em; }
+          .v2tf-main { min-width: 0; }
+          .v2tf-task-title { font-size: 13px; white-space: normal; line-height: 1.3; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+          .v2tf-meta { font-size: 11px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+          .v2tf-score { font-size: 12px; min-width: 36px; padding: 5px 8px; }
+          .v2tf-rai { padding: 12px 14px; gap: 10px; font-size: 12.5px; }
+          .v2tf-avatar { width: 30px; height: 30px; font-size: 12px; }
+        }
+
+        @media (max-width: 420px) {
+          .v2tf-root { padding: 16px 12px 18px; }
+          .v2tf-title { font-size: 22px; }
+          .v2tf-list { --row-h: 74px; --gap: 8px; }
+          .v2tf-task { padding: 10px 12px; gap: 10px; }
+          .v2tf-label { font-size: 8.5px; min-width: 50px; padding: 3px 5px; }
+          .v2tf-task-title { font-size: 12.5px; }
+          .v2tf-meta { font-size: 10.5px; }
+          .v2tf-score { min-width: 32px; font-size: 11.5px; padding: 4px 7px; }
+          .v2tf-msg { font-size: 12px; }
         }
       `}</style>
 
