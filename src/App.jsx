@@ -971,7 +971,7 @@ function HomeV2({ setPage }) {
       {/* ══════ MEET RAI ══════ */}
       <section className="v2-section-rai r-full-bleed">
         <div className="v2-section-inner">
-          <div className="v2-section-head">
+          <div className="v2-section-head" style={{ textAlign: "center", margin: "0 auto 56px", maxWidth: 880 }}>
             <div className="v2-eyebrow">How it works</div>
             <h2 className="v2-section-h2">Meet <span style={{ color: C.btn }}>Rai</span>. She pays attention to every client, every day.</h2>
             <p className="v2-section-sub">When something shifts, she catches it — and tells you what to do about it.</p>
@@ -4908,7 +4908,7 @@ export default function RetaynedSite() {
 
         /* Hero device — beige on beige */
         .v2-hero-device {
-          background: #F5ECD8;
+          background: #EAE4D6;
           border-radius: 24px;
           padding: 32px;
           max-width: 1100px; margin: 56px auto 0;
@@ -5171,7 +5171,7 @@ export default function RetaynedSite() {
         .v2-section-sub {
           font-size: clamp(16px, 1.8vw, 18px);
           color: ${C.textSec};
-          line-height: 1.6; max-width: 640px;
+          line-height: 1.6; max-width: 640px; margin-left: auto; margin-right: auto;
         }
 
         /* ═══ MEET RAI ═══ */
@@ -5260,6 +5260,7 @@ export default function RetaynedSite() {
           white-space: nowrap; width: max-content;
           padding: 8px 0;
           will-change: transform;
+          color: ${C.textSec};
         }
         .v2-become {
           display: flex; align-items: center; justify-content: center;
