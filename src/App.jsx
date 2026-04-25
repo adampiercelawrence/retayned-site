@@ -350,7 +350,7 @@ function Nav({ page, setPage }) {
             ))}
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
           <span className="r-desktop-nav" onClick={() => setPage("login")} role="button" tabIndex={0} onKeyDown={e => e.key === "Enter" && setPage("login")} style={{ fontSize: 14, fontWeight: 600, color: C.textSec, cursor: "pointer" }}>Log In</span>
           <button className="cta-btn" onClick={() => { setPage("signup"); setOpen(false); }} style={{ padding: "10px 22px", background: C.btn, color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
             Start Free Trial
@@ -5178,6 +5178,7 @@ export default function RetaynedSite() {
         .v2-section-rai { background: ${C.bg}; padding: 96px 48px; }
         .v2-rai-steps {
           display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+          max-width: 1400px; margin: 0 auto;
         }
         .v2-rai-step {
           background: transparent;
@@ -5213,6 +5214,7 @@ export default function RetaynedSite() {
         .v2-platform-grid {
           display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px;
           align-items: center;
+          max-width: 1400px; margin: 0 auto;
         }
         .v2-bullets { margin-top: 28px; }
         .v2-bullet {
