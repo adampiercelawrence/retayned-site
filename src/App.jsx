@@ -2804,7 +2804,7 @@ const FAQ_DATA = [
 function FAQ({ dark = false }) {
   const [open, setOpen] = useState(null);
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+    <div style={{ maxWidth: 1100, margin: "0 auto" }}>
       {FAQ_DATA.map((group, gi) => (
         <div key={gi} style={{ marginBottom: 32 }}>
           <div style={{ marginBottom: 12 }}>
@@ -2849,7 +2849,7 @@ function FAQPage({ setPage }) {
         setPage={setPage}
       />
       <section className="ret-section ret-bg-cream r-full-bleed" style={{ paddingTop: 0 }}>
-        <div className="ret-section-inner" style={{ maxWidth: 1200 }}>
+        <div className="ret-section-inner" style={{ maxWidth: 1100 }}>
           <FAQ />
         </div>
       </section>
@@ -2880,7 +2880,7 @@ function Privacy({ setPage }) {
         setPage={setPage}
       />
       <section className="ret-section ret-bg-cream r-full-bleed" style={{ paddingTop: 0 }}>
-        <div className="ret-section-inner" style={{ maxWidth: 1200 }}>
+        <div className="ret-section-inner" style={{ maxWidth: 1100 }}>
           <div className="ret-card" style={{ padding: "44px 40px" }}>
             <div className="ret-prose">
               <p>Retayned, operated by Maniac Digital, LLC ("Retayned," "we," "our," "us"), is committed to protecting the privacy of our users and the clients they manage through the Service. This Privacy Policy describes how we collect, use, store, and share information when you use the Retayned platform, website (retayned.com), and related services (collectively, the "Service").</p>
@@ -2979,7 +2979,7 @@ function Terms({ setPage }) {
         setPage={setPage}
       />
       <section className="ret-section ret-bg-cream r-full-bleed" style={{ paddingTop: 0 }}>
-        <div className="ret-section-inner" style={{ maxWidth: 1200 }}>
+        <div className="ret-section-inner" style={{ maxWidth: 1100 }}>
           <div className="ret-card" style={{ padding: "44px 40px" }}>
             <div className="ret-prose">
               <p>These Terms of Service ("Terms") govern your access to and use of the Retayned platform, website, and related services (collectively, the "Service") provided by Maniac Digital, LLC ("Retayned," "we," "our," "us"). By creating an account or using the Service, you agree to be bound by these Terms. If you do not agree, do not use the Service.</p>
@@ -4767,7 +4767,7 @@ export default function RetaynedSite() {
           text-align: right;
           min-width: 0;
         }
-        @media (max-width: 1200px) {
+        @media (max-width: 1100px) {
           .v2-platform-portfolio-grid { grid-template-columns: 1fr; }
           .v2-port-sidebar { flex-direction: row; }
           .v2-port-sidebar > * { flex: 1; }
@@ -4911,7 +4911,7 @@ export default function RetaynedSite() {
           background: #F5ECD8;
           border-radius: 24px;
           padding: 32px;
-          max-width: 1200px; margin: 56px auto 0;
+          max-width: 1100px; margin: 56px auto 0;
           position: relative;
         }
         .v2-hero-device-inner {
@@ -5150,7 +5150,7 @@ export default function RetaynedSite() {
           font-size: 13px; font-weight: 500; color: ${C.textSec};
 
         /* ═══ SECTION SHARED ═══ */
-        .v2-section-inner { max-width: 1320px; margin: 0 auto; }
+        .v2-section-inner { max-width: 1400px; margin: 0 auto; }
         .v2-section-head { max-width: 880px; margin-bottom: 56px; }
         .v2-eyebrow {
           display: inline-block;
@@ -5373,7 +5373,8 @@ export default function RetaynedSite() {
         .v2-sub-enterprise { color: rgba(255,255,255,0.7) !important; }
         .v2-enterprise-grid {
           display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
-          margin-top: 48px;
+          margin: 48px auto 0;
+          max-width: 1400px;
         }
         .v2-enterprise-card {
           background: rgba(255,255,255,0.04);
