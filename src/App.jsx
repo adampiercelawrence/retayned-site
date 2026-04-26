@@ -385,7 +385,7 @@ function Nav({ page, setPage }) {
               onClick={() => setMobilePlatformExpanded(!mobilePlatformExpanded)}
               aria-label={mobilePlatformExpanded ? "Collapse Platform" : "Expand Platform"}
               style={{
-                width: 44, display: "flex", alignItems: "center", justifyContent: "center",
+                width: 44, display: "flex", alignItems: "center", justifyContent: "flex-end",
                 background: "none", border: "none", cursor: "pointer", padding: 0,
               }}
             >
@@ -1486,14 +1486,90 @@ function HomeV2({ setPage }) {
 
 
 // ═══ HOME ═══
+// ═══ PRICING — ported from final/pricing.html ═══
+function ROICalculator() {
+  const [clients, setClients] = useState(20);
+  const [avgValue, setAvgValue] = useState(2500);
+  const [savedRate, setSavedRate] = useState(15);
+  const baseFee = 19.99;
+  const perClient = 1.0;
+  const monthlyCost = baseFee + clients * perClient;
+  const clientsSaved = clients * (savedRate / 100);
+  const revenueSaved = clientsSaved * avgValue;
+  const roi = monthlyCost > 0 ? Math.round(revenueSaved / monthlyCost) : 0;
+
+  const labelStyle = { fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 700, color: C.textSec };
+  const valueStyle = { fontWeight: 900, fontSize: 22, marginTop: 4, color: C.text, letterSpacing: "-0.02em" };
+
+  const Slider = ({ label, value, set, min, max, step, prefix = "", suffix = "" }) => (
+    <div>
+      <div style={labelStyle}>{label}</div>
+      <div style={valueStyle}>{prefix}{value.toLocaleString()}{suffix}</div>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => set(Number(e.target.value))}
+        style={{ width: "100%", marginTop: 10, accentColor: C.btn }}
+      />
+    </div>
+  );
+
+  return (
+    <div style={{ background: C.card, border: "1px solid " + C.borderLight, borderRadius: 18, padding: "32px 36px", boxShadow: "0 12px 40px rgba(28,50,36,0.06), 0 2px 6px rgba(28,50,36,0.04)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
+        <span style={{ display: "inline-block", padding: "4px 12px", background: C.primarySoft, color: C.primary, borderRadius: 999, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em" }}>ROI Calculator</span>
+        <span style={{ fontSize: 12, color: C.textMuted }}>Move the sliders →</span>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 28, marginTop: 20 }} className="pricing-roi-grid">
+        <Slider label="Active clients" value={clients} set={setClients} min={5} max={100} step={1} />
+        <Slider label="Avg client value / mo" value={avgValue} set={setAvgValue} min={250} max={10000} step={50} prefix="$" />
+        <Slider label="Churn prevented" value={savedRate} set={setSavedRate} min={1} max={50} step={1} suffix="%" />
+      </div>
+
+      <div style={{ marginTop: 28, padding: "22px 24px", background: C.primaryGhost, borderRadius: 14, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }} className="pricing-roi-result">
+        <div>
+          <div style={labelStyle}>Retayned cost / mo</div>
+          <div style={valueStyle}>${monthlyCost.toFixed(2)}</div>
+        </div>
+        <div>
+          <div style={labelStyle}>Revenue saved / mo</div>
+          <div style={{ ...valueStyle, color: C.success }}>${Math.round(revenueSaved).toLocaleString()}</div>
+        </div>
+        <div>
+          <div style={labelStyle}>Return on Retayned</div>
+          <div style={{ ...valueStyle, color: C.btn, fontSize: 26 }}>{roi.toLocaleString()}×</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Pricing({ setPage }) {
   const features = [
-    { label: "Today", desc: "Prioritized tasks, ranked by impact" },
-    { label: "Retention Score (1–99)", desc: "12 dimensions, 20 combinations" },
-    { label: "Health Checks", desc: "Monthly cadence, scored drift" },
-    { label: "Talk to Rai", desc: "Unlimited chats, calibrated scripts" },
-    { label: "Rolodex", desc: "Former clients, ready to re-engage" },
-    { label: "Referrals", desc: "Readiness scoring, right-time asks" },
+    "Today (prioritized tasks, ranked by impact)",
+    "Retention Score (1–99 · 12 dimensions)",
+    "Health Checks (monthly cadence, scored drift)",
+    "Talk to Rai · unlimited, calibrated scripts",
+    "Rolodex of former clients, ready to re-engage",
+    "Referrals · readiness scoring, right-time asks",
+    "Unlimited team seats · no per-seat fees",
+    "Daily exports + CSV",
+  ];
+
+  const addons = [
+    { name: "Managed Rai sweeps", sub: "Daily autonomous triage across your book.", price: "+$2", unit: "/client/mo" },
+    { name: "Salesforce / HubSpot sync", sub: "Two-way connector with field mapping.", price: "+$49", unit: "/mo" },
+    { name: "Custom playbooks", sub: "White-glove archetype training for your book.", price: "$499", unit: "one-time" },
+  ];
+
+  const enterpriseCards = [
+    { eyebrow: "Managed Agent", title: "Rai as autonomous service.", body: "Daily sweeps across your entire book. Twelve-dimension scoring. Archetype detection. Prioritized task lists delivered to whoever owns the relationship." },
+    { eyebrow: "Multi-seat App", title: "Your team, one view.", body: "Unlimited seats. Role-based permissions. Full handoff history per client. When an account manager leaves, their knowledge stays." },
+    { eyebrow: "MCP + REST API", title: "Plug into your stack.", body: "Give your internal agents the same retention intelligence. Connect to Salesforce, HubSpot, or your homegrown CRM." },
+    { eyebrow: "White-glove", title: "Onboarding + dedicated CS.", body: "A real person who knows your book. SOC 2, SAML, audit log. Quarterly business reviews. Custom playbook training." },
   ];
 
   return (
@@ -1501,664 +1577,353 @@ function Pricing({ setPage }) {
       <RetPageStyles />
       <style>{`
         @media (max-width: 760px) {
-          .pricing-page .ret-h1 { line-height: 1.04; }
-          .pricing-page .ret-strike-wrap { padding-top: 0.08em; }
-          .pricing-page .ret-caveat { top: -0.45em; }
+          .pricing-roi-grid { grid-template-columns: 1fr !important; }
+          .pricing-roi-result { grid-template-columns: 1fr !important; }
+          .pricing-ent-grid { grid-template-columns: 1fr !important; }
+          .pricing-addons-grid { grid-template-columns: 1fr !important; }
+          .pricing-ent-cta { flex-direction: column; align-items: stretch !important; }
+          .pricing-price-num { font-size: 88px !important; }
         }
       `}</style>
 
-      <RetHero
-        eyebrow="Pricing"
-        h1={<>One client saved pays for <span className="ret-strike-wrap"><span className="ret-strike">a year</span><span className="ret-caveat">years</span></span> of Retayned.</>}
-        sub="Save one client. Cover it forever."
-        primaryCta={null}
-        secondaryCta={null}
-        fine={null}
-        setPage={setPage}
-      />
+      {/* ─── HERO (forest dark) ─── */}
+      <section className="r-full-bleed" style={{ background: C.primaryDeep, color: "#fff", padding: "72px 48px 96px", textAlign: "center" }}>
+        <div className="ret-eyebrow ret-eyebrow-light">Pricing</div>
+        <h1 className="ret-h1" style={{ color: "#fff", maxWidth: 980, margin: "16px auto 0" }}>
+          Solve your business's most consequential problem for <span className="ret-strike-wrap"><span className="ret-strike">the cost of</span><span className="ret-caveat" style={{ color: C.primaryLight }}>less than</span></span> a Netflix subscription.
+        </h1>
 
-      {/* Price card */}
-      <section className="ret-section ret-bg-cream r-full-bleed" style={{ paddingTop: 0 }}>
-        <div className="ret-section-inner" style={{ maxWidth: 580 }}>
-          <div className="ret-card" style={{ padding: "56px 40px", textAlign: "center", borderRadius: 24, boxShadow: "0 20px 60px rgba(60,40,10,0.12), 0 4px 16px rgba(60,40,10,0.05)" }}>
-            <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", color: C.primary, marginBottom: 24 }}>One plan. Every feature.</div>
-            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 6, marginBottom: 12 }}>
-              <span style={{ fontSize: 72, fontWeight: 900, letterSpacing: "-0.04em", color: C.text, lineHeight: 1 }}>$19.99</span>
-              <span style={{ fontSize: 18, color: C.textMuted, fontWeight: 600 }}>/mo</span>
-            </div>
-            <div style={{ fontSize: 16, color: C.textSec, marginBottom: 18, lineHeight: 1.5 }}>+ <strong style={{ fontWeight: 700, color: C.text }}>$1 per client</strong></div>
-            <p style={{ fontSize: 15, color: C.text, marginBottom: 32, lineHeight: 1.5, maxWidth: 420, margin: "0 auto 32px", letterSpacing: "-0.01em" }}>Solve your business's most consequential problem for less than a Netflix subscription.</p>
-            <button className="ret-btn-primary" style={{ width: "100%" }} onClick={() => setPage("signup")}>Start Free Trial</button>
-            <p style={{ fontSize: 13, color: C.textMuted, marginTop: 14 }}>14-day free trial. Cancel anytime.</p>
-          </div>
+        <div style={{ marginTop: 44, display: "flex", justifyContent: "center", alignItems: "baseline", gap: 16, flexWrap: "wrap" }}>
+          <span className="pricing-price-num" style={{ fontSize: 124, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1, color: "#fff" }}>
+            $19<span style={{ fontSize: 64 }}>.99</span>
+          </span>
+          <span style={{ fontSize: 16, color: "rgba(255,255,255,0.65)" }}>/mo · + $1 per client</span>
         </div>
-      </section>
 
-      <RetCurve from="#F2EEE8" to="#EAE4D6" variant="default" />
+        <button className="cta-btn" onClick={() => setPage("signup")} style={{ marginTop: 32, padding: "16px 36px", fontSize: 16, fontWeight: 700, background: C.btn, color: "#fff", border: "none", borderRadius: 12, cursor: "pointer", fontFamily: "inherit" }}>Start Free Trial</button>
+        <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginTop: 12 }}>14-day free trial. Cancel anytime. No card.</div>
 
-      {/* Features */}
-      <section className="ret-section ret-bg-beige r-full-bleed">
-        <div className="ret-section-inner">
-          <div className="ret-section-head">
-            <div className="ret-eyebrow">Everything included</div>
-            <h2 className="ret-h2">No tiers. No gates. No seat fees.</h2>
-          </div>
-          <div className="ret-grid-3">
-            {features.map((f, i) => (
-              <div key={i} className="ret-card" style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 2 }}><polyline points="20 6 9 17 4 12"/></svg>
-                <div>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: C.text, marginBottom: 3, letterSpacing: "-0.01em" }}>{f.label}</div>
-                  <div style={{ fontSize: 13, color: C.textSec, lineHeight: 1.45 }}>{f.desc}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <p style={{ fontSize: 13.5, color: C.textSec, textAlign: "center", fontStyle: "italic", marginTop: 24 }}>Unlimited team members · No per-seat fees · No tiers</p>
+        {/* Mixed-typography vocab row */}
+        <div style={{ marginTop: 48, display: "flex", justifyContent: "center", gap: 32, flexWrap: "wrap", alignItems: "baseline", fontSize: 22 }}>
+          <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: "#fff" }}>One Plan</span>
+          <span style={{ fontFamily: "'Caveat', cursive", fontWeight: 600, fontSize: "1.15em", color: C.primaryLight }}>No tiers</span>
+          <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: C.warning, fontSize: 18 }}>NO SEAT FEES</span>
+          <span style={{ fontFamily: "'Caveat', cursive", fontWeight: 600, fontSize: "1.15em", color: "#fff" }}>Cancel any time</span>
+          <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: C.primaryLight }}>Every feature</span>
         </div>
-      </section>
 
-      <RetCurve from="#EAE4D6" to={C.bg} variant="dome" />
-
-      {/* Math */}
-      <section className="ret-section ret-bg-light r-full-bleed">
-        <div className="ret-section-inner" style={{ maxWidth: 720, textAlign: "center" }}>
-          <div className="ret-section-head" style={{ marginBottom: 48 }}>
-            <div className="ret-eyebrow">The math</div>
-            <h2 className="ret-h2">Run the numbers. They're on your side.</h2>
-          </div>
-          <div style={{ background: C.card, borderRadius: 16, padding: "36px 28px", maxWidth: 480, margin: "0 auto", textAlign: "left", boxShadow: "0 12px 40px rgba(60,40,10,0.08)", border: "1.5px dashed " + C.borderLight, fontVariantNumeric: "tabular-nums" }}>
-            <div style={{ textAlign: "center", paddingBottom: 18, borderBottom: "1px dashed " + C.borderLight, marginBottom: 6 }}>
-              <div style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.18em", color: C.textMuted, marginBottom: 4 }}>Monthly · Per Client</div>
-              <div style={{ fontSize: 14, fontWeight: 800, color: C.text }}>The Retayned Math</div>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "12px 0", gap: 16 }}>
-              <span style={{ fontSize: 13.5, color: C.textSec, flex: 1 }}>You charge</span>
-              <span style={{ fontSize: 16, fontWeight: 800, color: C.text, whiteSpace: "nowrap" }}>$2,500<span style={{ fontSize: 11, color: C.textMuted, fontWeight: 500 }}>/mo</span></span>
-            </div>
-            <div style={{ borderTop: "1px dashed " + C.borderLight, margin: "4px 0" }} />
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "12px 0", gap: 16 }}>
-              <span style={{ fontSize: 13.5, color: C.textSec, flex: 1 }}>Retayned base</span>
-              <span style={{ fontSize: 16, fontWeight: 800, color: C.text, whiteSpace: "nowrap" }}>$19.99</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "12px 0", gap: 16 }}>
-              <span style={{ fontSize: 13.5, color: C.textSec, flex: 1 }}>Per-client fee</span>
-              <span style={{ fontSize: 16, fontWeight: 800, color: C.text, whiteSpace: "nowrap" }}>$1.00</span>
-            </div>
-            <div style={{ borderTop: "1px dashed " + C.borderLight, margin: "4px 0" }} />
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "12px 0", gap: 16 }}>
-              <span style={{ fontSize: 13.5, color: C.text, fontWeight: 800, flex: 1 }}>Net per client</span>
-              <span style={{ fontSize: 16, fontWeight: 800, color: C.primary, whiteSpace: "nowrap" }}>$2,479.01</span>
-            </div>
-            <div style={{ marginTop: 6, paddingTop: 18, borderTop: "2px solid " + C.text, display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-              <span style={{ fontSize: 13, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: C.text }}>One save = </span>
-              <span style={{ fontSize: 26, fontWeight: 900, color: C.primary, letterSpacing: "-0.02em" }}>125 months</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <RetCurve from={C.bg} to={C.primaryDeep} variant="rightCrest" />
-
-      {/* Enterprise strip */}
-      <section className="ret-section ret-bg-deep r-full-bleed">
-        <div className="ret-section-inner" style={{ maxWidth: 820 }}>
-          <div className="ret-card-deep" style={{ padding: "36px 40px", display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap", borderRadius: 20 }}>
-            <div style={{ flex: "1 1 360px", color: "#fff" }}>
-              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", color: C.primaryLight, marginBottom: 10 }}>Retayned Enterprise · Early Access</div>
-              <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", color: "#fff", marginBottom: 6 }}>Relationship intelligence, scaled.</div>
-              <div style={{ fontSize: 15, color: "rgba(255,255,255,0.72)", lineHeight: 1.5 }}>For teams and agents managing your book. Multi-seat plumbing, manager dashboards, agent API.</div>
-            </div>
-            <button className="ret-btn-onDark-outline" onClick={() => setPage("contact")}>Request Early Access</button>
-          </div>
+        {/* Feature pills (subtle, under vocab row) */}
+        <div style={{ marginTop: 28, display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap", maxWidth: 880, marginLeft: "auto", marginRight: "auto" }}>
+          {[
+            "Today",
+            "Retention Score",
+            "Health Checks",
+            "Talk to Rai",
+            "Rolodex",
+            "Referrals",
+          ].map(f => (
+            <span key={f} style={{
+              display: "inline-flex", alignItems: "center", gap: 7,
+              padding: "7px 14px", borderRadius: 999,
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              fontSize: 12.5, fontWeight: 600,
+              color: "rgba(255,255,255,0.78)",
+              letterSpacing: "0.01em",
+            }}>
+              <span style={{ color: C.primaryLight, fontWeight: 800, fontSize: 11 }}>✓</span>
+              {f}
+            </span>
+          ))}
         </div>
       </section>
 
       <RetCurve from={C.primaryDeep} to="#F2EEE8" variant="leftCrest" />
 
-      {/* Final CTA */}
-      <section className="ret-section ret-bg-cream r-full-bleed" style={{ textAlign: "center" }}>
-        <div className="ret-section-inner" style={{ maxWidth: 820 }}>
-          <h2 className="ret-h2" style={{ maxWidth: 780, margin: "0 auto 32px" }}>
-            Saving just <em style={{ fontStyle: "normal", fontWeight: 900, color: C.primary }}>ONE</em> relationship for even just <em style={{ fontStyle: "normal", fontWeight: 900, color: C.primary }}>ONE</em> month could pay for Retayned for a <em style={{ fontStyle: "normal", fontWeight: 900, color: C.primary }}>DECADE</em>.
-          </h2>
-          <div className="ret-cta-row">
-            <button className="ret-btn-primary" onClick={() => setPage("signup")}>Start Free Trial</button>
-          </div>
-          <p className="ret-hero-fine">14-day free trial. Cancel anytime.</p>
-        </div>
-      </section>
-
-      <Footer setPage={setPage} />
-    </div>
-  );
-}
-
-// ═══ ABOUT ═══
-function About({ setPage }) {
-  return (
-    <div>
-      <RetPageStyles />
-
-      <RetHero
-        eyebrow="About"
-        h1={<>The team that's kept clients for <span className="ret-strike-wrap"><span className="ret-strike">years</span><span className="ret-caveat">a decade+</span></span>.</>}
-        sub="Retayned wasn't planned. We kept clients for 10+ years through COVID, work from home, digital transformation, fun AI, scary AI, and everything in between. We assumed what we were doing was normal. When we found out we were doing something genuinely special, we wanted to share it."
-        primaryCta={null}
-        secondaryCta={null}
-        fine={null}
-        setPage={setPage}
-      />
-
-      {/* Founder strip */}
-      <section className="ret-section ret-bg-cream r-full-bleed" style={{ paddingTop: 0, paddingBottom: 96 }}>
-        <div className="ret-section-inner" style={{ maxWidth: 560, display: "flex", alignItems: "center", gap: 20 }}>
-          <img src={HEADSHOT} alt="Adam Lawrence" style={{ width: 96, height: 96, borderRadius: 18, objectFit: "cover", objectPosition: "center 15%", boxShadow: "0 8px 24px rgba(60,40,10,0.12)", flexShrink: 0 }} />
-          <div>
-            <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", color: C.text }}>Adam Lawrence</div>
-            <div style={{ fontSize: 14, color: C.textMuted, marginTop: 2 }}>Founder</div>
-          </div>
-        </div>
-      </section>
-
-      <RetCurve from="#F2EEE8" to={C.bg} variant="leftCrest" />
-
-      {/* Backstory */}
-      <section className="ret-section ret-bg-light r-full-bleed">
-        <div className="ret-section-inner" style={{ maxWidth: 760 }}>
-          <div className="ret-section-head">
-            <div className="ret-eyebrow">The backstory</div>
-            <h2 className="ret-h2">How Retayned came to be.</h2>
-          </div>
-          <div className="ret-card" style={{ padding: "48px 44px", borderRadius: 20, boxShadow: "0 12px 40px rgba(60,40,10,0.08)" }}>
-            <div className="ret-prose">
-              <p>Adam Lawrence spent most of his career running a paid social agency, managing campaigns and client relationships for agencies, DTC brands, and enterprise clients.</p>
-              <p>Over that time, one pattern became impossible to ignore: he rarely lost accounts. And even when he did, the client would often come back later or refer business.</p>
-              <p>At first, he wasn't sure why. So he dug in. Sure, the ad performance was great — but other agencies had comparable results. It wasn't pricing; he wasn't close to the cheapest option. He kept looking until one day he found the answer.</p>
-              <div style={{ padding: "20px 24px", background: C.primarySoft, borderRadius: 14, borderLeft: "4px solid " + C.primary, fontSize: 16, lineHeight: 1.55, color: C.text, margin: "24px 0" }}>
-                <em style={{ fontStyle: "italic", color: C.textSec }}>The Founder moment:</em> a potential client said:
-                <strong style={{ fontWeight: 800, display: "block", marginTop: 6, color: C.text }}>"You're not in the paid social business. You're in the client retention business."</strong>
-              </div>
-              <p>That hit different. Because it was true.</p>
-              <p>So we all got to work. We profiled how each client communicated — were they direct or did they hint? We tracked what they actually cared about versus what they said they cared about. We watched for the subtle signals — response times slowing, meetings getting cancelled, feedback shifts. And when those signals appeared, we didn't avoid the conversation. We had it early, with the right framing, and with words that acknowledged what was really going on.</p>
-              <p style={{ fontStyle: "italic", color: C.textSec }}>We were doing retention engineering without knowing it had a name.</p>
-              <p>The problem was that it all lived in our heads. There was no system. No dashboard. No way to scale it beyond the accounts we personally touched. When we looked for a tool that did what we were doing instinctively, it didn't exist. The enterprise churn platforms cost $1,500+/month and take months to learn. The freelancer CRMs were glorified invoicing tools wearing a "retention" hat. There was no such tool.</p>
-              <p>So we built it.</p>
-              <p>Retayned does something almost every CRM doesn't: it looks 👀. It reads the signals, profiles the relationship, and gives simple, digestible notes to delight your clients. Together, we can move on from clients moving on.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <RetCurve from={C.bg} to="#F2EEE8" variant="rightCrest" />
-
-      <RetFinalCTA
-        h2="Turn client relationships into lifelong partnerships."
-        sub="The tool we built for ourselves. Now yours."
-        setPage={setPage}
-      />
-
-      <Footer setPage={setPage} />
-    </div>
-  );
-}
-
-// ═══ BLOG POSTS ═══
-const blogPostData = [
-  {
-    tag: "Diagnostics",
-    readTime: "4 min",
-    title: "The signal you keep missing: vague positivity.",
-    desc: '"Looks good." "All good on our end." "No notes." When engaged clients go quiet, the silence is the warning.',
-    body: [
-      'Engaged clients give details. Disengaging clients give you "all good." If you\'ve been getting easy approvals on work that used to spark debate, that\'s not a sign you finally cracked the code — it\'s usually a sign your client has stopped investing in the relationship.',
-      'The pattern is consistent across every type of business we\'ve seen. Specific feedback turns into shorthand. Shorthand turns into emojis. Emojis turn into silence. By the time the silence is loud enough to notice, the contract conversation is already weeks behind where it should be.',
-      'The fix isn\'t to ask "is everything okay?" — that gives them an easy out. The fix is to ask a specific, opinionated question that requires a real answer. Not "how was the campaign," but "on the last campaign, was the creative direction what you had in mind, or would you have gone a different way?"',
-      'You\'re not auditing them. You\'re showing that you noticed something shifted, and you\'re inviting a real conversation back. The clients who matter will take you up on it. The ones who won\'t — well, now you know.',
-    ],
-  },
-  {
-    tag: "Playbook",
-    readTime: "5 min",
-    title: "How to handle the new stakeholder without burning your champion.",
-    desc: "Your main contact's new boss wants to review all vendor relationships. Mike says don't worry. Here's the move that keeps both relationships intact.",
-    body: [
-      'When a new stakeholder enters the picture, the instinct is usually one of two extremes. Either you go around your champion and try to introduce yourself to the new boss directly, or you trust your champion completely and wait it out. Both are usually wrong.',
-      'Going around your champion undermines them. If Mike has spent two years convincing his organization that you\'re worth keeping, and you reach out to his new boss the moment that boss arrives, you just told Mike you don\'t trust his judgment. He\'ll remember that, even if he doesn\'t say anything.',
-      'But trusting completely is also risky. Mike might be your champion, but he doesn\'t know what\'s in his new boss\'s head. He doesn\'t know if there\'s a mandate to consolidate vendors. He\'s reading tea leaves like everyone else.',
-      'The right move: ask Mike how he\'d like to handle it together. "I trust your read on this. How do you want to play it — should I put something together for you to share, or would it help if I met them directly?" You\'re respecting his position while giving him options. He knows whether an intro helps or hurts. Let him pick.',
-      'Most champions, when given the option, will ask you to prepare materials they can share. That\'s the win — you\'ve armed them, you haven\'t bypassed them, and the new boss now has a positive first exposure to your work via someone they trust.',
-    ],
-  },
-  {
-    tag: "Framework",
-    readTime: "6 min",
-    title: "Twelve dimensions, twenty combinations: how to actually score a client relationship.",
-    desc: "Most retention scoring is a wrapped-up NPS. Here's a richer framework that captures how clients actually behave before they leave.",
-    body: [
-      "NPS asks one question. Client retention requires twelve. Trust, loyalty, expectations, grace, communication, responsiveness, tone, sentiment, engagement, alignment, stability, depth — each one tells you something different about where a relationship really stands.",
-      "But individual dimensions aren't the interesting part. The interesting part is the combinations. Trust high + communication low = Silent Satisfaction (content but pulling away). Tone neutral + engagement dropping = Vague Positivity (the slow fade we wrote about). Depth dropping + new stakeholder = Champion Shift (relationship needs to be rebuilt from scratch).",
-      "Twenty combinations cover the patterns we see most often. None of them are theoretical — every one came from a real account that either churned or expanded, and worked backward from the outcome.",
-      'The goal of scoring isn\'t to give you a number to stare at. It\'s to give you a vocabulary for what you\'re seeing. When you can name what\'s happening — "this is Delegation Drift, not Silent Satisfaction" — you can act on it. Because the moves are different.',
-      "If this framework resonates, the deeper write-up of all twenty combinations is in the platform. We use it to score every client every day, and to draft the right opening line for whatever conversation each one needs.",
-    ],
-  },
-];
-
-function BlogPosts() {
-  const [expandedPost, setExpandedPost] = useState(null);
-
-  if (expandedPost !== null) {
-    const post = blogPostData[expandedPost];
-    return (
-      <div>
-        <button onClick={() => setExpandedPost(null)} style={{ background: "none", border: "none", fontSize: 13, fontWeight: 600, color: C.textMuted, cursor: "pointer", fontFamily: "inherit", marginBottom: 20, padding: 0 }}>← Back to all posts</button>
-        <div className="ret-card" style={{ padding: "48px 44px", borderRadius: 20, boxShadow: "0 12px 40px rgba(60,40,10,0.08)" }}>
-          <div style={{ display: "flex", gap: 8, marginBottom: 16, alignItems: "center" }}>
-            <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", padding: "4px 10px", background: C.primarySoft, color: C.primary, borderRadius: 6 }}>{post.tag}</span>
-            <span style={{ fontSize: 12, color: C.textMuted }}>{post.readTime} read</span>
-          </div>
-          <h2 style={{ fontSize: "clamp(24px, 3.2vw, 36px)", fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 24, color: C.text }}>{post.title}</h2>
-          <div className="ret-prose">
-            {post.body.map((p, i) => (<p key={i}>{p}</p>))}
-          </div>
-          <div style={{ marginTop: 32, padding: "28px 24px", background: C.primarySoft, borderRadius: 14, textAlign: "center" }}>
-            <p style={{ fontSize: 17, fontWeight: 800, marginBottom: 6, color: C.text }}>Want to catch these signals automatically?</p>
-            <p style={{ fontSize: 14, color: C.textSec, marginBottom: 18 }}>Retayned monitors your client relationships and tells you when to act.</p>
-            <button className="ret-btn-primary">Start Free Trial</button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="ret-grid-3">
-      {blogPostData.map((p, i) => (
-        <div key={i} onClick={() => { setExpandedPost(i); window.scrollTo(0, 0); }} className="ret-card ret-card-hover" style={{ cursor: "pointer" }}>
-          <div style={{ display: "flex", gap: 8, marginBottom: 14, alignItems: "center" }}>
-            <span style={{ fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", padding: "3px 9px", background: C.primarySoft, color: C.primary, borderRadius: 5 }}>{p.tag}</span>
-            <span style={{ fontSize: 11, color: C.textMuted }}>{p.readTime} read</span>
-          </div>
-          <h3 style={{ fontSize: 19, fontWeight: 800, marginBottom: 8, lineHeight: 1.25, letterSpacing: "-0.02em", color: C.text }}>{p.title}</h3>
-          <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.55, marginBottom: 16 }}>{p.desc}</p>
-          <div style={{ fontSize: 13, fontWeight: 700, color: C.btn }}>Read post →</div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ═══ LEARN / RESOURCES ═══
-function Blog({ setPage }) {
-  const [activeModule, setActiveModule] = useState(null);
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [sliderVals, setSliderVals] = useState({});
-
-  const reset = () => { setActiveModule(null); setStep(0); setAnswers({}); setEmail(""); setName(""); setSubmitted(false); setSliderVals({}); };
-
-  useEffect(() => { if (activeModule) window.scrollTo(0, 0); }, [step, activeModule]);
-
-  const modules = [
-    { id: "health", title: "Retention Health Check", desc: "Think of one client. Answer five questions honestly. Get a retention score and know what to do next.", time: "60 sec", tag: "Assessment",
-      icon: (<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>) },
-    { id: "calculator", title: "The Retention Calculator", desc: "See what client churn is actually costing you. The number is always bigger than you think.", time: "30 sec", tag: "Calculator",
-      icon: (<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>) },
-    { id: "profile", title: "Grade Your Client Relationship", desc: "Score one client across 12 relationship dimensions. See where the cracks are.", time: "2 min", tag: "Assessment",
-      icon: (<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>) },
-    { id: "simulator", title: "The Hard Conversation Simulator", desc: "Five scenarios. Three approaches each. See how your instincts play out.", time: "4 min", tag: "Simulator",
-      icon: (<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>) },
-  ];
-
-  const hcQuestions = [
-    { q: "Has this client's communication pattern changed recently?", opts: [{ t: "Same as always — no shift in how we talk", s: 10 }, { t: "Slightly different but could be nothing", s: 8 }, { t: "Noticeably different from normal", s: 3 }, { t: "Something has clearly changed", s: 1 }] },
-    { q: "When was your last meaningful conversation?", opts: [{ t: "This week — we're in a good rhythm", s: 10 }, { t: "Within 2 weeks — normal for us", s: 8 }, { t: "It's been a while — longer than usual", s: 4 }, { t: "It's been 84 years...", s: 1 }] },
-    { q: "How honest is the feedback you're getting?", opts: [{ t: "Same as always — they engage the way they always have", s: 10 }, { t: "Slightly less engaged than normal", s: 8 }, { t: "Noticeably pulled back from how they used to be", s: 4 }, { t: "Little to no feedback at all — and that's new", s: 1 }] },
-    { q: "Is there a conversation you've been putting off?", opts: [{ t: "No — we're aligned and I feel good about it", s: 10 }, { t: "Something small I should probably mention", s: 8 }, { t: "Something real that's been on my mind", s: 4 }, { t: "Yes — and the longer I wait the harder it gets", s: 1 }] },
-    { q: "If they cancelled tomorrow, how would you feel?", opts: [{ t: "Surprised. Unexpected for sure.", s: 10 }, { t: "Surprised but I could see it if I'm honest", s: 6 }, { t: "Not that surprised", s: 3 }, { t: "I've had the thought myself", s: 1 }] },
-  ];
-
-  const raiNudge = " The truth is, by the time response times have doubled and meetings are slipping, you're playing catch-up. The A play was having this conversation weeks ago when the first signal appeared. Want help spotting those earlier? Talk to Rai.";
-  const simScenarios = [
-    { title: "The New Stakeholder", setup: "Your main contact Mike just told you his new boss wants to \"review all vendor relationships.\" Mike says not to worry. What do you do?",
-      opts: [
-        { label: "Ask for an intro to Mike's new boss to set the tone directly", desc: "\"Mike, we'd really like to speak to your new boss to make sure he sees our value..\"", outcome: "If Mike is protective of the relationship, you just undermined your biggest advocate. If you are already providing value, the new boss will likely see it regardless. Rai can help diagnose situations like this.", score: "C" },
-        { label: "Ask Mike how he'd like to handle it together", desc: "\"I trust your read on this. How do you want to play it — should I put something together for you, or would it help if I met them directly?\"", outcome: "You're respecting Mike's position while giving him options. He knows whether an intro helps or hurts.", score: "A" },
-        { label: "Trust Mike and wait it out", desc: "He knows the internal dynamics better than you.", outcome: "This can work — if Mike has real influence and a strong relationship with the new boss. But you're betting your contract on someone else's political capital without knowing how much they have.", score: "B" },
-      ]},
-    { title: "The Vague Feedback Shift", setup: "Your client Ally used to give detailed, specific feedback on every deliverable. For the last three rounds, it's been \"looks good\" and nothing else. What do you do?",
-      opts: [
-        { label: "Send a longer-form review request or survey", desc: "A formal feedback form covering satisfaction, communication, and goals.", outcome: "Formality when the relationship has been informal signals that you know something is wrong. It also gives her an easy out — she'll check all the positive boxes and you'll learn nothing.", score: "C" },
-        { label: "Enjoy the easy approval and move on", desc: "Less revision means more efficiency. Maybe she just trusts you now.", outcome: "Vague positivity is one of the most missed churn signals. Engaged clients give details. Disengaging clients say \"looks good.\"", score: "D" },
-        { label: "Ask a specific question that forces a real answer", desc: "\"Ally, on the last campaign — was the creative direction what you had in mind, or would you have gone a different way?\"", outcome: "You're not asking, \"Is everything okay?\" — you're making it easy for her to give you something real without it feeling like a confrontation.", score: "A" },
-      ]},
-    { title: "The Budget Conversation", setup: "Your client James casually mentions they're \"tightening budgets across the board this quarter.\" He hasn't said anything about your contract specifically. What do you do?",
-      opts: [
-        { label: "Proactively propose a restructured package", desc: "\"James, I heard you on the budget pressure. Here's what I'd suggest if we need to adjust — these are the highest-impact pieces I'd protect.\"", outcome: "You're showing you listened, you're flexible, and you're strategic. Clients cut vendors who seem rigid first.", score: "A" },
-        { label: "Wait to see if it affects you", desc: "He didn't mention your contract. No need to bring it up and plant ideas.", outcome: "You're hoping the problem doesn't find you. It usually does — and by then you've lost the chance to shape the conversation.", score: "C" },
-        { label: "Ask directly if your contract is at risk", desc: "\"James, should I be worried about our engagement?\"", outcome: "Direct, but it puts him in an awkward position and frames you as a cost to defend rather than a partner solving a problem.", score: "C" },
-      ]},
-    { title: "The Competitor Mention", setup: "During a call, your client Priya casually says \"we've been getting pitched by a few other agencies lately.\" She laughs it off. What do you do?",
-      opts: [
-        { label: "Laugh it off too and change the subject", desc: "She brought it up casually, so it's probably nothing. Don't make it weird.", outcome: "She told you for a reason. Clients don't mention competitors by accident. This was either a test or a warning — either way, ignoring it is the worst response.", score: "D" },
-        { label: "Immediately pitch new ideas to prove your value", desc: "Launch into everything new you've been thinking about to remind her why she hired you.", outcome: "Reactive and transparent. She'll see through it — and it signals insecurity rather than confidence.", score: "C" },
-        { label: "Match her energy with confidence", desc: "\"Of course you are! You're a great client. I'd be worried if they weren't calling you.\"", outcome: "No panic, no defensiveness. You're reminding her she's valuable and you're not threatened. Confidence is the most underrated retention tool.", score: "A" },
-      ]},
-    { title: "The Slow Fade", setup: "Your client Sarah used to respond within hours. Now it takes days. Meetings keep getting rescheduled. The work quality hasn't changed. What do you do?",
-      opts: [
-        { label: "Name the pattern directly", desc: "\"Sarah, I've noticed our rhythm has shifted. I want to make sure I'm still delivering what matters most to you.\"", outcome: "This is the right instinct and it may still work." + raiNudge, score: "B" },
-        { label: "Send a check-in email", desc: "\"Hey Sarah, just checking in — everything okay on your end?\"", outcome: "She'll say \"All good!\" and the fade continues. You've confirmed nothing and changed nothing." + raiNudge, score: "C" },
-        { label: "Increase deliverables to prove value", desc: "Send an extra report, add a new initiative, work harder.", outcome: "More output doesn't fix a relationship problem. You're solving the wrong thing and burning resources." + raiNudge, score: "D" },
-      ]},
-  ];
-
-  const profileDims = [
-    { key: "commFreq", name: "Communication Frequency", left: "Rarely", right: "Constantly" },
-    { key: "commTone", name: "Communication Tone", left: "Reserved", right: "Direct" },
-    { key: "trustLevel", name: "Trust Level", left: "Hands-on", right: "Delegated" },
-    { key: "decisionSpeed", name: "Decision Speed", left: "Deliberate", right: "Immediate" },
-    { key: "feedbackStyle", name: "Feedback Style", left: "Indirect", right: "Blunt" },
-    { key: "metricFocus", name: "Metric Focus", left: "Gut feel", right: "Data-driven" },
-    { key: "expectLevel", name: "Expectation Level", left: "Conservative", right: "Aggressive" },
-    { key: "reportNeed", name: "Reporting Need", left: "Hands-off", right: "Everything" },
-    { key: "stressResponse", name: "Stress Response", left: "Goes quiet", right: "Gets loud" },
-    { key: "changeAppetite", name: "Change Appetite", left: "Stable", right: "Experimenting" },
-    { key: "loyaltySignal", name: "Loyalty Signal", left: "Shopping around", right: "Locked in" },
-    { key: "relationDepth", name: "Relationship Depth", left: "Business", right: "Personal" },
-  ];
-
-  const EmailGate = ({ title }) => (
-    <div style={{ background: C.primaryDeep, borderRadius: 16, padding: "32px 28px", color: "#fff", textAlign: "center" }}>
-      {!submitted ? (
-        <>
-          <div style={{ fontSize: 20, fontWeight: 900, marginBottom: 8, letterSpacing: "-0.02em" }}>{title || "Want help before your next tough convo?"}</div>
-          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.72)", marginBottom: 20, lineHeight: 1.5 }}>Start your 14-day free trial. Cancel anytime.</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 340, margin: "0 auto" }}>
-            <input value={name} onChange={e => setName(e.target.value)} placeholder="Name" style={{ width: "100%", padding: "13px 16px", border: "1.5px solid rgba(255,255,255,0.2)", borderRadius: 10, fontSize: 14, fontFamily: "inherit", background: "rgba(255,255,255,0.08)", color: "#fff", outline: "none", boxSizing: "border-box" }} />
-            <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" style={{ width: "100%", padding: "13px 16px", border: "1.5px solid rgba(255,255,255,0.2)", borderRadius: 10, fontSize: 14, fontFamily: "inherit", background: "rgba(255,255,255,0.08)", color: "#fff", outline: "none", boxSizing: "border-box" }} />
-            <button onClick={() => { if (email.includes("@")) setSubmitted(true); }} className="ret-btn-onDark" style={{ width: "100%", marginTop: 4 }}>Try Free Now</button>
-          </div>
-        </>
-      ) : (
-        <>
-          <div style={{ fontSize: 40, marginBottom: 10 }}>✓</div>
-          <div style={{ fontSize: 20, fontWeight: 900, marginBottom: 6, letterSpacing: "-0.02em" }}>You're in.</div>
-          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.72)" }}>You're on the list. We'll be in touch soon.</p>
-        </>
-      )}
-    </div>
-  );
-
-  const Opt = ({ text, selected, onClick }) => (
-    <div onClick={onClick} style={{ padding: "14px 18px", borderRadius: 12, cursor: "pointer", background: selected ? C.primarySoft : "#fff", border: "1.5px solid " + (selected ? C.primary : C.borderLight), fontSize: 14.5, color: selected ? C.primary : C.textSec, fontWeight: selected ? 600 : 500, transition: "all 0.15s" }}>{text}</div>
-  );
-
-  const BackBtn = ({ onClick }) => <button onClick={onClick} style={{ padding: "9px 18px", background: "transparent", color: C.textSec, border: "1.5px solid " + C.borderLight, borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>← Back</button>;
-  const NextBtn = ({ onClick, disabled, label }) => <button onClick={onClick} style={{ padding: "9px 22px", background: disabled ? C.surface : C.btn, color: disabled ? C.textMuted : "#fff", border: "none", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: disabled ? "default" : "pointer", fontFamily: "inherit" }}>{label || "Next"}</button>;
-
-  const renderHealth = () => {
-    const total = hcQuestions.length;
-    if (step < total) {
-      const q = hcQuestions[step];
-      return (
-        <div>
-          <div style={{ display: "flex", gap: 4, marginBottom: 18 }}>{Array.from({ length: total }).map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= step ? C.primary : C.borderLight }} />)}</div>
-          <p style={{ fontSize: 12, color: C.textMuted, marginBottom: 8, fontWeight: 600 }}>Question {step + 1} of {total}</p>
-          <p style={{ fontSize: 20, fontWeight: 800, marginBottom: 20, lineHeight: 1.3, letterSpacing: "-0.02em", color: C.text }}>{q.q}</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {q.opts.map((o, i) => <Opt key={i} text={o.t} selected={answers[step] === i} onClick={() => { setAnswers({ ...answers, [step]: i }); setTimeout(() => setStep(step + 1), 300); }} />)}
-          </div>
-          {step > 0 && <div style={{ marginTop: 18 }}><BackBtn onClick={() => setStep(step - 1)} /></div>}
-        </div>
-      );
-    }
-    const score = Math.round(hcQuestions.reduce((a, q, i) => a + q.opts[answers[i]]?.s, 0) / 50 * 100);
-    const label = score >= 90 ? "Thriving" : score >= 80 ? "Healthy" : score >= 70 ? "Check In" : score >= 60 ? "Attention Needed" : score >= 50 ? "Watch Closely" : score >= 40 ? "At Risk" : score >= 30 ? "Serious" : score >= 20 ? "Critical" : "Emergency";
-    const color = score >= 70 ? C.success : score >= 50 ? C.warning : C.danger;
-    const msg = score >= 90 ? "This relationship is strong. Keep showing up the way you have been. Great work!"
-      : score >= 80 ? "Healthy. Nothing urgent that stands out, but don't coast — momentum is easier to keep than rebuild."
-      : score >= 70 ? "Nothing alarming, but worth considering what you can do slightly differently to improve this engagement."
-      : score >= 60 ? "Something is off. You seem to sense it. Think through what's changed and how you can address any new variables. We recommend reviewing with Rai."
-      : score >= 50 ? "There's a pattern forming here. Multiple signals suggest this isn't a one-off rough patch. We recommend having an honest conversation soon. Speak with Rai."
-      : score >= 40 ? "Several things need attention and they're compounding. The longer you wait, the harder each one gets to fix. Speak with Rai before this escalates."
-      : score >= 30 ? "This client relationship has serious, overlapping problems. We strongly recommend building a retention gameplan with Rai today. Not this week — today."
-      : score >= 20 ? "This relationship has deep fractures on multiple fronts. If there's a path back, it requires a direct, honest conversation immediately. Speak with Rai and prepare for either outcome."
-      : "There's no way to sugarcoat this one. It's time to decide: is a last effort worth it, or is it time for the Rolodex? If things are ending, a graceful exit can still pave the way for referrals and future business.";
-    return (
-      <div>
-        <div style={{ textAlign: "center", marginBottom: 28, padding: "28px 20px", background: "#fff", borderRadius: 14, border: "1px solid " + C.borderLight }}>
-          <div style={{ fontSize: 72, fontWeight: 900, color, letterSpacing: "-0.04em", lineHeight: 1 }}>{score}%</div>
-          <div style={{ fontSize: 20, fontWeight: 800, color, marginTop: 6, letterSpacing: "-0.02em" }}>{label}</div>
-          <p style={{ fontSize: 15, color: C.textSec, marginTop: 14, lineHeight: 1.55, maxWidth: 500, margin: "14px auto 0" }}>{msg}</p>
-        </div>
-        <EmailGate title="You know the score. Now get the fix." />
-      </div>
-    );
-  };
-
-  const renderCalculator = () => {
-    const clients = parseInt(answers.clients) || 0;
-    const avgRev = parseInt(answers.avgRev) || 0;
-    const churnPct = parseInt(answers.churnPct) || 0;
-    const calculated = clients > 0 && avgRev > 0 && churnPct > 0;
-    const annualLoss = Math.round(clients * (churnPct / 100) * avgRev * 12);
-    const fivePctImprove = Math.round(annualLoss * 0.05 * 20);
-    const inputStyle = { width: "100%", padding: "13px 16px", border: "1.5px solid " + C.borderLight, borderRadius: 10, fontSize: 15, fontFamily: "inherit", outline: "none", background: "#fff", boxSizing: "border-box" };
-    const labelStyle = { fontSize: 13.5, fontWeight: 700, display: "block", marginBottom: 8, color: C.text };
-    return (
-      <div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 24 }}>
-          <div>
-            <label style={labelStyle}>How many active clients do you have?</label>
-            <input type="number" value={answers.clients || ""} onChange={e => setAnswers({ ...answers, clients: e.target.value })} placeholder="e.g. 12" style={inputStyle} />
-          </div>
-          <div>
-            <label style={labelStyle}>Average monthly revenue per client ($)</label>
-            <input type="number" value={answers.avgRev || ""} onChange={e => setAnswers({ ...answers, avgRev: e.target.value })} placeholder="e.g. 4000" style={inputStyle} />
-          </div>
-          <div>
-            <label style={labelStyle}>What % of clients do you lose per year?</label>
-            <input type="number" value={answers.churnPct || ""} onChange={e => setAnswers({ ...answers, churnPct: e.target.value })} placeholder="e.g. 20" style={inputStyle} />
-          </div>
-        </div>
-        {calculated && (
-          <div style={{ marginBottom: 24 }}>
-            <div style={{ background: C.dangerBg, borderRadius: 14, padding: "28px 20px", textAlign: "center", marginBottom: 14 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: C.danger, textTransform: "uppercase", letterSpacing: ".1em", marginBottom: 8 }}>You're losing</div>
-              <div style={{ fontSize: 52, fontWeight: 900, color: C.danger, letterSpacing: "-0.04em", lineHeight: 1 }}>${annualLoss.toLocaleString()}</div>
-              <div style={{ fontSize: 14, color: C.danger, marginTop: 6, fontWeight: 600 }}>per year to client churn</div>
-            </div>
-            <div style={{ background: C.primarySoft, borderRadius: 14, padding: "28px 20px", textAlign: "center" }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: ".1em", marginBottom: 8 }}>A 5% retention improvement =</div>
-              <div style={{ fontSize: 52, fontWeight: 900, color: C.primary, letterSpacing: "-0.04em", lineHeight: 1 }}>+${fivePctImprove.toLocaleString()}</div>
-              <div style={{ fontSize: 14, color: C.primary, marginTop: 6, fontWeight: 600 }}>in profit impact (at 95% margin on retained revenue)</div>
-            </div>
-          </div>
-        )}
-        {calculated && <EmailGate title="Ready to reduce your churn?" />}
-      </div>
-    );
-  };
-
-  const renderProfile = () => {
-    const total = profileDims.length;
-    if (step < total) {
-      const dim = profileDims[step];
-      const val = sliderVals[dim.key];
-      const hasVal = val !== undefined;
-      return (
-        <div>
-          <div style={{ display: "flex", gap: 3, marginBottom: 16 }}>{profileDims.map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= step ? C.primary : C.borderLight }} />)}</div>
-          <p style={{ fontSize: 12, color: C.textMuted, marginBottom: 8, fontWeight: 600 }}>Dimension {step + 1} of {total}</p>
-          <p style={{ fontSize: 22, fontWeight: 800, marginBottom: 12, letterSpacing: "-0.02em", color: C.text }}>{dim.name}</p>
-          <div style={{ textAlign: "center", marginBottom: 12 }}>
-            <span style={{ fontSize: 56, fontWeight: 900, color: hasVal ? C.primary : C.borderLight, letterSpacing: "-0.04em", lineHeight: 1 }}>{hasVal ? val : "—"}</span>
-          </div>
-          <div style={{ padding: "0 4px", marginBottom: 10 }}>
-            <input type="range" min="0" max="10" value={hasVal ? val : 5} onChange={e => setSliderVals({ ...sliderVals, [dim.key]: parseInt(e.target.value) })} style={{ width: "100%", height: 6, appearance: "none", WebkitAppearance: "none", background: `linear-gradient(to right, ${C.borderLight} 0%, ${C.primary} 100%)`, borderRadius: 3, outline: "none", cursor: "pointer" }} />
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: C.textMuted, marginBottom: 20, fontWeight: 600 }}>
-            <span>{dim.left}</span><span>{dim.right}</span>
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            {step > 0 ? <BackBtn onClick={() => setStep(step - 1)} /> : <div />}
-            <NextBtn onClick={() => hasVal && setStep(step + 1)} disabled={!hasVal} label={step < total - 1 ? "Next" : "See Profile"} />
-          </div>
-        </div>
-      );
-    }
-    const loyalty = (sliderVals.loyaltySignal || 5) / 10;
-    const trust = (sliderVals.trustLevel || 5) / 10;
-    const baseline = Math.round((loyalty * 0.30 + trust * 0.20 + 0.50) * 100);
-    const label = baseline >= 75 ? "Strong" : baseline >= 55 ? "Stable" : baseline >= 35 ? "Watch" : "At Risk";
-    const color = baseline >= 75 ? C.success : baseline >= 55 ? C.warning : C.danger;
-    return (
-      <div>
-        <div style={{ textAlign: "center", marginBottom: 20, padding: "28px 20px", background: "#fff", borderRadius: 14, border: "1px solid " + C.borderLight }}>
-          <div style={{ fontSize: 72, fontWeight: 900, color, letterSpacing: "-0.04em", lineHeight: 1 }}>{baseline}%</div>
-          <div style={{ fontSize: 20, fontWeight: 800, color, marginTop: 6, letterSpacing: "-0.02em" }}>{label}</div>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 24 }}>
-          {profileDims.map(d => (
-            <div key={d.key} style={{ display: "flex", justifyContent: "space-between", padding: "10px 12px", background: "#fff", borderRadius: 8, fontSize: 12.5, border: "1px solid " + C.borderLight }}>
-              <span style={{ color: C.textSec }}>{d.name}</span>
-              <span style={{ fontWeight: 800, color: C.primary }}>{sliderVals[d.key]}</span>
-            </div>
-          ))}
-        </div>
-        <EmailGate title="Want to level up your client relationships?" />
-      </div>
-    );
-  };
-
-  const renderSimulator = () => {
-    const total = simScenarios.length;
-    if (step < total) {
-      const s = simScenarios[step];
-      const picked = answers[step];
-      const revealed = picked !== undefined;
-      return (
-        <div>
-          <div style={{ display: "flex", gap: 4, marginBottom: 18 }}>{Array.from({ length: total }).map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= step ? C.primary : C.borderLight }} />)}</div>
-          <p style={{ fontSize: 12, color: C.textMuted, marginBottom: 8, fontWeight: 600 }}>Scenario {step + 1} of {total}</p>
-          <p style={{ fontSize: 22, fontWeight: 800, marginBottom: 10, letterSpacing: "-0.02em", color: C.text }}>{s.title}</p>
-          <p style={{ fontSize: 15, color: C.textSec, lineHeight: 1.55, marginBottom: 20 }}>{s.setup}</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {s.opts.map((o, i) => (
-              <div key={i} onClick={() => !revealed && setAnswers({ ...answers, [step]: i })} style={{ padding: "16px 18px", borderRadius: 12, cursor: revealed ? "default" : "pointer", background: revealed && picked === i ? (o.score === "A" ? C.primarySoft : o.score === "B" ? C.warningBg : C.dangerBg) : "#fff", border: "1.5px solid " + (revealed && picked === i ? (o.score === "A" ? C.primary : o.score === "B" ? C.warning : C.danger) : C.borderLight) }}>
-                <div style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 6, color: C.text }}>{o.label}</div>
-                <div style={{ fontSize: 13, color: C.textSec, fontStyle: "italic", lineHeight: 1.5 }}>{o.desc}</div>
-                {revealed && picked === i && (
-                  <div style={{ marginTop: 12, padding: "12px 14px", background: "rgba(0,0,0,0.03)", borderRadius: 8 }}>
-                    <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.06em" }}>Grade: {o.score}</div>
-                    <p style={{ fontSize: 13.5, color: C.textSec, lineHeight: 1.55 }}>{o.outcome}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18 }}>
-            {step > 0 ? <BackBtn onClick={() => setStep(step - 1)} /> : <div />}
-            {revealed && <NextBtn onClick={() => setStep(step + 1)} label={step < total - 1 ? "Next" : "See Results"} />}
-          </div>
-        </div>
-      );
-    }
-    const grades = simScenarios.map((s, i) => s.opts[answers[i]]?.score || "?");
-    return (
-      <div>
-        <div style={{ textAlign: "center", marginBottom: 24, padding: "28px 20px", background: "#fff", borderRadius: 14, border: "1px solid " + C.borderLight }}>
-          <div style={{ display: "flex", justifyContent: "center", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
-            {grades.map((g, i) => (
-              <div key={i} style={{ width: 56, height: 56, borderRadius: 12, background: g === "A" ? C.primarySoft : g === "B" ? C.warningBg : C.dangerBg, border: "2px solid " + (g === "A" ? C.primary : g === "B" ? C.warning : C.danger), display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, fontWeight: 900, color: g === "A" ? C.primary : g === "B" ? C.warning : C.danger }}>{g}</div>
-            ))}
-          </div>
-          <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.02em", color: C.text }}>{grades.filter(g => g === "A").length >= 3 ? "Strong conversational instincts." : "Most people avoid these conversations entirely."}</div>
-          <p style={{ fontSize: 14.5, color: C.textSec, marginTop: 10, lineHeight: 1.55, maxWidth: 500, margin: "10px auto 0" }}>The right words at the right time save accounts. The wrong ones — or no words at all — lose them.</p>
-        </div>
-        <EmailGate />
-      </div>
-    );
-  };
-
-  const renderers = { health: renderHealth, calculator: renderCalculator, profile: renderProfile, simulator: renderSimulator };
-
-  return (
-    <div>
-      <RetPageStyles />
-
-      <RetHero
-        eyebrow="Resources"
-        h1="Tools to sharpen your retention instincts."
-        sub="Interactive assessments, calculators, and simulators. Free. No sign-up required."
-        primaryCta={null}
-        secondaryCta={null}
-        fine={null}
-        setPage={setPage}
-      />
-
-      {/* Tools or active module */}
-      <section className="ret-section ret-bg-cream r-full-bleed" style={{ paddingTop: 0 }}>
+      {/* ─── ROI CALCULATOR ─── */}
+      <section className="ret-section r-full-bleed" style={{ background: "#F2EEE8", paddingTop: 80 }}>
         <div className="ret-section-inner">
-          {!activeModule ? (
-            <div className="ret-grid-3">
-              {modules.map((m) => (
-                <div key={m.id} onClick={() => { reset(); setActiveModule(m.id); window.scrollTo(0, 0); }} className="ret-card ret-card-hover" style={{ cursor: "pointer" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
-                    <div style={{ width: 48, height: 48, borderRadius: 12, background: C.primarySoft, display: "flex", alignItems: "center", justifyContent: "center" }}>{m.icon}</div>
-                    <div style={{ display: "flex", gap: 6 }}>
-                      <span style={{ fontSize: 10.5, fontWeight: 700, padding: "3px 9px", borderRadius: 5, textTransform: "uppercase", letterSpacing: "0.06em", background: C.primarySoft, color: C.primary }}>{m.tag}</span>
-                      <span style={{ fontSize: 10.5, fontWeight: 700, padding: "3px 9px", borderRadius: 5, textTransform: "uppercase", letterSpacing: "0.06em", background: C.surfaceWarm, color: C.textMuted }}>{m.time}</span>
-                    </div>
-                  </div>
-                  <h2 style={{ fontSize: 19, fontWeight: 800, marginBottom: 8, lineHeight: 1.25, letterSpacing: "-0.02em", color: C.text }}>{m.title}</h2>
-                  <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.55, marginBottom: 18 }}>{m.desc}</p>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: C.btn }}>Start →</div>
+          <div className="ret-section-head">
+            <div className="ret-eyebrow">Run the math</div>
+            <h2 className="ret-h2" style={{ maxWidth: 720, margin: "12px auto 0" }}>
+              Saving just ONE client makes Retayned free for a decade.
+            </h2>
+            <p style={{ marginTop: 14, fontSize: 17, color: C.textSec, lineHeight: 1.5 }}>Move the sliders to your reality.</p>
+          </div>
+          <div style={{ maxWidth: 920, margin: "0 auto" }}>
+            <ROICalculator />
+          </div>
+
+          {/* Reference receipt */}
+          <div style={{ maxWidth: 580, margin: "56px auto 0" }}>
+            <div style={{ textAlign: "center", marginBottom: 16 }}>
+              <span style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 700, color: C.textSec }}>Reference receipt</span>
+            </div>
+            <div className="ret-card" style={{ padding: "28px 32px" }}>
+              {[
+                ["You charge", "$2,500 / mo"],
+                ["Retayned base", "$19.99"],
+                ["Per-client fee (×1)", "$1.00"],
+                ["—", "—"],
+                ["Net per saved client", "$2,479.01"],
+                ["One save covers", "125 months"],
+              ].map(([k, v], i) => (
+                <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: i < 5 ? "1px dashed " + C.borderLight : "none", fontSize: 14.5, fontWeight: i >= 4 ? 800 : 500, color: i >= 4 ? C.text : C.textSec }}>
+                  <span>{k}</span><span>{v}</span>
                 </div>
               ))}
             </div>
-          ) : (
-            <div style={{ maxWidth: 760, margin: "0 auto" }}>
-              <button onClick={reset} style={{ background: "none", border: "none", fontSize: 14, fontWeight: 600, color: C.textMuted, cursor: "pointer", fontFamily: "inherit", marginBottom: 20, padding: 0 }}>← Back to all tools</button>
-              <div className="ret-card" style={{ padding: "44px 44px", borderRadius: 20, boxShadow: "0 12px 40px rgba(60,40,10,0.08)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 28, paddingBottom: 20, borderBottom: "1px solid " + C.borderLight }}>
-                  <div style={{ width: 48, height: 48, borderRadius: 12, background: C.primarySoft, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{modules.find(m => m.id === activeModule)?.icon}</div>
-                  <h2 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.025em", color: C.text, margin: 0 }}>{modules.find(m => m.id === activeModule)?.title}</h2>
+          </div>
+        </div>
+      </section>
+
+      <RetCurve from="#F2EEE8" to={C.bg} variant="rightRise" />
+
+      {/* ─── À LA CARTE ─── */}
+      <section className="ret-section r-full-bleed" style={{ background: C.bg }}>
+        <div className="ret-section-inner">
+          <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <div className="ret-section-head">
+              <div className="ret-eyebrow">À la carte</div>
+              <h2 className="ret-h2" style={{ marginTop: 12, fontSize: "clamp(24px, 3.5vw, 36px)" }}>Optional add-ons. Most never need them.</h2>
+            </div>
+            <div className="pricing-addons-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+              {addons.map(a => (
+                <div key={a.name} className="ret-card" style={{ padding: "24px 26px" }}>
+                  <div style={{ fontWeight: 800, fontSize: 16, color: C.text }}>{a.name}</div>
+                  <div style={{ fontSize: 13.5, color: C.textSec, marginTop: 6, lineHeight: 1.55 }}>{a.sub}</div>
+                  <div style={{ marginTop: 16, display: "flex", alignItems: "baseline", gap: 6 }}>
+                    <span style={{ fontWeight: 900, fontSize: 24, color: C.btn, letterSpacing: "-0.02em" }}>{a.price}</span>
+                    <span style={{ fontSize: 12.5, color: C.textSec }}>{a.unit}</span>
+                  </div>
                 </div>
-                {renderers[activeModule]?.()}
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <RetCurve from={C.bg} to={C.primaryDeep} variant="leftRise" />
+
+      {/* ─── ENTERPRISE ─── */}
+      <section className="r-full-bleed" style={{ background: C.primaryDeep, color: "#fff", padding: "88px 48px" }}>
+        <div className="ret-section-inner" style={{ maxWidth: 1100 }}>
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <div className="ret-eyebrow ret-eyebrow-light">Retayned Enterprise · Early Access</div>
+            <h2 className="ret-h2" style={{ marginTop: 14, color: "#fff", maxWidth: 720, margin: "14px auto 0" }}>
+              Relationship intelligence, <span style={{ fontFamily: "'Caveat', cursive", color: C.primaryLight, fontWeight: 700, fontSize: "1.1em" }}>scaled.</span>
+            </h2>
+            <p style={{ color: "rgba(255,255,255,0.7)", maxWidth: 620, margin: "16px auto 0", fontSize: 15.5, lineHeight: 1.6 }}>
+              For teams and agents managing your book. Multi-seat plumbing, manager dashboards, agent API.
+            </p>
+          </div>
+
+          {/* What enterprise includes */}
+          <div className="pricing-ent-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 18, marginTop: 8 }}>
+            {enterpriseCards.map(c => (
+              <div key={c.title} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "26px 28px" }}>
+                <div style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 800, color: C.primaryLight }}>{c.eyebrow}</div>
+                <div style={{ fontWeight: 800, fontSize: 19, marginTop: 10, color: "#fff", letterSpacing: "-0.01em" }}>{c.title}</div>
+                <div style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", marginTop: 10, lineHeight: 1.6 }}>{c.body}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Live console mock */}
+          <div style={{ background: "rgba(0,0,0,0.25)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "20px 24px", marginTop: 28 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
+              <span style={{ fontSize: 13, color: C.primaryLight, fontWeight: 600 }}>● RaiS · Live view <span style={{ color: "rgba(255,255,255,0.4)", marginLeft: 10, fontWeight: 400 }}>Points to 1,247 clients · Last sweep 09:04</span></span>
+              <span style={{ fontSize: 11, color: C.primaryLight, background: "rgba(85,139,104,0.12)", padding: "3px 10px", borderRadius: 999, fontWeight: 700 }}>● Running</span>
+            </div>
+            <div style={{ fontFamily: "'Courier New', monospace", fontSize: 12.5, color: "#D4DBD2", lineHeight: 1.7 }}>
+              <div><span style={{ color: "#9FB29D" }}>09:04</span> <span style={{ color: C.warning }}>SWEEP</span>  Scored 1,247 clients. Δ avg score: −0.4. Flagged 38 at-risk.</div>
+              <div><span style={{ color: "#9FB29D" }}>09:04</span> <span style={{ color: C.danger }}>ALERT</span>  Foxglove Partners entered "velocity decay" archetype. Confidence: 0.87.</div>
+              <div><span style={{ color: "#9FB29D" }}>09:15</span> <span style={{ color: C.primaryLight }}>TASK</span>   Generated 62 tasks. 28 outreach emails drafted and queued for review.</div>
+              <div><span style={{ color: "#9FB29D" }}>09:15</span> <span style={{ color: C.primaryLight }}>SYNC</span>   Dispatched to Slack (#42), CRM (58). Next sweep: 09:04 tomorrow.</div>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="pricing-ent-cta" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 36, padding: "26px 30px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, gap: 18 }}>
+            <div>
+              <div style={{ fontWeight: 800, fontSize: 19, color: "#fff" }}>Ready to talk?</div>
+              <div style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", marginTop: 6, lineHeight: 1.55 }}>30-minute call with Adam. Bring your book size, your stack, and one tough account.</div>
+            </div>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <a href="mailto:adam@retayned.com" className="cta-btn" style={{ padding: "14px 22px", fontSize: 15, fontWeight: 700, background: "transparent", color: "#fff", border: "1px solid rgba(255,255,255,0.25)", borderRadius: 12, cursor: "pointer", textDecoration: "none", display: "inline-flex", alignItems: "center" }}>adam@retayned.com</a>
+              <button className="cta-btn" onClick={() => setPage("contact")} style={{ padding: "14px 22px", fontSize: 15, fontWeight: 700, background: C.btn, color: "#fff", border: "none", borderRadius: 12, cursor: "pointer", fontFamily: "inherit" }}>Request Early Access</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <RetCurve from={C.primaryDeep} to="#F2EEE8" variant="rightCrest" />
+
+      {/* ─── FINAL CALLBACK ─── */}
+      <section className="ret-section r-full-bleed" style={{ background: "#F2EEE8", textAlign: "center", padding: "72px 48px" }}>
+        <div className="ret-section-inner" style={{ maxWidth: 880 }}>
+          <h3 style={{ fontSize: "clamp(20px, 2.5vw, 26px)", fontWeight: 800, color: C.text, lineHeight: 1.3, letterSpacing: "-0.02em" }}>
+            Saving just <span style={{ color: C.btn }}>ONE</span> relationship for even just <span style={{ color: C.btn }}>ONE</span> month could pay for Retayned for a <span style={{ color: C.btn }}>DECADE</span>.
+          </h3>
+          <button className="cta-btn" onClick={() => setPage("signup")} style={{ marginTop: 24, padding: "16px 36px", fontSize: 16, fontWeight: 700, background: C.btn, color: "#fff", border: "none", borderRadius: 12, cursor: "pointer", fontFamily: "inherit" }}>Start Free Trial</button>
+          <div style={{ fontSize: 13, color: C.textSec, marginTop: 12 }}>14-day free trial. Cancel anytime.</div>
+        </div>
+      </section>
+
+      <Footer setPage={setPage} />
+    </div>
+  );
+}
+
+// ═══ ABOUT — ported from final/about.html ═══
+function About({ setPage }) {
+  const values = [
+    { n: "01", t: "Vague positivity is a churn signal.", b: "When clients go quiet, the silence is the warning. We name it out loud." },
+    { n: "02", t: "The script has to be yours.", b: "No template carries a relationship. Rai writes scripts in your voice, not ours." },
+    { n: "03", t: "A 5% lift in retention beats every growth hack.", b: "Run the math. We do, every time we ship a feature." },
+    { n: "04", t: "Tools should be cheap. Relationships are not.", b: "$19.99/mo is a deliberate price." },
+  ];
+
+  const timeline = [
+    { y: "2014", label: "First retained client.", sub: "A DTC brand. Still with us today." },
+    { y: "2018", label: "The pattern emerges.", sub: "We rarely lose accounts. We start to wonder why." },
+    { y: "2022", label: "A founder moment.", sub: "\"You're in the client retention business.\"" },
+    { y: "2025", label: "Retayned ships.", sub: "The system, externalized for everyone else." },
+  ];
+
+  return (
+    <div className="about-page">
+      <RetPageStyles />
+      <style>{`
+        @media (max-width: 760px) {
+          .about-vocab { font-size: 22px !important; gap: 18px !important; }
+          .about-founder-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+          .about-timeline { grid-template-columns: 1fr 1fr !important; gap: 32px 16px !important; }
+          .about-timeline-line { display: none !important; }
+        }
+      `}</style>
+
+      {/* ─── HERO ─── */}
+      <section className="ret-section r-full-bleed" style={{ background: "#F2EEE8", paddingBottom: 24, textAlign: "center" }}>
+        <div className="ret-section-inner" style={{ maxWidth: 880 }}>
+          <div className="ret-eyebrow">About Retayned</div>
+          <h1 className="ret-h1" style={{ marginTop: 16, maxWidth: 880, marginInline: "auto" }}>
+            We didn't set out to build a CRM. We set out to keep the clients <span style={{ fontFamily: "'Caveat', cursive", color: C.btn, fontWeight: 700, fontSize: "1.05em" }}>nobody else does.</span>
+          </h1>
+        </div>
+      </section>
+
+      {/* Mixed-typography vocab row */}
+      <section className="r-full-bleed" style={{ background: "#F2EEE8", padding: "16px 48px 56px" }}>
+        <div className="about-vocab" style={{ display: "flex", justifyContent: "center", gap: 28, flexWrap: "wrap", alignItems: "baseline", fontSize: 30 }}>
+          <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 900, color: C.primary }}>Loyalty</span>
+          <span style={{ fontFamily: "'Caveat', cursive", fontStyle: "italic", color: C.btn, fontWeight: 700, fontSize: "1.15em" }}>Tenure</span>
+          <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, textTransform: "uppercase", color: C.danger, letterSpacing: "0.05em", fontSize: "0.85em" }}>SIGNAL</span>
+          <span style={{ fontFamily: "'Caveat', cursive", fontWeight: 600, color: C.warning, fontSize: "1.15em" }}>Words</span>
+          <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 900, color: C.success }}>Trust</span>
+          <span style={{ fontFamily: "'Caveat', cursive", fontStyle: "italic", color: C.primaryLight, fontWeight: 700, fontSize: "1.15em" }}>Receipts</span>
+          <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 800, color: C.primary }}>Repeat</span>
+        </div>
+      </section>
+
+      <RetCurve from="#F2EEE8" to={C.primaryDeep} variant="leftRise" />
+
+      {/* ─── MANIFESTO ON DARK ─── */}
+      <section className="r-full-bleed" style={{ background: C.primaryDeep, color: "#fff", padding: "88px 48px" }}>
+        <div style={{ maxWidth: 760, margin: "0 auto" }}>
+          <div className="ret-eyebrow ret-eyebrow-light">Our manifesto</div>
+          <div style={{ marginTop: 32, fontSize: "clamp(19px, 2.4vw, 24px)", lineHeight: 1.55, color: "#E8EFE8", fontWeight: 400 }}>
+            <p>Most CRMs are built around the deal. The signed contract. The closed-won.</p>
+            <p style={{ marginTop: 22 }}>
+              We think the deal is the <em style={{ color: C.primaryLight, fontStyle: "italic" }}>least</em> interesting moment in a client relationship. The interesting moments are the <strong style={{ fontWeight: 800, color: "#fff" }}>quiet</strong> ones — the email that was a little colder than usual, the follow-up that went two days longer than normal, the tone that shifted between week six and week seven.
+            </p>
+            <p style={{ marginTop: 22 }}>
+              Those are the moments that decide whether a client renews. And those are the moments every other CRM <em style={{ color: C.danger, fontStyle: "italic" }}>misses</em>.
+            </p>
+            <p style={{ marginTop: 28, fontWeight: 900, fontSize: "clamp(24px, 3vw, 32px)", lineHeight: 1.25, color: "#fff", letterSpacing: "-0.02em" }}>
+              Retayned doesn't track deals. It tracks the small things that decide them.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <RetCurve from={C.primaryDeep} to={C.bg} variant="rightCrest" />
+
+      {/* ─── FOUNDER + VALUES ─── */}
+      <section className="ret-section r-full-bleed" style={{ background: C.bg }}>
+        <div className="ret-section-inner" style={{ maxWidth: 1100 }}>
+          <div className="about-founder-grid" style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 40, alignItems: "start" }}>
+            {/* Founder card */}
+            <div className="ret-card" style={{ padding: "36px 32px" }}>
+              <div className="ret-eyebrow">Founder</div>
+              <div style={{ display: "flex", gap: 18, marginTop: 18, alignItems: "center" }}>
+                <div style={{ width: 72, height: 72, borderRadius: 16, overflow: "hidden", background: C.primarySoft, flexShrink: 0 }}>
+                  <img src="/AdamLawrence.jpg" alt="Adam Lawrence" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                </div>
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: 19, color: C.text }}>Adam Lawrence</div>
+                  <div style={{ fontSize: 13, color: C.textSec, marginTop: 2 }}>Founder. Wrote the manual. Picks up the phone.</div>
+                </div>
+              </div>
+              <p style={{ fontSize: 14.5, color: C.textSec, marginTop: 22, lineHeight: 1.6 }}>
+                Ten years of paid social. Ran campaigns for agencies, DTC brands, and enterprises. Kept the clients other people lost. Eventually figured out why — and then turned it into the system you're looking at.
+              </p>
+              <div style={{ marginTop: 22, display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <span style={{ display: "inline-block", padding: "5px 12px", background: C.primarySoft, color: C.primary, borderRadius: 999, fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.14em" }}>Washington, DC</span>
+                <span style={{ display: "inline-block", padding: "5px 12px", background: "#EFE9FB", color: C.btn, borderRadius: 999, fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.14em" }}>Talk to me directly</span>
+                <a href="mailto:adam@retayned.com" style={{ display: "inline-block", padding: "5px 12px", background: C.primarySoft, color: C.primary, borderRadius: 999, fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.14em", textDecoration: "none" }}>adam@retayned.com</a>
               </div>
             </div>
-          )}
+
+            {/* Values list */}
+            <div>
+              <div className="ret-eyebrow">What we believe</div>
+              <div style={{ marginTop: 22 }}>
+                {values.map(v => (
+                  <div key={v.n} style={{ padding: "16px 0", borderBottom: "1px solid " + C.borderLight }}>
+                    <div style={{ display: "flex", gap: 14, alignItems: "baseline" }}>
+                      <span style={{ fontFamily: "'Courier New', monospace", fontSize: 11, color: C.btn, fontWeight: 800, letterSpacing: "0.05em" }}>{v.n}</span>
+                      <strong style={{ fontSize: 15.5, color: C.text, letterSpacing: "-0.01em" }}>{v.t}</strong>
+                    </div>
+                    <div style={{ fontSize: 13.5, color: C.textSec, marginLeft: 28, marginTop: 6, lineHeight: 1.55 }}>{v.b}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <RetCurve from="#F2EEE8" to="#EAE4D6" variant="rightRise" />
+      <RetCurve from={C.bg} to="#F2EEE8" variant="leftCrest" />
 
-      {/* Blog */}
-      <section className="ret-section ret-bg-beige r-full-bleed">
+      {/* ─── TIMELINE ─── */}
+      <section className="ret-section r-full-bleed" style={{ background: "#F2EEE8", paddingBottom: 96 }}>
         <div className="ret-section-inner">
           <div className="ret-section-head">
-            <div className="ret-eyebrow">From the blog</div>
-            <h2 className="ret-h2">Writing on retention.</h2>
+            <div className="ret-eyebrow">The Timeline</div>
+            <h2 className="ret-h2" style={{ marginTop: 12 }}>
+              How we got here, in <span style={{ fontFamily: "'Caveat', cursive", color: C.btn, fontWeight: 700, fontSize: "1.05em" }}>four moments.</span>
+            </h2>
           </div>
-          <BlogPosts />
-        </div>
-      </section>
 
-      <RetCurve from="#EAE4D6" to="#F2EEE8" variant="leftRise" />
+          <div className="about-timeline" style={{ maxWidth: 1000, margin: "44px auto 0", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", position: "relative" }}>
+            <div className="about-timeline-line" style={{ position: "absolute", top: 14, left: "6%", right: "6%", height: 1, background: C.borderLight }} />
+            {timeline.map(m => (
+              <div key={m.y} style={{ textAlign: "center", position: "relative", padding: "0 14px" }}>
+                <div style={{ width: 14, height: 14, borderRadius: 999, background: C.btn, margin: "8px auto 0", border: "3px solid #F2EEE8" }} />
+                <div style={{ fontWeight: 900, fontSize: 15, marginTop: 16, color: C.btn, letterSpacing: "0.04em" }}>{m.y}</div>
+                <div style={{ fontSize: 14.5, fontWeight: 800, marginTop: 8, color: C.text, letterSpacing: "-0.01em" }}>{m.label}</div>
+                <div style={{ fontSize: 13, color: C.textSec, marginTop: 8, lineHeight: 1.55 }}>{m.sub}</div>
+              </div>
+            ))}
+          </div>
 
-      {/* Subscribe */}
-      <section className="ret-section ret-bg-cream r-full-bleed" style={{ textAlign: "center" }}>
-        <div className="ret-section-inner" style={{ maxWidth: 560 }}>
-          <div className="ret-eyebrow">Stay in the loop</div>
-          <h2 className="ret-h2">Get notified when we publish.</h2>
-          <div style={{ display: "flex", gap: 10, maxWidth: 400, margin: "28px auto 0", flexWrap: "wrap" }}>
-            <input style={{ flex: "1 1 200px", padding: "13px 16px", border: "1.5px solid " + C.borderLight, borderRadius: 10, fontSize: 14, fontFamily: "inherit", background: "#fff", color: C.text, outline: "none", boxSizing: "border-box", minWidth: 0 }} placeholder="you@agency.com" />
-            <button className="ret-btn-primary">Subscribe</button>
+          <div style={{ textAlign: "center", marginTop: 64 }}>
+            <p style={{ fontWeight: 800, fontSize: "clamp(18px, 2.3vw, 22px)", color: C.text, letterSpacing: "-0.01em" }}>
+              Built for the way you already work — when nobody was looking.
+            </p>
+            <button className="cta-btn" onClick={() => setPage("signup")} style={{ marginTop: 18, padding: "16px 36px", fontSize: 16, fontWeight: 700, background: C.btn, color: "#fff", border: "none", borderRadius: 12, cursor: "pointer", fontFamily: "inherit" }}>Start Free Trial</button>
+            <div style={{ fontSize: 13, color: C.textSec, marginTop: 10 }}>14-day free trial. Cancel anytime.</div>
           </div>
         </div>
       </section>
@@ -2167,6 +1932,208 @@ function Blog({ setPage }) {
     </div>
   );
 }
+
+// ═══ RESOURCES (was Blog) — ported from final/resources.html ═══
+const RESOURCES_POSTS = [
+  { tag: "DIAGNOSTICS", read: "4 min read", title: "The signal you keep missing: vague positivity.", sub: "\"Looks good.\" \"All good on our end.\" \"No notes.\" When engaged clients go quiet, the silence is the warning." },
+  { tag: "PLAYBOOK", read: "5 min read", title: "How to handle the new stakeholder without burning your champion.", sub: "Your main contact's new boss wants to review all vendor relationships. Mike says don't worry. Here's the move that keeps both relationships intact." },
+  { tag: "FRAMEWORK", read: "8 min read", title: "Twelve dimensions, twenty combinations: how to actually score a client relationship.", sub: "Most retention scoring is a wrapped-up NPS. Here's a richer framework that captures how clients actually behave before they leave." },
+  { tag: "DIAGNOSTICS", read: "3 min read", title: "The cancelled-meeting math.", sub: "A meeting moved once is a calendar problem. Twice is a relationship problem. Three times is a renewal problem." },
+  { tag: "PLAYBOOK", read: "6 min read", title: "Saying \"I noticed something\" without sounding paranoid.", sub: "The exact opening line we've used for ten years to surface concerns before they harden." },
+  { tag: "CASE STUDY", read: "5 min read", title: "Saved at month 11: how Pinebrook's renewal got back on track in 14 days.", sub: "A real save, with the dashboards, the script, and the timeline." },
+];
+
+const RESOURCES_TOOLS = [
+  { kind: "ASSESSMENT", dur: "60 sec", title: "Retention Health Check", sub: "Think of one client. Answer five questions honestly. Get a retention score and know what to do next." },
+  { kind: "CALCULATOR", dur: "30 sec", title: "The Retention Calculator", sub: "See what client churn is actually costing you. The number is always bigger than you think." },
+  { kind: "ASSESSMENT", dur: "2 min", title: "Grade Your Client Relationship", sub: "Score one client across 12 relationship dimensions. See where the cracks are." },
+  { kind: "SIMULATOR", dur: "4 min", title: "The Hard Conversation Simulator", sub: "Five scenarios. Three approaches each. See how your instincts play out." },
+];
+
+const RESOURCES_GUIDES = [
+  { name: "The 12 Retention Dimensions", sub: "A complete cheat sheet for what to watch.", kind: "PDF · 14 pages" },
+  { name: "The Quiet-Client Script Pack", sub: "Ten openers for the awkward check-in.", kind: "PDF · 6 pages" },
+  { name: "Renewal Pre-Mortem Template", sub: "A 60-day playbook for at-risk accounts.", kind: "NOTION · template" },
+  { name: "Health Check Question Bank", sub: "The exact 47 questions Rai chooses from.", kind: "PDF · 8 pages" },
+];
+
+const RESOURCES_WEBINARS = [
+  { date: "JUN 12", dur: "45 min", title: "Reading client tone in writing.", sub: "A live teardown of three real client emails — what we'd notice, what we'd say next.", kind: "On demand" },
+  { date: "MAY 28", dur: "30 min", title: "When to bring up renewal (and when not to).", sub: "Adam walks through the timing model.", kind: "On demand" },
+  { date: "JUL 18", dur: "60 min", title: "Office hours: bring one client, leave with a plan.", sub: "Live, with five operators per session.", kind: "Upcoming" },
+];
+
+function MiniTag({ color = "primary", children }) {
+  const map = {
+    primary: { bg: C.primarySoft, fg: C.primary },
+    btn: { bg: "#EFE9FB", fg: C.btn },
+    warning: { bg: "#F4E5C2", fg: "#8B6A1B" },
+    danger: { bg: "#F2D6CE", fg: "#8E2A18" },
+  };
+  const c = map[color] || map.primary;
+  return (
+    <span style={{ display: "inline-block", fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", fontWeight: 800, padding: "4px 10px", borderRadius: 999, background: c.bg, color: c.fg }}>{children}</span>
+  );
+}
+
+function Blog({ setPage }) {
+  const [filter, setFilter] = useState("All");
+  const filters = ["All", "Articles", "Tools", "Guides", "Webinars"];
+  const featured = RESOURCES_POSTS[0];
+  const sideFeatured = RESOURCES_POSTS.slice(1, 3);
+
+  return (
+    <div className="resources-page">
+      <RetPageStyles />
+      <style>{`
+        @media (max-width: 900px) {
+          .res-featured-grid { grid-template-columns: 1fr !important; }
+          .res-library-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 600px) {
+          .res-library-grid { grid-template-columns: 1fr !important; }
+          .res-filter-row { flex-direction: column; align-items: flex-start !important; gap: 16px !important; }
+          .res-newsletter-row { flex-direction: column; gap: 10px !important; }
+          .res-newsletter-input { width: 100% !important; }
+        }
+      `}</style>
+
+      {/* ─── HERO ─── */}
+      <section className="ret-section r-full-bleed" style={{ background: "#F2EEE8", textAlign: "center", paddingBottom: 32 }}>
+        <div className="ret-section-inner">
+          <div style={{ maxWidth: 760, margin: "0 auto" }}>
+            <div className="ret-eyebrow">Resources</div>
+            <h1 className="ret-h1" style={{ marginTop: 16 }}>
+              Field notes from the <span style={{ fontFamily: "'Caveat', cursive", color: C.btn, fontWeight: 700, fontSize: "1.05em" }}>retention business.</span>
+            </h1>
+            <p style={{ marginTop: 18, fontSize: 17, color: C.textSec, lineHeight: 1.55 }}>Articles, tools, guides, and webinars. Free. No sign-up required.</p>
+          </div>
+
+          {/* Featured row */}
+          <div className="res-featured-grid" style={{ maxWidth: 1100, margin: "44px auto 0", display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 20, textAlign: "left" }}>
+            <div className="ret-card" style={{ padding: 0, overflow: "hidden" }}>
+              <div style={{ height: 280, background: "linear-gradient(135deg, " + C.primarySoft + ", #EFE9FB)", position: "relative" }}>
+                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ fontFamily: "'Caveat', cursive", fontSize: 72, color: C.btn, textAlign: "center", lineHeight: 0.9, fontWeight: 700 }}>
+                    the<br/><span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 900, color: C.primary, letterSpacing: "-0.04em", fontSize: 64 }}>SIGNAL</span>
+                  </div>
+                </div>
+                <div style={{ position: "absolute", top: 16, left: 16, display: "flex", gap: 8 }}>
+                  <MiniTag color="btn">Featured</MiniTag>
+                  <MiniTag color="primary">{featured.tag}</MiniTag>
+                </div>
+              </div>
+              <div style={{ padding: "24px 28px" }}>
+                <div style={{ fontSize: 11, color: C.textMuted, letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 700 }}>{featured.read} · Adam Lawrence</div>
+                <h3 style={{ fontSize: 26, fontWeight: 900, lineHeight: 1.2, marginTop: 8, color: C.text, letterSpacing: "-0.02em" }}>{featured.title}</h3>
+                <p style={{ fontSize: 14, color: C.textSec, marginTop: 10, lineHeight: 1.6 }}>{featured.sub}</p>
+                <span style={{ color: C.btn, fontSize: 13.5, fontWeight: 800, marginTop: 14, display: "inline-block", cursor: "pointer" }}>Read post →</span>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              {sideFeatured.map(p => (
+                <div key={p.title} className="ret-card" style={{ padding: "22px 24px", flex: 1 }}>
+                  <MiniTag color="primary">{p.tag}</MiniTag>
+                  <div style={{ fontSize: 11, color: C.textMuted, marginTop: 8, fontWeight: 600, letterSpacing: "0.05em" }}>{p.read}</div>
+                  <h4 style={{ fontSize: 17, fontWeight: 800, lineHeight: 1.25, marginTop: 8, color: C.text, letterSpacing: "-0.01em" }}>{p.title}</h4>
+                  <p style={{ fontSize: 13, color: C.textSec, marginTop: 6, lineHeight: 1.55 }}>{p.sub}</p>
+                  <span style={{ color: C.btn, fontSize: 13, fontWeight: 800, marginTop: 10, display: "inline-block", cursor: "pointer" }}>Read →</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <RetCurve from="#F2EEE8" to={C.bg} variant="rightCrest" />
+
+      {/* ─── LIBRARY + FILTER ─── */}
+      <section className="ret-section r-full-bleed" style={{ background: C.bg }}>
+        <div className="ret-section-inner">
+          <div className="res-filter-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32, flexWrap: "wrap", gap: 14 }}>
+            <h2 className="ret-h2" style={{ fontSize: "clamp(28px, 4vw, 42px)", margin: 0 }}>The library.</h2>
+            <div style={{ display: "inline-flex", background: C.card, padding: 5, borderRadius: 999, border: "1px solid " + C.borderLight, flexWrap: "wrap" }}>
+              {filters.map(f => (
+                <button key={f} onClick={() => setFilter(f)} style={{
+                  padding: "8px 18px", borderRadius: 999, fontSize: 13, fontWeight: 700,
+                  background: filter === f ? C.text : "transparent",
+                  color: filter === f ? "#fff" : C.textSec,
+                  border: "none", cursor: "pointer", fontFamily: "inherit",
+                  transition: "all 0.15s ease",
+                }}>{f}</button>
+              ))}
+            </div>
+          </div>
+
+          <div className="res-library-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+            {(filter === "All" || filter === "Tools") && RESOURCES_TOOLS.map(t => (
+              <div key={t.title} className="ret-card" style={{ padding: "24px 26px", background: "#EFE9FB" }}>
+                <MiniTag color="btn">{t.kind}</MiniTag>
+                <h4 style={{ fontSize: 17, fontWeight: 800, marginTop: 14, color: C.text, letterSpacing: "-0.01em" }}>{t.title}</h4>
+                <p style={{ fontSize: 13.5, color: C.textSec, marginTop: 6, lineHeight: 1.55 }}>{t.sub}</p>
+                <span style={{ color: C.btn, fontSize: 13.5, fontWeight: 800, marginTop: 12, display: "inline-block", cursor: "pointer" }}>Start interactive →</span>
+              </div>
+            ))}
+            {(filter === "All" || filter === "Articles") && RESOURCES_POSTS.slice(3, 6).map(p => (
+              <div key={p.title} className="ret-card" style={{ padding: "24px 26px" }}>
+                <MiniTag color="primary">{p.tag}</MiniTag>
+                <div style={{ fontSize: 11, color: C.textMuted, marginTop: 8, fontWeight: 600, letterSpacing: "0.05em" }}>{p.read}</div>
+                <h4 style={{ fontSize: 17, fontWeight: 800, lineHeight: 1.2, marginTop: 8, color: C.text, letterSpacing: "-0.01em" }}>{p.title}</h4>
+                <p style={{ fontSize: 13.5, color: C.textSec, marginTop: 6, lineHeight: 1.55 }}>{p.sub}</p>
+                <span style={{ color: C.btn, fontSize: 13.5, fontWeight: 800, marginTop: 10, display: "inline-block", cursor: "pointer" }}>Read →</span>
+              </div>
+            ))}
+            {(filter === "All" || filter === "Guides") && RESOURCES_GUIDES.map(g => (
+              <div key={g.name} className="ret-card" style={{ padding: "24px 26px" }}>
+                <MiniTag color="warning">{g.kind.split(" ")[0]}</MiniTag>
+                <h4 style={{ fontSize: 17, fontWeight: 800, marginTop: 14, color: C.text, letterSpacing: "-0.01em" }}>{g.name}</h4>
+                <p style={{ fontSize: 13.5, color: C.textSec, marginTop: 6, lineHeight: 1.55 }}>{g.sub}</p>
+                <div style={{ fontSize: 11.5, color: C.textMuted, marginTop: 8, fontWeight: 600 }}>{g.kind}</div>
+                <span style={{ color: C.btn, fontSize: 13.5, fontWeight: 800, marginTop: 12, display: "inline-block", cursor: "pointer" }}>↓ Download</span>
+              </div>
+            ))}
+            {(filter === "All" || filter === "Webinars") && RESOURCES_WEBINARS.map(w => (
+              <div key={w.title} className="ret-card" style={{ padding: "24px 26px", background: C.primaryDeep, color: "#fff", border: "1px solid " + C.primaryDeep }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", fontWeight: 800, color: C.primaryLight }}>WEBINAR</span>
+                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>{w.dur}</span>
+                </div>
+                <div style={{ fontFamily: "'Courier New', monospace", fontSize: 11.5, color: C.primaryLight, marginTop: 10, fontWeight: 600 }}>{w.date} · {w.kind}</div>
+                <h4 style={{ fontSize: 17, fontWeight: 800, marginTop: 10, color: "#fff", letterSpacing: "-0.01em" }}>{w.title}</h4>
+                <p style={{ fontSize: 13.5, color: "rgba(255,255,255,0.7)", marginTop: 6, lineHeight: 1.55 }}>{w.sub}</p>
+                <span style={{ color: C.primaryLight, fontSize: 13.5, fontWeight: 800, marginTop: 12, display: "inline-block", cursor: "pointer" }}>{w.kind === "Upcoming" ? "Reserve a seat →" : "Watch →"}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <RetCurve from={C.bg} to="#F2EEE8" variant="leftCrest" />
+
+      {/* ─── NEWSLETTER ─── */}
+      <section className="ret-section r-full-bleed" style={{ background: "#F2EEE8", textAlign: "center", paddingBottom: 88 }}>
+        <div className="ret-section-inner" style={{ maxWidth: 760 }}>
+          <div className="ret-eyebrow">Stay in the loop</div>
+          <h3 className="ret-h2" style={{ marginTop: 14, fontSize: "clamp(24px, 3.5vw, 36px)" }}>Get notified when we publish.</h3>
+          <div className="res-newsletter-row" style={{ marginTop: 22, display: "inline-flex", gap: 8, alignItems: "center", background: C.card, padding: 6, borderRadius: 999, border: "1px solid " + C.borderLight, maxWidth: "100%" }}>
+            <input
+              type="email"
+              placeholder="you@agency.com"
+              className="res-newsletter-input"
+              style={{ background: "transparent", border: "none", outline: "none", padding: "10px 18px", width: 280, fontSize: 14.5, color: C.text, fontFamily: "inherit" }}
+            />
+            <button className="cta-btn" style={{ padding: "10px 22px", fontSize: 14, fontWeight: 700, background: C.btn, color: "#fff", border: "none", borderRadius: 999, cursor: "pointer", fontFamily: "inherit" }}>Subscribe</button>
+          </div>
+          <div style={{ fontSize: 12.5, color: C.textSec, marginTop: 12 }}>One email a month. Unsubscribe with one click.</div>
+        </div>
+      </section>
+
+      <Footer setPage={setPage} />
+    </div>
+  );
+}
+
 
 // ═══════════════════════════════════════════════════════════════
 // SHARED PAGE PRIMITIVES — used by all non-home pages
