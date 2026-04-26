@@ -4797,7 +4797,13 @@ export default function RetaynedSite() {
           content: ''; position: absolute;
           left: -3%; top: 53%; height: 0.07em; width: 106%;
           background: ${C.danger}; border-radius: 2px;
-          transform: rotate(-1deg);
+          transform: rotate(-1deg) scaleX(0);
+          transform-origin: left center;
+          animation: v2StrikeDraw 0.55s cubic-bezier(0.65, 0, 0.35, 1) 0.9s forwards;
+        }
+        @keyframes v2StrikeDraw {
+          0%   { transform: rotate(-1deg) scaleX(0); }
+          100% { transform: rotate(-1deg) scaleX(1); }
         }
         .v2-caveat {
           font-family: 'Caveat', cursive;
@@ -4806,6 +4812,12 @@ export default function RetaynedSite() {
           transform: translateX(-50%) rotate(-2deg);
           font-size: 0.78em; white-space: nowrap;
           line-height: 1;
+          opacity: 0;
+          animation: v2CaveatIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 1.5s forwards;
+        }
+        @keyframes v2CaveatIn {
+          0%   { opacity: 0; transform: translateX(-50%) rotate(-2deg) translateY(6px) scale(0.9); }
+          100% { opacity: 1; transform: translateX(-50%) rotate(-2deg) translateY(0) scale(1); }
         }
         .v2-hero-sub {
           font-size: clamp(17px, 2vw, 24px);
