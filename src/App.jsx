@@ -5135,11 +5135,6 @@ export default function RetaynedSite() {
         .v2-curve { display: block; width: 100vw; height: 140px; margin-top: 0; margin-bottom: -1px; padding: 0; line-height: 0; position: relative; z-index: 1; }
         .v2-curve svg { display: block; width: 100%; height: calc(100% + 1px); }
 
-        /* ═══ STATS BAND ═══ */
-          background: ${C.bg};
-          font-weight: 900; color: ${C.primary};
-          font-size: 13px; font-weight: 500; color: ${C.textSec};
-
         /* ═══ SECTION SHARED ═══ */
         .v2-section-inner { max-width: 1400px; margin: 0 auto; }
         .v2-section-head { margin-bottom: 56px; }
