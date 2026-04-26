@@ -367,42 +367,52 @@ function Nav({ page, setPage }) {
             <span style={{ fontSize: 22, fontWeight: 900, color: C.primary, marginLeft: 1, fontFamily: "system-ui, -apple-system, sans-serif" }}>.</span>
           </div>
 
-          {/* Platform expandable group */}
-          <button
-            onClick={() => setMobilePlatformExpanded(!mobilePlatformExpanded)}
-            style={{
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-              width: "100%", textAlign: "left", padding: "14px 0",
-              background: "none", border: "none",
-              borderBottom: "1px solid " + C.borderLight,
-              fontSize: 17, fontWeight: platformActive ? 700 : 500,
-              color: platformActive ? C.primary : C.text,
-              cursor: "pointer", fontFamily: "inherit",
-            }}
-          >
-            Platform
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5, transform: mobilePlatformExpanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </button>
+          {/* Platform: label navigates, chevron expands */}
+          <div style={{ display: "flex", alignItems: "stretch", borderBottom: "1px solid " + C.borderLight }}>
+            <button
+              onClick={() => { setPage("platform"); setOpen(false); setMobilePlatformExpanded(false); }}
+              style={{
+                flex: 1, textAlign: "left", padding: "14px 0",
+                background: "none", border: "none",
+                fontSize: 17, fontWeight: platformActive ? 700 : 500,
+                color: platformActive ? C.primary : C.text,
+                cursor: "pointer", fontFamily: "inherit",
+              }}
+            >
+              Platform
+            </button>
+            <button
+              onClick={() => setMobilePlatformExpanded(!mobilePlatformExpanded)}
+              aria-label={mobilePlatformExpanded ? "Collapse Platform" : "Expand Platform"}
+              style={{
+                width: 44, display: "flex", alignItems: "center", justifyContent: "center",
+                background: "none", border: "none", cursor: "pointer", padding: 0,
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={platformActive ? C.primary : C.text} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5, transform: mobilePlatformExpanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+          </div>
 
           {mobilePlatformExpanded && (
             <div style={{ paddingLeft: 8, paddingTop: 10, paddingBottom: 10 }}>
-              <button onClick={() => { setPage("platform"); setOpen(false); setMobilePlatformExpanded(false); }} style={{ display: "block", width: "100%", textAlign: "left", padding: "10px 0", background: "none", border: "none", fontSize: 15, fontWeight: page === "platform" ? 700 : 500, color: page === "platform" ? C.primary : C.text, cursor: "pointer", fontFamily: "inherit" }}>
-                All Features
-              </button>
               {features.map(f => (
                 <button
                   key={f.id}
                   onClick={() => { setPage(f.id); setOpen(false); setMobilePlatformExpanded(false); }}
                   style={{
-                    display: "block", width: "100%", textAlign: "left", padding: "10px 0",
+                    display: "flex", alignItems: "center", gap: 12,
+                    width: "100%", textAlign: "left", padding: "10px 0",
                     background: "none", border: "none",
                     fontSize: 15, fontWeight: page === f.id ? 700 : 500,
                     color: page === f.id ? C.primary : C.text,
                     cursor: "pointer", fontFamily: "inherit",
                   }}
                 >
+                  <span style={{ width: 28, height: 28, borderRadius: 6, background: C.primarySoft, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <NavIcon name={f.icon} size={18} />
+                  </span>
                   {f.label}
                 </button>
               ))}
@@ -435,13 +445,17 @@ function Nav({ page, setPage }) {
                   key={a.id}
                   onClick={() => { setPage(a.id); setOpen(false); setMobileSolutionsExpanded(false); }}
                   style={{
-                    display: "block", width: "100%", textAlign: "left", padding: "10px 0",
+                    display: "flex", alignItems: "center", gap: 12,
+                    width: "100%", textAlign: "left", padding: "10px 0",
                     background: "none", border: "none",
                     fontSize: 15, fontWeight: page === a.id ? 700 : 500,
                     color: page === a.id ? C.primary : C.text,
                     cursor: "pointer", fontFamily: "inherit",
                   }}
                 >
+                  <span style={{ width: 28, height: 28, borderRadius: 6, background: C.primarySoft, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <NavIcon name={a.icon} size={18} />
+                  </span>
                   {a.label}
                 </button>
               ))}
@@ -540,31 +554,6 @@ function Footer({ setPage }) {
 
 // Inline footer for pages ending in the 4-stop gradient — renders inside the gradient wrapper
 // so the gradient flows seamlessly through it (no hard cut from gradient to solid).
-function InlineFooter({ setPage }) {
-  return (
-    <div style={{ padding: "32px 20px 24px", position: "relative", zIndex: 2 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-        <div style={{ display: "flex", alignItems: "baseline", cursor: "pointer" }} onClick={() => setPage("home")}>
-          <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: "-0.04em", color: "rgba(255,255,255,0.7)", fontFamily: "system-ui, -apple-system, sans-serif" }}>Retayned</span>
-          <span style={{ fontSize: 16, fontWeight: 900, color: "rgba(255,255,255,0.7)", marginLeft: 1, fontFamily: "system-ui, -apple-system, sans-serif" }}>.</span>
-        </div>
-        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>There's no "i" in Retayned.</div>
-      </div>
-      <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 12 }}>
-        {[["platform","Platform"],["pricing","Pricing"],["faq","FAQs"],["contact","Contact"],["privacy","Privacy"],["terms","Terms"]].map(([id, label]) => (
-          <span key={id} onClick={() => setPage(id)} role="button" tabIndex={0} onKeyDown={e => e.key === "Enter" && setPage(id)} style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", cursor: "pointer" }}>{label}</span>
-        ))}
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 8 }}>
-        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", lineHeight: 1.5 }}>
-          <sup>1</sup> Reichheld, F. & Schefter, P. "The Economics of E-Loyalty." Harvard Business School / Bain & Company.
-        </div>
-        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}>© {new Date().getFullYear()} Maniac Digital, LLC</div>
-      </div>
-    </div>
-  );
-}
-
 // ═══ HERO INTERACTIVE DEMO ═══
 function V2TodayFeed() {
   // Breakpoint-aware row heights — same architecture as desktop+mobile reference files.
@@ -3709,68 +3698,6 @@ function Enterprise({ setPage }) {
 // ═══════════════════════════════════════════════════════════════
 // FEATURE PAGES — one template, six data definitions
 // ═══════════════════════════════════════════════════════════════
-function FeaturePage({ data, current, setPage }) {
-  const otherFeatures = PLATFORM_FEATURES.filter(f => f.id !== current).slice(0, 3);
-  return (
-    <div>
-      <RetPageStyles />
-      <RetHero
-        eyebrow={data.eyebrow}
-        h1={data.h1}
-        sub={data.sub}
-        primaryCta="Start Free Trial"
-        primaryAction="signup"
-        secondaryCta="See all features"
-        secondaryAction="platform"
-        setPage={setPage}
-      />
-      <RetCurve from="#F2EEE8" to="#EAE4D6" variant="rightRise" />
-      <section className="ret-section ret-bg-beige r-full-bleed">
-        <div className="ret-section-inner">
-          <div className="ret-section-head">
-            <div className="ret-eyebrow">How it works</div>
-            <h2 className="ret-h2">{data.howTitle}</h2>
-          </div>
-          <div className="ret-grid-3">
-            {data.steps.map((s, i) => (
-              <div key={i} className="ret-card">
-                <div style={{ fontSize: 11, fontWeight: 700, color: C.btn, textTransform: "uppercase", letterSpacing: "0.14em", marginBottom: 10 }}>Step {i + 1}</div>
-                <h3 className="ret-h3">{s.h}</h3>
-                <p style={{ fontSize: 14.5, color: C.textSec, lineHeight: 1.6, margin: 0 }}>{s.p}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      <RetCurve from="#EAE4D6" to="#F2EEE8" variant="leftRise" />
-      <section className="ret-section ret-bg-cream r-full-bleed">
-        <div className="ret-section-inner">
-          <div className="ret-section-head">
-            <div className="ret-eyebrow">Related features</div>
-            <h2 className="ret-h2">Better together.</h2>
-          </div>
-          <div className="ret-grid-3">
-            {otherFeatures.map(f => (
-              <div key={f.id} className="ret-card ret-card-hover" style={{ cursor: "pointer" }} onClick={() => setPage(f.id)}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: C.btn, textTransform: "uppercase", letterSpacing: "0.14em", marginBottom: 10 }}>{f.label}</div>
-                <h3 style={{ fontSize: 18, fontWeight: 800, color: C.text, marginBottom: 8, lineHeight: 1.3, letterSpacing: "-0.015em" }}>{f.headline}</h3>
-                <p style={{ fontSize: 14, color: C.textSec, lineHeight: 1.6, margin: 0 }}>{f.sub}</p>
-                <div style={{ marginTop: 14, fontSize: 13, fontWeight: 700, color: C.btn }}>Learn more →</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      <RetFinalCTA
-        h2={data.finalH2}
-        sub={data.finalSub}
-        setPage={setPage}
-      />
-      <Footer setPage={setPage} />
-    </div>
-  );
-}
-
 function FeatureToday({ setPage }) {
   const otherFeatures = PLATFORM_FEATURES.filter(f => f.id !== "feature-today").slice(0, 3);
   return (
@@ -5218,11 +5145,6 @@ export default function RetaynedSite() {
           display: flex; align-items: center; justify-content: center;
           font-size: 12px; font-weight: 900; margin-top: 2px;
         }
-          font-size: 64px; font-weight: 900; color: ${C.primary};
-          background: linear-gradient(90deg, ${C.primary}, ${C.primaryLight});
-          font-size: 11px; color: ${C.textMuted};
-          background: ${C.primarySoft};
-          font-size: 12px; color: ${C.primary};
 
         /* ═══ COMBOS ═══ */
         .v2-section-combos { background: ${C.bg}; padding: 112px 48px; }
