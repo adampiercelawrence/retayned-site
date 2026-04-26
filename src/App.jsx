@@ -971,7 +971,7 @@ function HomeV2({ setPage }) {
       {/* ══════ MEET RAI ══════ */}
       <section className="v2-section-rai r-full-bleed">
         <div className="v2-section-inner">
-          <div className="v2-section-head" style={{ textAlign: "center", margin: "0 auto 56px", maxWidth: 880 }}>
+          <div className="v2-section-head">
             <div className="v2-eyebrow">How it works</div>
             <h2 className="v2-section-h2">Meet <span style={{ color: C.btn }}>Rai</span>. She pays attention to every client, every day.</h2>
             <p className="v2-section-sub">When something shifts, she catches it — and tells you what to do about it.</p>
@@ -2533,7 +2533,7 @@ function Contact({ setPage }) {
   return (
     <div>
       <RetPageStyles />
-      <section style={{ background: "#F2EEE8", minHeight: "calc(100vh - 80px)", padding: "60px 20px 80px" }}>
+      <section className="r-full-bleed" style={{ background: "#F2EEE8", minHeight: "calc(100vh - 80px)", padding: "60px 20px 80px" }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 44 }}>
             <h1 style={{ fontSize: "clamp(40px, 5vw, 56px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.05, margin: "0 0 16px", color: C.text }}>Get in Touch</h1>
@@ -2598,7 +2598,7 @@ function Login({ setPage }) {
   return (
     <div>
       <RetPageStyles />
-      <section style={{ background: "#F2EEE8", minHeight: "calc(100vh - 80px)", padding: "40px 20px 80px" }}>
+      <section className="r-full-bleed" style={{ background: "#F2EEE8", minHeight: "calc(100vh - 80px)", padding: "40px 20px 80px" }}>
         <div style={{ maxWidth: 520, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 32 }}>
             <span
@@ -2686,7 +2686,7 @@ function Signup({ setPage }) {
   return (
     <div>
       <RetPageStyles />
-      <section style={{ background: "#F2EEE8", minHeight: "calc(100vh - 80px)", padding: "40px 20px 80px" }}>
+      <section className="r-full-bleed" style={{ background: "#F2EEE8", minHeight: "calc(100vh - 80px)", padding: "40px 20px 80px" }}>
         <div style={{ maxWidth: 520, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 32 }}>
             <span
@@ -4641,7 +4641,7 @@ export default function RetaynedSite() {
         @media (min-width: 1280px) {
           section { padding-left: 80px !important; padding-right: 80px !important; }
           .r-nav-inner { padding-left: 80px !important; padding-right: 80px !important; }
-          .r-wrap { max-width: 1400px; margin: 0 auto; }
+          .r-wrap { max-width: 100%; margin: 0 auto; }
           .r-full-bleed { padding-left: 80px; padding-right: 80px; }
         }
 
@@ -4921,20 +4921,11 @@ export default function RetaynedSite() {
           overflow: hidden;
         }
 
-        /* Today feed */
-          border-bottom: 1px solid ${C.borderLight};
-          background: ${C.btn};
         @keyframes v2-pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.35; }
         }
-          font-size: 11.5px; color: ${C.textMuted}; line-height: 1.4;
-        }
 
-          background: ${C.primarySoft};
-          font-size: 12.5px; color: ${C.primary};
-
-        /* ═══ Today feed v4 (v2tf-*) — hero animated task list ═══ */
         /* ═══ Today feed v4 (v2tf-*) — hero animated task list ═══
            Architecture matches reference mobile/desktop files exactly:
            - Cards absolute-positioned, transform: translateY()
@@ -5151,7 +5142,7 @@ export default function RetaynedSite() {
 
         /* ═══ SECTION SHARED ═══ */
         .v2-section-inner { max-width: 1400px; margin: 0 auto; }
-        .v2-section-head { max-width: 880px; margin-bottom: 56px; }
+        .v2-section-head { margin-bottom: 56px; }
         .v2-eyebrow {
           display: inline-block;
           font-size: 12px; font-weight: 700;
@@ -5171,7 +5162,7 @@ export default function RetaynedSite() {
         .v2-section-sub {
           font-size: clamp(16px, 1.8vw, 18px);
           color: ${C.textSec};
-          line-height: 1.6; max-width: 640px; margin-left: auto; margin-right: auto;
+          line-height: 1.6;
         }
 
         /* ═══ MEET RAI ═══ */
